@@ -18,5 +18,8 @@ export const db = getFirestore(firebaseApp)
 export const functions = getFunctions(firebaseApp, 'asia-east1')
 
 export function employeeEmail(employeeId: string) {
-  return `${employeeId.trim().toLowerCase()}@employees.smilebike.invalid`
+  const normalized = employeeId.trim().toUpperCase()
+  if (/^[A-Z0-9]{3,20}$/.test(normalized)) return `${normalized.toLowerCase()}@employees.smilebike.invalid`
+  const encoded = Array.from(new TextEncoder().encode(normalized), byte => byte.toString(16).padStart(2, '0')).join('')
+  return `id-${encoded}@employees.smilebike.invalid`
 }

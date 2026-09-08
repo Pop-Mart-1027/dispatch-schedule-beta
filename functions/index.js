@@ -17,7 +17,7 @@ const EMPLOYEE_ID = /^[A-Z0-9]{3,20}$/
 
 function cleanId(value) {
   const id = String(value || '').trim().toUpperCase()
-  if (!EMPLOYEE_ID.test(id)) throw new HttpsError('invalid-argument', '員工編號格式不正確')
+  if (!id || id.length > 40 || /[\/\u0000-\u001f]/.test(id)) throw new HttpsError('invalid-argument', '員工編號格式不正確')
   return id
 }
 
@@ -34,7 +34,8 @@ function cleanRole(value) {
 }
 
 function employeeEmail(employeeId) {
-  return `${employeeId.toLowerCase()}@employees.smilebike.invalid`
+  if (EMPLOYEE_ID.test(employeeId)) return `${employeeId.toLowerCase()}@employees.smilebike.invalid`
+  return `id-${Buffer.from(employeeId, 'utf8').toString('hex')}@employees.smilebike.invalid`
 }
 
 async function importTemporaryPasswordUser({ employeeId, displayName, disabled = false, customClaims = {} }) {
