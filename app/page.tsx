@@ -12,6 +12,7 @@ type ScheduleRow = { rowId: string; employeeId: string; name: string; title: str
 type ScheduleData = { month: string; days: string[]; morning: ScheduleRow[]; night: ScheduleRow[] }
 const weekdays = ['二', '三', '四', '五', '六', '日', '一']
 const adminEmployeeIds = new Set(['B0957'])
+const publicAssetUrl = (file: string) => `${import.meta.env.BASE_URL}${file.replace(/^\//, '')}`
 
 export default function Home() {
   const [loggedIn, setLoggedIn] = useState(false)
@@ -31,7 +32,7 @@ export default function Home() {
   }
 
   useEffect(() => {
-    fetch('/september-schedules.json')
+    fetch(publicAssetUrl('september-schedules.json'))
       .then(response => response.json())
       .then((data: ScheduleData) => setScheduleData(data))
       .catch(() => notify('班表來源載入失敗，請重新整理頁面'))
@@ -97,7 +98,7 @@ function weekdayAt(index: number) {
   return weekdays[index % 7]
 }
 
-function EmptyNotice() { return <section className="notice-page"><div className="notice-heading"><Megaphone size={25} /><div><p className="eyebrow">NOTICE</p><h1>公告</h1></div></div><article className="notice-image-card"><img src="/temporary-notice.png" alt="獎懲公告" /></article></section> }
+function EmptyNotice() { return <section className="notice-page"><div className="notice-heading"><Megaphone size={25} /><div><p className="eyebrow">NOTICE</p><h1>公告</h1></div></div><article className="notice-image-card"><img src={publicAssetUrl('temporary-notice.png')} alt="獎懲公告" /></article></section> }
 
 function DispatchView({ data }: { data: ScheduleData | null }) {
   const [day, setDay] = useState(7)
