@@ -101,17 +101,25 @@ function weekdayAt(index: number) {
 
 function EmptyNotice() { return <section className="notice-page"><div className="notice-heading"><Megaphone size={25} /><div><p className="eyebrow">NOTICE</p><h1>公告</h1></div></div><article className="notice-image-card"><img src={publicAssetUrl('temporary-notice.png')} alt="獎懲公告" /></article></section> }
 
+function taipeiToday() {
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date())
+  const part = (type: string) => parts.find(p => p.type === type)!.value
+  return `${part('year')}-${part('month')}-${part('day')}`
+}
+
 function DispatchView({ data }: { data: ScheduleData | null }) {
-  const [day, setDay] = useState(7)
+  const [date, setDate] = useState(taipeiToday)
+  const day = Number(date.slice(8))
+  const sourceMonth = data?.month?.replace('/', '-').slice(0, 7) || '2026-09'
   const [shift, setShift] = useState<'night' | 'morning'>('night')
   const rows = shift === 'night' ? data?.night ?? [] : data?.morning ?? []
-  const people = rows.map(row => ({ row, code: row.shifts[day - 1], area: dispatchArea(row.shifts[day - 1]) || dispatchSpecialGroup(row) })).filter(item => item.code && !isLeave(item.code) && item.area)
+  const people = (date.slice(0, 7) === sourceMonth ? rows : []).map(row => ({ row, code: row.shifts[day - 1], area: dispatchArea(row.shifts[day - 1]) || dispatchSpecialGroup(row) })).filter(item => item.code && !isLeave(item.code) && item.area)
   const groups = people.reduce<Record<string, { row: ScheduleRow; code: string; area: string }[]>>((result, item) => {
     result[item.area] = [...(result[item.area] ?? []), item]
     return result
   }, {})
   const orderedGroups = Object.entries(groups).sort(([left], [right]) => dispatchAreaOrder(left) - dispatchAreaOrder(right) || left.localeCompare(right, 'en', { numeric: true }))
-  return <><div className="page-intro"><div><p className="eyebrow">DISPATCH ORDER · SCHEDULE SOURCE</p><h1>分區派工單</h1><p className="muted">僅帶入當日實際上班且可辨識區域的班別；例休與各類請假不列入派工人員。</p></div><span className="status">唯讀</span></div><div className="dispatch-toolbar"><label>日期<select value={day} onChange={event => setDay(Number(event.target.value))}>{Array.from({ length: 30 }, (_, index) => <option key={index} value={index + 1}>2026/9/{index + 1}（週{weekdayAt(index)}）</option>)}</select></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'morning' ? 'tab active' : 'tab'} onClick={() => setShift('morning')}>早班</button></div></div>{!data ? <p className="loading">正在載入班表資料…</p> : <div className="dispatch-grid">{orderedGroups.map(([area, members]) => { const special = area === '單位主官' || area.includes('監控'); const drivers = members.filter(member => !member.row.title.includes('PT')); const stations = members.filter(member => member.row.title.includes('PT')); return <article className={special ? 'dispatch-card command-card' : 'dispatch-card'} key={area}><header><span>{area.endsWith('區') || area === '單位主官' || area.includes('監控') ? area : `${area}區`}</span><small>{shift === 'night' ? '夜班' : '早班'} · 9/{day}</small></header><div className="dispatch-fields">{special ? <><b>人員</b><div>{members.map(member => <span className="person" key={member.row.rowId}>{member.row.name}<small>{member.code}</small></span>)}</div></> : <><b>駕駛</b><div>{drivers.length ? drivers.map(member => <span className="person" key={member.row.rowId}>{member.row.name}<small>{member.code}</small></span>) : '—'}</div><b>駐點</b><div>{stations.length ? stations.map(member => <span className="person" key={member.row.rowId}>{member.row.name}<small>{member.code}</small></span>) : '—'}</div><b>工作重點</b><span>{dispatchFocus(area)}</span><b>平衡區域</b><span>無</span></>}</div></article>})}</div>}</>
+  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'morning' ? 'tab active' : 'tab'} onClick={() => setShift('morning')}>早班</button></div></div>{!data ? <p className="loading">正在載入班表資料…</p> : date.slice(0, 7) !== sourceMonth ? <p className="loading">此月份尚未匯入班表</p> : <div className="dispatch-grid">{orderedGroups.map(([area, members]) => { const special = area === '單位主官' || area.includes('監控'); const drivers = members.filter(member => !member.row.title.includes('PT')); const stations = members.filter(member => member.row.title.includes('PT')); return <article className={special ? 'dispatch-card command-card' : 'dispatch-card'} key={area}><header><span>{area.endsWith('區') || area === '單位主官' || area.includes('監控') ? area : `${area}區`}</span><small>{shift === 'night' ? '夜班' : '早班'} · {Number(date.slice(5, 7))}/{day}</small></header><div className="dispatch-fields">{special ? <><b>人員</b><div>{members.map(member => <span className="person" key={member.row.rowId}>{member.row.name}<small>{member.code}</small></span>)}</div></> : <><b>駕駛</b><div>{drivers.length ? drivers.map(member => <span className="person" key={member.row.rowId}>{member.row.name}<small>{member.code}</small></span>) : '—'}</div><b>駐點</b><div>{stations.length ? stations.map(member => <span className="person" key={member.row.rowId}>{member.row.name}<small>{member.code}</small></span>) : '—'}</div><b>工作重點</b><span>{dispatchFocus(area)}</span><b>平衡區域</b><span>無</span></>}</div></article>})}</div>}</>
 }
 
 function isLeave(shift: string) { return ['例', '休', '慰'].includes(shift) || shift.includes('病') || shift.includes('事') || shift.includes('特') || shift === '假' }
@@ -154,12 +162,15 @@ function dispatchAreaOrder(area: string) {
 }
 
 function PreSchedule({ onSave }: { onSave: () => void }) {
-  const [plan, setPlan] = useState<string[]>(Array(30).fill(''))
+  const [month] = useState(() => { const today = taipeiToday(); return new Date(Number(today.slice(0, 4)), Number(today.slice(5, 7)), 1) })
+  const days = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate()
+  const offset = month.getDay()
+  const [plan, setPlan] = useState<string[]>(() => Array(days).fill(''))
   const [activeDay, setActiveDay] = useState(0)
   const [tool, setTool] = useState('上班')
   const choices = ['上班', '休', '休上', '例', '慰', '病', '事', '特']
   const applyToDay = (index: number) => { setActiveDay(index); setPlan(current => current.map((value, day) => day === index ? tool : value)) }
-  const checks = plan.map((_, index) => index).filter(index => weekdayAt(2 + index) === '日' && index + 7 <= plan.length).map(start => {
+  const checks = plan.map((_, index) => index).filter(index => (offset + index) % 7 === 0 && index + 7 <= plan.length).map(start => {
     const week = plan.slice(start, start + 7)
     const hasRegularDay = week.includes('例')
     const hasRestDay = week.some(value => value === '休' || value.includes('休上'))
@@ -169,7 +180,7 @@ function PreSchedule({ onSave }: { onSave: () => void }) {
   const longestWorkRun = plan.reduce((state, value) => value === '上班' ? { current: state.current + 1, longest: Math.max(state.longest, state.current + 1) } : { current: 0, longest: state.longest }, { current: 0, longest: 0 }).longest
   const hasContinuousWorkError = longestWorkRun > 5
   const canSubmit = plan.every(Boolean) && checks.every(check => check.ok) && !hasContinuousWorkError
-  return <><div className="page-intro"><div><p className="eyebrow">NEXT MONTH PLANNING</p><h1>預排班</h1><p className="muted">直接點日期即標為上班；先選上方類型後，再點日期可填休假或請假。</p></div><span className="status open">開放中</span></div><section className="pre-card"><div className="form-head"><div><h2>10 月預排班</h2><p>連續排班不得超過 5 天；每週日到週六必須安排 1 個例與 1 個休／休上。</p></div><span className="status">草稿</span></div><div className="plan-tools"><span>目前工具：<b>{tool}</b>（點選日期套用）</span><div>{choices.map(choice => <button key={choice} onClick={() => setTool(choice)} className={tool === choice ? 'choice active' : 'choice'}>{choice}</button>)}<button className="choice" onClick={() => setTool('')}>清除</button></div></div><div className="calendar pre-calendar">{plan.map((shift, index) => <button key={index} onClick={() => applyToDay(index)} className={`day-card ${activeDay === index ? 'selected' : ''} ${scheduleCellStyle(shift)}`}><small>10/{index + 1} · 週{weekdayAt(2 + index)}</small><strong>{shift || '未排'}</strong><span>{activeDay === index ? '已選取' : '點選套用'}</span></button>)}</div><label>備註<textarea placeholder="可填寫個人排班偏好或需協調事項" /></label><button className="primary" disabled={!canSubmit} onClick={onSave}>{canSubmit ? '儲存預排班' : '請完成每日設定與日到六一例一休檢查'}</button></section></>
+  return <section className="pre-card"><h2 className="plan-month">{month.getFullYear()} 年 {month.getMonth() + 1} 月</h2><div className="plan-tools"><div>{choices.map(choice => <button key={choice} aria-pressed={tool === choice} onClick={() => setTool(choice)} className={tool === choice ? 'choice active' : 'choice'}>{choice}</button>)}<button className={tool === '' ? 'choice active' : 'choice'} onClick={() => setTool('')}>清除</button></div></div><div className="month-grid">{['日','一','二','三','四','五','六'].map(w => <div className="weekday" key={w}>{w}</div>)}{Array.from({length:offset},(_,i)=><div aria-hidden="true" key={'blank'+i} />)}{plan.map((shift,index)=><button aria-label={`${month.getMonth()+1}月${index+1}日 ${shift || '未排'}`} key={index} onClick={()=>applyToDay(index)} className={`month-day ${activeDay===index?'selected':''} ${scheduleCellStyle(shift)}`}><small>{index+1}</small><strong>{shift || '—'}</strong></button>)}</div><label>備註<textarea placeholder="排班備註" /></label><button className="primary" disabled={!canSubmit} onClick={onSave}>儲存預排班</button></section>
 }
 
 function LeaveView({ onAction }: { onAction: (text: string) => void }) { const leaves = [['特休', '15 天', '0 天', '0 天'], ['病假', '30 天', '0 天', '0 天'], ['事假', '14 天', '0 天', '0 天']]; return <><div className="page-intro"><div><p className="eyebrow">LEAVE & ATTENDANCE</p><h1>假勤／特休</h1><p className="muted">查看假別餘額與使用狀態。</p></div><button className="primary" onClick={() => onAction('已開啟請假申請（Beta 示意）')}>我要請假</button></div><div className="leave-table"><div className="leave-row head"><span>假別</span><span>可用／額度</span><span>已使用</span><span>簽核中</span></div>{leaves.map(row => <div className="leave-row" key={row[0]}>{row.map((cell, i) => <span key={`${cell}-${i}`}>{cell}</span>)}</div>)}</div></> }

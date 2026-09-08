@@ -1,7 +1,24 @@
 /* Higher specificity keeps mobile layout independent of stylesheet order. */
+.plan-month { font-size: 20px; margin-bottom: 12px; }
+.pre-card .plan-tools { display: block; padding: 0; margin: 0 0 14px; }
+.pre-card .plan-tools > div { display: flex; flex-wrap: wrap; gap: 6px; }
+.pre-card .choice { min-height: 40px; padding: 6px 10px; }
+.month-grid { display: grid; grid-template-columns: repeat(7,minmax(0,1fr)); gap: 4px; }
+.weekday { text-align: center; padding: 6px 0; color: #666; }
+.month-day { min-width: 0; min-height: 64px; padding: 5px 2px; border: 1px solid #ddd; background: #fffdf8; border-radius: 6px; color: #3e332c; }
+.month-day small, .month-day strong { display: block; font-size: 13px; }
+.month-day strong { margin-top: 8px; }
+.month-day.selected { outline: 2px solid #d94718; outline-offset: -2px; }
+.month-day.cell-rest { background: #ffe8e8; color: #bc2633; }
+.month-day.cell-leave { background: #fff4c4; color: #785b00; }
+.app-shell[data-page="dispatch"] .topbar .eyebrow, .app-shell[data-page="dispatch"] .profile-chip { display: none; }
 .notice-page .notice-image-card { max-height: none; overflow: visible; }
 .notice-page .notice-image-card img { width: 100%; max-width: 100%; min-width: 0; height: auto; }
 @media (max-width: 760px) {
+  .app-shell[data-page="pre"] .topbar, .app-shell[data-page="dispatch"] .topbar { height: 52px; padding: 4px 12px; }
+  .app-shell[data-page="pre"] .topbar > div { display: none; }
+  .app-shell[data-page="pre"] .content, .app-shell[data-page="dispatch"] .content { padding: 12px 10px; }
+  .app-shell[data-page="dispatch"] .dispatch-toolbar { margin: 0 0 12px; gap: 10px; }
   .app-shell .matrix-wrap { width: 100%; max-width: 100%; overflow: auto; max-height: 65dvh; touch-action: pan-x pan-y; }
   .app-shell .schedule-matrix tr > :nth-child(-n+3) { position: static; left: auto; z-index: auto; }
   .app-shell .schedule-matrix thead tr > th { position: sticky; top: 0; left: auto; z-index: 2; }

@@ -5,6 +5,7 @@ const assert = require('node:assert/strict');
  for (const width of [320,390,430]) {
   const page = await browser.newPage({viewport:{width,height:844},isMobile:true,hasTouch:true});
   const errors=[]; page.on('pageerror',e=>errors.push(e.message));
+  await page.clock.setFixedTime(new Date('2026-09-08T11:00:00+08:00'));
   const loaded=page.waitForResponse(r=>r.url().includes('september-schedules.json'));
   await page.goto(process.env.TEST_URL || 'http://127.0.0.1:4174/dispatch-schedule-beta/');
   await loaded;
@@ -44,7 +45,24 @@ const assert = require('node:assert/strict');
    await page.locator('.matrix-wrap').evaluate(e=>e.scrollLeft=e.scrollWidth);
    assert(await page.locator('.matrix-wrap').evaluate(e=>e.scrollLeft>500));
   }
-  for(const name of ['派工單','預排班','假勤／特休','個人資料','工作總覽']) {await go(name);await fits();}
+  await go('派工單');
+  assert.equal(await page.locator('input[type=date]').inputValue(),'2026-09-08');
+  await page.locator('input[type=date]').fill('2026-10-01');
+  await page.getByText('此月份尚未匯入班表').waitFor();
+  assert.equal(await page.locator('.dispatch-card').count(),0);
+  await go('預排班');
+  await fits();
+  assert.equal(await page.locator('.month-day').count(),31);
+  assert.equal(await page.locator('.weekday').count(),7);
+  await page.locator('.month-day').first().click();
+  assert.equal(await page.locator('.month-day strong').first().innerText(),'上班');
+  await page.getByRole('button',{name:'例',exact:true}).click();
+  await page.locator('.month-day').nth(1).click();
+  assert.equal(await page.locator('.month-day strong').nth(1).innerText(),'例');
+  await page.getByRole('button',{name:'上班',exact:true}).click();
+  for(let day=3;day<10;day++) await page.locator('.month-day').nth(day).click();
+  assert(await page.getByRole('button',{name:'儲存預排班'}).isDisabled());
+  for(const name of ['假勤／特休','個人資料','工作總覽']) {await go(name);await fits();}
   await page.getByRole('button',{name:'開啟選單'}).click();
   await page.getByRole('button',{name:'關閉選單'}).last().click();
   assert.equal(await page.locator('.sidebar.open').count(),0);
