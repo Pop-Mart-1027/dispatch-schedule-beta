@@ -1,0 +1,3 @@
+"conflictType","employeeId","name","title","shiftSource","sourceCount","sourceRefs","resolution"
+"同姓名不同員編","B2955","林建安","調度專員-E","夜班","1","night:9月夜班-217","confirmed"
+"同姓名不同員編","B6033","林建安","PT-早","早班","1","morning:9月日班-533","rejected"

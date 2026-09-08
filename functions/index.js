@@ -96,6 +96,12 @@ async function requireAdmin(request) {
   return user
 }
 
+async function requireDuty(request) {
+  const user = await requireUser(request)
+  if (!['duty', 'admin'].includes(user.snapshot.data().role)) throw new HttpsError('permission-denied', '需要值班監控權限')
+  return user
+}
+
 exports.getMyProfile = onCall(async request => {
   const { employeeId, snapshot } = await requireUser(request)
   return publicEmployee(snapshot)
@@ -229,6 +235,26 @@ exports.adminSyncEmployees = onCall({ timeoutSeconds: 300, memory: '512MiB' }, a
   }
   await audit('employees.synced', actor.employeeId, '*', { created, updated, conflicts })
   return { created, updated, conflicts }
+})
+
+exports.generateDailyDispatch = onCall(async request => {
+  const actor = await requireDuty(request)
+  const date = String(request.data?.date || '')
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new HttpsError('invalid-argument', '日期格式不正確')
+  const schedules = await db.collection('scheduleRecords').where('date', '==', date).get()
+  const areas = await db.collection('areaMaster').where('active', '==', true).get()
+  const areaMap = new Map(areas.docs.map(item => [item.id, item.data()]))
+  const batch = db.batch(); let count = 0
+  for (const schedule of schedules.docs) {
+    const data = schedule.data(); const code = String(data.scheduleCode || '')
+    if (!code || ['例', '休', '休上', '慰', '假'].includes(code) || /病|事|特/.test(code)) continue
+    const areaCode = [...areaMap.keys()].sort((a, b) => b.length - a.length).find(area => code.includes(area)) || ''
+    if (!areaCode) continue
+    const area = areaMap.get(areaCode)
+    const id = `${date}-${data.employeeId}-${data.shiftType}`
+    batch.set(db.collection('dispatchRecords').doc(id), { id, date, employeeId: data.employeeId, employeeName: data.employeeName, scheduleCode: code, areaCode, areaName: area.areaName || areaCode, vehicleType: area.defaultVehicleType || '', vehicleNo: area.defaultVehicleNo || '', driver: '', assistant: '', station: area.defaultStation || '', workFocus: area.defaultWorkFocus || '', balanceArea: area.defaultBalanceArea || '', note: '', source: 'scheduleRecords', status: 'active', createdAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(), modifiedBy: actor.employeeId, modifiedAt: FieldValue.serverTimestamp() }, { merge: true }); count += 1
+  }
+  await batch.commit(); await audit('dispatch.generated', actor.employeeId, date, { count }); return { date, count }
 })
 
 exports._test = { cleanId, employeeEmail }

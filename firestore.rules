@@ -14,6 +14,10 @@ service cloud.firestore {
       return isActiveEmployee() && request.auth.token.role == 'admin'
         && get(employeePath()).data.role == 'admin';
     }
+    function isDuty() {
+      return isActiveEmployee() && request.auth.token.role in ['duty', 'admin']
+        && get(employeePath()).data.role in ['duty', 'admin'];
+    }
 
     // Existing breakfast-order rules are preserved.
     match /orders/{orderId} {
@@ -78,6 +82,44 @@ service cloud.firestore {
         ])
         && request.resource.data.createdAt == request.time;
       allow update, delete: if false;
+    }
+
+    match /scheduleRecords/{recordId} {
+      allow get, list: if isActiveEmployee() && (isAdmin() || resource.data.employeeId == request.auth.token.employeeId);
+      allow write: if false;
+    }
+
+    match /dispatchRecords/{recordId} {
+      allow get: if isActiveEmployee() && (isDuty() || resource.data.employeeId == request.auth.token.employeeId);
+      allow list: if isActiveEmployee() && (isDuty() || resource.data.employeeId == request.auth.token.employeeId);
+      allow create: if false;
+      allow update: if isActiveEmployee() && isDuty()
+        && resource.data.date == request.resource.data.date
+        && request.resource.data.modifiedBy == request.auth.token.employeeId
+        && request.resource.data.modifiedAt == request.time;
+      allow delete: if false;
+    }
+    match /dispatchAuditLogs/{auditId} {
+      allow read, create: if isDuty();
+      allow update, delete: if false;
+    }
+
+    match /areaMaster/{areaCode} {
+      allow read: if isActiveEmployee();
+      allow write: if isAdmin();
+    }
+
+    match /broadcasts/{broadcastId} {
+      allow read: if isActiveEmployee();
+      allow write: if isAdmin();
+    }
+
+    match /broadcastReads/{readId} {
+      allow read: if isActiveEmployee() && (isAdmin() || resource.data.employeeId == request.auth.token.employeeId);
+      allow create, update: if isActiveEmployee()
+        && request.resource.data.employeeId == request.auth.token.employeeId
+        && request.resource.data.broadcastId is string;
+      allow delete: if false;
     }
 
     match /auditLogs/{entryId} { allow read, write: if false; }
