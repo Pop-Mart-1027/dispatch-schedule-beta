@@ -17,8 +17,8 @@ const publicAssetUrl = (file: string) => `${import.meta.env.BASE_URL}${file.repl
 
 export default function Home() {
   const [loggedIn, setLoggedIn] = useState(false)
-  const [account, setAccount] = useState('96504')
-  const [password, setPassword] = useState('96504')
+  const [account, setAccount] = useState('')
+  const [password, setPassword] = useState('')
   const [currentUser, setCurrentUser] = useState<{ name: string; role: 'employee' | 'admin' }>({ name: '涂佑葦', role: 'employee' })
   const [page, setPage] = useState('home')
   const [scheduleTab, setScheduleTab] = useState('mine')
@@ -39,7 +39,7 @@ export default function Home() {
       .catch(() => notify('班表來源載入失敗，請重新整理頁面'))
   }, [])
 
-  if (!loggedIn) return <main className="login-page"><section className="login-card"><div className="login-bike"><BikeArtwork /></div><p className="eyebrow">YOUBIKE DISPATCH BETA</p><h1>調度組排班</h1><p className="muted">請使用本人員工編號登入。</p><label>員工編號<input value={account} onChange={e => setAccount(e.target.value)} /></label><label>密碼<input type="password" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && signIn()} /></label><button className="primary full" onClick={signIn}>登入工作台 <ChevronRight size={18} /></button><small>Beta 初始密碼為本人員工編號。</small>{notice && <p className="error">{notice}</p>}</section></main>
+  if (!loggedIn) return <main className="login-page"><section className="login-card"><div className="login-bike"><BikeArtwork /></div><p className="eyebrow">YOUBIKE DISPATCH BETA</p><h1 className="login-brand"><span className="smile-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><circle cx="10" cy="11" r="2" fill="currentColor" /><circle cx="22" cy="11" r="2" fill="currentColor" /><path d="M8 19C10 27 22 27 24 19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" /></svg></span>微笑Bike</h1><label>員工編號<input autoComplete="username" placeholder="請使用本人員工編號登入" value={account} onChange={e => setAccount(e.target.value)} /></label><label>密碼<input type="password" autoComplete="current-password" placeholder="首次登入密碼為編號" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && signIn()} /></label><button className="primary full" onClick={signIn}>登入工作台 <ChevronRight size={18} /></button>{notice && <p className="error">{notice}</p>}</section></main>
 
   const titles: Record<string, string> = { home: '工作總覽', notice: '公告', schedule: '我的班表', dispatch: '派工單', pre: '預排班', leave: '假勤／特休', profile: '個人資料' }
   const go = (target: string) => { setPage(target); setMenuOpen(false) }

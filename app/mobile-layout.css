@@ -1,4 +1,8 @@
 /* Higher specificity keeps mobile layout independent of stylesheet order. */
+.login-brand { display: flex; align-items: center; gap: 12px; color: #4b352d; }
+.smile-icon { display: inline-grid; place-items: center; width: 44px; height: 44px; flex-shrink: 0; border-radius: 14px; background: #fff0cf; color: #df541b; }
+.smile-icon svg { width: 32px; height: 32px; }
+.login-card input::placeholder { color: #7c858a; opacity: 1; font-size: 14px; }
 .pinned-role { display: none; }
 .personal-month .month-day { text-align: center; overflow-wrap: anywhere; }
 .personal-month .month-day strong { font-size: 12px; line-height: 1.35; }
