@@ -1,0 +1,14 @@
+{
+  "name": "smile-bike-functions",
+  "private": true,
+  "main": "index.js",
+  "engines": { "node": "22" },
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "firebase-admin": "^13.5.0",
+    "firebase-functions": "^6.4.0"
+  }
+}
