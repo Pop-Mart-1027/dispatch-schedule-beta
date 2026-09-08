@@ -5,6 +5,7 @@ import './area-fix.css'
 import './dispatch.css'
 import './youbike-theme.css'
 import './mobile-nav.css'
+import './mobile-layout.css'
 import { Fragment, useEffect, useState } from 'react'
 import { CalendarDays, ChevronRight, ClipboardList, ClipboardPlus, Clock3, Coffee, LogOut, Megaphone, Menu, UserRound, X } from 'lucide-react'
 

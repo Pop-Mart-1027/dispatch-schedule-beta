@@ -1,0 +1,17 @@
+/* Higher specificity keeps mobile layout independent of stylesheet order. */
+.notice-page .notice-image-card { max-height: none; overflow: visible; }
+.notice-page .notice-image-card img { width: 100%; max-width: 100%; min-width: 0; height: auto; }
+@media (max-width: 760px) {
+  .app-shell .matrix-wrap { width: 100%; max-width: 100%; overflow: auto; max-height: 65dvh; touch-action: pan-x pan-y; }
+  .app-shell .schedule-matrix tr > :nth-child(-n+3) { position: static; left: auto; z-index: auto; }
+  .app-shell .schedule-matrix thead tr > th { position: sticky; top: 0; left: auto; z-index: 2; }
+  .app-shell .sidebar { width: min(290px, 86vw); overflow-y: auto; height: 100dvh; }
+  .app-shell .menu-button, .app-shell .drawer-close { min-width: 44px; min-height: 44px; flex-shrink: 0; }
+  .app-shell .tabs { max-width: 100%; flex-wrap: wrap; }
+  .app-shell .tab { min-height: 44px; }
+  .app-shell .dispatch-fields { grid-template-columns: 76px minmax(0, 1fr); }
+  .app-shell .dispatch-fields > * { min-width: 0; overflow-wrap: anywhere; }
+  .app-shell .day-card { min-width: 0; overflow-wrap: anywhere; }
+  .app-shell .toast { left: 16px; right: 16px; bottom: 16px; z-index: 80; }
+  .app-shell input, .app-shell select, .app-shell textarea { font-size: 16px; }
+}
