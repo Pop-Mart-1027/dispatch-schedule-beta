@@ -9,6 +9,9 @@ const assert = require('node:assert/strict');
   const loaded=page.waitForResponse(r=>r.url().includes('september-schedules.json'));
   await page.goto(process.env.TEST_URL || 'http://127.0.0.1:4174/dispatch-schedule-beta/');
   await loaded;
+  await page.locator('.login-bike img').evaluate(i=>i.decode());
+  if(width===390) await page.screenshot({path:'outputs/login-mobile.png',fullPage:true});
+  assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1));
   await page.getByRole('button',{name:'登入工作台'}).click();
   await page.getByRole('button',{name:'開啟選單'}).waitFor();
   async function go(name) {
@@ -16,6 +19,7 @@ const assert = require('node:assert/strict');
    await page.locator('.sidebar.open').waitFor();
    await page.locator('nav').getByRole('button',{name,exact:true}).click();
    assert.equal(await page.locator('.sidebar.open').count(),0);
+   await page.waitForFunction(()=>document.querySelector('.sidebar').getBoundingClientRect().right<=0);
   }
   async function fits(){ assert(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth+1),'page overflow'); }
   await go('公告');
@@ -63,6 +67,8 @@ const assert = require('node:assert/strict');
   for(let day=3;day<10;day++) await page.locator('.month-day').nth(day).click();
   assert(await page.getByRole('button',{name:'儲存預排班'}).isDisabled());
   for(const name of ['假勤／特休','個人資料','工作總覽']) {await go(name);await fits();}
+  await page.locator('.welcome .bike-art img').evaluate(i=>i.decode());
+  if(width===390) await page.screenshot({path:'outputs/home-mobile.png',fullPage:true});
   await page.getByRole('button',{name:'開啟選單'}).click();
   await page.getByRole('button',{name:'關閉選單'}).last().click();
   assert.equal(await page.locator('.sidebar.open').count(),0);

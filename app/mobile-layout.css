@@ -1,4 +1,14 @@
 /* Higher specificity keeps mobile layout independent of stylesheet order. */
+.bike-art { position: relative; width: min(350px, 46%); flex-shrink: 0; isolation: isolate; }
+.bike-art::before { content: ''; position: absolute; inset: 12% 0 4%; background: radial-gradient(ellipse, #ffdfaa80, #fff4df00 72%); z-index: -1; }
+.bike-art img { display: block; width: 100%; height: auto; filter: drop-shadow(0 8px 6px #65421912); }
+.welcome:has(.bike-art) { align-items: center; }
+.login-bike .bike-art { width: 100%; max-width: 270px; margin: 0 auto 12px; }
+.login-page:has(.login-bike) { background: radial-gradient(ellipse at 20% 10%, #ffe4b1, transparent 65%), #fffaf1; }
+.login-card:has(.login-bike) { border: 1px solid #f2dfc6; }
+.login-card .primary, .app-shell .primary { background: #e95521; }
+.leave-actions { display: flex; justify-content: flex-end; margin-bottom: 12px; }
+.app-shell[data-page="leave"] .topbar .eyebrow, .app-shell[data-page="leave"] .profile-chip { display: none; }
 .plan-month { font-size: 20px; margin-bottom: 12px; }
 .pre-card .plan-tools { display: block; padding: 0; margin: 0 0 14px; }
 .pre-card .plan-tools > div { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -15,6 +25,14 @@
 .notice-page .notice-image-card { max-height: none; overflow: visible; }
 .notice-page .notice-image-card img { width: 100%; max-width: 100%; min-width: 0; height: auto; }
 @media (max-width: 760px) {
+  .app-shell .welcome:has(.bike-art) { flex-direction: row; gap: 8px; }
+  .welcome:has(.bike-art) h1 { font-size: 22px; }
+  .welcome:has(.bike-art) .eyebrow { display: none; }
+  .welcome:has(.bike-art) .muted { font-size: 13px; }
+  .login-card:has(.login-bike) { padding: 24px; }
+  .login-bike .bike-art { max-width: 220px; }
+  .app-shell[data-page="leave"] .topbar { height: 52px; }
+  .app-shell[data-page="leave"] .content { padding: 12px 10px; }
   .app-shell[data-page="pre"] .topbar, .app-shell[data-page="dispatch"] .topbar { height: 52px; padding: 4px 12px; }
   .app-shell[data-page="pre"] .topbar > div { display: none; }
   .app-shell[data-page="pre"] .content, .app-shell[data-page="dispatch"] .content { padding: 12px 10px; }
