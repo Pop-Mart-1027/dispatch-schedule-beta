@@ -1,4 +1,11 @@
 /* Higher specificity keeps mobile layout independent of stylesheet order. */
+.pinned-role { display: none; }
+.personal-month .month-day { text-align: center; overflow-wrap: anywhere; }
+.personal-month .month-day strong { font-size: 12px; line-height: 1.35; }
+/* A clipped table cell becomes a nested scroll container and breaks sticky
+   descendants, especially on Safari. Let the label use the matrix scroller. */
+.app-shell .schedule-matrix .area-heading td { overflow: visible; }
+.app-shell .schedule-matrix .area-label { display: block; width: max-content; }
 .bike-art { position: relative; width: min(350px, 46%); flex-shrink: 0; isolation: isolate; }
 .bike-art::before { content: ''; position: absolute; inset: 12% 0 4%; background: radial-gradient(ellipse, #ffdfaa80, #fff4df00 72%); z-index: -1; }
 .bike-art img { display: block; width: 100%; height: auto; filter: drop-shadow(0 8px 6px #65421912); }
@@ -42,6 +49,7 @@
   .app-shell .schedule-matrix thead tr > th { position: sticky; top: 0; left: auto; z-index: 2; }
   .app-shell .schedule-matrix thead tr > :nth-child(-n+3) { position: sticky; top: 0; left: auto; z-index: 3; }
   .app-shell .schedule-matrix tbody tr:not(.area-heading) > :nth-child(3) { position: sticky; left: 0; z-index: 4; background: #fffdf8; box-shadow: 2px 0 3px #0002; }
+  .app-shell .schedule-matrix .pinned-role { display: block; font-size: 10px; line-height: 1.4; margin-top: 3px; white-space: normal; }
   .app-shell .schedule-matrix thead tr > :nth-child(3) { position: sticky; left: 0; top: 0; z-index: 5; }
   .app-shell[data-page="schedule"] .topbar { height: 52px; padding: 4px 12px; }
   .app-shell[data-page="schedule"] .topbar > div { display: none; }
@@ -49,7 +57,7 @@
   .app-shell[data-page="schedule"] .page-intro { display: none; }
   .app-shell[data-page="schedule"] .tabs { margin: 0 0 8px; }
   .app-shell[data-page="schedule"] .matrix-wrap { max-height: calc(100dvh - 134px); }
-  .app-shell .schedule-matrix .area-label { position: sticky; left: 12px; display: inline-block; max-width: calc(100vw - 64px); overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
+  .app-shell .schedule-matrix .area-label { position: sticky; left: 12px; display: block; max-width: calc(100vw - 64px); overflow: hidden; text-overflow: ellipsis; }
   .app-shell .sidebar { width: min(290px, 86vw); overflow-y: auto; height: 100dvh; }
   .app-shell .menu-button, .app-shell .drawer-close { min-width: 44px; min-height: 44px; flex-shrink: 0; }
   .app-shell .tabs { max-width: 100%; flex-wrap: wrap; }

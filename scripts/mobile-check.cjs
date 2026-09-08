@@ -27,6 +27,9 @@ const assert = require('node:assert/strict');
   await fits();
   assert(await page.locator('.notice-image-card img').evaluate(i=>i.clientWidth<=innerWidth));
   await go('我的班表');
+  assert.equal(await page.locator('.personal-month .month-day').count(),30);
+  assert.equal(await page.locator('.personal-month .weekday').count(),7);
+  assert.equal(await page.locator('.personal-month .month-day strong').nth(11).innerText(),'慰勞');
   for(const name of ['早班','夜班']) {
    await page.getByRole('button',{name,exact:true}).click();
    await fits();
@@ -48,6 +51,9 @@ const assert = require('node:assert/strict');
    assert(after.x<before.x-400,`frozen horizontal columns ${name}: ${before.x} -> ${after.x}`);
    await page.locator('.matrix-wrap').evaluate(e=>e.scrollLeft=e.scrollWidth);
    assert(await page.locator('.matrix-wrap').evaluate(e=>e.scrollLeft>500));
+   const areaRect=await page.locator('.area-label').first().boundingBox();
+   assert(areaRect.x>=wrap.x && areaRect.x+areaRect.width<=wrap.x+wrap.width,'area label remains in viewport');
+   assert(await nameCell.locator('.pinned-role').isVisible());
   }
   await go('派工單');
   assert.equal(await page.locator('input[type=date]').inputValue(),'2026-09-08');
