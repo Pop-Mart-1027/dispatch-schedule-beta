@@ -87,11 +87,10 @@ async function requireAdmin(request) {
   if (!request.auth || request.auth.token.role !== 'admin') throw new HttpsError('permission-denied', '需要管理員權限')
   const employeeId = cleanId(request.auth.token.employeeId || request.auth.uid)
   const snapshot = await db.collection('employees').doc(employeeId).get()
-  // A freshly imported admin may perform the one-time directory sync before
-  // its Firestore profile exists. The signed custom claim is issued only by Admin SDK/import.
-  if (!snapshot.exists) return { employeeId, snapshot: null }
+  if (!snapshot.exists) throw new HttpsError('permission-denied', '找不到管理員主檔')
   const user = { employeeId, snapshot }
   if (snapshot.data().active !== true) throw new HttpsError('permission-denied', '帳號已停用')
+  if (snapshot.data().mustChangePassword === true || request.auth.token.mustChangePassword === true) throw new HttpsError('failed-precondition', '請先修改密碼')
   if (user.snapshot.data().role !== 'admin') throw new HttpsError('permission-denied', '需要管理員權限')
   return user
 }

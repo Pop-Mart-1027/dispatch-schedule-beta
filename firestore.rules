@@ -6,7 +6,9 @@ service cloud.firestore {
     function employeePath() { return /databases/$(database)/documents/employees/$(request.auth.token.employeeId); }
     function isActiveEmployee() {
       return signedIn() && request.auth.token.employeeId is string
-        && exists(employeePath()) && get(employeePath()).data.active == true;
+        && request.auth.token.mustChangePassword == false
+        && exists(employeePath()) && get(employeePath()).data.active == true
+        && get(employeePath()).data.mustChangePassword == false;
     }
     function isAdmin() {
       return isActiveEmployee() && request.auth.token.role == 'admin'
@@ -56,6 +58,26 @@ service cloud.firestore {
       allow list: if isAdmin();
       // All employee-master mutations go through trusted Admin SDK functions.
       allow create, update, delete: if false;
+    }
+
+    match /attendanceLocations/{locationId} {
+      allow read: if isActiveEmployee();
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /attendanceRecords/{recordId} {
+      allow read: if isActiveEmployee()
+        && (isAdmin() || resource.data.employeeId == request.auth.token.employeeId);
+      allow create: if isActiveEmployee()
+        && request.resource.data.employeeId == request.auth.token.employeeId
+        && request.resource.data.keys().hasOnly([
+          'employeeId', 'employeeName', 'date', 'punchType', 'timestamp',
+          'scheduleCode', 'dispatchAreaCode', 'locationId', 'locationName',
+          'latitude', 'longitude', 'accuracy', 'distanceMeters',
+          'withinGeofence', 'status', 'abnormalReason', 'createdAt'
+        ])
+        && request.resource.data.createdAt == request.time;
+      allow update, delete: if false;
     }
 
     match /auditLogs/{entryId} { allow read, write: if false; }

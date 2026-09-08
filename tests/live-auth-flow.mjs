@@ -29,6 +29,9 @@ const firstNewPassword = `T!${crypto.randomBytes(18).toString('base64url')}`
 const secondNewPassword = `T!${crypto.randomBytes(18).toString('base64url')}`
 const checks = []
 
+await signIn(adminId, adminId)
+await invoke('adminResetPassword', { employeeId })
+await signOut(auth)
 await signIn(employeeId, employeeId)
 let profile = await invoke('getMyProfile')
 assert.equal(profile.mustChangePassword, true)
