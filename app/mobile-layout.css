@@ -5,6 +5,8 @@
   .app-shell .matrix-wrap { width: 100%; max-width: 100%; overflow: auto; max-height: 65dvh; touch-action: pan-x pan-y; }
   .app-shell .schedule-matrix tr > :nth-child(-n+3) { position: static; left: auto; z-index: auto; }
   .app-shell .schedule-matrix thead tr > th { position: sticky; top: 0; left: auto; z-index: 2; }
+  .app-shell .schedule-matrix thead tr > :nth-child(-n+3) { position: sticky; top: 0; left: auto; z-index: 3; }
+  .app-shell .schedule-matrix .area-label { position: sticky; left: 12px; display: inline-block; max-width: calc(100vw - 64px); overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
   .app-shell .sidebar { width: min(290px, 86vw); overflow-y: auto; height: 100dvh; }
   .app-shell .menu-button, .app-shell .drawer-close { min-width: 44px; min-height: 44px; flex-shrink: 0; }
   .app-shell .tabs { max-width: 100%; flex-wrap: wrap; }
