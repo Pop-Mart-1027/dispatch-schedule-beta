@@ -1,0 +1,10 @@
+.schedule-matrix tbody .area-heading td {
+  position: static;
+  height: 40px;
+  padding: 9px 14px;
+  background: #378ea0 !important;
+  color: #fff !important;
+  font-size: 16px;
+  font-weight: 800;
+  text-align: left;
+}
