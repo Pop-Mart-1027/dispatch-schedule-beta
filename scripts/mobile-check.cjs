@@ -5,8 +5,9 @@ const assert = require('node:assert/strict');
  for (const width of [320,390,430]) {
   const page = await browser.newPage({viewport:{width,height:844},isMobile:true,hasTouch:true});
   const errors=[]; page.on('pageerror',e=>errors.push(e.message));
-  await page.goto('http://127.0.0.1:4174/dispatch-schedule-beta/');
-  await page.waitForResponse(r=>r.url().includes('september-schedules.json')).catch(()=>{});
+  const loaded=page.waitForResponse(r=>r.url().includes('september-schedules.json'));
+  await page.goto(process.env.TEST_URL || 'http://127.0.0.1:4174/dispatch-schedule-beta/');
+  await loaded;
   await page.getByRole('button',{name:'登入工作台'}).click();
   await page.getByRole('button',{name:'開啟選單'}).waitFor();
   async function go(name) {
@@ -30,6 +31,13 @@ const assert = require('node:assert/strict');
    const headerTop=await page.locator('.schedule-matrix thead th').first().evaluate(e=>e.getBoundingClientRect().top);
    await page.locator('.matrix-wrap').evaluate(e=>{e.scrollLeft=500;e.scrollTop=200;});
    const after=await cell.boundingBox();
+   const nameCell=page.locator('.schedule-matrix tbody tr:not(.area-heading)').first().locator('td').nth(2);
+   const nameX=(await nameCell.boundingBox()).x;
+   const wrap=await page.locator('.matrix-wrap').boundingBox();
+   assert(Math.abs(nameX-wrap.x-1)<3,'name pins to left edge');
+   assert(wrap.y<135,'schedule starts near top');
+   await page.locator('.matrix-wrap').evaluate(e=>e.scrollLeft=800);
+   assert(Math.abs((await nameCell.boundingBox()).x-nameX)<2,'name stays pinned as dates scroll');
    const tops=await page.locator('.schedule-matrix thead th').evaluateAll(es=>es.map(e=>e.getBoundingClientRect().top));
    assert(tops.every(y=>Math.abs(y-headerTop)<2),'all column headers must remain aligned on vertical scroll');
    assert(after.x<before.x-400,`frozen horizontal columns ${name}: ${before.x} -> ${after.x}`);

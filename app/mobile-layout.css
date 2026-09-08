@@ -6,6 +6,14 @@
   .app-shell .schedule-matrix tr > :nth-child(-n+3) { position: static; left: auto; z-index: auto; }
   .app-shell .schedule-matrix thead tr > th { position: sticky; top: 0; left: auto; z-index: 2; }
   .app-shell .schedule-matrix thead tr > :nth-child(-n+3) { position: sticky; top: 0; left: auto; z-index: 3; }
+  .app-shell .schedule-matrix tbody tr:not(.area-heading) > :nth-child(3) { position: sticky; left: 0; z-index: 4; background: #fffdf8; box-shadow: 2px 0 3px #0002; }
+  .app-shell .schedule-matrix thead tr > :nth-child(3) { position: sticky; left: 0; top: 0; z-index: 5; }
+  .app-shell[data-page="schedule"] .topbar { height: 52px; padding: 4px 12px; }
+  .app-shell[data-page="schedule"] .topbar > div { display: none; }
+  .app-shell[data-page="schedule"] .content { padding: 8px 10px 12px; }
+  .app-shell[data-page="schedule"] .page-intro { display: none; }
+  .app-shell[data-page="schedule"] .tabs { margin: 0 0 8px; }
+  .app-shell[data-page="schedule"] .matrix-wrap { max-height: calc(100dvh - 134px); }
   .app-shell .schedule-matrix .area-label { position: sticky; left: 12px; display: inline-block; max-width: calc(100vw - 64px); overflow: hidden; text-overflow: ellipsis; vertical-align: middle; }
   .app-shell .sidebar { width: min(290px, 86vw); overflow-y: auto; height: 100dvh; }
   .app-shell .menu-button, .app-shell .drawer-close { min-width: 44px; min-height: 44px; flex-shrink: 0; }
