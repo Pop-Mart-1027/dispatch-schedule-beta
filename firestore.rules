@@ -119,21 +119,27 @@ service cloud.firestore {
     }
 
     match /broadcastReads/{readId} {
-      function isOwnRead() {
+      function isOwnAuth() {
         return isActiveEmployee()
-          && resource.data.employeeId == request.auth.token.employeeId
-          && readId == resource.data.broadcastId + '_' + request.auth.token.employeeId;
+          && request.auth.uid == request.auth.token.employeeId;
+      }
+      function isOwnReadId() {
+        return isOwnAuth()
+          && readId.matches('^.+_' + request.auth.token.employeeId + '$');
       }
       function isOwnNewRead() {
-        return isActiveEmployee()
+        return isOwnAuth()
           && request.resource.data.employeeId == request.auth.token.employeeId
           && request.resource.data.broadcastId is string
           && request.resource.id == request.resource.data.broadcastId + '_' + request.auth.token.employeeId;
       }
-      allow get, list: if isOwnRead();
+      // Single-document get must not depend on resource.data: the document may not exist yet.
+      allow get: if isOwnReadId();
+      allow list: if isOwnAuth() && resource.data.employeeId == request.auth.token.employeeId
+        && readId == resource.data.broadcastId + '_' + request.auth.token.employeeId;
       allow create: if isOwnNewRead()
         && request.resource.data.keys().hasOnly(['broadcastId', 'employeeId', 'firstShownAt', 'lastShownAt', 'readAt', 'shownCount']);
-      allow update: if isOwnRead() && isOwnNewRead()
+      allow update: if isOwnReadId() && isOwnNewRead()
         && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['firstShownAt', 'lastShownAt', 'readAt', 'shownCount']);
       allow delete: if false;
     }
