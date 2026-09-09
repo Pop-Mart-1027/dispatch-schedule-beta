@@ -324,6 +324,23 @@ function DutyStaffPanel({ staff, shift }: { staff: DutyStaff; shift: 'night' | '
   return <section className="duty-staff" aria-label="值班資訊"><header><strong>值班資訊</strong></header><div>{shift === 'day' && <><b>主官</b><span>{names(staff.supervisors)}</span></>}<b>台北監控</b><span>{names(staff.taipeiMonitors)}</span><b>新北監控</b><span>{names(staff.newTaipeiMonitors)}</span></div></section>
 }
 
+function dispatchBlockFrontOrder(left: DispatchBlock, right: DispatchBlock) {
+  const key = (block: DispatchBlock) => {
+    if (!block.areaCode) return { special: 1, letter: 99, number: Number.MAX_SAFE_INTEGER, variant: 9 }
+    const isZ = block.variantCode === 'Z' || block.areaCode.startsWith('Z')
+    const canonicalCode = isZ && block.areaCode.startsWith('Z') ? block.areaCode.slice(1) : block.areaCode
+    const match = canonicalCode.toUpperCase().match(/^([A-Z]+)(\d*)/)
+    const areaLetter = match?.[1] ?? canonicalCode.toUpperCase()
+    const numericSuffix = match?.[2] ? Number(match[2]) : -1
+    const variant = isZ ? 1 : block.variantCode === 'small-night' ? 2 : block.variantCode && block.variantCode !== 'standard' ? 3 : 0
+    const letterIndex = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.indexOf(areaLetter[0] ?? '')
+    return { special: 0, letter: letterIndex < 0 ? 98 : letterIndex, number: numericSuffix, variant }
+  }
+  const a = key(left)
+  const b = key(right)
+  return a.special - b.special || a.letter - b.letter || a.number - b.number || a.variant - b.variant || left.vehicleNo.localeCompare(right.vehicleNo, 'en', { numeric: true }) || left.blockId.localeCompare(right.blockId)
+}
+
 function FirestoreDispatchView({ isDuty }: { employeeId: string; isDuty: boolean }) {
   const [date, setDate] = useState(taipeiToday)
   const [shift, setShift] = useState<'night' | 'day'>('night')
@@ -354,7 +371,7 @@ function FirestoreDispatchView({ isDuty }: { employeeId: string; isDuty: boolean
     }).finally(() => setDutyLoading(false))
   }, [date])
   const dutyStaff = deriveDutyStaff(schedules, profiles, shift)
-  const visible = blocks.filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0))
+  const visible = blocks.filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0)).sort(dispatchBlockFrontOrder)
   return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div></div>{dutyLoading ? <div className="duty-staff-status">值班資訊載入中…</div> : dutyError ? <div className="result-card result-warning">{dutyError}</div> : <DutyStaffPanel staff={dutyStaff} shift={shift} />}{blocksError && <div className="result-card result-warning">{blocksError}</div>}{!blocksError && !visible.length ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid">{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id}><header><span>{block.areaName || block.areaCode || '特殊派工'}</span></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} /><b>駐點</b><DispatchBlockPeople people={block.stations} /><b>工作重點</b><span>{block.workFocus || '—'}</span></div></article>)}</div>}</>
 }
 
