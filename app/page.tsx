@@ -292,13 +292,15 @@ function deriveDispatchRecords(schedules: ScheduleRecord[], overrides: DispatchR
   const overrideMap = new Map(overrides.map(record => [`${record.employeeId}|${record.scheduleCode}`, record]))
   const genericMapping = new Map(finalDispatchMapping.filter(item => item.mappingType === 'alias').map(item => [item.scheduleCode, item]))
   const employeeMapping = new Map(finalDispatchMapping.filter(item => item.mappingType === 'employee-specific' && 'employeeId' in item).map(item => [`${item.employeeId}|${item.scheduleCode}|${item.evidenceDate || ''}`, item]))
+  const datedEmployeeEvidence = new Map(finalDispatchMapping.filter(item => item.mappingType === 'employee-specific' && 'employeeId' in item && item.evidenceDate).map(item => [`${item.employeeId}|${item.evidenceDate}`, item]))
   const sourceRows = [...sourceSchedule.morning.map(row => ({ ...row, shiftType: 'morning' as const })), ...sourceSchedule.night.map(row => ({ ...row, shiftType: 'night' as const }))]
   const sourceMap = new Map(sourceRows.map(row => [`${row.shiftType}:${row.employeeId}`, row]))
   return schedules.filter(record => (!employeeId || record.employeeId === employeeId) && record.scheduleCode && !isLeave(record.scheduleCode)).map(record => {
     const source = sourceMap.get(`${record.shiftType}:${record.employeeId}`)
     const pseudoRow: ScheduleRow = { rowId: record.id, employeeId: record.employeeId, name: record.employeeName, title: record.title || source?.title || '', group: record.group || source?.group || '', area: record.area || source?.area || '', shifts: [] }
-    const evidence = finalDispatchMapping.find(item => item.mappingType === 'employee-specific' && 'employeeId' in item && item.employeeId === record.employeeId && item.evidenceDate === record.date)
+    const evidence = datedEmployeeEvidence.get(`${record.employeeId}|${record.date}`)
     const mapping = evidence || employeeMapping.get(`${record.employeeId}|${record.scheduleCode}|${record.date}`) || genericMapping.get(record.scheduleCode)
+    const effectiveShiftType = evidence && 'sourceSheet' in evidence && String(evidence.sourceSheet || '').includes('大夜') ? 'night' : record.shiftType
     const specialGroup = dispatchSpecialGroup(pseudoRow)
     const areaCode = mapping?.targetAreaCode || (specialGroup ? specialGroup : '')
     const area = areaMap.get(areaCode)
@@ -308,7 +310,7 @@ function deriveDispatchRecords(schedules: ScheduleRecord[], overrides: DispatchR
       employeeId: record.employeeId,
       employeeName: record.employeeName,
       scheduleCode: record.scheduleCode,
-      shiftType: record.shiftType,
+      shiftType: effectiveShiftType,
       areaCode,
       areaName: area?.areaName || (specialGroup || (areaCode ? `${areaCode}區` : '待人工派工')),
       vehicleType: area?.defaultVehicleType || '', vehicleNo: evidence && 'vehicleNo' in evidence ? evidence.vehicleNo || area?.defaultVehicleNo || '' : area?.defaultVehicleNo || '',
@@ -318,18 +320,28 @@ function deriveDispatchRecords(schedules: ScheduleRecord[], overrides: DispatchR
       workFocus: area?.defaultWorkFocus || '', balanceArea: area?.defaultBalanceArea || '', note: '',
       source: 'scheduleRecords', status: 'active', createdAt: undefined, updatedAt: undefined, modifiedBy: '',
     }
-    return { ...base, ...(overrideMap.get(`${record.employeeId}|${record.scheduleCode}`) || {}) }
+    const override = overrideMap.get(`${record.employeeId}|${record.scheduleCode}`)
+    if (!override) return base
+    const merged = { ...base, ...override }
+    if (evidence && 'role' in evidence) {
+      if (!override.driver) merged.driver = base.driver
+      if (!override.station) merged.station = base.station
+      if (!override.assistant) merged.assistant = base.assistant
+      if (!override.vehicleNo || override.vehicleNo === area?.defaultVehicleNo) merged.vehicleNo = base.vehicleNo
+    }
+    return merged
   }).sort((left, right) => dispatchAreaOrder(left.areaCode) - dispatchAreaOrder(right.areaCode) || left.employeeName.localeCompare(right.employeeName, 'zh-Hant'))
 }
 
 function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isDuty: boolean }) {
   const [date, setDate] = useState(taipeiToday); const [records, setRecords] = useState<DispatchRecord[]>([]); const [error, setError] = useState('')
-  const load = async () => { try { const [schedules, overrides, areas] = await Promise.all([listScheduleRecords(date), listDispatchRecords(date), listAreaMaster()]); const next = deriveDispatchRecords(schedules, overrides, areas); console.info('[dispatch] derived from scheduleRecords', { date, scheduleCount: schedules.length, overrideCount: overrides.length, count: next.length }); setRecords(next); setError('') } catch (error: unknown) { console.error('[dispatch] load failed', error); setRecords([]); const code = typeof error === 'object' && error && 'code' in error ? String(error.code) : ''; setError(code === 'permission-denied' ? '派工／班表讀取權限不足' : code === 'failed-precondition' ? '派工查詢缺少 Firestore index' : '派工資料載入失敗') } }
+  const load = async () => { try { const [schedules, overrides, areas] = await Promise.all([listScheduleRecords(date), listDispatchRecords(date), listAreaMaster()]); const next = deriveDispatchRecords(schedules, overrides, areas); const evidence = finalDispatchMapping.filter(item => item.mappingType === 'employee-specific' && 'employeeId' in item && item.evidenceDate === date && 'sourceSheet' in item && item.sourceSheet === '9/9大夜派工單'); const evidenceIds = new Set(evidence.map(item => item.employeeId)); const joined = schedules.filter(record => evidenceIds.has(record.employeeId)); const cardRows = next.filter(record => evidenceIds.has(record.employeeId)); const nightRows = cardRows.filter(record => record.shiftType === 'night'); console.info('[dispatch:pipeline]', { mappingEmployeeEvidence: evidence.length, selectedDateEvidence: evidence.length, scheduleJoin: joined.length, nightShiftFilter: nightRows.length, areaGrouped: nightRows.filter(record => record.areaCode).length, roles: { driver: nightRows.filter(record => record.driver).length, station: nightRows.filter(record => record.station).length, assistant: nightRows.filter(record => record.assistant).length }, matchedOverrides: overrides.filter(record => evidenceIds.has(record.employeeId)).length, afterOverrides: nightRows.filter(record => record.driver || record.station || record.assistant).length, finalCardData: nightRows.length }); setRecords(next); setError('') } catch (error: unknown) { console.error('[dispatch] load failed', error); setRecords([]); const code = typeof error === 'object' && error && 'code' in error ? String(error.code) : ''; setError(code === 'permission-denied' ? '派工／班表讀取權限不足' : code === 'failed-precondition' ? '派工查詢缺少 Firestore index' : '派工資料載入失敗') } }
   useEffect(() => { void load() }, [date, employeeId, isDuty])
   const [shift, setShift] = useState<'night' | 'morning'>('night')
   const visible = records.filter(record => record.shiftType === shift)
   const groups = visible.reduce<Record<string, DispatchRecord[]>>((all, record) => ({ ...all, [record.areaCode || '未分區']: [...(all[record.areaCode || '未分區'] || []), record] }), {})
   const orderedGroups = Object.entries(groups).sort(([left], [right]) => dispatchAreaOrder(left) - dispatchAreaOrder(right) || left.localeCompare(right, 'en', { numeric: true }))
+  useEffect(() => { const frame = requestAnimationFrame(() => console.info('[dispatch:dom]', { date, shift, people: document.querySelectorAll('.dispatch-grid .person').length })); return () => cancelAnimationFrame(frame) }, [date, shift, records])
   return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'morning' ? 'tab active' : 'tab'} onClick={() => setShift('morning')}>早班</button></div></div>{error && <div className="result-card result-warning">{error}</div>}{!records.length && !error ? <p className="loading">此日期尚未匯入班表。</p> : !visible.length ? <p className="loading">此日期沒有{shift === 'night' ? '夜班' : '早班'}派工。</p> : <div className="dispatch-grid">{orderedGroups.map(([area, members]) => { const special = area === '單位主官' || area.includes('監控'); const vehicleRows = Array.from(new Map(members.filter(record => record.vehicleNo).map(record => [record.vehicleNo, record])).values()); return <article className={special ? 'dispatch-card command-card' : 'dispatch-card'} key={area}><header><span>{members[0].areaName || area}</span><small>{shift === 'night' ? '夜班' : '早班'} · {date}</small></header><div className="dispatch-fields">{special ? <><b>人員</b><div>{members.map(record => <span className="person" key={record.id}>{record.employeeName}<small>{record.employeeId} · {record.scheduleCode}</small></span>)}</div></> : <><b>駕駛</b><div>{members.filter(record => record.driver).map(record => <span className="person" key={record.id}>{record.driver}<small>{record.employeeId} · {record.scheduleCode}</small></span>) || '—'}</div><b>隨車</b><div>{members.filter(record => record.assistant).map(record => <span className="person" key={record.id}>{record.assistant}</span>) || '—'}</div><b>駐點</b><div>{members.filter(record => record.station).map(record => <span className="person" key={record.id}>{record.employeeName}<small>{record.station}</small></span>) || '—'}</div><b>車型／車號</b><span>{vehicleRows.map(record => `${record.vehicleType || '—'}／${record.vehicleNo || '—'}`).join('、') || '—'}</span><b>工作重點</b><span>{members[0].workFocus || '—'}</span><b>平衡區域</b><span>{members[0].balanceArea || '—'}</span><b>備註</b><span>{members.map(record => record.note).filter(Boolean).join('、') || '—'}</span></>}</div></article>})}</div>}</>
 }
 
