@@ -330,11 +330,32 @@ function FirestoreDispatchView({ isDuty }: { employeeId: string; isDuty: boolean
   const [blocks, setBlocks] = useState<DispatchBlock[]>([])
   const [schedules, setSchedules] = useState<ScheduleRecord[]>([])
   const [profiles, setProfiles] = useState<EmployeeProfile[]>([])
-  const [error, setError] = useState('')
-  useEffect(() => { void Promise.all([listDispatchBlocks(date), listScheduleRecords(date), getDocs(collection(db, 'employees'))]).then(([items, records, employees]) => { setBlocks(items); setSchedules(records); setProfiles(employees.docs.map(item => ({ employeeId: item.id, ...(item.data() as Omit<EmployeeProfile, 'employeeId'>) }))); setError(''); console.info('[dispatchBlocks] loaded', { date, count: items.length, people: items.reduce((sum, block) => sum + block.drivers.length + block.stations.length + block.assistants.length, 0) }) }).catch(reason => { console.error('[dispatchBlocks] load failed', reason); setBlocks([]); setSchedules([]); setProfiles([]); setError('派工區塊或值班資訊載入失敗') }) }, [date])
+  const [blocksError, setBlocksError] = useState('')
+  const [dutyError, setDutyError] = useState('')
+  const [dutyLoading, setDutyLoading] = useState(true)
+  useEffect(() => {
+    void listDispatchBlocks(date).then(items => {
+      setBlocks(items); setBlocksError('')
+      console.info('[dispatchBlocks] query success', { date, count: items.length, people: items.reduce((sum, block) => sum + block.drivers.length + block.stations.length + block.assistants.length, 0) })
+    }).catch(reason => {
+      console.error('[dispatchBlocks] query failed', { date, code: reason?.code, message: reason?.message, error: reason })
+      setBlocks([]); setBlocksError('派工區塊載入失敗')
+    })
+  }, [date])
+  useEffect(() => {
+    setDutyLoading(true)
+    void Promise.all([listScheduleRecords(date), getDocs(collection(db, 'employees'))]).then(([records, employees]) => {
+      const loadedProfiles = employees.docs.map(item => ({ employeeId: item.id, ...(item.data() as Omit<EmployeeProfile, 'employeeId'>) }))
+      setSchedules(records); setProfiles(loadedProfiles); setDutyError('')
+      console.info('[dutyStaff] query success', { date, scheduleRecords: records.length, employees: loadedProfiles.length })
+    }).catch(reason => {
+      console.error('[dutyStaff] query failed', { date, code: reason?.code, message: reason?.message, error: reason })
+      setSchedules([]); setProfiles([]); setDutyError('值班資訊載入失敗')
+    }).finally(() => setDutyLoading(false))
+  }, [date])
   const dutyStaff = deriveDutyStaff(schedules, profiles, shift)
   const visible = blocks.filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0))
-  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div></div><DutyStaffPanel staff={dutyStaff} />{error && <div className="result-card result-warning">{error}</div>}{!error && !visible.length ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid">{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id}><header><span>{block.areaName || '特殊派工'}</span><small>{block.variantCode || block.areaCode || '特殊'} · 第 {block.sourceRow} 列</small></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} /><b>駐點</b><DispatchBlockPeople people={block.stations} /><b>工作重點</b><span>{block.workFocus || '—'}</span></div></article>)}</div>}</>
+  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div></div>{dutyLoading ? <div className="duty-staff-status">值班資訊載入中…</div> : dutyError ? <div className="result-card result-warning">{dutyError}</div> : <DutyStaffPanel staff={dutyStaff} />}{blocksError && <div className="result-card result-warning">{blocksError}</div>}{!blocksError && !visible.length ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid">{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id}><header><span>{block.areaName || '特殊派工'}</span><small>{block.variantCode || block.areaCode || '特殊'} · 第 {block.sourceRow} 列</small></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} /><b>駐點</b><DispatchBlockPeople people={block.stations} /><b>工作重點</b><span>{block.workFocus || '—'}</span></div></article>)}</div>}</>
 }
 
 const formatBlockPeople = (people: DispatchBlockPerson[]) => people.map(person => `${person.employeeId} ${person.employeeName}`.trim()).join('\n')

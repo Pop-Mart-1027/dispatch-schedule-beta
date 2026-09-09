@@ -58,8 +58,8 @@ service cloud.firestore {
 
     match /employees/{employeeId} {
       // Own record remains readable after disable so the client can immediately sign out.
-      allow get: if signedIn() && (request.auth.token.employeeId == employeeId || isAdmin());
-      allow list: if isAdmin();
+      allow get: if signedIn() && (request.auth.token.employeeId == employeeId || isActiveEmployee());
+      allow list: if isActiveEmployee();
       // All employee-master mutations go through trusted Admin SDK functions.
       allow create, update, delete: if false;
     }
