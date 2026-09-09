@@ -344,7 +344,7 @@ function deriveDutyStaff(records: ScheduleRecord[], profiles: EmployeeProfile[],
 
 function DutyStaffPanel({ staff, shift }: { staff: DutyStaff; shift: 'night' | 'day' }) {
   const names = (items: string[]) => items.length ? items.join('、') : '未排定'
-  return <section className="duty-staff" aria-label="值班資訊"><header><strong>值班資訊</strong></header><div>{shift === 'day' && <><b>調度主任</b><span>{names(staff.directors)}</span><b>調度副主任</b><span>{names(staff.deputyDirectors)}</span></>}{monitorDisplayRows(staff.taipeiMonitors, staff.newTaipeiMonitors).map(({ label, name }) => <Fragment key={`${label}-${name}`}><b>{label}</b><span>{name}</span></Fragment>)}</div></section>
+  return <section className="duty-staff" aria-label="值班資訊"><header><strong>值班資訊</strong></header><div>{shift === 'day' && <><b>調度主任</b><span>{names(staff.directors)}</span><b>調度副主任</b><span>{names(staff.deputyDirectors)}</span></>}{monitorDisplayRows(staff.taipeiMonitors, staff.newTaipeiMonitors, shift === 'day' ? 3 : 1).map(({ label, name }) => <Fragment key={`${label}-${name}`}><b>{label}</b><span>{name}</span></Fragment>)}</div></section>
 }
 
 function dispatchBlockFrontOrder(left: DispatchBlock, right: DispatchBlock) {

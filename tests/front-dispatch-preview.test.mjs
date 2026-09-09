@@ -58,6 +58,7 @@ const virtual = {
     const root = createRoot(document.getElementById('root'));
     window.showDispatch = () => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(FirestoreDispatchView, {employeeId: 'test', isDuty: false})));
     window.showHome = () => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(HomeView, {name: '登入人員', onAction: () => {}, onGo: () => {}})));
+    window.showFrontDuty = (shift, staff) => root.render(React.createElement(DutyStaffPanel, {shift, staff}));
     window.showManager = () => root.render(React.createElement('div', {className: 'admin-console'}, React.createElement(DispatchManager, {employeeId: 'test'})));
     window.showDashboard = () => root.render(React.createElement('div', {className: 'admin-console'}, React.createElement(Dashboard, {role: 'admin', onOpenDispatch: () => {}})));
     window.showSchedule = shift => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(ScheduleMatrix, {rows: window.fixture.source[shift], days: window.fixture.source.days})));
@@ -229,6 +230,24 @@ test('home displays the current Chinese date and three concise actions as read-o
   assert.deepEqual(await page.locator('.home-actions strong').allTextContents(), ['我的班表', '派工單', '請假申請'])
   assert.equal(await page.locator('.home-overview input, .home-overview textarea, .home-overview [contenteditable]').count(), 0)
   assert.equal(await page.locator('.home-date').evaluate(element => getComputedStyle(element).cursor), 'default')
+})
+
+test('only daytime front monitors group three per row; directors and night remain unchanged', async () => {
+  const taipei = ['黃啟哲', '陳威宇', '陳韋傑', '江俊翰', '高秉森', '柯勃甫', '曾芳英']
+  for (const count of [0, 1, 2, 3, 4, 5, 6, 7]) {
+    const staff = {directors: ['劉志強'], deputyDirectors: ['蔡文翔', '鄒正宇'], taipeiMonitors: taipei.slice(0, count), newTaipeiMonitors: ['周義順']}
+    await page.evaluate(staff => window.showFrontDuty('day', staff), staff)
+    await page.waitForFunction(count => document.querySelectorAll('.duty-staff > div > span').length === 3 + Math.ceil(count / 3), count)
+    const expected = ['劉志強', '蔡文翔、鄒正宇']
+    for (let index = 0; index < count; index += 3) expected.push(taipei.slice(index, Math.min(index + 3, count)).join('、'))
+    expected.push('周義順')
+    assert.deepEqual(await page.locator('.duty-staff > div > span').allTextContents(), expected)
+    assert.deepEqual(await page.locator('.duty-staff > div > b').allTextContents(), ['調度主任', '調度副主任', ...Array(Math.ceil(count / 3)).fill('台北監控'), '新北監控'])
+    await page.evaluate(staff => window.showFrontDuty('night', staff), staff)
+    await page.waitForFunction(count => document.querySelectorAll('.duty-staff > div > span').length === count + 1, count)
+    assert.deepEqual(await page.locator('.duty-staff > div > span').allTextContents(), [...taipei.slice(0, count), '周義順'])
+    assert.equal(await page.getByText('調度主任', {exact: true}).count(), 0)
+  }
 })
 
 test('Dashboard uses the seven operational labels without changing assignment totals', async () => {
