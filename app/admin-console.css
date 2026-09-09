@@ -425,6 +425,28 @@
   border: 0;
   background: transparent;
 }
+.dispatch-pending-summary {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.dispatch-pending-summary button {
+  padding: 6px 12px;
+  border: 1px solid #d88535;
+  border-radius: 6px;
+  color: #90460c;
+  background: #fff;
+  cursor: pointer;
+}
+.dispatch-pending-list {
+  max-height: 60vh;
+  overflow: auto;
+}
+.dispatch-pending-list th {
+  position: sticky;
+  top: 0;
+  background: #fff4e8;
+}
 .admin-edit-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;

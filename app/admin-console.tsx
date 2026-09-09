@@ -575,6 +575,7 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
   const [importDate, setImportDate] = useState<string | null>(null);
   const [importing, setImporting] = useState(false);
   const [importMessage, setImportMessage] = useState('');
+  const [showPending, setShowPending] = useState(false);
   const [areaSearch, setAreaSearch] = useState('');
   const [employeeSearch, setEmployeeSearch] = useState('');
   const [pickerSearch, setPickerSearch] = useState('');
@@ -639,6 +640,7 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
   };
   const assignment = shift === 'day' ? dayAssignment : nightAssignment;
   const assignedBlocks = assignment.blocks;
+  useEffect(() => { setShowPending(false); }, [date, shift]);
   const areas = [
     ...new Set(
       assignedBlocks.map((block) => block.areaCode || '特殊派工'),
@@ -850,9 +852,30 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
         </div>
       )}
       {assignment.unmatched.length > 0 && (
-        <div className="admin-alert">
-          待人工調整：{assignment.unmatched.map((person) => `${person.employeeName}（${person.scheduleCode}）`).join('、')}
+        <div className="admin-alert dispatch-pending-summary">
+          <strong>待人工調整：{assignment.unmatched.length} 人</strong>
+          <button type="button" aria-haspopup="dialog" onClick={() => setShowPending(true)}>查看名單</button>
         </div>
+      )}
+      {showPending && assignment.unmatched.length > 0 && (
+        <Modal title={`待人工調整：${assignment.unmatched.length} 人`} onClose={() => setShowPending(false)}>
+          <p>{date} · {shift === 'day' ? '早班' : '夜班'}</p>
+          <div className="dispatch-pending-list">
+            <table className="admin-data-table">
+              <thead><tr><th>員編</th><th>姓名</th><th>班表代碼</th><th>目前區域</th><th>待調整原因</th></tr></thead>
+              <tbody>{assignment.unmatched.map((person, index) => {
+                const currentAreas = [...new Set(assignedBlocks.filter(block =>
+                  [...block.drivers, ...block.stations, ...block.assistants].some(item => item.employeeId === person.employeeId),
+                ).map(block => block.areaName || block.areaCode || '特殊派工'))];
+                return <tr key={`${person.employeeId}-${person.scheduleCode}-${index}`}>
+                  <td>{person.employeeId}</td><td>{person.employeeName}</td><td>{person.scheduleCode}</td>
+                  <td>{currentAreas.join('、') || '尚未派工'}</td>
+                  <td>{person.reason.replaceAll('block', '派工區塊').replaceAll('variant', '類型')}</td>
+                </tr>;
+              })}</tbody>
+            </table>
+          </div>
+        </Modal>
       )}
       <div className="admin-table-wrap">
         <table className="admin-data-table dispatch-table">

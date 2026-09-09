@@ -260,3 +260,44 @@ test('Google button fetches only after confirmation and complete imported people
   assert.equal(await page.locator('.dispatch-card .person').count(), 109)
   assert.equal(await page.evaluate(() => window.writeAttempts), 0)
 })
+
+test('pending assignments stay collapsed, open a bounded list, and hide when zero', async () => {
+  await page.reload()
+  await page.evaluate(() => window.showManager())
+  await page.waitForSelector('.dispatch-table tbody tr')
+  assert.equal(await page.locator('.dispatch-pending-summary').count(), 0)
+  assert.equal(await page.getByRole('button', {name: '查看名單', exact: true}).count(), 0)
+
+  await page.evaluate(() => {
+    window.fixture.schedules['2026-09-13'] = window.fixture.schedules['2026-09-09']
+      .filter(person => person.shiftType === 'morning').slice(0, 164)
+      .map(person => ({...person, date: '2026-09-13', scheduleCode: '早A1'}))
+    window.formalByDate = {'2026-09-13': window.fixture.template.map(block => ({
+      ...block, date: '2026-09-13', modifiedBy: 'manual-import', drivers: [], stations: [], assistants: [],
+    }))}
+  })
+  await page.locator('input[type=date]').fill('2026-09-13')
+  await page.waitForFunction(() => document.querySelector('.dispatch-pending-summary strong')?.textContent === '待人工調整：164 人')
+  assert.equal(await page.locator('.dispatch-pending-list').count(), 0)
+  assert.equal(await page.locator('.dispatch-pending-summary').textContent(), '待人工調整：164 人查看名單')
+  await page.getByRole('button', {name: '查看名單', exact: true}).click()
+  assert.equal(await page.locator('.dispatch-pending-list tbody tr').count(), 164)
+  assert.deepEqual(await page.locator('.dispatch-pending-list th').allTextContents(), ['員編','姓名','班表代碼','目前區域','待調整原因'])
+  assert.match(await page.locator('.dispatch-pending-list tbody tr').first().textContent(), /早A1尚未派工該區 派工區塊 已由人工修改/)
+  const listSize = await page.locator('.dispatch-pending-list').evaluate(element => ({height: element.clientHeight, scroll: element.scrollHeight}))
+  assert.ok(listSize.scroll > listSize.height)
+  assert.ok(listSize.height <= 648)
+  await page.locator('.admin-modal > header button').click()
+  assert.equal(await page.locator('.dispatch-pending-list').count(), 0)
+  await page.getByRole('button', {name: '查看名單', exact: true}).click()
+  await page.locator('.admin-page-toolbar select').first().selectOption('night')
+  await page.waitForFunction(() => !document.querySelector('.dispatch-pending-summary'))
+  assert.equal(await page.locator('.dispatch-pending-list').count(), 0)
+  await page.locator('.admin-page-toolbar select').first().selectOption('day')
+  await page.getByRole('button', {name: '查看名單', exact: true}).click()
+  await page.locator('input[type=date]').fill('2026-09-09')
+  await page.waitForFunction(() => !document.querySelector('.dispatch-pending-summary'))
+  assert.equal(await page.locator('.dispatch-pending-list').count(), 0)
+  assert.equal(await page.evaluate(() => window.writeAttempts), 0)
+  assert.deepEqual(await page.evaluate(() => window.importCalls), [])
+})
