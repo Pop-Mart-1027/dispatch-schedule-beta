@@ -291,13 +291,13 @@ function deriveDispatchRecords(schedules: ScheduleRecord[], overrides: DispatchR
   const areaMap = new Map(areas.map(area => [area.areaCode, area]))
   const overrideMap = new Map(overrides.map(record => [`${record.employeeId}|${record.scheduleCode}`, record]))
   const genericMapping = new Map(finalDispatchMapping.filter(item => item.mappingType === 'alias').map(item => [item.scheduleCode, item]))
-  const employeeMapping = new Map(finalDispatchMapping.filter(item => item.mappingType === 'employee-specific' && 'employeeId' in item).map(item => [`${item.employeeId}|${item.scheduleCode}`, item]))
+  const employeeMapping = new Map(finalDispatchMapping.filter(item => item.mappingType === 'employee-specific' && 'employeeId' in item).map(item => [`${item.employeeId}|${item.scheduleCode}|${item.evidenceDate || ''}`, item]))
   const sourceRows = [...sourceSchedule.morning.map(row => ({ ...row, shiftType: 'morning' as const })), ...sourceSchedule.night.map(row => ({ ...row, shiftType: 'night' as const }))]
   const sourceMap = new Map(sourceRows.map(row => [`${row.shiftType}:${row.employeeId}`, row]))
   return schedules.filter(record => (!employeeId || record.employeeId === employeeId) && record.scheduleCode && !isLeave(record.scheduleCode)).map(record => {
     const source = sourceMap.get(`${record.shiftType}:${record.employeeId}`)
     const pseudoRow: ScheduleRow = { rowId: record.id, employeeId: record.employeeId, name: record.employeeName, title: record.title || source?.title || '', group: record.group || source?.group || '', area: record.area || source?.area || '', shifts: [] }
-    const mapping = employeeMapping.get(`${record.employeeId}|${record.scheduleCode}`) || genericMapping.get(record.scheduleCode)
+    const mapping = employeeMapping.get(`${record.employeeId}|${record.scheduleCode}|${record.date}`) || genericMapping.get(record.scheduleCode)
     const specialGroup = dispatchSpecialGroup(pseudoRow)
     const areaCode = mapping?.targetAreaCode || (specialGroup ? specialGroup : '')
     const area = areaMap.get(areaCode)
