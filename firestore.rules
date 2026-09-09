@@ -85,8 +85,9 @@ service cloud.firestore {
     }
 
     match /scheduleRecords/{recordId} {
-      allow get, list: if isActiveEmployee() && (isAdmin() || resource.data.employeeId == request.auth.token.employeeId);
-      allow write: if false;
+      allow get, list: if isActiveEmployee() && (isDuty() || resource.data.employeeId == request.auth.token.employeeId);
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin();
     }
 
     match /dispatchRecords/{recordId} {
