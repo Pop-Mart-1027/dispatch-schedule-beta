@@ -7,7 +7,7 @@ import './youbike-theme.css'
 import './mobile-nav.css'
 import './mobile-layout.css'
 import './admin-console.css'
-import { Fragment, useEffect, useState } from 'react'
+import { Fragment, useEffect, useMemo, useState } from 'react'
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, serverTimestamp, Timestamp, updateDoc, where } from 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
@@ -17,7 +17,8 @@ import { evaluateGeofence, GEOFENCE_WARNING_ACCURACY_METERS } from '../lib/geofe
 import { buildAttendanceRecord, canSubmitPunch, getPunchBlockReason, hasTodayPunch, type AttendanceLocation, type AttendanceRecord, type PunchType } from '../lib/attendance'
 import { listAttendanceLocations, listTodayAttendanceRecords, createAttendanceRecord, removeAttendanceLocation, saveAttendanceLocation } from '../lib/attendance-firestore'
 import { listMonthScheduleRecords, listScheduleRecords, type ScheduleRecord } from '../lib/schedule-firestore'
-import { listDispatchBlocks, updateDispatchBlock, writeDispatchBlockAudit, type DispatchBlock, type DispatchBlockEditable, type DispatchBlockPerson } from '../lib/dispatch-blocks-firestore'
+import { buildDispatchPreviewBlocks, listDispatchBlockTemplate, listDispatchBlocks, updateDispatchBlock, writeDispatchBlockAudit, type DispatchBlock, type DispatchBlockEditable, type DispatchBlockPerson } from '../lib/dispatch-blocks-firestore'
+import { assignSchedulesToDispatchBlocks } from '../lib/dispatch-schedule-assignment'
 import { getBroadcastRead, listActiveBroadcasts, recordBroadcastShown, type Broadcast } from '../lib/broadcasts'
 import { getCurrentAnnouncement } from '../lib/announcements'
 import sourceSchedule from '../public/september-schedules.json'
@@ -365,29 +366,54 @@ function FirestoreDispatchView({ isDuty }: { employeeId: string; isDuty: boolean
   const [blocksError, setBlocksError] = useState('')
   const [dutyError, setDutyError] = useState('')
   const [dutyLoading, setDutyLoading] = useState(true)
+  const [blocksLoading, setBlocksLoading] = useState(true)
+  const [isPreview, setIsPreview] = useState(false)
   useEffect(() => {
-    void listDispatchBlocks(date).then(items => {
-      setBlocks(items); setBlocksError('')
+    let cancelled = false
+    setBlocksLoading(true); setBlocks([]); setBlocksError(''); setIsPreview(false)
+    void listDispatchBlocks(date).then(async items => {
+      const preview = items.length === 0
+      const loaded = preview ? buildDispatchPreviewBlocks((await listDispatchBlockTemplate(date)).blocks, date) : items
+      if (cancelled) return
+      setBlocks(loaded); setIsPreview(preview)
       console.info('[dispatchBlocks] query success', { date, count: items.length, people: items.reduce((sum, block) => sum + block.drivers.length + block.stations.length + block.assistants.length, 0) })
     }).catch(reason => {
+      if (cancelled) return
       console.error('[dispatchBlocks] query failed', { date, code: reason?.code, message: reason?.message, error: reason })
       setBlocks([]); setBlocksError('派工區塊載入失敗')
-    })
+    }).finally(() => { if (!cancelled) setBlocksLoading(false) })
+    return () => { cancelled = true }
   }, [date])
   useEffect(() => {
-    setDutyLoading(true)
+    let cancelled = false
+    setDutyLoading(true); setSchedules([]); setProfiles([]); setDutyError('')
     void Promise.all([listScheduleRecords(date), getDocs(collection(db, 'employees'))]).then(([records, employees]) => {
+      if (cancelled) return
       const loadedProfiles = employees.docs.map(item => ({ employeeId: item.id, ...(item.data() as Omit<EmployeeProfile, 'employeeId'>) }))
       setSchedules(records); setProfiles(loadedProfiles); setDutyError('')
       console.info('[dutyStaff] query success', { date, scheduleRecords: records.length, employees: loadedProfiles.length })
     }).catch(reason => {
+      if (cancelled) return
       console.error('[dutyStaff] query failed', { date, code: reason?.code, message: reason?.message, error: reason })
       setSchedules([]); setProfiles([]); setDutyError('值班資訊載入失敗')
-    }).finally(() => setDutyLoading(false))
+    }).finally(() => { if (!cancelled) setDutyLoading(false) })
+    return () => { cancelled = true }
   }, [date])
   const dutyStaff = deriveDutyStaff(schedules, profiles, shift)
-  const visible = blocks.filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0)).sort(dispatchBlockFrontOrder)
-  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div></div>{dutyLoading ? <div className="duty-staff-status">值班資訊載入中…</div> : dutyError ? <div className="result-card result-warning">{dutyError}</div> : <DutyStaffPanel staff={dutyStaff} shift={shift} />}{blocksError && <div className="result-card result-warning">{blocksError}</div>}{!blocksError && !visible.length ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid">{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id}><header><span>{block.areaName || block.areaCode || '特殊派工'}</span></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} /><b>駐點</b><DispatchBlockPeople people={block.stations} /><b>工作重點</b><span>{block.workFocus || '—'}</span></div></article>)}</div>}</>
+  const displayBlocks = useMemo(() => {
+    if (!isPreview) return blocks
+    if (dutyLoading || dutyError) return []
+    return assignSchedulesToDispatchBlocks({
+      blocks,
+      schedules: schedules.filter(record => record.date === date),
+      employees: profiles.map(profile => ({ ...profile, title: profile.title || '' })),
+      shift,
+    }).blocks
+  }, [blocks, isPreview, schedules, profiles, shift, date, dutyLoading, dutyError])
+  const visible = displayBlocks.filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0)).sort(dispatchBlockFrontOrder)
+  const dispatchLoading = blocksLoading || (isPreview && dutyLoading)
+  const dispatchError = blocksError || (isPreview && dutyError ? '班表或員工資料載入失敗，無法產生派工預覽' : '')
+  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div></div>{dutyLoading ? <div className="duty-staff-status">值班資訊載入中…</div> : dutyError ? <div className="result-card result-warning">{dutyError}</div> : <DutyStaffPanel staff={dutyStaff} shift={shift} />}{dispatchError && <div className="result-card result-warning">{dispatchError}</div>}{dispatchLoading ? <p className="loading">派工資料載入中…</p> : !dispatchError && !visible.length ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid">{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id}><header><span>{block.areaName || block.areaCode || '特殊派工'}</span></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} /><b>駐點</b><DispatchBlockPeople people={block.stations} /><b>工作重點</b><span>{block.workFocus || '—'}</span></div></article>)}</div>}</>
 }
 
 const formatBlockPeople = (people: DispatchBlockPerson[]) => people.map(person => `${person.employeeId} ${person.employeeName}`.trim()).join('\n')
