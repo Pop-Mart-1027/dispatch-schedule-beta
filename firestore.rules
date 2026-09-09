@@ -109,6 +109,19 @@ service cloud.firestore {
           && request.resource.data.updatedAt == request.time);
       allow delete: if false;
     }
+    match /dispatchBlocks/{blockId} {
+      allow get, list: if isActiveEmployee();
+      allow create, delete: if isAdmin();
+      allow update: if isAdmin()
+        || (isActiveEmployee() && isDuty()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'vehicleNo', 'drivers', 'stations', 'assistants', 'workFocus',
+            'balanceArea', 'note', 'modifiedBy', 'modifiedAt', 'updatedAt'
+          ])
+          && request.resource.data.modifiedBy == request.auth.token.employeeId
+          && request.resource.data.modifiedAt == request.time
+          && request.resource.data.updatedAt == request.time);
+    }
     match /dispatchAuditLogs/{auditId} {
       allow read, create: if isDuty();
       allow update, delete: if false;

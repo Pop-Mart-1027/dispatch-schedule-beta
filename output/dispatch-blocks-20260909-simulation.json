@@ -1,0 +1,6977 @@
+{
+  "model": "dispatchBlocks simulation v1",
+  "generatedAt": "2026-09-09T08:01:03.581Z",
+  "blocks": [
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-3",
+      "areaCode": "A1",
+      "areaName": "府前 A1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFM-2661",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4943",
+          "employeeName": "黃啟建",
+          "sourceText": "黃啟建晚A1",
+          "sourceRow": 5
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B3037",
+          "employeeName": "林宜慶",
+          "sourceText": "林宜慶17-21",
+          "sourceRow": 6
+        },
+        {
+          "employeeId": "B3917",
+          "employeeName": "林志賢",
+          "sourceText": "林志賢18-22",
+          "sourceRow": 7
+        },
+        {
+          "employeeId": "B1461",
+          "employeeName": "張凱閎",
+          "sourceText": "張凱閎17-21",
+          "sourceRow": 8
+        },
+        {
+          "employeeId": "B5828",
+          "employeeName": "徐立威",
+          "sourceText": "徐立威18-22",
+          "sourceRow": 9
+        }
+      ],
+      "assistants": [],
+      "workFocus": "18:00後調度車優先運補「市府松壽路口」拍照回傳\nA1.吳興/防災/泰和/象山公園/信義廣場/南山/松仁253/松仁121/信義運動/景平/景新/松勤莊敬/象捷2+3號(吳興公車/吳興街394巷)(泰和公園/泰和里民活動中心)\nA1.吳興/防災/泰和/象山公園/信義廣場/南山/松仁253/松仁121/信義運動/景平/景新/松勤莊敬/象捷2+3號(吳興公車/吳興街394巷)(泰和公園/泰和里民活動中心)\nA1:麟光/六張/臥龍/黎忠/黎雙/三興/嘉興/北醫/捷運世貿2+3號/吳興260/吳興284/和平東三段291.341巷/基隆路2段159/\nA1.南港花園社區A18/南港公園(東新170及福德街)/象捷3號/福德公/福德小/安強/松山家商/松友/松德站/百福公園/福德小公車站",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 3,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-11",
+      "areaCode": "A2",
+      "areaName": "府前 A2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1720",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B1829",
+          "employeeName": "莊孟儒",
+          "sourceText": "國上小夜莊孟儒A2/A2",
+          "sourceRow": 13
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B3810",
+          "employeeName": "林威辰",
+          "sourceText": "林威辰17-01",
+          "sourceRow": 16
+        },
+        {
+          "employeeId": "B3276",
+          "employeeName": "蔡雨桐",
+          "sourceText": "陳勇全16-20/蔡雨桐18-22",
+          "sourceRow": 17
+        },
+        {
+          "employeeId": "B4652",
+          "employeeName": "陳勇全",
+          "sourceText": "陳勇全16-20/蔡雨桐18-22",
+          "sourceRow": 17
+        },
+        {
+          "employeeId": "B3428",
+          "employeeName": "繆振雄",
+          "sourceText": "繆振雄18-22",
+          "sourceRow": 18
+        }
+      ],
+      "assistants": [],
+      "workFocus": "光復南菸廠路口 6/26即日起至7/6期間每日該站位18時至20時之整點見車率。\nA2(兩人)2-1 松車/饒河/永吉松信(公園)/五常/市東/後山埤/捷運松山(松捷臨停區拍照)/19-20綁復盛、復源\nA2(兩人)2-2玉成/永春/興雅/市政府/林口公園/成德國中/松德虎林/松德公園/成福178/成福197/協和祐德/成德綠地/東新63/廣慈博愛\nA2(三人)3-1 永吉松信/合樂公園/松車/饒河/五常公園/市民東興/捷運松山站/福祥/雅祥/市民松信/八德路四段652/立體停車場\nA2(三人)3-2 松仁95巷/松德公園/興雅/永吉公園/永吉321巷(綁車拍照回傳)/虎林永吉/富台公園\nA2(三人)3-3市政府/林口公園/後山埤/成德國中/玉成公園/成福178/成福197/協和祐德/成德綠地/東新63/廣慈博愛/松德虎林/中全公園",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 11,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-19",
+      "areaCode": "J1",
+      "areaName": "府前 J1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-6501",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B5639",
+          "employeeName": "周典",
+          "sourceText": "小夜周典J1/J2",
+          "sourceRow": 21
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B2477",
+          "employeeName": "古豐瑜",
+          "sourceText": "古豐瑜16-20",
+          "sourceRow": 22
+        },
+        {
+          "employeeId": "B3885",
+          "employeeName": "高宗義",
+          "sourceText": "高宗義18-22",
+          "sourceRow": 23
+        }
+      ],
+      "assistants": [],
+      "workFocus": "機動\nJ.敦南103巷/成功國宅(記得綁車)/信義安和4&1&2/通化街101/法治公園/樂利21巷/臨江公園\nJ.晚/國父2號&1號/僑安停車場/忠孝敦化7號&2號/瑠公/忠孝復興5/龍門/忠孝東四段49巷/光信公園\n捷運忠孝復興站，請挑一個出口21:00~22:00補一車拍照回傳",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 19,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-25",
+      "areaCode": "J2",
+      "areaName": "府前 J2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-6506",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "95413",
+          "employeeName": "邱士晉",
+          "sourceText": "邱士晉國上晚J2",
+          "sourceRow": 27
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "捷運忠孝復興站，請挑一個出口21:00~22:00補一車拍照回傳",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 25,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-28",
+      "areaCode": "C",
+      "areaName": "松山 C區",
+      "variantCode": "standard",
+      "vehicleNo": "RGE-1663",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B5257",
+          "employeeName": "張明康",
+          "sourceText": "張明康晚C1",
+          "sourceRow": 30
+        },
+        {
+          "employeeId": "B5959",
+          "employeeName": "鄭凱仁",
+          "sourceText": "鄭凱仁晚C2",
+          "sourceRow": 31
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B3435",
+          "employeeName": "蕭文總",
+          "sourceText": "蕭文總17-22.5",
+          "sourceRow": 30
+        },
+        {
+          "employeeId": "B4364",
+          "employeeName": "陳智聖",
+          "sourceText": "陳智聖18-22",
+          "sourceRow": 31
+        },
+        {
+          "employeeId": "B5632",
+          "employeeName": "冉存德",
+          "sourceText": "冉存德17-22.5",
+          "sourceRow": 32
+        }
+      ],
+      "assistants": [],
+      "workFocus": "C3-1.民生敦化/中山國中/北大/南京遼寧/南京復興/龍江南京/朱崙/敦化長春/內政部/民生光復\nC3-2.民生光復/小巨蛋/藝文/立體停車場/民生活動/三民公/健安/健康/三總/塔悠/南京東興/西松/三民一\nC3-3.國土管理署。朱崙商場。敦化八德路口。台北田徑場。捷運小巨蛋2號出口。捷運小巨蛋3號出口。台北藝文推廣處。田徑場北寧路側。\n捷運中山國中站，市府很關心，(離峰~盡可能柱上一半以上)，(高峰~下班時間能多滿就多滿)。\n請松山區晚班交接時，背1車回去給大夜，可以出車直接優先運補捷運中山國中站",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 28,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-35",
+      "areaCode": "C",
+      "areaName": "小夜 C區(塔悠)",
+      "variantCode": "small-night",
+      "vehicleNo": "RFN-1726",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 35,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-37",
+      "areaCode": "U",
+      "areaName": "南港 U區",
+      "variantCode": "standard",
+      "vehicleNo": "RGE-1662",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 37,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-38",
+      "areaCode": "U",
+      "areaName": "南港 U區",
+      "variantCode": "standard",
+      "vehicleNo": "RGH-9360",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 38,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-39",
+      "areaCode": "U",
+      "areaName": "南港 U區(停南港)",
+      "variantCode": "standard",
+      "vehicleNo": "RGE-1661",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B6258",
+          "employeeName": "黃進雄",
+          "sourceText": "黃進雄晚U",
+          "sourceRow": 41
+        },
+        {
+          "employeeId": "B4431",
+          "employeeName": "鄭兆融",
+          "sourceText": "小夜鄭兆融U/A1",
+          "sourceRow": 42
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B1704",
+          "employeeName": "張品嫻",
+          "sourceText": "張品嫻16-20",
+          "sourceRow": 41
+        },
+        {
+          "employeeId": "B6072",
+          "employeeName": "王中合",
+          "sourceText": "王中合16-21",
+          "sourceRow": 42
+        },
+        {
+          "employeeId": "B2015",
+          "employeeName": "黃偉軒",
+          "sourceText": "黃偉軒17-22",
+          "sourceRow": 43
+        },
+        {
+          "employeeId": "B5949",
+          "employeeName": "許淑雯",
+          "sourceText": "許淑雯16：00-22：00",
+          "sourceRow": 44
+        },
+        {
+          "employeeId": "B6296",
+          "employeeName": "李汯縉",
+          "sourceText": "李汯縉18-22",
+          "sourceRow": 45
+        }
+      ],
+      "assistants": [],
+      "workFocus": "U.晚1(四人):南港國小/南軟新民街/世貿公園/經貿二路105巷口2站/捷運南軟2號/捷運南展館/東湖區\nU.晚2(四人):國家生技/白雲國小/力行橋/福山公園/舊莊區/中研公園/中研院5個站解車\nU.晚3(四人):東新國小/東陽公園/興南公園/新新公園/向陽南港/忠孝東路6段225巷\nU.晚4(四人):南港車站/流行音樂中心/機動安泰",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 39,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-46",
+      "areaCode": "A1",
+      "areaName": "府前 A1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1722",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 46,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-49",
+      "areaCode": "",
+      "areaName": "小夜 車",
+      "variantCode": "small-night",
+      "vehicleNo": "RFN-1728",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 49,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-52",
+      "areaCode": "",
+      "areaName": "小夜 車",
+      "variantCode": "small-night",
+      "vehicleNo": "BFR-5181",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 52,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-54",
+      "areaCode": "",
+      "areaName": "小夜 車",
+      "variantCode": "small-night",
+      "vehicleNo": "RFQ-1025",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 54,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-56",
+      "areaCode": "",
+      "areaName": "小夜 車",
+      "variantCode": "small-night",
+      "vehicleNo": "RFN-1721",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 56,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-58",
+      "areaCode": "",
+      "areaName": "小夜 車",
+      "variantCode": "small-night",
+      "vehicleNo": "BKP-2863",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 58,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-60",
+      "areaCode": "",
+      "areaName": "小夜 車",
+      "variantCode": "small-night",
+      "vehicleNo": "BKK-9172(修)",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 60,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-62",
+      "areaCode": "B1",
+      "areaName": "公館 B1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFM-2659",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 62,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-63",
+      "areaCode": "B2",
+      "areaName": "公館 B2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1729",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 63,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-64",
+      "areaCode": "B3",
+      "areaName": "公館 B3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFW-2300",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 64,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-65",
+      "areaCode": "B4",
+      "areaName": "公館 B4區",
+      "variantCode": "standard",
+      "vehicleNo": "BKP-3525",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 65,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-66",
+      "areaCode": "B",
+      "areaName": "公館 大B區",
+      "variantCode": "standard",
+      "vehicleNo": "BKK-9183/ATT-5950",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B2902",
+          "employeeName": "黃永賜",
+          "sourceText": "黃永賜晚B1",
+          "sourceRow": 68
+        },
+        {
+          "employeeId": "B6095",
+          "employeeName": "曾楷隆",
+          "sourceText": "曾楷隆晚B4",
+          "sourceRow": 69
+        },
+        {
+          "employeeId": "B5638",
+          "employeeName": "何宣瑩",
+          "sourceText": "何宣瑩小夜B4",
+          "sourceRow": 70
+        },
+        {
+          "employeeId": "B4029",
+          "employeeName": "郭展佑",
+          "sourceText": "郭展佑 1730-1930 B3",
+          "sourceRow": 71
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B0084",
+          "employeeName": "夏裕豪",
+          "sourceText": "夏裕豪17-22.5",
+          "sourceRow": 68
+        },
+        {
+          "employeeId": "B1044",
+          "employeeName": "王仗腧",
+          "sourceText": "王仗腧16-20",
+          "sourceRow": 69
+        },
+        {
+          "employeeId": "B1075",
+          "employeeName": "胡義孝",
+          "sourceText": "胡義孝15.5-21",
+          "sourceRow": 70
+        },
+        {
+          "employeeId": "B1759",
+          "employeeName": "孫元",
+          "sourceText": "孫元17-22.5",
+          "sourceRow": 71
+        },
+        {
+          "employeeId": "B2768",
+          "employeeName": "石同正",
+          "sourceText": "石同正16-20",
+          "sourceRow": 72
+        },
+        {
+          "employeeId": "B3721",
+          "employeeName": "李冠儒",
+          "sourceText": "李冠儒16-20",
+          "sourceRow": 73
+        },
+        {
+          "employeeId": "B4027",
+          "employeeName": "江士賢",
+          "sourceText": "江士賢16-20",
+          "sourceRow": 74
+        },
+        {
+          "employeeId": "B5067",
+          "employeeName": "簡凡凱",
+          "sourceText": "簡凡凱-載12-21",
+          "sourceRow": 75
+        },
+        {
+          "employeeId": "B5447",
+          "employeeName": "吳啟豪",
+          "sourceText": "吳啟豪18-22",
+          "sourceRow": 76
+        },
+        {
+          "employeeId": "B5588",
+          "employeeName": "陳亭堯",
+          "sourceText": "陳亭堯-載17-21",
+          "sourceRow": 77
+        },
+        {
+          "employeeId": "B5651",
+          "employeeName": "江典祐",
+          "sourceText": "江典祐-載12-21",
+          "sourceRow": 78
+        },
+        {
+          "employeeId": "B5787",
+          "employeeName": "吳則辰",
+          "sourceText": "吳則辰-載17-22.5",
+          "sourceRow": 79
+        }
+      ],
+      "assistants": [],
+      "workFocus": "B晚1-公2、公3、二活群\nB晚2-台資、法人、校內解車、82群、311群、泰順、(假日+自來水)\nB晚3-師圖、龍泉、台電、紀州庵、河堤、245群\nB晚4-台科、敦基、大安、敦親、基隆長興、動物、癌醫\nB晚5-校內解車、公2、公3、自來水\nB晚6-機動\nB晚7-機動",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 66,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-80",
+      "areaCode": "D1",
+      "areaName": "萬華 D1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFQ-6378",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B1368",
+          "employeeName": "莫國煊",
+          "sourceText": "莫國煊晚D1",
+          "sourceRow": 82
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B3979",
+          "employeeName": "張修齊",
+          "sourceText": "張修齊18-22",
+          "sourceRow": 82
+        },
+        {
+          "employeeId": "B4417",
+          "employeeName": "李紘瑋",
+          "sourceText": "李紘瑋16-22.5",
+          "sourceRow": 83
+        },
+        {
+          "employeeId": "B2296",
+          "employeeName": "王勇盛",
+          "sourceText": "王勇盛16-20",
+          "sourceRow": 84
+        }
+      ],
+      "assistants": [],
+      "workFocus": "※萬大路493巷站勿前往任何作業※\nD1-1 青年/國興/莒光/復華/公宅/棒球場/東園/錦德\nD1-2 牯嶺/螢橋/和平重慶/南海/植物園/金山/南昌\n機動",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 80,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-86",
+      "areaCode": "D2",
+      "areaName": "萬華 D2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1727",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B2056",
+          "employeeName": "林志皇",
+          "sourceText": "林志皇晚D2",
+          "sourceRow": 88
+        },
+        {
+          "employeeId": "B4942",
+          "employeeName": "陳世昌",
+          "sourceText": "陳世昌晚D2",
+          "sourceRow": 89
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B4469",
+          "employeeName": "蘇宗偉",
+          "sourceText": "蘇宗偉16-20",
+          "sourceRow": 88
+        },
+        {
+          "employeeId": "B5806",
+          "employeeName": "李芳憲",
+          "sourceText": "李芳憲18-22",
+          "sourceRow": 89
+        },
+        {
+          "employeeId": "B5887",
+          "employeeName": "沈昶甫",
+          "sourceText": "沈昶甫18-22",
+          "sourceRow": 90
+        },
+        {
+          "employeeId": "B6202",
+          "employeeName": "呂俊宏",
+          "sourceText": "呂俊宏18-22",
+          "sourceRow": 91
+        }
+      ],
+      "assistants": [],
+      "workFocus": "列管場站:龍山國中(廣州街)服務水準未達標優先補車\nD2-1 台大/國圖/仁愛林森/信義杭州/紹興濟南\nD2-2 博愛/中山堂/永樂/桂林/華西/國圖/市立大\n機動",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 86,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-92",
+      "areaCode": "D3",
+      "areaName": "萬華 D3區",
+      "variantCode": "standard",
+      "vehicleNo": "RDX-6865",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B1715",
+          "employeeName": "葉源鑫",
+          "sourceText": "葉源鑫晚D3",
+          "sourceRow": 94
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "列管場站:泉州寧波西街口該站位16時至22時在站車輛(不要有空站)\n列管場站:泉州寧波西街口該站位16時至22時在站車輛(不要有空站)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 92,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-96",
+      "areaCode": "D",
+      "areaName": "萬華 D區",
+      "variantCode": "standard",
+      "vehicleNo": "RFZ-8527",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 96,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-99",
+      "areaCode": "E1",
+      "areaName": "北投 E1區",
+      "variantCode": "standard",
+      "vehicleNo": "EBC-8312",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 99,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-100",
+      "areaCode": "E2",
+      "areaName": "北投 E2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFH-9326",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 100,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-101",
+      "areaCode": "E",
+      "areaName": "北投 E區",
+      "variantCode": "standard",
+      "vehicleNo": "RFQ-6379",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "95967",
+          "employeeName": "嚴俊明",
+          "sourceText": "嚴俊明晚E1",
+          "sourceRow": 103
+        },
+        {
+          "employeeId": "B2184",
+          "employeeName": "何國豪",
+          "sourceText": "何國豪晚E2",
+          "sourceRow": 104
+        },
+        {
+          "employeeId": "B4964",
+          "employeeName": "刁冠傑",
+          "sourceText": "刁冠傑國上晚E",
+          "sourceRow": 105
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B2313",
+          "employeeName": "高昕暐",
+          "sourceText": "高昕暐15.5-21",
+          "sourceRow": 103
+        },
+        {
+          "employeeId": "B4568",
+          "employeeName": "鍾榮烜",
+          "sourceText": "鍾榮烜18-22",
+          "sourceRow": 104
+        },
+        {
+          "employeeId": "B5136",
+          "employeeName": "林世淵",
+          "sourceText": "林世淵16-20",
+          "sourceRow": 105
+        },
+        {
+          "employeeId": "B6185",
+          "employeeName": "紀勝嵐",
+          "sourceText": "紀勝嵐17-21",
+          "sourceRow": 106
+        },
+        {
+          "employeeId": "B6234",
+          "employeeName": "郭一宏",
+          "sourceText": "郭一宏17-21",
+          "sourceRow": 107
+        }
+      ],
+      "assistants": [],
+      "workFocus": "即日起 7/16-7/27幼華中學(大業路)每日該站位6時至23時無車優先補車 場站列管\nE1. 石牌/永欣/振華/北護/北運/振興/蘭興/中山天母/蘭雅國小\nE2. 復興崗/國防/新北投/北投/大業大同/奇岩/清江/唭哩岸站\n新北投站請加強補車，17:30先補一車拍照回傳(全時段都不要空站)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 101,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-108",
+      "areaCode": "F",
+      "areaName": "汐止 F區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-7397",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "96438",
+          "employeeName": "李晉名",
+          "sourceText": "李晉名晚F",
+          "sourceRow": 110
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B2626",
+          "employeeName": "陳侯良",
+          "sourceText": "陳侯良17-22",
+          "sourceRow": 110
+        },
+        {
+          "employeeId": "B3076",
+          "employeeName": "吳佳錦",
+          "sourceText": "吳佳錦18-22",
+          "sourceRow": 111
+        },
+        {
+          "employeeId": "B4475",
+          "employeeName": "陳建甫",
+          "sourceText": "陳建甫18-22",
+          "sourceRow": 112
+        },
+        {
+          "employeeId": "B4947",
+          "employeeName": "李峻毅",
+          "sourceText": "李峻毅18-22",
+          "sourceRow": 113
+        },
+        {
+          "employeeId": "B5545",
+          "employeeName": "李倍健",
+          "sourceText": "李倍健18-22",
+          "sourceRow": 114
+        },
+        {
+          "employeeId": "B6297",
+          "employeeName": "王偉誌",
+          "sourceText": "王偉誌18-22",
+          "sourceRow": 115
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 108,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-116",
+      "areaCode": "F",
+      "areaName": "汐止 F區",
+      "variantCode": "standard",
+      "vehicleNo": "RFH-0631",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "U.晚1(四人):南港國小/南軟新民街/世貿公園/經貿二路105巷口2站/捷運南軟2號/捷運南展館/東湖區\nU.晚2(四人):國家生技/白雲國小/力行橋/福山公園/舊莊區/中研公園/中研院5個站解車\nU.晚3(四人):東新國小/東陽公園/興南公園/新新公園/向陽南港/忠孝東路6段225巷\nU.晚4(四人):南港車站/流行音樂中心/機動安泰",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 116,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-122",
+      "areaCode": "G1",
+      "areaName": "新店 G1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFY-0702",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 122,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-123",
+      "areaCode": "G2",
+      "areaName": "新店 G2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1730",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 123,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-124",
+      "areaCode": "G",
+      "areaName": "新店 G區",
+      "variantCode": "standard",
+      "vehicleNo": "RFJ-9655",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B3785",
+          "employeeName": "鄭智中",
+          "sourceText": "鄭智中晚G2",
+          "sourceRow": 126
+        },
+        {
+          "employeeId": "B4586",
+          "employeeName": "李傑",
+          "sourceText": "李傑晚G2",
+          "sourceRow": 127
+        },
+        {
+          "employeeId": "B5377",
+          "employeeName": "邱奕榮",
+          "sourceText": "邱奕榮晚G1",
+          "sourceRow": 128
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "97306",
+          "employeeName": "高周禮",
+          "sourceText": "高周禮18-22",
+          "sourceRow": 126
+        },
+        {
+          "employeeId": "B2570",
+          "employeeName": "黃梓濠",
+          "sourceText": "黃梓濠18-22",
+          "sourceRow": 127
+        },
+        {
+          "employeeId": "B3845",
+          "employeeName": "凌翼",
+          "sourceText": "凌翼18-22",
+          "sourceRow": 128
+        },
+        {
+          "employeeId": "B4399",
+          "employeeName": "徐瑋駿",
+          "sourceText": "徐瑋駿18-22",
+          "sourceRow": 129
+        },
+        {
+          "employeeId": "B4479",
+          "employeeName": "薛兆恩",
+          "sourceText": "薛兆恩18-22",
+          "sourceRow": 130
+        },
+        {
+          "employeeId": "B4983",
+          "employeeName": "郭修岑",
+          "sourceText": "郭修岑18-22",
+          "sourceRow": 131
+        },
+        {
+          "employeeId": "B5690",
+          "employeeName": "李建樹",
+          "sourceText": "李建樹16-20",
+          "sourceRow": 132
+        },
+        {
+          "employeeId": "B5997",
+          "employeeName": "黃建元",
+          "sourceText": "黃建元18-22",
+          "sourceRow": 133
+        }
+      ],
+      "assistants": [],
+      "workFocus": "17~20 時 寶橋路235巷,寶橋路235巷口,補車拍照,不要空站\n17~19時 ＜中正民權路口＞補車拍照,不要空站",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 124,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-134",
+      "areaCode": "P1",
+      "areaName": "景華 P1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFW-2301",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 134,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-135",
+      "areaCode": "P2",
+      "areaName": "景華 P2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFZ-8530",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4393",
+          "employeeName": "詹益晃",
+          "sourceText": "詹益晃國上晚P2",
+          "sourceRow": 137
+        },
+        {
+          "employeeId": "B6093",
+          "employeeName": "李建華",
+          "sourceText": "李建華晚P1",
+          "sourceRow": 138
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "98324",
+          "employeeName": "張學憲",
+          "sourceText": "張學憲16.5-22",
+          "sourceRow": 137
+        },
+        {
+          "employeeId": "B5637",
+          "employeeName": "王世穎",
+          "sourceText": "王世穎17-01",
+          "sourceRow": 139
+        },
+        {
+          "employeeId": "B6100",
+          "employeeName": "高世芳",
+          "sourceText": "高世芳18-22",
+          "sourceRow": 140
+        }
+      ],
+      "assistants": [],
+      "workFocus": "捷運萬隆站(1號出口)、捷運萬隆站(2號出口)、捷運萬隆站(4號出口)、景美運動公園\n每日8時至23時之整點與半點見車率、見位率、列管場站 無車無位優先處理(即日起至115年7月6日)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 135,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-141",
+      "areaCode": "H1",
+      "areaName": "福林 H1區",
+      "variantCode": "standard",
+      "vehicleNo": "BFR-3591",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 141,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-142",
+      "areaCode": "H2",
+      "areaName": "福林 H2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFX-1901/RFY-5611",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 142,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-143",
+      "areaCode": "H",
+      "areaName": "福林 H區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1723/BFR-1732",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "95660",
+          "employeeName": "劉正廉",
+          "sourceText": "劉正廉晚H",
+          "sourceRow": 145
+        },
+        {
+          "employeeId": "93924",
+          "employeeName": "紀建行",
+          "sourceText": "紀建行晚H1",
+          "sourceRow": 146
+        },
+        {
+          "employeeId": "95418",
+          "employeeName": "邱益欣",
+          "sourceText": "邱益欣晚H2",
+          "sourceRow": 147
+        },
+        {
+          "employeeId": "B2101",
+          "employeeName": "陳俊智",
+          "sourceText": "陳俊智晚H1",
+          "sourceRow": 148
+        },
+        {
+          "employeeId": "B3733",
+          "employeeName": "李長宏",
+          "sourceText": "李長宏小夜H",
+          "sourceRow": 149
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B2778",
+          "employeeName": "羅品淵",
+          "sourceText": "羅品淵18-22",
+          "sourceRow": 145
+        },
+        {
+          "employeeId": "B3608",
+          "employeeName": "黃世堃",
+          "sourceText": "黃世堃18-22",
+          "sourceRow": 146
+        },
+        {
+          "employeeId": "B3754",
+          "employeeName": "郭子賢",
+          "sourceText": "郭子賢18-22",
+          "sourceRow": 147
+        },
+        {
+          "employeeId": "B4474",
+          "employeeName": "謝明傑",
+          "sourceText": "謝明傑18-22",
+          "sourceRow": 148
+        },
+        {
+          "employeeId": "B6236",
+          "employeeName": "陳昱諴",
+          "sourceText": "陳昱諴18-22",
+          "sourceRow": 149
+        },
+        {
+          "employeeId": "B3823",
+          "employeeName": "朱奕旻",
+          "sourceText": "朱奕旻18-22",
+          "sourceRow": 150
+        }
+      ],
+      "assistants": [],
+      "workFocus": "H1.晚2蘭雅/天母運動/市立大/芝山小/雨農小/陽明醫院/\nH1+2.晚3芝山12/至善臨溪/士捷/芝山抽水/華聲/中山中正/戲曲/福林/故宮\nH2.晚1-1百齡/華齡/新天地/陽明高中\nH2.晚1-2劍潭捷運/海外劍潭/士運/中正基河/天文館/銘傳※百齡高中綁車請拍照回報(綁車勿超線!)※\nH2.晚.捷運劍南/北安大直/培英/捷運大直/樂群二敬",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 143,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-151",
+      "areaCode": "I1",
+      "areaName": "林金 I1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-1023",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "95181",
+          "employeeName": "吳怡億",
+          "sourceText": "吳怡億 1830-2130",
+          "sourceRow": 153
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B5470",
+          "employeeName": "林晉楠",
+          "sourceText": "林晉楠16-20",
+          "sourceRow": 153
+        },
+        {
+          "employeeId": "B5524",
+          "employeeName": "詹竣閎",
+          "sourceText": "詹竣閎18-22",
+          "sourceRow": 154
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 151,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-155",
+      "areaCode": "I2",
+      "areaName": "圓山 I2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFW-7653",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "96429",
+          "employeeName": "盧坤湶",
+          "sourceText": "盧坤湶晚I2",
+          "sourceRow": 157
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B4632",
+          "employeeName": "蘇永禎",
+          "sourceText": "蘇永禎18-22",
+          "sourceRow": 157
+        },
+        {
+          "employeeId": "B5666",
+          "employeeName": "詹淳㝢",
+          "sourceText": "詹淳㝢16-20",
+          "sourceRow": 158
+        }
+      ],
+      "assistants": [],
+      "workFocus": "※民族延平 這區已被議員盯上，22:00確保有一半位子可以還，拍照回傳\n中山行政中心 晚上9點派個人去綁車或是拉走一車",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 155,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-159",
+      "areaCode": "I3",
+      "areaName": "林金 I3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFX-6091",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4905",
+          "employeeName": "莊千篁",
+          "sourceText": "莊千篁晚I3",
+          "sourceRow": 161
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B1050",
+          "employeeName": "李榮圳",
+          "sourceText": "李榮圳15.5-21",
+          "sourceRow": 161
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 159,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-162",
+      "areaCode": "I",
+      "areaName": "林金 I區",
+      "variantCode": "standard",
+      "vehicleNo": "RFJ-9656",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 162,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-165",
+      "areaCode": "K1",
+      "areaName": "三重 K1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-7398",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "97246",
+          "employeeName": "余建慶",
+          "sourceText": "余建慶晚K1",
+          "sourceRow": 167
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "98250",
+          "employeeName": "陳宥宙",
+          "sourceText": "陳宥宙16-20",
+          "sourceRow": 167
+        },
+        {
+          "employeeId": "B2358",
+          "employeeName": "林姵妏",
+          "sourceText": "林姵妏16-20",
+          "sourceRow": 168
+        },
+        {
+          "employeeId": "B2576",
+          "employeeName": "蔡耀新",
+          "sourceText": "蔡耀新17-22",
+          "sourceRow": 169
+        },
+        {
+          "employeeId": "B5760",
+          "employeeName": "陳靖群",
+          "sourceText": "陳靖群18-22",
+          "sourceRow": 170
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 165,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-171",
+      "areaCode": "K1",
+      "areaName": "小夜 K1區",
+      "variantCode": "small-night",
+      "vehicleNo": "RFV-6502",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B0773",
+          "employeeName": "鍾子健",
+          "sourceText": "鍾子健小夜K1",
+          "sourceRow": 173
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 171,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-174",
+      "areaCode": "K2",
+      "areaName": "正義 K2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFY-5612",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "95858",
+          "employeeName": "李志宗",
+          "sourceText": "李志宗晚K2",
+          "sourceRow": 176
+        },
+        {
+          "employeeId": "B5671",
+          "employeeName": "邱飛瀧",
+          "sourceText": "邱飛瀧晚K2",
+          "sourceRow": 177
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "97143",
+          "employeeName": "陳亭宇",
+          "sourceText": "陳亭宇17-21",
+          "sourceRow": 176
+        },
+        {
+          "employeeId": "97430",
+          "employeeName": "蔡沅育",
+          "sourceText": "蔡沅育16-20",
+          "sourceRow": 177
+        },
+        {
+          "employeeId": "98213",
+          "employeeName": "王為民",
+          "sourceText": "王為民18-22",
+          "sourceRow": 178
+        },
+        {
+          "employeeId": "B3888",
+          "employeeName": "潘弘傑",
+          "sourceText": "潘弘傑16-20",
+          "sourceRow": 179
+        },
+        {
+          "employeeId": "97520",
+          "employeeName": "黃婉如",
+          "sourceText": "黃婉如17.5-02",
+          "sourceRow": 180
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 174,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-181",
+      "areaCode": "K2",
+      "areaName": "正義 K2區",
+      "variantCode": "standard",
+      "vehicleNo": "RGE-1669",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 181,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-183",
+      "areaCode": "K3",
+      "areaName": "永福 K3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFZ-8526",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "94245",
+          "employeeName": "張憲忞",
+          "sourceText": "張憲忞晚K3",
+          "sourceRow": 185
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B2023",
+          "employeeName": "饒芳華",
+          "sourceText": "饒芳華15.5-21",
+          "sourceRow": 185
+        },
+        {
+          "employeeId": "96818",
+          "employeeName": "陳武揚",
+          "sourceText": "陳武揚16-20",
+          "sourceRow": 186
+        },
+        {
+          "employeeId": "B4362",
+          "employeeName": "葉信成",
+          "sourceText": "葉信成17.5-02",
+          "sourceRow": 187
+        },
+        {
+          "employeeId": "B4847",
+          "employeeName": "李宜靜",
+          "sourceText": "李宜靜18-22",
+          "sourceRow": 188
+        },
+        {
+          "employeeId": "B5874",
+          "employeeName": "洪樂安",
+          "sourceText": "洪樂安17-21",
+          "sourceRow": 189
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 183,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-190",
+      "areaCode": "K3",
+      "areaName": "永福 K3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFY-5610",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 190,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-192",
+      "areaCode": "K4",
+      "areaName": "永康 K4區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-1019",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 192,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-193",
+      "areaCode": "K4",
+      "areaName": "永康 K4區",
+      "variantCode": "standard",
+      "vehicleNo": "BFR-1731",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4749",
+          "employeeName": "趙晨翔",
+          "sourceText": "趙晨翔晚K4",
+          "sourceRow": 195
+        },
+        {
+          "employeeId": "B5920",
+          "employeeName": "葉佐仁",
+          "sourceText": "葉佐仁晚K4",
+          "sourceRow": 196
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B0094",
+          "employeeName": "葉家勳",
+          "sourceText": "葉家勳16-20",
+          "sourceRow": 195
+        },
+        {
+          "employeeId": "B0590",
+          "employeeName": "葉建良",
+          "sourceText": "葉建良18-23.5",
+          "sourceRow": 196
+        },
+        {
+          "employeeId": "B2340",
+          "employeeName": "胡淑婷",
+          "sourceText": "胡淑婷17-22.5",
+          "sourceRow": 197
+        },
+        {
+          "employeeId": "B5109",
+          "employeeName": "詹鎧駿",
+          "sourceText": "詹鎧駿18-22",
+          "sourceRow": 198
+        },
+        {
+          "employeeId": "B5102",
+          "employeeName": "楊慶昌",
+          "sourceText": "楊慶昌18-22",
+          "sourceRow": 199
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 193,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-200",
+      "areaCode": "K4",
+      "areaName": "小夜 K4區",
+      "variantCode": "small-night",
+      "vehicleNo": "RDX-6902(小夜車)",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4593",
+          "employeeName": "許志誠",
+          "sourceText": "許志誠小夜K4",
+          "sourceRow": 202
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 200,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-203",
+      "areaCode": "L1",
+      "areaName": "新莊 L1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-7399/RFW-7652",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "96556",
+          "employeeName": "徐進旺",
+          "sourceText": "徐進旺晚L1",
+          "sourceRow": 205
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B2142",
+          "employeeName": "李憲璋",
+          "sourceText": "李憲璋16-20",
+          "sourceRow": 205
+        },
+        {
+          "employeeId": "B1978",
+          "employeeName": "吳向哲",
+          "sourceText": "吳向哲16.5-22",
+          "sourceRow": 206
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 203,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-207",
+      "areaCode": "L2",
+      "areaName": "輔大 L2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFJ-9652/RFQ-1026",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4449",
+          "employeeName": "林政亞",
+          "sourceText": "林政亞晚L2",
+          "sourceRow": 209
+        },
+        {
+          "employeeId": "B4636",
+          "employeeName": "吳昌鴻",
+          "sourceText": "吳昌鴻晚L2",
+          "sourceRow": 210
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B3818",
+          "employeeName": "陳玟蒨",
+          "sourceText": "陳玟蒨17-21",
+          "sourceRow": 209
+        },
+        {
+          "employeeId": "B4984",
+          "employeeName": "廖萬諴",
+          "sourceText": "廖萬諴18-22",
+          "sourceRow": 210
+        },
+        {
+          "employeeId": "B5236",
+          "employeeName": "鄭少奇",
+          "sourceText": "鄭少奇16-20",
+          "sourceRow": 211
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 207,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-212",
+      "areaCode": "L3",
+      "areaName": "泰山 L3區",
+      "variantCode": "standard",
+      "vehicleNo": "RDX-6861/BKK-9176",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "95591",
+          "employeeName": "許博丞",
+          "sourceText": "許博丞晚L3",
+          "sourceRow": 214
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B0927",
+          "employeeName": "陳俊男",
+          "sourceText": "陳俊男18-23",
+          "sourceRow": 214
+        },
+        {
+          "employeeId": "B3951",
+          "employeeName": "孫銘佑",
+          "sourceText": "孫銘佑18-22",
+          "sourceRow": 215
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 212,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-216",
+      "areaCode": "L4",
+      "areaName": "新泰 L4區",
+      "variantCode": "standard",
+      "vehicleNo": "RFH-9322/RFX-1902",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "98284",
+          "employeeName": "曾上銓",
+          "sourceText": "曾上銓晚L4",
+          "sourceRow": 218
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B3678",
+          "employeeName": "李宗益",
+          "sourceText": "李宗益18-22",
+          "sourceRow": 218
+        },
+        {
+          "employeeId": "B3709",
+          "employeeName": "朱威至",
+          "sourceText": "朱威至18-22",
+          "sourceRow": 219
+        },
+        {
+          "employeeId": "B4567",
+          "employeeName": "吳勤盛",
+          "sourceText": "吳勤盛18-22",
+          "sourceRow": 220
+        }
+      ],
+      "assistants": [],
+      "workFocus": "20:00~24:00 「捷運頭前庄站」重點補車拍照回傳\n20:00~24:00 「捷運頭前庄站」重點補車拍照回傳",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 216,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-222",
+      "areaCode": "L",
+      "areaName": "小夜 L區",
+      "variantCode": "small-night",
+      "vehicleNo": "BFR-5821",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 222,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-224",
+      "areaCode": "M",
+      "areaName": "秀朗 M區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-1021/RFX-6093",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 224,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-225",
+      "areaCode": "M",
+      "areaName": "小夜M區",
+      "variantCode": "small-night",
+      "vehicleNo": "BFR-5822",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B5533",
+          "employeeName": "施書閔",
+          "sourceText": "施書閔晚M",
+          "sourceRow": 227
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B3697",
+          "employeeName": "楊健志",
+          "sourceText": "楊健志17-21",
+          "sourceRow": 227
+        },
+        {
+          "employeeId": "B5337",
+          "employeeName": "王逸羣",
+          "sourceText": "王逸羣18-22",
+          "sourceRow": 228
+        },
+        {
+          "employeeId": "B5759",
+          "employeeName": "江慶生",
+          "sourceText": "江慶生17-21",
+          "sourceRow": 229
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 225,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-230",
+      "areaCode": "W1",
+      "areaName": "中和 W1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFX-6092",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 230,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-231",
+      "areaCode": "W2",
+      "areaName": "中和 W2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFY-0703",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 231,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-232",
+      "areaCode": "W3",
+      "areaName": "中和 W3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFH-9325",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 232,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-233",
+      "areaCode": "W",
+      "areaName": "小夜W區",
+      "variantCode": "small-night",
+      "vehicleNo": "RFQ-1027",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B2578",
+          "employeeName": "賴俊凱",
+          "sourceText": "賴俊凱晚W1",
+          "sourceRow": 235
+        },
+        {
+          "employeeId": "B5891",
+          "employeeName": "張默凡",
+          "sourceText": "張默凡晚W2",
+          "sourceRow": 236
+        },
+        {
+          "employeeId": "B1854",
+          "employeeName": "劉彥廷",
+          "sourceText": "劉彥廷晚W3",
+          "sourceRow": 237
+        },
+        {
+          "employeeId": "B6153",
+          "employeeName": "邱智祥",
+          "sourceText": "邱智祥晚W3",
+          "sourceRow": 238
+        },
+        {
+          "employeeId": "B4509",
+          "employeeName": "虞介文",
+          "sourceText": "虞介文小夜W3",
+          "sourceRow": 239
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "98229",
+          "employeeName": "江政勳",
+          "sourceText": "江政勳16-20",
+          "sourceRow": 235
+        },
+        {
+          "employeeId": "B1035",
+          "employeeName": "陳孝釗",
+          "sourceText": "陳孝釗16-20",
+          "sourceRow": 236
+        },
+        {
+          "employeeId": "B2146",
+          "employeeName": "李武龍",
+          "sourceText": "李武龍17-00.5",
+          "sourceRow": 237
+        },
+        {
+          "employeeId": "B2872",
+          "employeeName": "賴韋銘",
+          "sourceText": "賴韋銘17-21",
+          "sourceRow": 238
+        },
+        {
+          "employeeId": "B3581",
+          "employeeName": "黃建斌",
+          "sourceText": "黃建斌18-01",
+          "sourceRow": 239
+        },
+        {
+          "employeeId": "B5399",
+          "employeeName": "高緯辰",
+          "sourceText": "高緯辰18-22",
+          "sourceRow": 240
+        },
+        {
+          "employeeId": "B5479",
+          "employeeName": "林家盟",
+          "sourceText": "林家盟18-22",
+          "sourceRow": 241
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 233,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-242",
+      "areaCode": "N1",
+      "areaName": "濱江 N1區",
+      "variantCode": "standard",
+      "vehicleNo": "EBC-8307/RFJ-9653",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 242,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-243",
+      "areaCode": "N2",
+      "areaName": "濱江 N2區",
+      "variantCode": "standard",
+      "vehicleNo": "EBC-8315/EBC-8316",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 243,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-244",
+      "areaCode": "N3",
+      "areaName": "濱江 N3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFM-2660",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B2057",
+          "employeeName": "李紹欣",
+          "sourceText": "李紹欣晚N",
+          "sourceRow": 246
+        },
+        {
+          "employeeId": "B5208",
+          "employeeName": "賴玨良",
+          "sourceText": "賴玨良晚N",
+          "sourceRow": 247
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "96410",
+          "employeeName": "詹欽富",
+          "sourceText": "詹欽富17-22.5",
+          "sourceRow": 246
+        },
+        {
+          "employeeId": "B0603",
+          "employeeName": "薛承真",
+          "sourceText": "薛承真17.5-21.5",
+          "sourceRow": 247
+        },
+        {
+          "employeeId": "B3231",
+          "employeeName": "陳正禮",
+          "sourceText": "陳正禮18-22",
+          "sourceRow": 248
+        },
+        {
+          "employeeId": "B3251",
+          "employeeName": "黃世宇",
+          "sourceText": "黃世宇17-22.5",
+          "sourceRow": 249
+        },
+        {
+          "employeeId": "B4594",
+          "employeeName": "葉昌隆",
+          "sourceText": "葉昌隆18-22",
+          "sourceRow": 250
+        },
+        {
+          "employeeId": "B5168",
+          "employeeName": "韓炳山",
+          "sourceText": "韓炳山18-22",
+          "sourceRow": 251
+        },
+        {
+          "employeeId": "B5702",
+          "employeeName": "賴錫煌",
+          "sourceText": "賴錫煌17-21",
+          "sourceRow": 252
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 244,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-253",
+      "areaCode": "O1",
+      "areaName": "藝文 O1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFX-6095",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 253,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-254",
+      "areaCode": "O1",
+      "areaName": "藝文 O1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFW-7651",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 254,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-255",
+      "areaCode": "O1",
+      "areaName": "藝文 O1區",
+      "variantCode": "standard",
+      "vehicleNo": "BKP-0190",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B1190",
+          "employeeName": "王宗信",
+          "sourceText": "王宗信晚O1",
+          "sourceRow": 257
+        },
+        {
+          "employeeId": "B5784",
+          "employeeName": "李昱威",
+          "sourceText": "李昱威小夜O1",
+          "sourceRow": 258
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B0410",
+          "employeeName": "陳均瑜",
+          "sourceText": "陳均瑜17-01",
+          "sourceRow": 257
+        },
+        {
+          "employeeId": "B3788",
+          "employeeName": "呂俊杰",
+          "sourceText": "呂俊杰18-22",
+          "sourceRow": 258
+        },
+        {
+          "employeeId": "B5728",
+          "employeeName": "陳聖霖",
+          "sourceText": "陳聖霖17-21",
+          "sourceRow": 259
+        },
+        {
+          "employeeId": "B5829",
+          "employeeName": "林書弘",
+          "sourceText": "林書弘17-21",
+          "sourceRow": 260
+        }
+      ],
+      "assistants": [],
+      "workFocus": "安排一位PT 放江子翠3號出口 放完才能離開江子翠\n江子翠18-22請重點補車\n江子翠18-22請重點補車\n江子翠18-22請重點補車",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 255,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-261",
+      "areaCode": "O2",
+      "areaName": "板橋 O2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFM-2663",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 261,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-262",
+      "areaCode": "O2",
+      "areaName": "小夜 O2區",
+      "variantCode": "small-night",
+      "vehicleNo": "BKP-0187",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B6094",
+          "employeeName": "周家豪",
+          "sourceText": "周家豪晚O2",
+          "sourceRow": 264
+        },
+        {
+          "employeeId": "B3482",
+          "employeeName": "黃政棕",
+          "sourceText": "黃政棕 17:30-19:30",
+          "sourceRow": 265
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "96792",
+          "employeeName": "邱志麟",
+          "sourceText": "邱志麟17-21",
+          "sourceRow": 264
+        },
+        {
+          "employeeId": "97351",
+          "employeeName": "陳致嘉",
+          "sourceText": "陳致嘉17-21",
+          "sourceRow": 265
+        },
+        {
+          "employeeId": "B3653",
+          "employeeName": "黃偉龍",
+          "sourceText": "黃偉龍18-22",
+          "sourceRow": 266
+        },
+        {
+          "employeeId": "B3978",
+          "employeeName": "邱富祥",
+          "sourceText": "邱富祥18-22",
+          "sourceRow": 267
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 262,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-268",
+      "areaCode": "O4",
+      "areaName": "板橋 O4區",
+      "variantCode": "standard",
+      "vehicleNo": "RFQ-6380",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 268,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-269",
+      "areaCode": "O4",
+      "areaName": "小夜 O4區",
+      "variantCode": "small-night",
+      "vehicleNo": "RFX-0031",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B3784",
+          "employeeName": "賴宇浤",
+          "sourceText": "賴宇浤晚O4",
+          "sourceRow": 271
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B2310",
+          "employeeName": "蕭卉婷",
+          "sourceText": "蕭卉婷17-21",
+          "sourceRow": 271
+        },
+        {
+          "employeeId": "B2734",
+          "employeeName": "趙鴻",
+          "sourceText": "趙鴻17-21",
+          "sourceRow": 272
+        },
+        {
+          "employeeId": "B4095",
+          "employeeName": "薛朝聰",
+          "sourceText": "薛朝聰18-22",
+          "sourceRow": 273
+        },
+        {
+          "employeeId": "B5001",
+          "employeeName": "李佩馨",
+          "sourceText": "李佩馨18-22",
+          "sourceRow": 274
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 269,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-275",
+      "areaCode": "O3",
+      "areaName": "亞東 O3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-6505",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 275,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-276",
+      "areaCode": "O3",
+      "areaName": "小夜 O3區",
+      "variantCode": "small-night",
+      "vehicleNo": "RGE-1665",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4056",
+          "employeeName": "楊坪達",
+          "sourceText": "楊坪達晚O3",
+          "sourceRow": 278
+        },
+        {
+          "employeeId": "B1000",
+          "employeeName": "鄭人維",
+          "sourceText": "鄭人維小夜O3",
+          "sourceRow": 279
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B2277",
+          "employeeName": "楊旺慶",
+          "sourceText": "楊旺慶16-20",
+          "sourceRow": 278
+        },
+        {
+          "employeeId": "97330",
+          "employeeName": "許元信",
+          "sourceText": "許元信17-22.5",
+          "sourceRow": 279
+        },
+        {
+          "employeeId": "B3362",
+          "employeeName": "林勤益",
+          "sourceText": "林勤益18-22",
+          "sourceRow": 280
+        },
+        {
+          "employeeId": "B4418",
+          "employeeName": "劉盈亨",
+          "sourceText": "劉盈亨18-22",
+          "sourceRow": 281
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 276,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-282",
+      "areaCode": "R",
+      "areaName": "土城 R區",
+      "variantCode": "standard",
+      "vehicleNo": "RFY-0701",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 282,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-283",
+      "areaCode": "R",
+      "areaName": "土城 R區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-6503",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 283,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-284",
+      "areaCode": "R",
+      "areaName": "土城 R區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-1020",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 284,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-285",
+      "areaCode": "R",
+      "areaName": "土城 R區",
+      "variantCode": "standard",
+      "vehicleNo": "RGE-1667",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "93950",
+          "employeeName": "林躍翰",
+          "sourceText": "林躍翰晚R",
+          "sourceRow": 287
+        },
+        {
+          "employeeId": "B5324",
+          "employeeName": "季修民",
+          "sourceText": "季修民晚R",
+          "sourceRow": 288
+        },
+        {
+          "employeeId": "B6154",
+          "employeeName": "許峻瑋",
+          "sourceText": "許峻瑋晚R",
+          "sourceRow": 289
+        },
+        {
+          "employeeId": "B3012",
+          "employeeName": "謝子耀",
+          "sourceText": "謝子耀 17:30-20:30",
+          "sourceRow": 290
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B0974",
+          "employeeName": "李文順",
+          "sourceText": "李文順16-20",
+          "sourceRow": 287
+        },
+        {
+          "employeeId": "B3649",
+          "employeeName": "張喬榕",
+          "sourceText": "張喬榕16-20",
+          "sourceRow": 288
+        },
+        {
+          "employeeId": "94467",
+          "employeeName": "王鴻宇",
+          "sourceText": "王鴻宇18-22",
+          "sourceRow": 289
+        },
+        {
+          "employeeId": "B1052",
+          "employeeName": "陳柏宇",
+          "sourceText": "陳柏宇18-22",
+          "sourceRow": 290
+        },
+        {
+          "employeeId": "B3597",
+          "employeeName": "王孫鋌",
+          "sourceText": "王孫鋌18-22",
+          "sourceRow": 291
+        },
+        {
+          "employeeId": "B3811",
+          "employeeName": "徐浩倫",
+          "sourceText": "徐浩倫18-22",
+          "sourceRow": 292
+        },
+        {
+          "employeeId": "B4317",
+          "employeeName": "林渝勝",
+          "sourceText": "林渝勝18-22",
+          "sourceRow": 293
+        },
+        {
+          "employeeId": "B4450",
+          "employeeName": "吳秉燁",
+          "sourceText": "吳秉燁18-22",
+          "sourceRow": 294
+        },
+        {
+          "employeeId": "B4972",
+          "employeeName": "詹明勳",
+          "sourceText": "詹明勳18-22",
+          "sourceRow": 295
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 285,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-296",
+      "areaCode": "S",
+      "areaName": "樹林 S區",
+      "variantCode": "standard",
+      "vehicleNo": "RGH-0950",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 296,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-297",
+      "areaCode": "S",
+      "areaName": "樹林 S區",
+      "variantCode": "standard",
+      "vehicleNo": "RGH-9361",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "98209",
+          "employeeName": "翁煥森",
+          "sourceText": "翁煥森晚S",
+          "sourceRow": 299
+        },
+        {
+          "employeeId": "B6229",
+          "employeeName": "沈承甫",
+          "sourceText": "沈承甫晚S",
+          "sourceRow": 300
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "95958",
+          "employeeName": "林逢隆",
+          "sourceText": "林逢隆16.5-22",
+          "sourceRow": 299
+        },
+        {
+          "employeeId": "B0126",
+          "employeeName": "王軍昊",
+          "sourceText": "王軍昊18-22",
+          "sourceRow": 300
+        },
+        {
+          "employeeId": "98283",
+          "employeeName": "林秀玲",
+          "sourceText": "林秀玲18-22",
+          "sourceRow": 301
+        },
+        {
+          "employeeId": "B3938",
+          "employeeName": "柯明田",
+          "sourceText": "柯明田18-22",
+          "sourceRow": 302
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 297,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-303",
+      "areaCode": "T1",
+      "areaName": "鶯歌 T1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFH-9323",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 303,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-304",
+      "areaCode": "T2",
+      "areaName": "三峽 T2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-1022",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 304,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-305",
+      "areaCode": "T",
+      "areaName": "鶯歌 T區",
+      "variantCode": "standard",
+      "vehicleNo": "RFX-1903",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B5331",
+          "employeeName": "陳弘毅",
+          "sourceText": "陳弘毅晚T1",
+          "sourceRow": 307
+        },
+        {
+          "employeeId": "96827",
+          "employeeName": "陳明宏",
+          "sourceText": "陳明宏晚T2",
+          "sourceRow": 308
+        },
+        {
+          "employeeId": "B6170",
+          "employeeName": "黃志霖",
+          "sourceText": "黃志霖晚T2",
+          "sourceRow": 309
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B3104",
+          "employeeName": "王志強",
+          "sourceText": "王志強18-22",
+          "sourceRow": 307
+        },
+        {
+          "employeeId": "B5069",
+          "employeeName": "林詠蒼",
+          "sourceText": "林詠蒼18-22",
+          "sourceRow": 308
+        },
+        {
+          "employeeId": "B5851",
+          "employeeName": "李家逸",
+          "sourceText": "李家逸16-20",
+          "sourceRow": 309
+        },
+        {
+          "employeeId": "B6073",
+          "employeeName": "羅德淵",
+          "sourceText": "羅德淵17-22.5",
+          "sourceRow": 310
+        },
+        {
+          "employeeId": "B4356",
+          "employeeName": "李蔡明",
+          "sourceText": "李蔡明17-22.5",
+          "sourceRow": 311
+        },
+        {
+          "employeeId": "B5286",
+          "employeeName": "王筠媜",
+          "sourceText": "王筠媜17-22.5",
+          "sourceRow": 312
+        },
+        {
+          "employeeId": "B6044",
+          "employeeName": "蘇振祿",
+          "sourceText": "蘇振祿17-22.5",
+          "sourceRow": 313
+        },
+        {
+          "employeeId": "B6182",
+          "employeeName": "盧冠宏",
+          "sourceText": "盧冠宏18-22",
+          "sourceRow": 314
+        }
+      ],
+      "assistants": [],
+      "workFocus": "平日1700起 先駐守 鳳鳴車站，綁車全解完再處理別站。車站不要空綁",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 305,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-315",
+      "areaCode": "V",
+      "areaName": "淡水 V區",
+      "variantCode": "standard",
+      "vehicleNo": "RFW-2302",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 315,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-316",
+      "areaCode": "V",
+      "areaName": "淡水 V區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1725",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 316,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-317",
+      "areaCode": "V",
+      "areaName": "淡水 V區",
+      "variantCode": "standard",
+      "vehicleNo": "RGH-9362",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "97248",
+          "employeeName": "陳睿榮",
+          "sourceText": "陳睿榮晚V1",
+          "sourceRow": 319
+        },
+        {
+          "employeeId": "B4473",
+          "employeeName": "張皓雲",
+          "sourceText": "張皓雲晚V",
+          "sourceRow": 320
+        },
+        {
+          "employeeId": "B5407",
+          "employeeName": "朱秦鴻",
+          "sourceText": "朱秦鴻晚V2",
+          "sourceRow": 321
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "96806",
+          "employeeName": "蔡竹軒",
+          "sourceText": "蔡竹軒16-20",
+          "sourceRow": 319
+        },
+        {
+          "employeeId": "97485",
+          "employeeName": "黃宏甫",
+          "sourceText": "黃宏甫16.5-22",
+          "sourceRow": 320
+        },
+        {
+          "employeeId": "B1371",
+          "employeeName": "陳韋誠",
+          "sourceText": "陳韋誠16.5-22",
+          "sourceRow": 321
+        },
+        {
+          "employeeId": "B4120",
+          "employeeName": "張惟翔",
+          "sourceText": "張惟翔15.5-21",
+          "sourceRow": 322
+        },
+        {
+          "employeeId": "B5634",
+          "employeeName": "楊宜憲",
+          "sourceText": "楊宜憲18-22",
+          "sourceRow": 323
+        },
+        {
+          "employeeId": "B6235",
+          "employeeName": "林郁承",
+          "sourceText": "林郁承18-22",
+          "sourceRow": 324
+        }
+      ],
+      "assistants": [],
+      "workFocus": "V.捷運竹圍/竹圍公園/關渡宮/立功立德/捷運關渡/關渡自然公園/中央北路四段540巷口",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 317,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-325",
+      "areaCode": "X1",
+      "areaName": "林口 X1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFJ-9657",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 325,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-326",
+      "areaCode": "X2",
+      "areaName": "林口 X2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFH-0633",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 326,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "day",
+      "blockId": "day-single-327",
+      "areaCode": "X",
+      "areaName": "林口 X區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-1025",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4209",
+          "employeeName": "陳正良",
+          "sourceText": "陳正良晚X",
+          "sourceRow": 329
+        },
+        {
+          "employeeId": "B5955",
+          "employeeName": "呂裕杰",
+          "sourceText": "呂裕杰晚X1",
+          "sourceRow": 330
+        },
+        {
+          "employeeId": "B0508",
+          "employeeName": "賴怡成",
+          "sourceText": "賴怡成1730-1930",
+          "sourceRow": 331
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "98757",
+          "employeeName": "游順雄",
+          "sourceText": "游順雄16-20",
+          "sourceRow": 329
+        },
+        {
+          "employeeId": "B2153",
+          "employeeName": "劉濬禾",
+          "sourceText": "劉濬禾18-22",
+          "sourceRow": 330
+        },
+        {
+          "employeeId": "B3130",
+          "employeeName": "劉濬宇",
+          "sourceText": "劉濬宇17-22",
+          "sourceRow": 331
+        },
+        {
+          "employeeId": "B4634",
+          "employeeName": "卓振剛",
+          "sourceText": "卓振剛18-22",
+          "sourceRow": 332
+        },
+        {
+          "employeeId": "B5886",
+          "employeeName": "賴建翰",
+          "sourceText": "賴建翰16-20",
+          "sourceRow": 333
+        },
+        {
+          "employeeId": "B6012",
+          "employeeName": "郭永坤",
+          "sourceText": "郭永坤17-21",
+          "sourceRow": 334
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "雙北今日派工單看這邊",
+      "sourceRow": 327,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-2",
+      "areaCode": "A1",
+      "areaName": "府前 A1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFM-2661",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "96409",
+          "employeeName": "楊力融",
+          "sourceText": "楊力融",
+          "sourceRow": 4
+        },
+        {
+          "employeeId": "B5956",
+          "employeeName": "李麥克",
+          "sourceText": "李麥克",
+          "sourceRow": 5
+        },
+        {
+          "employeeId": "B4431",
+          "employeeName": "鄭兆融",
+          "sourceText": "鄭兆融",
+          "sourceRow": 7
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B5569",
+          "employeeName": "黃偉祥",
+          "sourceText": "黃偉祥",
+          "sourceRow": 4
+        },
+        {
+          "employeeId": "B2030",
+          "employeeName": "楊鴻斌",
+          "sourceText": "楊鴻斌",
+          "sourceRow": 5
+        },
+        {
+          "employeeId": "97237",
+          "employeeName": "邱瑞揚",
+          "sourceText": "邱瑞揚",
+          "sourceRow": 6
+        }
+      ],
+      "assistants": [],
+      "workFocus": "夜4-1:泰和區+松有/169\n夜4-2:麟光區",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 2,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-2",
+      "areaCode": "A2",
+      "areaName": "府前 A2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1720",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "97561",
+          "employeeName": "廖國丞",
+          "sourceText": "廖國丞",
+          "sourceRow": 4
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B3810",
+          "employeeName": "林威辰",
+          "sourceText": "林威辰",
+          "sourceRow": 4
+        },
+        {
+          "employeeId": "B4996",
+          "employeeName": "邱崇義",
+          "sourceText": "邱崇義",
+          "sourceRow": 6
+        }
+      ],
+      "assistants": [],
+      "workFocus": "夜4-3:市捷玉成區\n夜4-4:永吉復源區",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 2,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-8",
+      "areaCode": "A1",
+      "areaName": "小夜 A1區",
+      "variantCode": "small-night",
+      "vehicleNo": "RFN-1722",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B5888",
+          "employeeName": "王怡惇",
+          "sourceText": "王怡惇",
+          "sourceRow": 11
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜 (23:00後 禁止吳興街260巷作業)\n大夜 (23:00後 禁止吳興街284巷36弄作業)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 8,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-8",
+      "areaCode": "A2",
+      "areaName": "小夜 A2區",
+      "variantCode": "small-night",
+      "vehicleNo": "BKP-2863",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B1829",
+          "employeeName": "莊孟儒",
+          "sourceText": "莊孟儒",
+          "sourceRow": 10
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 8,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-12",
+      "areaCode": "J1",
+      "areaName": "府前 J1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-6501",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B6105",
+          "employeeName": "陳慕樊",
+          "sourceText": "陳慕樊",
+          "sourceRow": 14
+        },
+        {
+          "employeeId": "B4969",
+          "employeeName": "劉柏言",
+          "sourceText": "劉柏言",
+          "sourceRow": 15
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 12,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-12",
+      "areaCode": "ZU",
+      "areaName": "南港 ZU區",
+      "variantCode": "Z",
+      "vehicleNo": "RGE-1662",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B1159",
+          "employeeName": "林楷倫",
+          "sourceText": "林楷倫",
+          "sourceRow": 14
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "東湖路113巷95弄(6點柱滿+綁一車)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 12,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-16",
+      "areaCode": "J1",
+      "areaName": "小夜 J1區",
+      "variantCode": "small-night",
+      "vehicleNo": "RGH-9360",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B6206",
+          "employeeName": "高祐傑",
+          "sourceText": "高祐傑",
+          "sourceRow": 19
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 16,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-16",
+      "areaCode": "U",
+      "areaName": "南港 U區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1721",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B6241",
+          "employeeName": "陳宗庭",
+          "sourceText": "陳宗庭",
+          "sourceRow": 18
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "東湖路113巷95弄(6點柱滿+綁一車)\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 16,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-20",
+      "areaCode": "J2",
+      "areaName": "府前 J2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-6506",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B2615",
+          "employeeName": "張智堯",
+          "sourceText": "張智堯",
+          "sourceRow": 22
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 20,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-20",
+      "areaCode": "ZU",
+      "areaName": "小夜 ZU區",
+      "variantCode": "small-night",
+      "vehicleNo": "RGE-1661",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜\n東湖路113巷95弄(6點柱滿+綁一車)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 20,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-24",
+      "areaCode": "J2",
+      "areaName": "小夜 J2區",
+      "variantCode": "small-night",
+      "vehicleNo": "RFQ-1025",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B5639",
+          "employeeName": "周典",
+          "sourceText": "周典",
+          "sourceRow": 26
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 24,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-24",
+      "areaCode": "N1",
+      "areaName": "濱江 N1區",
+      "variantCode": "standard",
+      "vehicleNo": "EBC-8307",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B3655",
+          "employeeName": "薛評仁",
+          "sourceText": "薛評仁",
+          "sourceRow": 26
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B0989",
+          "employeeName": "陳煒舜",
+          "sourceText": "陳煒舜",
+          "sourceRow": 26
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 24,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-27",
+      "areaCode": "",
+      "areaName": "府(車在維修)",
+      "variantCode": "standard",
+      "vehicleNo": "BKK-9172",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 27,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-27",
+      "areaCode": "N2",
+      "areaName": "濱江 N2區",
+      "variantCode": "standard",
+      "vehicleNo": "EBC-8315",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "96736",
+          "employeeName": "黃奕盛",
+          "sourceText": "黃奕盛",
+          "sourceRow": 29
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B5281",
+          "employeeName": "許知亮",
+          "sourceText": "許知亮",
+          "sourceRow": 29
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 27,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-31",
+      "areaCode": "C",
+      "areaName": "府前 C小夜",
+      "variantCode": "small-night",
+      "vehicleNo": "RFN-1728",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 31,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-31",
+      "areaCode": "N3",
+      "areaName": "濱江 N3區",
+      "variantCode": "standard",
+      "vehicleNo": "EBC-8316",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4441",
+          "employeeName": "王建仁",
+          "sourceText": "王建仁",
+          "sourceRow": 33
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 31,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-35",
+      "areaCode": "C1",
+      "areaName": "府前 C1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1726",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "96781",
+          "employeeName": "高宏慶",
+          "sourceText": "高宏慶",
+          "sourceRow": 37
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B4218",
+          "employeeName": "李國良",
+          "sourceText": "李國良",
+          "sourceRow": 37
+        }
+      ],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 35,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-35",
+      "areaCode": "N",
+      "areaName": "濱江 N區",
+      "variantCode": "standard",
+      "vehicleNo": "RFM-2660/RFJ-9653",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 35,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-39",
+      "areaCode": "C2",
+      "areaName": "府前 C2區",
+      "variantCode": "standard",
+      "vehicleNo": "RGE-1663",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "98335",
+          "employeeName": "吳韋廷",
+          "sourceText": "吳韋廷",
+          "sourceRow": 41
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 39,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-39",
+      "areaCode": "L1",
+      "areaName": "新莊 L1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-7399",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B1192",
+          "employeeName": "曾佳琦",
+          "sourceText": "曾佳琦",
+          "sourceRow": 41
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "96477",
+          "employeeName": "林俊宏",
+          "sourceText": "林俊宏",
+          "sourceRow": 41
+        },
+        {
+          "employeeId": "B0414",
+          "employeeName": "許嘉豪",
+          "sourceText": "許嘉豪",
+          "sourceRow": 42
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 39,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-43",
+      "areaCode": "B1",
+      "areaName": "臺大B1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFM-2659",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B0920",
+          "employeeName": "劉人傑",
+          "sourceText": "劉人傑",
+          "sourceRow": 45
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B5016",
+          "employeeName": "周宏輝",
+          "sourceText": "周宏輝",
+          "sourceRow": 45
+        },
+        {
+          "employeeId": "B5401",
+          "employeeName": "陳佳楹",
+          "sourceText": "陳佳楹",
+          "sourceRow": 46
+        }
+      ],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 43,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-43",
+      "areaCode": "ZL1",
+      "areaName": "新莊 ZL1區",
+      "variantCode": "Z",
+      "vehicleNo": "RFW-7652",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 43,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-47",
+      "areaCode": "B2",
+      "areaName": "臺大B2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1729",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B3569",
+          "employeeName": "王明智",
+          "sourceText": "王明智",
+          "sourceRow": 49
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B5492",
+          "employeeName": "廖翊展",
+          "sourceText": "廖翊展",
+          "sourceRow": 49
+        },
+        {
+          "employeeId": "B5739",
+          "employeeName": "黃俊嘉",
+          "sourceText": "黃俊嘉",
+          "sourceRow": 50
+        }
+      ],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 47,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-47",
+      "areaCode": "L4",
+      "areaName": "新泰 L4區",
+      "variantCode": "standard",
+      "vehicleNo": "RFH-9322",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B2517",
+          "employeeName": "陳子彬",
+          "sourceText": "陳子彬",
+          "sourceRow": 49
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 47,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-51",
+      "areaCode": "B3",
+      "areaName": "臺大B3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFW-2300",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4558",
+          "employeeName": "張鈞凱",
+          "sourceText": "張鈞凱",
+          "sourceRow": 53
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B5762",
+          "employeeName": "馮珮宜",
+          "sourceText": "馮珮宜",
+          "sourceRow": 53
+        },
+        {
+          "employeeId": "B6082",
+          "employeeName": "李文慧",
+          "sourceText": "李文慧",
+          "sourceRow": 54
+        }
+      ],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 51,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-51",
+      "areaCode": "ZL4",
+      "areaName": "新泰 ZL4區",
+      "variantCode": "Z",
+      "vehicleNo": "RFX-1902",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 51,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-55",
+      "areaCode": "B4",
+      "areaName": "臺大B4區",
+      "variantCode": "standard",
+      "vehicleNo": "BKP-3525",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B5638",
+          "employeeName": "何宣瑩",
+          "sourceText": "何宣瑩",
+          "sourceRow": 58
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 55,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-55",
+      "areaCode": "L4",
+      "areaName": "小夜 L4區",
+      "variantCode": "small-night",
+      "vehicleNo": "BFR-5821",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 55,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-59",
+      "areaCode": "B",
+      "areaName": "臺大B區",
+      "variantCode": "standard",
+      "vehicleNo": "BBK-9183",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 59,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-59",
+      "areaCode": "L2",
+      "areaName": "輔大 L2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFJ-9652",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B5482",
+          "employeeName": "尹念祖",
+          "sourceText": "尹念祖",
+          "sourceRow": 61
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "捷運丹鳳站(1號出口) 23:00補車拍照",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 59,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-63",
+      "areaCode": "P1",
+      "areaName": "景華 P1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFZ-8530",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "94232",
+          "employeeName": "林宗賢",
+          "sourceText": "林宗賢",
+          "sourceRow": 65
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "95644",
+          "employeeName": "吳瓊如",
+          "sourceText": "吳瓊如",
+          "sourceRow": 65
+        }
+      ],
+      "assistants": [],
+      "workFocus": "(22:00-07:00 禁止景華街128巷口作業)\n景興國中請於06:00-06:30之間拉空站(開學期)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 63,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-63",
+      "areaCode": "ZL2",
+      "areaName": "輔大 ZL2區",
+      "variantCode": "Z",
+      "vehicleNo": "RFQ-1026",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B1994",
+          "employeeName": "錢偉倫",
+          "sourceText": "錢偉倫",
+          "sourceRow": 65
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "捷運丹鳳站(1號出口) 23:00補車拍照",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 63,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-67",
+      "areaCode": "P2",
+      "areaName": "景華 P2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFW-2301",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B3002",
+          "employeeName": "朱寬和",
+          "sourceText": "朱寬和",
+          "sourceRow": 69
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B5637",
+          "employeeName": "王世穎",
+          "sourceText": "王世穎",
+          "sourceRow": 69
+        }
+      ],
+      "assistants": [],
+      "workFocus": "萬芳出租國宅備30 早上拍照",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 67,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-67",
+      "areaCode": "L3",
+      "areaName": "泰山 L3區",
+      "variantCode": "standard",
+      "vehicleNo": "BKK-9176",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B3217",
+          "employeeName": "李豐光",
+          "sourceText": "李豐光",
+          "sourceRow": 69
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 67,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-70",
+      "areaCode": "G1",
+      "areaName": "新店 G1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFY-0702",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B3238",
+          "employeeName": "張智淵",
+          "sourceText": "張智淵",
+          "sourceRow": 72
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B2712",
+          "employeeName": "莊勝義",
+          "sourceText": "莊勝義",
+          "sourceRow": 72
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 70,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-70",
+      "areaCode": "ZL3",
+      "areaName": "泰山 ZL3區",
+      "variantCode": "Z",
+      "vehicleNo": "RDX-6861",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 70,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-73",
+      "areaCode": "G2",
+      "areaName": "新店 G2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFJ-9655",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "98729",
+          "employeeName": "簡君璋",
+          "sourceText": "簡君璋",
+          "sourceRow": 75
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "早上6點中華郵政玫瑰城郵局站上9成滿",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 73,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-73",
+      "areaCode": "M",
+      "areaName": "秀朗 M區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-1021",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "97435",
+          "employeeName": "彭清龍",
+          "sourceText": "彭清龍",
+          "sourceRow": 75
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "仁愛路40巷(拍照列管週期議會檢討)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 73,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-76",
+      "areaCode": "G",
+      "areaName": "新店 G區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1730",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 76,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-76",
+      "areaCode": "M2",
+      "areaName": "秀朗 M2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFX-6093",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "97436",
+          "employeeName": "孫維聯",
+          "sourceText": "孫維聯",
+          "sourceRow": 78
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "仁愛路40巷(拍照列管週期議會檢討)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 76,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-79",
+      "areaCode": "D1",
+      "areaName": "萬華 D1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFQ-6378",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "95424",
+          "employeeName": "宋威緯",
+          "sourceText": "宋威緯",
+          "sourceRow": 81
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B3824",
+          "employeeName": "游琮政",
+          "sourceText": "游琮政",
+          "sourceRow": 81
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 79,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-79",
+      "areaCode": "",
+      "areaName": "中永和小夜",
+      "variantCode": "small-night",
+      "vehicleNo": "BFR-5822",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜\n大夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 79,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-83",
+      "areaCode": "D2",
+      "areaName": "萬華 D2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFZ-8527",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "94253",
+          "employeeName": "蔡祈甫",
+          "sourceText": "蔡祈甫",
+          "sourceRow": 85
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 83,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-83",
+      "areaCode": "W1",
+      "areaName": "中和 W1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFX-6092",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B1811",
+          "employeeName": "陳志龍",
+          "sourceText": "陳志龍",
+          "sourceRow": 85
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B2146",
+          "employeeName": "李武龍",
+          "sourceText": "李武龍",
+          "sourceRow": 85
+        }
+      ],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 83,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-87",
+      "areaCode": "D3",
+      "areaName": "萬華 D3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1727",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B2268",
+          "employeeName": "李嘉泰",
+          "sourceText": "李嘉泰",
+          "sourceRow": 89
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 87,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-87",
+      "areaCode": "ZW1",
+      "areaName": "中和 ZW1區",
+      "variantCode": "Z",
+      "vehicleNo": "RFH-9325",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B6013",
+          "employeeName": "林克明",
+          "sourceText": "林克明",
+          "sourceRow": 89
+        }
+      ],
+      "stations": [],
+      "assistants": [
+        {
+          "employeeId": "B3581",
+          "employeeName": "黃建斌",
+          "sourceText": "黃建斌",
+          "sourceRow": 89
+        }
+      ],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 87,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-91",
+      "areaCode": "D",
+      "areaName": "萬華 D區",
+      "variantCode": "standard",
+      "vehicleNo": "RDX-6865",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 91,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-91",
+      "areaCode": "W2",
+      "areaName": "中和 W2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFY-0703",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B0429",
+          "employeeName": "盧成俊",
+          "sourceText": "盧成俊",
+          "sourceRow": 93
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 91,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-95",
+      "areaCode": "E1",
+      "areaName": "北投 E1區",
+      "variantCode": "standard",
+      "vehicleNo": "EBC-8312",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "95991",
+          "employeeName": "周文德",
+          "sourceText": "周文德",
+          "sourceRow": 97
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "大業大同街口站4車+中和街455巷11弄1車 (6點拍照列管週期)\n捷運新北投站2車+2號出口1車 (6點拍照列管週期)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 95,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-95",
+      "areaCode": "W3",
+      "areaName": "中和 W3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFQ-1027",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4509",
+          "employeeName": "虞介文",
+          "sourceText": "虞介文",
+          "sourceRow": 98
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 95,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-99",
+      "areaCode": "E2",
+      "areaName": "北投 E2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFH-9326",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "94622",
+          "employeeName": "鄭友庠",
+          "sourceText": "鄭友庠",
+          "sourceRow": 101
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "中山天母路口1車 (6點拍照列管週期)\n捷運石牌站2號(6點8成滿)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 99,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-99",
+      "areaCode": "O1",
+      "areaName": "藝文 O1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFW-7651",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B3175",
+          "employeeName": "李文良",
+          "sourceText": "李文良",
+          "sourceRow": 101
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B0410",
+          "employeeName": "陳均瑜",
+          "sourceText": "陳均瑜",
+          "sourceRow": 101
+        },
+        {
+          "employeeId": "B5167",
+          "employeeName": "陳致豪",
+          "sourceText": "陳致豪",
+          "sourceRow": 102
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 99,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-103",
+      "areaCode": "E",
+      "areaName": "北投 E區",
+      "variantCode": "standard",
+      "vehicleNo": "RFQ-6379",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "94488",
+          "employeeName": "張旭全",
+          "sourceText": "張旭全",
+          "sourceRow": 105
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "裕民二路33巷(6點9成滿)\n溫泉路68巷6弄口備14台/溫泉路81號備14台",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 103,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-103",
+      "areaCode": "ZO1",
+      "areaName": "藝文 ZO1區",
+      "variantCode": "Z",
+      "vehicleNo": "RFX-6095",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 103,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-107",
+      "areaCode": "F1",
+      "areaName": "汐止 F1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-7397",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "96697",
+          "employeeName": "林均達",
+          "sourceText": "林均達",
+          "sourceRow": 109
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "(F1雙侯)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 107,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-107",
+      "areaCode": "O1",
+      "areaName": "O1 小夜",
+      "variantCode": "small-night",
+      "vehicleNo": "BKP-0190",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B5784",
+          "employeeName": "李昱威",
+          "sourceText": "李昱威",
+          "sourceRow": 109
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜\n大夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 107,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-111",
+      "areaCode": "F2",
+      "areaName": "汐止 F2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFH-0631",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "96165",
+          "employeeName": "蕭克銘",
+          "sourceText": "蕭克銘",
+          "sourceRow": 113
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B4696",
+          "employeeName": "陳建宇",
+          "sourceText": "陳建宇",
+          "sourceRow": 113
+        }
+      ],
+      "assistants": [],
+      "workFocus": "(F2汐止)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 111,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-111",
+      "areaCode": "O2",
+      "areaName": "板橋 O2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFM-2663",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B2109",
+          "employeeName": "李承恩",
+          "sourceText": "李承恩",
+          "sourceRow": 113
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B1875",
+          "employeeName": "林炳中",
+          "sourceText": "林炳中",
+          "sourceRow": 113
+        }
+      ],
+      "assistants": [],
+      "workFocus": "禁止進入22:00-06:00港德攤集區(中正路236巷)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 111,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-114",
+      "areaCode": "H1",
+      "areaName": "福林H1區",
+      "variantCode": "standard",
+      "vehicleNo": "BFR-3591",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B2207",
+          "employeeName": "王致隆",
+          "sourceText": "王致隆",
+          "sourceRow": 116
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B0831",
+          "employeeName": "謝宗柏",
+          "sourceText": "謝宗柏",
+          "sourceRow": 116
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 114,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-114",
+      "areaCode": "O2",
+      "areaName": "O2 小夜",
+      "variantCode": "small-night",
+      "vehicleNo": "BKP-0187",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B1025",
+          "employeeName": "周生財",
+          "sourceText": "周生財",
+          "sourceRow": 117
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜\n大夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 114,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-118",
+      "areaCode": "H2",
+      "areaName": "福林H2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1723",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "95205",
+          "employeeName": "陳家銘",
+          "sourceText": "陳家銘",
+          "sourceRow": 120
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B4419",
+          "employeeName": "鄭宇昕",
+          "sourceText": "鄭宇昕",
+          "sourceRow": 120
+        }
+      ],
+      "assistants": [],
+      "workFocus": "21:00~07:00勿前往福林路100巷77弄口作業",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 118,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-118",
+      "areaCode": "O4",
+      "areaName": "板橋 O4區",
+      "variantCode": "standard",
+      "vehicleNo": "RFQ-6380",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B0957",
+          "employeeName": "曾芳英",
+          "sourceText": "曾芳英",
+          "sourceRow": 120
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "95897",
+          "employeeName": "顏宏屹",
+          "sourceText": "顏宏屹",
+          "sourceRow": 120
+        }
+      ],
+      "assistants": [],
+      "workFocus": "德光國光街口00:00後正職勿前往作業，00:00後PT勿前往作業",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 118,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-121",
+      "areaCode": "H",
+      "areaName": "福林H區",
+      "variantCode": "standard",
+      "vehicleNo": "RDX-6873",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 121,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-121",
+      "areaCode": "O4",
+      "areaName": "O4 小夜",
+      "variantCode": "small-night",
+      "vehicleNo": "RGE-1665",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜\n大夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 121,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-125",
+      "areaCode": "ZH",
+      "areaName": "福林ZH區",
+      "variantCode": "Z",
+      "vehicleNo": "RFX-1901",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜\n大夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 125,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-125",
+      "areaCode": "O3",
+      "areaName": "亞東 O3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-6505",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4802",
+          "employeeName": "張文全",
+          "sourceText": "張文全",
+          "sourceRow": 127
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 125,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-129",
+      "areaCode": "H",
+      "areaName": "小夜 H區",
+      "variantCode": "small-night",
+      "vehicleNo": "RFY-5611",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B3733",
+          "employeeName": "李長宏",
+          "sourceText": "李長宏",
+          "sourceRow": 131
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜\n大夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 129,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-129",
+      "areaCode": "O3",
+      "areaName": "O3 小夜",
+      "variantCode": "small-night",
+      "vehicleNo": "RFM-2665",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B1000",
+          "employeeName": "鄭人維",
+          "sourceText": "鄭人維",
+          "sourceRow": 131
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜\n大夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 129,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-133",
+      "areaCode": "I1",
+      "areaName": "林金 I1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-1023",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B2858",
+          "employeeName": "杜家銘",
+          "sourceText": "杜家銘",
+          "sourceRow": 135
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 133,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-133",
+      "areaCode": "R",
+      "areaName": "土城 R區",
+      "variantCode": "standard",
+      "vehicleNo": "RFY-0701",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "96463",
+          "employeeName": "胡家豪",
+          "sourceText": "胡家豪",
+          "sourceRow": 135
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "95656",
+          "employeeName": "盧宥丞",
+          "sourceText": "盧宥丞",
+          "sourceRow": 135
+        }
+      ],
+      "assistants": [],
+      "workFocus": "土城綜合體育場麻煩近期平日幫忙站上備滿40台，謝謝",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 133,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-136",
+      "areaCode": "I2",
+      "areaName": "圓山 I2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFW-7653",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B5326",
+          "employeeName": "林益行",
+          "sourceText": "林益行",
+          "sourceRow": 138
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 136,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-136",
+      "areaCode": "ZR",
+      "areaName": "土城 ZR區",
+      "variantCode": "Z",
+      "vehicleNo": "RFV-1020",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "土城綜合體育場麻煩近期平日幫忙站上備滿40台，謝謝",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 136,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-139",
+      "areaCode": "I3",
+      "areaName": "林金 I3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFX-6091",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "95181",
+          "employeeName": "吳怡億",
+          "sourceText": "吳怡億",
+          "sourceRow": 141
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 139,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-139",
+      "areaCode": "ZR3",
+      "areaName": "土城 ZR3區",
+      "variantCode": "Z",
+      "vehicleNo": "RGE-1667",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜\n大夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 139,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-143",
+      "areaCode": "I",
+      "areaName": "林金 I區",
+      "variantCode": "standard",
+      "vehicleNo": "RFJ-9656",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B1065",
+          "employeeName": "林東緯",
+          "sourceText": "林東緯",
+          "sourceRow": 145
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 143,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-143",
+      "areaCode": "",
+      "areaName": "土城 小夜",
+      "variantCode": "small-night",
+      "vehicleNo": "RFV-6503",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜\n大夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 143,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-147",
+      "areaCode": "K1",
+      "areaName": "三重 K1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-7398",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B0895",
+          "employeeName": "楊迦得",
+          "sourceText": "楊迦得",
+          "sourceRow": 149
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "97520",
+          "employeeName": "黃婉如",
+          "sourceText": "黃婉如",
+          "sourceRow": 149
+        }
+      ],
+      "assistants": [],
+      "workFocus": "光明市場早上6點備20台",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 147,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-147",
+      "areaCode": "S",
+      "areaName": "樹林 S區",
+      "variantCode": "standard",
+      "vehicleNo": "RGH-0950/RGF-9361",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 147,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-150",
+      "areaCode": "K1",
+      "areaName": "小夜 K1區",
+      "variantCode": "small-night",
+      "vehicleNo": "RFV-6502",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B0773",
+          "employeeName": "鍾子健",
+          "sourceText": "鍾子健",
+          "sourceRow": 152
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜\n大夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 150,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-150",
+      "areaCode": "T1",
+      "areaName": "鶯歌 T1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFH-9323",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B3348",
+          "employeeName": "蔡承恩",
+          "sourceText": "蔡承恩",
+          "sourceRow": 152
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "06:00前將臺鐵鳳鳴站、臺鐵鳳鳴站(鶯歌路)兩站站上拉空",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 150,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-154",
+      "areaCode": "K2",
+      "areaName": "正義 K2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFY-5612",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "96708",
+          "employeeName": "林家賢",
+          "sourceText": "林家賢",
+          "sourceRow": 156
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B1006",
+          "employeeName": "李世洋",
+          "sourceText": "李世洋",
+          "sourceRow": 156
+        }
+      ],
+      "assistants": [],
+      "workFocus": "(小夜車支援)三和國中站2號(10/22-???列管週期)\n三重國小站(10/16-???列管週期)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 154,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-154",
+      "areaCode": "T2",
+      "areaName": "鶯歌 T2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-1022",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "94980",
+          "employeeName": "王華祐",
+          "sourceText": "王華祐",
+          "sourceRow": 156
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "95850",
+          "employeeName": "楊豐如",
+          "sourceText": "楊豐如",
+          "sourceRow": 156
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 154,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-158",
+      "areaCode": "K2",
+      "areaName": "正義 K2區",
+      "variantCode": "standard",
+      "vehicleNo": "RGE-1669",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "95641",
+          "employeeName": "陳廷紘",
+          "sourceText": "陳廷紘",
+          "sourceRow": 160
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "(小夜車支援)三和國中站2號(10/22-???列管週期)\n三重國小站(10/16-???列管週期)",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 158,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-158",
+      "areaCode": "T",
+      "areaName": "鶯歌 T區",
+      "variantCode": "standard",
+      "vehicleNo": "RFX-1903",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4684",
+          "employeeName": "張育維",
+          "sourceText": "張育維",
+          "sourceRow": 160
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 158,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-162",
+      "areaCode": "K3",
+      "areaName": "永福 K3區",
+      "variantCode": "standard",
+      "vehicleNo": "RFZ-8526",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "94466",
+          "employeeName": "鄭永愷",
+          "sourceText": "鄭永愷",
+          "sourceRow": 164
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "B4362",
+          "employeeName": "葉信成",
+          "sourceText": "葉信成",
+          "sourceRow": 164
+        }
+      ],
+      "assistants": [],
+      "workFocus": "早上6點普庵寺站上8成滿，備綁20台\n早上6點中興復興路口站上8成滿，備綁10台",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 162,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-162",
+      "areaCode": "V1",
+      "areaName": "淡水 V1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFW-2302",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "96172",
+          "employeeName": "楊宗元",
+          "sourceText": "楊宗元",
+          "sourceRow": 164
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 162,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-166",
+      "areaCode": "ZK3",
+      "areaName": "永福 ZK3區",
+      "variantCode": "Z",
+      "vehicleNo": "RFY-5610",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B0211",
+          "employeeName": "謝宗霖",
+          "sourceText": "謝宗霖",
+          "sourceRow": 168
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "早上6點普庵寺站上8成滿，備綁20台\n早上6點中興復興路口站上8成滿，備綁10台",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 166,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-166",
+      "areaCode": "V2",
+      "areaName": "淡水 V2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFN-1725/RGH-9362",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4132",
+          "employeeName": "張皓鈞",
+          "sourceText": "張皓鈞",
+          "sourceRow": 168
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 166,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-170",
+      "areaCode": "K4",
+      "areaName": "永康 K4區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-1019",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "95207",
+          "employeeName": "陳駿宏",
+          "sourceText": "陳駿宏",
+          "sourceRow": 172
+        }
+      ],
+      "stations": [
+        {
+          "employeeId": "98309",
+          "employeeName": "謝明印",
+          "sourceText": "謝明印",
+          "sourceRow": 172
+        }
+      ],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 170,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-170",
+      "areaCode": "X1",
+      "areaName": "林口 X1區",
+      "variantCode": "standard",
+      "vehicleNo": "RFH-0633",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B0976",
+          "employeeName": "林進雄",
+          "sourceText": "林進雄",
+          "sourceRow": 172
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 170,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-173",
+      "areaCode": "ZK4",
+      "areaName": "永康 ZK4區",
+      "variantCode": "Z",
+      "vehicleNo": "BFR-1731",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B4593",
+          "employeeName": "許志誠",
+          "sourceText": "許志誠",
+          "sourceRow": 176
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "大夜\n小夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 173,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-173",
+      "areaCode": "X2",
+      "areaName": "林口 X2區",
+      "variantCode": "standard",
+      "vehicleNo": "RFJ-9657",
+      "vehicleType": "",
+      "drivers": [
+        {
+          "employeeId": "B5272",
+          "employeeName": "梁亦鑫",
+          "sourceText": "梁亦鑫",
+          "sourceRow": 175
+        }
+      ],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 173,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-left-177",
+      "areaCode": "K4",
+      "areaName": "小夜 K4區",
+      "variantCode": "small-night",
+      "vehicleNo": "RDX-6902",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "小夜\n大夜",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 177,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    },
+    {
+      "date": "2026-09-09",
+      "shiftType": "night",
+      "blockId": "night-right-177",
+      "areaCode": "X",
+      "areaName": "林口 X區",
+      "variantCode": "standard",
+      "vehicleNo": "RFV-1025",
+      "vehicleType": "",
+      "drivers": [],
+      "stations": [],
+      "assistants": [],
+      "workFocus": "",
+      "balanceArea": "",
+      "note": "",
+      "sourceSheet": "9/9大夜派工單",
+      "sourceRow": 177,
+      "createdAt": null,
+      "updatedAt": null,
+      "sourceUpdatedAt": null,
+      "status": "active",
+      "modifiedBy": "",
+      "modifiedAt": null
+    }
+  ],
+  "unresolved": [],
+  "summary": {
+    "dayBlocks": 89,
+    "nightBlocks": 94,
+    "fineAreaCount": 81,
+    "multiVehicleAreaCount": 30,
+    "parsedPersonAssignments": 351,
+    "uniqueParsedPeople": 333,
+    "unresolvedPersonCells": 0,
+    "oldSingleCardMergedBlocks": 43
+  },
+  "multiVehicleAreas": [
+    {
+      "shiftType": "day",
+      "areaCode": "A1",
+      "blocks": 2,
+      "vehicles": [
+        "RFM-2661",
+        "RFN-1722"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "C",
+      "blocks": 2,
+      "vehicles": [
+        "RGE-1663",
+        "RFN-1726"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "U",
+      "blocks": 3,
+      "vehicles": [
+        "RGE-1662",
+        "RGH-9360",
+        "RGE-1661"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "F",
+      "blocks": 2,
+      "vehicles": [
+        "RFV-7397",
+        "RFH-0631"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "K1",
+      "blocks": 2,
+      "vehicles": [
+        "RFV-7398",
+        "RFV-6502"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "K2",
+      "blocks": 2,
+      "vehicles": [
+        "RFY-5612",
+        "RGE-1669"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "K3",
+      "blocks": 2,
+      "vehicles": [
+        "RFZ-8526",
+        "RFY-5610"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "K4",
+      "blocks": 3,
+      "vehicles": [
+        "RFV-1019",
+        "BFR-1731",
+        "RDX-6902(小夜車)"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "M",
+      "blocks": 2,
+      "vehicles": [
+        "RFV-1021/RFX-6093",
+        "BFR-5822"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "O1",
+      "blocks": 3,
+      "vehicles": [
+        "RFX-6095",
+        "RFW-7651",
+        "BKP-0190"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "O2",
+      "blocks": 2,
+      "vehicles": [
+        "RFM-2663",
+        "BKP-0187"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "O4",
+      "blocks": 2,
+      "vehicles": [
+        "RFQ-6380",
+        "RFX-0031"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "O3",
+      "blocks": 2,
+      "vehicles": [
+        "RFV-6505",
+        "RGE-1665"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "R",
+      "blocks": 4,
+      "vehicles": [
+        "RFY-0701",
+        "RFV-6503",
+        "RFV-1020",
+        "RGE-1667"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "S",
+      "blocks": 2,
+      "vehicles": [
+        "RGH-0950",
+        "RGH-9361"
+      ]
+    },
+    {
+      "shiftType": "day",
+      "areaCode": "V",
+      "blocks": 3,
+      "vehicles": [
+        "RFW-2302",
+        "RFN-1725",
+        "RGH-9362"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "A1",
+      "blocks": 2,
+      "vehicles": [
+        "RFM-2661",
+        "RFN-1722"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "A2",
+      "blocks": 2,
+      "vehicles": [
+        "RFN-1720",
+        "BKP-2863"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "J1",
+      "blocks": 2,
+      "vehicles": [
+        "RFV-6501",
+        "RGH-9360"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "ZU",
+      "blocks": 2,
+      "vehicles": [
+        "RGE-1662",
+        "RGE-1661"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "J2",
+      "blocks": 2,
+      "vehicles": [
+        "RFV-6506",
+        "RFQ-1025"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "L4",
+      "blocks": 2,
+      "vehicles": [
+        "RFH-9322",
+        "BFR-5821"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "O1",
+      "blocks": 2,
+      "vehicles": [
+        "RFW-7651",
+        "BKP-0190"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "O2",
+      "blocks": 2,
+      "vehicles": [
+        "RFM-2663",
+        "BKP-0187"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "O4",
+      "blocks": 2,
+      "vehicles": [
+        "RFQ-6380",
+        "RGE-1665"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "H",
+      "blocks": 2,
+      "vehicles": [
+        "RDX-6873",
+        "RFY-5611"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "O3",
+      "blocks": 2,
+      "vehicles": [
+        "RFV-6505",
+        "RFM-2665"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "K1",
+      "blocks": 2,
+      "vehicles": [
+        "RFV-7398",
+        "RFV-6502"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "K2",
+      "blocks": 2,
+      "vehicles": [
+        "RFY-5612",
+        "RGE-1669"
+      ]
+    },
+    {
+      "shiftType": "night",
+      "areaCode": "K4",
+      "blocks": 2,
+      "vehicles": [
+        "RFV-1019",
+        "RDX-6902"
+      ]
+    }
+  ],
+  "conflicts": [
+    {
+      "employeeId": "B0919",
+      "masterName": "洪祥瑜",
+      "sourceName": "洪梓翰",
+      "status": "unresolved-identity",
+      "action": "no assignment"
+    }
+  ]
+}

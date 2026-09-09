@@ -5,7 +5,9 @@ const { getAuth } = require('firebase-admin/auth')
 const { FieldValue, getFirestore } = require('firebase-admin/firestore')
 const { HttpsError, onCall } = require('firebase-functions/v2/https')
 const { setGlobalOptions } = require('firebase-functions/v2/options')
+const { onSchedule } = require('firebase-functions/v2/scheduler')
 const bcrypt = require('bcryptjs')
+const { parseCsv, parseDay, parseNight } = require('./dispatch-block-parser')
 
 initializeApp()
 setGlobalOptions({ region: 'asia-east1', maxInstances: 10 })
@@ -255,6 +257,63 @@ exports.generateDailyDispatch = onCall(async request => {
     batch.set(db.collection('dispatchRecords').doc(id), { id, date, employeeId: data.employeeId, employeeName: data.employeeName, scheduleCode: code, areaCode, areaName: area.areaName || areaCode, vehicleType: area.defaultVehicleType || '', vehicleNo: area.defaultVehicleNo || '', driver: '', assistant: '', station: area.defaultStation || '', workFocus: area.defaultWorkFocus || '', balanceArea: area.defaultBalanceArea || '', note: '', source: 'scheduleRecords', status: 'active', createdAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(), modifiedBy: actor.employeeId, modifiedAt: FieldValue.serverTimestamp() }, { merge: true }); count += 1
   }
   await batch.commit(); await audit('dispatch.generated', actor.employeeId, date, { count }); return { date, count }
+})
+
+async function syncDispatchBlocksForDate(date, actorId) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new HttpsError('invalid-argument', '日期格式不正確')
+  const [, month, day] = date.match(/^\d{4}-(\d{2})-(\d{2})$/)
+  const daySheet = '雙北今日派工單看這邊'
+  const nightSheet = `${Number(month)}/${Number(day)}大夜派工單`
+  const spreadsheetId = '1RBzq8miIdUFCTM2PZhAsDe7rNMCdfMxN6lVfV-NLhmk'
+  const readSheet = async sheet => {
+    const url = `https://docs.google.com/spreadsheets/d/${spreadsheetId}/gviz/tq?tqx=out:csv&sheet=${encodeURIComponent(sheet)}`
+    const response = await fetch(url)
+    if (!response.ok) throw new HttpsError('failed-precondition', `無法讀取分頁：${sheet}`)
+    return { rows: parseCsv(await response.text()), sheet }
+  }
+  const [daySource, nightSource, employeeSnapshot] = await Promise.all([
+    readSheet(daySheet), readSheet(nightSheet), db.collection('employees').where('active', '==', true).get(),
+  ])
+  const dayMarker = `${Number(month)}月${Number(day)}日`
+  if (!daySource.rows.slice(0, 3).flat().some(value => String(value).includes(dayMarker))) throw new HttpsError('failed-precondition', `白天即時分頁不是 ${date}`)
+  if (!nightSource.rows.slice(0, 3).flat().some(value => String(value).includes(`${Number(month)}/${Number(day)}`))) throw new HttpsError('failed-precondition', `大夜分頁不是 ${date}`)
+  const employees = employeeSnapshot.docs.map(item => ({ employeeId: item.id, name: item.data().name }))
+  const dayResult = parseDay(daySource.rows, date, employees)
+  const nightResult = parseNight(nightSource.rows, date, nightSheet, employees)
+  const parsedBlocks = [...dayResult.blocks, ...nightResult.blocks]
+  const existingSnapshot = await db.collection('dispatchBlocks').where('date', '==', date).get()
+  const existing = new Map(existingSnapshot.docs.map(item => [item.id, item.data()]))
+  const parsedIds = new Set(parsedBlocks.map(block => block.blockId))
+  const editableFields = ['vehicleNo', 'drivers', 'stations', 'assistants', 'workFocus', 'balanceArea', 'note']
+  const writes = []
+  for (const block of parsedBlocks) {
+    const previous = existing.get(block.blockId)
+    const payload = { ...block, sourceUpdatedAt: FieldValue.serverTimestamp(), updatedAt: FieldValue.serverTimestamp(), createdAt: previous?.createdAt || FieldValue.serverTimestamp(), modifiedBy: previous?.modifiedBy || '', modifiedAt: previous?.modifiedAt || null }
+    if (previous?.modifiedAt) for (const field of editableFields) payload[field] = previous[field]
+    writes.push({ ref: db.collection('dispatchBlocks').doc(block.blockId), payload })
+  }
+  for (const item of existingSnapshot.docs) if (!parsedIds.has(item.id)) writes.push({ ref: item.ref, payload: { status: 'stale', updatedAt: FieldValue.serverTimestamp() } })
+  for (let offset = 0; offset < writes.length; offset += 400) {
+    const batch = db.batch()
+    for (const write of writes.slice(offset, offset + 400)) batch.set(write.ref, write.payload, { merge: true })
+    await batch.commit()
+  }
+  const conflicts = [...dayResult.conflicts, ...nightResult.conflicts]
+  for (const conflict of conflicts) await db.collection('dispatchBlockConflicts').add({ ...conflict, date, status: 'unresolved', createdAt: FieldValue.serverTimestamp() })
+  await audit('dispatchBlocks.synced', actorId, date, { dayBlocks: dayResult.blocks.length, nightBlocks: nightResult.blocks.length, conflicts: conflicts.length })
+  return { date, dayBlocks: dayResult.blocks.length, nightBlocks: nightResult.blocks.length, conflicts: conflicts.length }
+}
+
+exports.syncDispatchBlocks = onCall({ timeoutSeconds: 120, memory: '512MiB' }, async request => {
+  const actor = await requireDuty(request)
+  const date = String(request.data?.date || '')
+  return syncDispatchBlocksForDate(date, actor.employeeId)
+})
+
+exports.syncCurrentDispatchBlocks = onSchedule({ schedule: 'every 15 minutes', timeZone: 'Asia/Taipei', timeoutSeconds: 120, memory: '512MiB' }, async () => {
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(new Date())
+  const value = type => parts.find(part => part.type === type).value
+  return syncDispatchBlocksForDate(`${value('year')}-${value('month')}-${value('day')}`, 'system-scheduler')
 })
 
 exports._test = { cleanId, employeeEmail }
