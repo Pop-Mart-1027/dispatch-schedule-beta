@@ -76,3 +76,16 @@
   gap: 0;
   text-align: left;
 }
+.home-overview { max-width: 960px; }
+.home-overview header { margin-bottom: 22px; }
+.home-date { margin: 0 0 8px; color: #715447; font-weight: 700; }
+.home-actions { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+.home-actions button { display: flex; min-height: 154px; padding: 22px; flex-direction: column; align-items: flex-start; gap: 10px; border: 1px solid #eedac7; border-radius: 12px; background: white; color: #ad461d; text-align: left; }
+.home-actions button strong { font-size: 20px; }
+.home-actions button small { color: #657078; }
+.home-actions button:hover { border-color: #ec761c; background: #fff9f1; }
+.app-shell :is(h1,h2,h3,.eyebrow,.home-date,.logo,.profile-chip),
+.admin-console :is(h1,h2,h3,.admin-brand,.admin-topbar,.admin-role-note,div.admin-stat) { cursor: default; }
+:is(input,textarea,[contenteditable="true"]) { cursor: text; }
+@media (max-width:760px) { .home-actions { gap: 10px; } .home-actions button { min-height: 145px; padding: 14px 10px; } .home-actions button strong { font-size: 17px; } }
+.app-shell, .admin-console { cursor: default; }

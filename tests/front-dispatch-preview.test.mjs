@@ -35,7 +35,7 @@ const virtual = {
     export const updateDispatchBlock = denyWrite, writeDispatchBlockAudit = denyWrite, saveDispatchPreviewAsFormal = denyWrite;
     export async function listDispatchBlocks(date) {
       await new Promise(resolve => setTimeout(resolve, window.delays?.[date] || 0));
-      return date === '2026-09-09' ? window.fixture.template : [];
+      return window.formalByDate?.[date] || (date === '2026-09-09' ? window.fixture.template : []);
     }
     export async function listDispatchBlockTemplate() { window.templateReads++; return { sourceDate: '2026-09-09', blocks: window.fixture.template } }`,
   'test:schedules': `export * from '/lib/schedule-firestore.ts';
@@ -44,12 +44,22 @@ const virtual = {
       await new Promise(resolve => setTimeout(resolve, window.delays?.[date] || 0));
       return window.fixture.schedules[date] || [];
     }`,
+  'test:functions': `export * from 'firebase/functions';
+    export const httpsCallable = (_service, name) => async data => {
+      if (name !== 'syncDispatchBlocks') throw new Error('Unexpected callable');
+      window.importCalls.push(data);
+      window.formalByDate = { ...window.formalByDate, [data.date]: window.fixture.template.map(block => ({...block, date: data.date, modifiedBy: 'manual-import'})) };
+      return {data: {date: data.date, dayBlocks: 89, nightBlocks: 94, conflicts: 0}};
+    };`,
   'test:entry': `import React from 'react'; import { createRoot } from 'react-dom/client';
-    import { FirestoreDispatchView, ScheduleMatrix, DutyStaffPanel } from '/app/page.tsx';
-    import { ScheduleManager, DutyColumn } from '/app/admin-console.tsx';
+    import { FirestoreDispatchView, ScheduleMatrix, DutyStaffPanel, HomeView } from '/app/page.tsx';
+    import { ScheduleManager, DutyColumn, DispatchManager, Dashboard } from '/app/admin-console.tsx';
     import '/app/globals.css';
     const root = createRoot(document.getElementById('root'));
     window.showDispatch = () => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(FirestoreDispatchView, {employeeId: 'test', isDuty: false})));
+    window.showHome = () => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(HomeView, {name: '登入人員', onAction: () => {}, onGo: () => {}})));
+    window.showManager = () => root.render(React.createElement('div', {className: 'admin-console'}, React.createElement(DispatchManager, {employeeId: 'test'})));
+    window.showDashboard = () => root.render(React.createElement('div', {className: 'admin-console'}, React.createElement(Dashboard, {role: 'admin', onOpenDispatch: () => {}})));
     window.showSchedule = shift => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(ScheduleMatrix, {rows: window.fixture.source[shift], days: window.fixture.source.days})));
     window.showAdminSchedule = () => root.render(React.createElement('div', {className: 'admin-console'},
       React.createElement('aside', {className: 'admin-sidebar'}), React.createElement('main', {className: 'admin-main'},
@@ -69,9 +79,10 @@ const server = await createServer({
       const admin = id.replaceAll('\\', '/').endsWith('/app/admin-console.tsx')
       if (!admin && !id.replaceAll('\\', '/').endsWith('/app/page.tsx')) return
       return code.replace("from 'firebase/firestore'", "from 'test:firestore'")
+        .replace("from 'firebase/functions'", "from 'test:functions'")
         .replace("from '../lib/dispatch-blocks-firestore'", "from 'test:blocks'")
         .replace("from '../lib/schedule-firestore'", "from 'test:schedules'")
-        + (admin ? '\nexport { ScheduleManager, DutyColumn };' : '\nexport { FirestoreDispatchView, ScheduleMatrix, DutyStaffPanel };')
+        + (admin ? '\nexport { ScheduleManager, DutyColumn, DispatchManager, Dashboard };' : '\nexport { FirestoreDispatchView, ScheduleMatrix, DutyStaffPanel, HomeView };')
     },
     configureServer(server) {
       server.middlewares.use('/preview-test', async (_req, res) => {
@@ -89,7 +100,7 @@ const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } })
 const errors = []
 page.on('pageerror', error => errors.push(error.message))
 await page.addInitScript(data => {
-  window.fixture = data; window.templateReads = 0; window.writeAttempts = 0
+  window.fixture = data; window.templateReads = 0; window.writeAttempts = 0; window.importCalls = []
   // Initial date is pinned without changing timers or component source.
   const NativeDate = Date
   window.Date = class extends NativeDate {
@@ -99,13 +110,11 @@ await page.addInitScript(data => {
 await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort())
 await page.goto(`http://127.0.0.1:${server.httpServer.address().port}/preview-test`)
 
-test('9/9 front cards retain formal block people and never request a template', async () => {
+test('9/9 ordinary saved blocks use schedule people rather than automatic Google people', async () => {
   await page.waitForSelector('.dispatch-card .person')
-  // The existing employee card intentionally hides the one assistant position.
-  const expected = template.filter(block => block.shiftType === 'night').flatMap(block => [...block.drivers, ...block.stations])
-  assert.equal(await page.locator('.dispatch-card .person').count(), expected.length)
-  assert.equal(expected.length, 109)
+  assert.equal(await page.locator('.dispatch-card .person').count(), 101)
   assert.equal(await page.evaluate(() => window.templateReads), 0)
+  assert.equal(await page.getByRole('button', {name: '＋ 帶入當日派工單（Google）'}).count(), 0)
   assert.deepEqual(errors, [])
   assert.equal(await page.evaluate(() => window.writeAttempts), 0)
 })
@@ -210,4 +219,44 @@ test('monitor display uses one person per populated row without empty city place
     assert.deepEqual(await page.locator('article > div > span').allTextContents(), actual)
     assert.equal(await page.getByText('未排定', { exact: true }).count(), 0)
   }
+})
+
+test('home displays the current Chinese date and three concise actions as read-only headings', async () => {
+  await page.evaluate(() => window.showHome())
+  await page.waitForSelector('.home-overview')
+  assert.equal(await page.locator('.home-date').textContent(), '2026年9月9日')
+  assert.equal(await page.locator('.home-overview h1').textContent(), '工作總覽')
+  assert.deepEqual(await page.locator('.home-actions strong').allTextContents(), ['我的班表', '派工單', '請假申請'])
+  assert.equal(await page.locator('.home-overview input, .home-overview textarea, .home-overview [contenteditable]').count(), 0)
+  assert.equal(await page.locator('.home-date').evaluate(element => getComputedStyle(element).cursor), 'default')
+})
+
+test('Dashboard uses the seven operational labels without changing assignment totals', async () => {
+  await page.evaluate(() => window.showDashboard())
+  await page.waitForFunction(() => document.querySelector('.dispatch-summary .admin-stat strong')?.textContent === '369')
+  const labels = await page.locator('.dispatch-summary .admin-stat > span').allTextContents()
+  assert.deepEqual(labels, ['日班出勤人數', '夜班出勤人數', '日班出車數', '夜班出車數', '多人共車數', '閒置車輛', '待人工調整人數'])
+  assert.deepEqual(await page.locator('.dispatch-summary .admin-stat > strong').allTextContents(), ['369', '101', '89', '94', '58', '53', '0'])
+  assert.doesNotMatch(await page.locator('.dispatch-summary').textContent(), /blocks|原始派工位置|原始識別人數/)
+})
+
+test('Google button fetches only after confirmation and complete imported people override assignment', async () => {
+  await page.evaluate(() => window.showManager())
+  await page.waitForSelector('.dispatch-table tbody tr')
+  await page.locator('input[type=date]').fill('2026-09-13')
+  await page.waitForSelector('.admin-preview-note')
+  assert.equal(await page.evaluate(() => window.importCalls.length), 0)
+  await page.getByRole('button', {name: '＋ 帶入當日派工單（Google）'}).click()
+  await page.getByRole('button', {name: '取消', exact: true}).click()
+  assert.equal(await page.evaluate(() => window.importCalls.length), 0)
+  await page.getByRole('button', {name: '＋ 帶入當日派工單（Google）'}).click()
+  await page.getByRole('button', {name: '確認帶入', exact: true}).click()
+  await page.waitForFunction(() => document.querySelector('[role=status]')?.textContent.includes('已帶入'))
+  assert.deepEqual(await page.evaluate(() => window.importCalls), [{date: '2026-09-13', confirmed: true}])
+  await page.evaluate(() => window.showDispatch())
+  await page.waitForSelector('.dispatch-toolbar input[type=date]')
+  await page.locator('input[type=date]').fill('2026-09-13')
+  await page.waitForFunction(() => document.querySelectorAll('.dispatch-card .person').length === 109)
+  assert.equal(await page.locator('.dispatch-card .person').count(), 109)
+  assert.equal(await page.evaluate(() => window.writeAttempts), 0)
 })

@@ -64,7 +64,7 @@ export async function getCurrentAnnouncement() {
 
 export async function uploadCurrentAnnouncement(file: File, employeeId: string) {
   if (!file.type.startsWith('image/')) throw new Error('只允許上傳圖片檔')
-  if (file.size > maximumInputBytes) throw new Error('公告圖片不可超過 12 MB')
+  if (file.size > maximumInputBytes) throw new Error('公告圖片不可超過 12 百萬位元組')
   const resized = await resizeForFirestore(file)
   const announcement = {
     ...resized,

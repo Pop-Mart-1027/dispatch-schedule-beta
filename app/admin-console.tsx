@@ -31,6 +31,7 @@ import {
 } from 'lucide-react';
 import { db, functions } from '../lib/firebase';
 import { monitorDisplayRows } from '../lib/monitor-display';
+import { popupModeLabels, targetTypeLabels, variantLabels, readableAudit } from '../lib/ui-labels';
 import {
   buildDispatchPreviewBlocks,
   listDispatchBlocks,
@@ -56,7 +57,6 @@ import {
 } from '../lib/admin-employee-order';
 import {
   dispatchAssignmentStatusLabel,
-  dispatchBlockAssignmentStatus,
   assignSchedulesToDispatchBlocks,
   parseScheduleAssignment,
   summarizeDispatchAssignment,
@@ -318,7 +318,7 @@ function Dashboard({
       })
       .catch((cause) => {
         console.error('[adminDashboard] load failed', cause);
-        setError('Dashboard 資料載入失敗');
+        setError('總覽資料載入失敗');
       });
   }, [date]);
   const employeeProfiles = new Map(
@@ -412,15 +412,16 @@ function Dashboard({
         timeZone: 'Asia/Taipei',
       }) === date,
   );
-  const stat = (label: string, value: number, people?: string[]) => (
-    <button
+  const stat = (label: string, value: number, people?: string[]) => {
+    const Element = people ? 'button' : 'div';
+    return <Element
       className="admin-stat"
       onClick={() => people && setList({ title: label, people })}
     >
       <span>{label}</span>
       <strong>{value}</strong>
-    </button>
-  );
+    </Element>;
+  };
   return (
     <>
       <div className="admin-page-toolbar">
@@ -457,44 +458,36 @@ function Dashboard({
           </header>
           <div className="stat-grid">
             {stat(
-              '白天派工人數',
+              '日班出勤人數',
               dayDispatch.uniquePeople,
               assignmentPeople(dayAssignment),
             )}
             {stat(
-              '夜班派工人數',
+              '夜班出勤人數',
               nightDispatch.uniquePeople,
               assignmentPeople(nightAssignment),
             )}
             {stat(
-              '白天 blocks',
+              '日班出車數',
               dayDispatch.blocks,
             )}
             {stat(
-              '夜班 blocks',
+              '夜班出車數',
               nightDispatch.blocks,
             )}
             {stat(
-              '多人共車 blocks',
+              '多人共車數',
               dayDispatch.sharedVehicleBlocks +
                 nightDispatch.sharedVehicleBlocks,
             )}
             {stat(
-              '無駕駛 blocks',
+              '閒置車輛',
               dayDispatch.noDriverBlocks + nightDispatch.noDriverBlocks,
             )}
             {stat(
               '待人工調整人數',
               pending.length,
               pending.map((person) => person.employeeName),
-            )}
-            {stat(
-              '原始派工位置',
-              originalPeople.length,
-            )}
-            {stat(
-              '原始識別人數',
-              originalAssignedIds.size,
             )}
           </div>
           {pending.length > 0 && (
@@ -579,7 +572,9 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
   const [schedules, setSchedules] = useState<ScheduleRecord[]>([]);
   const [employees, setEmployees] = useState<EmployeeRecord[]>([]);
   const [preview, setPreview] = useState(false);
-  const [previewSourceDate, setPreviewSourceDate] = useState('');
+  const [importDate, setImportDate] = useState<string | null>(null);
+  const [importing, setImporting] = useState(false);
+  const [importMessage, setImportMessage] = useState('');
   const [areaSearch, setAreaSearch] = useState('');
   const [employeeSearch, setEmployeeSearch] = useState('');
   const [pickerSearch, setPickerSearch] = useState('');
@@ -599,12 +594,10 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
       if (dispatchRows.length) {
         setBlocks(dispatchRows);
         setPreview(false);
-        setPreviewSourceDate('');
       } else {
         const template = await listDispatchBlockTemplate(date);
         setBlocks(buildDispatchPreviewBlocks(template.blocks, date));
         setPreview(template.blocks.length > 0);
-        setPreviewSourceDate(template.sourceDate);
       }
       setSchedules(scheduleRows);
       setEmployees(
@@ -622,33 +615,28 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
     void load();
   }, [date]);
   const dayAssignment = useMemo(
-    () => preview
-      ? assignSchedulesToDispatchBlocks({ blocks, schedules, employees, shift: 'day' })
-      : {
-          blocks: blocks
-            .filter((block) => block.shiftType === 'day')
-            .map((block) => ({
-              ...block,
-              assignmentStatus: dispatchBlockAssignmentStatus(block),
-            })),
-          unmatched: [],
-        },
-    [blocks, schedules, employees, preview],
+    () => assignSchedulesToDispatchBlocks({ blocks, schedules, employees, shift: 'day' }),
+    [blocks, schedules, employees],
   );
   const nightAssignment = useMemo(
-    () => preview
-      ? assignSchedulesToDispatchBlocks({ blocks, schedules, employees, shift: 'night' })
-      : {
-          blocks: blocks
-            .filter((block) => block.shiftType === 'night')
-            .map((block) => ({
-              ...block,
-              assignmentStatus: dispatchBlockAssignmentStatus(block),
-            })),
-          unmatched: [],
-        },
-    [blocks, schedules, employees, preview],
+    () => assignSchedulesToDispatchBlocks({ blocks, schedules, employees, shift: 'night' }),
+    [blocks, schedules, employees],
   );
+  const importGoogle = async () => {
+    if (!importDate || importing) return;
+    setImporting(true); setImportMessage('');
+    try {
+      const call = httpsCallable<{ date: string; confirmed: boolean }, { date: string; dayBlocks: number; nightBlocks: number; conflicts: number }>(functions, 'syncDispatchBlocks');
+      const { data } = await call({ date: importDate, confirmed: true });
+      setImportMessage(`已帶入 ${data.date}：日班 ${data.dayBlocks} 個派工區塊、夜班 ${data.nightBlocks} 個派工區塊${data.conflicts ? `；${data.conflicts} 筆姓名無法確認，已保留待處理紀錄` : ''}`);
+      setImportDate(null);
+      await load();
+    } catch (cause) {
+      console.error('[googleManualImport] failed', cause);
+      setImportMessage('帶入失敗：' + (cause instanceof Error && /[\u3400-\u9fff]/.test(cause.message) ? cause.message : '請確認網路或聯絡管理員'));
+      setImportDate(null);
+    } finally { setImporting(false); }
+  };
   const assignment = shift === 'day' ? dayAssignment : nightAssignment;
   const assignedBlocks = assignment.blocks;
   const areas = [
@@ -841,18 +829,29 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
             onChange={(event) => setEmployeeSearch(event.target.value)}
           />
         </label>
-        <strong>{visible.length} blocks／{assignment.unmatched.length} 人無對應 block</strong>
+        <strong>{visible.length} 個派工區塊／{assignment.unmatched.length} 人待人工調整</strong>
       </div>
+      <div className="dispatch-import-actions">
+        <button className="admin-primary" disabled={importing} onClick={() => setImportDate(date)}>＋ 帶入當日派工單（Google）</button>
+        {importMessage && <span role="status">{importMessage}</span>}
+      </div>
+      {importDate && <Modal title="確定要帶入 Google 當日派工單嗎？" onClose={() => { if (!importing) setImportDate(null); }}>
+        <p>日期：{importDate}</p>
+        <p>此操作將以 Google 當日派工資料更新目前日期的派工內容，包含人員、車號、駐點與工作重點。</p>
+        <div className="settings-actions">
+          <button disabled={importing} onClick={() => setImportDate(null)}>取消</button>
+          <button className="admin-primary" disabled={importing} onClick={() => void importGoogle()}>{importing ? '帶入中…' : '確認帶入'}</button>
+        </div>
+      </Modal>}
       {error && <div className="admin-alert">{error}</div>}
       {preview && (
         <div className="admin-preview-note">
-          此日期尚無正式 dispatchBlocks，目前顯示班表自動派工預覽
-          {previewSourceDate ? `（block 結構來源：${previewSourceDate}）` : ''}；第一次人工修改時才會保存整日正式 blocks。
+          此日期尚未儲存派工，目前顯示班表自動派工預覽；第一次人工修改時才會儲存當日派工。
         </div>
       )}
       {assignment.unmatched.length > 0 && (
         <div className="admin-alert">
-          尚無對應 block：{assignment.unmatched.map((person) => `${person.employeeName}（${person.scheduleCode}）`).join('、')}
+          待人工調整：{assignment.unmatched.map((person) => `${person.employeeName}（${person.scheduleCode}）`).join('、')}
         </div>
       )}
       <div className="admin-table-wrap">
@@ -874,7 +873,7 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
               <tr key={block.id}>
                 <td>
                   <b>{block.areaName || '特殊派工'}</b>
-                  <small>{block.areaCode || block.variantCode}</small>
+                  <small>{block.areaCode || variantLabels[block.variantCode] || '特殊派工'}</small>
                 </td>
                 <td>{block.vehicleNo || '—'}</td>
                 <td>{peopleNames(block.drivers)}</td>
@@ -1026,7 +1025,7 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
                     <summary>修改前／修改後</summary>
                     <pre>
                       {JSON.stringify(
-                        { before: audit.before, after: audit.after },
+                        { 修改前: readableAudit(audit.before), 修改後: readableAudit(audit.after) },
                         null,
                         2,
                       )}
@@ -1189,7 +1188,7 @@ function ScheduleManager({
         </label>
         <span className="admin-role-note">
           {admin
-            ? '點擊班別可修改；儲存時同步寫入 audit'
+            ? '點擊班別可修改；儲存時留下修改紀錄'
             : '值班監控僅可查看正式班表'}
         </span>
       </div>
@@ -1330,7 +1329,7 @@ function AnnouncementManager({ employeeId }: { employeeId: string }) {
               onChange={(event) => setFile(event.target.files?.[0] || null)}
             />
           </label>
-          <small>支援一般圖片格式，單檔上限 12 MB；系統會自動等比例縮圖，前台不裁切內容。</small>
+          <small>支援一般圖片格式，單檔上限 12 百萬位元組；系統會自動等比例縮圖，前台不裁切內容。</small>
           <div className="settings-actions">
             <button
               className="admin-primary"
@@ -1539,10 +1538,10 @@ function BroadcastManager({
                 </td>
                 <td>{item.type}</td>
                 <td>
-                  {item.targetType}
+                  {targetTypeLabels[item.targetType] || '指定對象'}
                   <small>{item.targetValues?.join('、')}</small>
                 </td>
-                <td>{item.popupMode}</td>
+                <td>{popupModeLabels[item.popupMode] || '僅在列表顯示'}</td>
                 <td>
                   {displayTime(item.startAt)}
                   <small>至 {displayTime(item.endAt)}</small>
@@ -1704,14 +1703,14 @@ function BroadcastManager({
                   })
                 }
               >
-                <option>once</option>
-                <option>daily</option>
-                <option>always</option>
-                <option>none</option>
+                <option value="once">只顯示一次</option>
+                <option value="daily">每天一次</option>
+                <option value="always">每次開啟</option>
+                <option value="none">僅在列表顯示</option>
               </select>
             </label>
             <label>
-              圖片 URL
+              圖片網址
               <input
                 value={draft.imageUrl}
                 onChange={(event) =>
@@ -1720,7 +1719,7 @@ function BroadcastManager({
               />
             </label>
             <label>
-              連結 URL
+              連結網址
               <input
                 value={draft.linkUrl}
                 onChange={(event) =>
@@ -2128,24 +2127,24 @@ function SystemSettings() {
             <b>打卡備案</b>
             <small>一般員工前台功能</small>
           </span>
-          <strong className="setting-off">attendanceEnabled = false</strong>
+          <strong className="setting-off">已停用</strong>
         </div>
         <div className="setting-row">
           <span>
             <b>廣播功能</b>
-            <small>broadcasts / broadcastReads</small>
+            <small>廣播與已讀紀錄</small>
           </span>
           <strong>啟用</strong>
         </div>
         <div className="setting-row">
           <span>
             <b>正式派工</b>
-            <small>dispatchBlocks runtime</small>
+            <small>班表自動派工與人工調整</small>
           </span>
           <strong>啟用</strong>
         </div>
         <p>
-          第一版提供設定入口與目前 feature flags
+          第一版提供設定入口與目前功能開關
           狀態；涉及正式環境的開關仍由程式設定及後端權限控制。
         </p>
       </section>

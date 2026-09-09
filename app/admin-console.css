@@ -756,3 +756,4 @@
   max-height: calc(100vh - 255px);
   object-fit: contain;
 }
+.dispatch-import-actions { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
