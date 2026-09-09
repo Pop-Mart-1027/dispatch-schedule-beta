@@ -93,10 +93,14 @@ service cloud.firestore {
       allow get: if isActiveEmployee() && (isDuty() || resource.data.employeeId == request.auth.token.employeeId);
       allow list: if isActiveEmployee() && (isDuty() || resource.data.employeeId == request.auth.token.employeeId);
       allow create: if false;
-      allow update: if isActiveEmployee() && isDuty()
-        && resource.data.date == request.resource.data.date
-        && request.resource.data.modifiedBy == request.auth.token.employeeId
-        && request.resource.data.modifiedAt == request.time;
+      allow update: if isAdmin()
+        || (isActiveEmployee() && isDuty()
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
+            'areaCode', 'areaName', 'vehicleType', 'vehicleNo', 'driver', 'assistant',
+            'station', 'workFocus', 'balanceArea', 'note', 'modifiedBy', 'modifiedAt'
+          ])
+          && request.resource.data.modifiedBy == request.auth.token.employeeId
+          && request.resource.data.modifiedAt == request.time);
       allow delete: if false;
     }
     match /dispatchAuditLogs/{auditId} {

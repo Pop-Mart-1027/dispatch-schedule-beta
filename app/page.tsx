@@ -17,7 +17,7 @@ import { buildAttendanceRecord, canSubmitPunch, getPunchBlockReason, hasTodayPun
 import { listAttendanceLocations, listTodayAttendanceRecords, createAttendanceRecord, removeAttendanceLocation, saveAttendanceLocation } from '../lib/attendance-firestore'
 import { listMonthScheduleRecords, type ScheduleRecord } from '../lib/schedule-firestore'
 import { listAreaMaster, listDispatchRecords, updateDispatchRecord, writeDispatchAudit, type AreaMaster, type DispatchRecord } from '../lib/dispatch-firestore'
-import { listActiveBroadcasts, listBroadcastReads, recordBroadcastShown, type Broadcast } from '../lib/broadcasts'
+import { getBroadcastRead, listActiveBroadcasts, recordBroadcastShown, type Broadcast } from '../lib/broadcasts'
 
 type ScheduleRow = { rowId: string; employeeId: string; name: string; title: string; group: string; area: string; shifts: string[] }
 type ScheduleData = { month: string; days: string[]; morning: ScheduleRow[]; night: ScheduleRow[] }
@@ -120,21 +120,27 @@ function scheduleRecordsToData(records: ScheduleRecord[]): ScheduleData {
 
 async function showEligibleBroadcast(user: Employee): Promise<Broadcast | undefined> {
   try {
-    const [broadcasts, reads] = await Promise.all([listActiveBroadcasts(), listBroadcastReads(user.employeeId)])
+    const [broadcasts, monthSchedule] = await Promise.all([listActiveBroadcasts(), listMonthScheduleRecords(taipeiToday().slice(0, 7), user.employeeId)])
+    const shiftGroups = new Set(monthSchedule.map(record => record.shiftType === 'morning' ? '早班' : '夜班'))
+    const targetMatches = (item: Broadcast) => {
+      const values = (item.targetValues || []).map(value => value.toLowerCase())
+      if (item.targetType === 'employee') return values.includes(user.employeeId.toLowerCase())
+      if (item.targetType === 'morning') return shiftGroups.has('早班') && (!values.length || values.some(value => ['早班', 'morning', '早'].includes(value)))
+      if (item.targetType === 'night') return shiftGroups.has('夜班') && (!values.length || values.some(value => ['夜班', 'night', '晚', '夜'].includes(value)))
+      if (item.targetType === 'area') return monthSchedule.some(record => values.includes(record.scheduleCode.toLowerCase()))
+      return item.targetType === 'all'
+    }
     const now = Date.now()
     const match = broadcasts.find(item => {
       const start = item.startAt && typeof item.startAt === 'object' && 'toDate' in item.startAt ? (item.startAt as { toDate: () => Date }).toDate().getTime() : 0
       const end = item.endAt && typeof item.endAt === 'object' && 'toDate' in item.endAt ? (item.endAt as { toDate: () => Date }).toDate().getTime() : Number.MAX_SAFE_INTEGER
       if (start > now || end < now || !item.active) return false
-      if (item.targetType === 'employee') return item.targetValues.includes(user.employeeId)
-      if (item.targetType === 'morning') return item.targetValues.length === 0 || item.targetValues.includes('早班')
-      if (item.targetType === 'night') return item.targetValues.length === 0 || item.targetValues.includes('夜班')
-      return item.targetType === 'all'
+      return targetMatches(item)
     })
     if (!match || match.popupMode === 'none') return
-    const read = reads.find(item => item.broadcastId === match.id)
+    const read = await getBroadcastRead(match.id, user.employeeId)
     const today = taipeiToday()
-    const last = read?.lastShownAt && typeof read.lastShownAt === 'object' && 'toDate' in read.lastShownAt ? (read.lastShownAt as { toDate: () => Date }).toDate().toISOString().slice(0, 10) : ''
+    const last = read?.lastShownAt && typeof read.lastShownAt === 'object' && 'toDate' in read.lastShownAt ? taipeiDate((read.lastShownAt as { toDate: () => Date }).toDate()) : ''
     if (match.popupMode === 'once' && read) return
     if (match.popupMode === 'daily' && last === today) return
     await recordBroadcastShown({ broadcastId: match.id, employeeId: user.employeeId, shownCount: read?.shownCount ?? 0 })
@@ -144,6 +150,12 @@ async function showEligibleBroadcast(user: Employee): Promise<Broadcast | undefi
 
 function BroadcastModal({ item, onClose }: { item: Broadcast; onClose: () => void }) {
   return <div className="broadcast-modal-backdrop" role="presentation"><section className={`broadcast-modal broadcast-modal-${item.type}`} role="dialog" aria-modal="true" aria-labelledby="broadcast-title"><button className="broadcast-close" aria-label="關閉廣播" onClick={onClose}><X size={18} /></button><p className="eyebrow">廣播事項</p><h2 id="broadcast-title">{item.title}</h2><p>{item.content}</p>{item.imageUrl && <img src={item.imageUrl} alt="廣播圖片" />}{item.linkUrl && <a href={item.linkUrl} target="_blank" rel="noreferrer">查看連結</a>}<button className="primary full" onClick={onClose}>我知道了</button></section></div>
+}
+
+function taipeiDate(value: Date) {
+  const parts = new Intl.DateTimeFormat('en-CA', { timeZone: 'Asia/Taipei', year: 'numeric', month: '2-digit', day: '2-digit' }).formatToParts(value)
+  const part = (type: string) => parts.find(item => item.type === type)!.value
+  return `${part('year')}-${part('month')}-${part('day')}`
 }
 
 function BroadcastList({ employeeId }: { employeeId: string }) {
