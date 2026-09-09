@@ -1,4 +1,4 @@
-import { collection, getDocs, orderBy, query, where } from 'firebase/firestore'
+import { collection, getDocs, query, where } from 'firebase/firestore'
 import { db } from './firebase'
 
 export type ScheduleRecord = {
@@ -8,15 +8,13 @@ export type ScheduleRecord = {
 }
 
 export async function listScheduleRecords(date: string, employeeId?: string) {
-  const constraints = [where('date', '==', date), orderBy('employeeId', 'asc')]
-  if (employeeId) constraints.unshift(where('employeeId', '==', employeeId))
+  const constraints = employeeId ? [where('employeeId', '==', employeeId)] : [where('date', '==', date)]
   const snapshot = await getDocs(query(collection(db, 'scheduleRecords'), ...constraints))
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ScheduleRecord))
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ScheduleRecord)).filter(record => !employeeId || record.date === date)
 }
 
 export async function listMonthScheduleRecords(month: string, employeeId?: string) {
-  const constraints = [where('date', '>=', `${month}-01`), where('date', '<=', `${month}-31`), orderBy('date', 'asc'), orderBy('employeeId', 'asc')]
-  if (employeeId) constraints.unshift(where('employeeId', '==', employeeId))
+  const constraints = employeeId ? [where('employeeId', '==', employeeId)] : [where('date', '>=', `${month}-01`), where('date', '<=', `${month}-31`)]
   const snapshot = await getDocs(query(collection(db, 'scheduleRecords'), ...constraints))
-  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ScheduleRecord))
+  return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() } as ScheduleRecord)).filter(record => record.date.startsWith(`${month}-`))
 }

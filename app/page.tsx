@@ -59,7 +59,8 @@ export default function Home() {
 
   useEffect(() => {
     if (!currentUser) return
-    void listMonthScheduleRecords('2026-09').then(records => setScheduleData(scheduleRecordsToData(records))).catch(() => notify('Firestore 班表載入失敗，請確認權限與網路'))
+    const employeeOnly = currentUser.role === 'employee' ? currentUser.employeeId : undefined
+    void listMonthScheduleRecords('2026-09', employeeOnly).then(records => { console.info('[scheduleRecords] loaded', { employeeId: employeeOnly || 'all', count: records.length }); setScheduleData(scheduleRecordsToData(records)); if (!records.length) notify('班表資料尚未匯入') }).catch(error => { console.error('[scheduleRecords] load failed', error); setScheduleData(scheduleRecordsToData([])); notify(error?.code === 'permission-denied' ? '班表讀取權限不足' : '班表資料載入失敗') })
   }, [currentUser?.employeeId])
 
   useEffect(() => onAuthStateChanged(auth, async user => {
@@ -228,7 +229,7 @@ function ScheduleView({ tab, setTab, data, employeeId }: { tab: string; setTab: 
   const isMine = tab === 'mine'
   const rows = tab === 'morning' ? data?.morning ?? [] : data?.night ?? []
   const personal = data && [...data.night, ...data.morning].find(row => row.employeeId === employeeId)
-  return <><div className="page-intro"><div><p className="eyebrow">SEPTEMBER SCHEDULE · EXCEL SOURCE</p><h1>{isMine ? '我的班表' : tab === 'morning' ? '早班全員班表' : '夜班全員班表'}</h1><p className="muted">{isMine ? '本人的正式班表。' : `直接帶入 Excel「${tab === 'morning' ? '9月日班' : '9月夜班'}」所有有效人員班表，共 ${rows.length} 筆。`}</p></div></div><div className="tabs"><button className={isMine ? 'tab active' : 'tab'} onClick={() => setTab('mine')}>我的班表</button><button className={tab === 'morning' ? 'tab active' : 'tab'} onClick={() => setTab('morning')}>早班</button><button className={tab === 'night' ? 'tab active' : 'tab'} onClick={() => setTab('night')}>夜班</button></div>{!data ? <p className="loading">正在載入 9 月 Excel 班表…</p> : isMine ? <PersonalSchedule row={personal ?? undefined} month={data.month} /> : <ScheduleMatrix rows={rows} days={data.days} />}</>
+  return <><div className="page-intro"><div><p className="eyebrow">SEPTEMBER SCHEDULE · FIRESTORE</p><h1>{isMine ? '我的班表' : tab === 'morning' ? '早班全員班表' : '夜班全員班表'}</h1><p className="muted">{isMine ? '本人的正式班表。' : `Firestore ${tab === 'morning' ? '早班' : '夜班'}資料，共 ${rows.length} 筆。`}</p></div></div><div className="tabs"><button className={isMine ? 'tab active' : 'tab'} onClick={() => setTab('mine')}>我的班表</button><button className={tab === 'morning' ? 'tab active' : 'tab'} onClick={() => setTab('morning')}>早班</button><button className={tab === 'night' ? 'tab active' : 'tab'} onClick={() => setTab('night')}>夜班</button></div>{!data ? <p className="loading">正在載入 9 月班表…</p> : isMine ? <PersonalSchedule row={personal ?? undefined} month={data.month} /> : rows.length ? <ScheduleMatrix rows={rows} days={data.days} /> : <p className="loading">班表資料尚未匯入</p>}</>
 }
 
 function PersonalSchedule({ row, month }: { row: ScheduleRow | undefined; month: string }) {
@@ -281,7 +282,7 @@ function EmptyNotice() { return <section className="notice-page"><div className=
 
 function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isDuty: boolean }) {
   const [date, setDate] = useState(taipeiToday); const [records, setRecords] = useState<DispatchRecord[]>([]); const [error, setError] = useState('')
-  const load = () => void listDispatchRecords(date, isDuty ? undefined : employeeId).then(setRecords).catch(() => { setRecords([]); setError('正式派工載入失敗，請確認 Firebase 權限') })
+  const load = () => void listDispatchRecords(date, isDuty ? undefined : employeeId).then(next => { console.info('[dispatchRecords] loaded', { date, employeeId: isDuty ? 'all' : employeeId, count: next.length }); setRecords(next); setError('') }).catch(error => { console.error('[dispatchRecords] load failed', error); setRecords([]); setError(error?.code === 'permission-denied' ? '派工讀取權限不足' : error?.code === 'failed-precondition' ? '派工查詢缺少 Firestore index' : '派工資料載入失敗') })
   useEffect(load, [date, employeeId, isDuty])
   const groups = records.reduce<Record<string, DispatchRecord[]>>((all, record) => ({ ...all, [record.areaCode || '未分區']: [...(all[record.areaCode || '未分區'] || []), record] }), {})
   return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label></div>{error && <div className="result-card result-warning">{error}</div>}{!records.length && !error ? <p className="loading">此日期尚未產生正式派工。</p> : <div className="dispatch-grid">{Object.entries(groups).map(([area, members]) => <article className="dispatch-card" key={area}><header><span>{members[0].areaName || area}</span><small>{date}</small></header><div className="dispatch-fields"><b>人員</b><div>{members.map(record => <span className="person" key={record.id}>{record.employeeName}<small>{record.employeeId} · {record.scheduleCode}</small></span>)}</div><b>車號</b><span>{members.map(r => r.vehicleNo).filter(Boolean).join('、') || '—'}</span><b>駐點</b><span>{members[0].station || '—'}</span><b>工作重點</b><span>{members[0].workFocus || '—'}</span><b>平衡區域</b><span>{members[0].balanceArea || '—'}</span></div></article>)}</div>}</>
@@ -289,7 +290,7 @@ function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isD
 
 function DispatchAdmin({ employeeId }: { employeeId: string }) {
   const [date, setDate] = useState(taipeiToday); const [area, setArea] = useState(''); const [shift, setShift] = useState(''); const [search, setSearch] = useState(''); const [records, setRecords] = useState<DispatchRecord[]>([]); const [areas, setAreas] = useState<AreaMaster[]>([]); const [editing, setEditing] = useState<DispatchRecord | null>(null); const [draft, setDraft] = useState<Partial<DispatchRecord>>({}); const [error, setError] = useState('')
-  const load = async () => { try { const [nextRecords, nextAreas] = await Promise.all([listDispatchRecords(date), listAreaMaster()]); setRecords(nextRecords); setAreas(nextAreas); setError('') } catch { setError('派工資料載入失敗，請確認 Firebase 權限') } }
+  const load = async () => { try { const [nextRecords, nextAreas] = await Promise.all([listDispatchRecords(date), listAreaMaster()]); console.info('[dispatchAdmin] loaded', { date, count: nextRecords.length }); setRecords(nextRecords); setAreas(nextAreas); setError('') } catch (error) { console.error('[dispatchAdmin] load failed', error); const code = typeof error === 'object' && error && 'code' in error ? String(error.code) : ''; setError(code === 'permission-denied' ? '派工管理權限不足' : code === 'failed-precondition' ? '派工查詢缺少 Firestore index' : '派工資料載入失敗') } }
   useEffect(() => { void load() }, [date])
   const filtered = records.filter(record => (!area || record.areaCode === area) && (!shift || record.scheduleCode.includes(shift)) && (!search || `${record.employeeId} ${record.employeeName}`.toLowerCase().includes(search.toLowerCase())))
   const open = (record: DispatchRecord) => { setEditing(record); setDraft({ ...record }) }

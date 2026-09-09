@@ -5,10 +5,9 @@ export type DispatchRecord = { id: string; date: string; employeeId: string; emp
 export type AreaMaster = { areaCode: string; areaName: string; defaultVehicleType: string; defaultVehicleNo: string; defaultStation: string; defaultWorkFocus: string; defaultBalanceArea: string; active: boolean; sortOrder: number }
 
 export async function listDispatchRecords(date: string, employeeId?: string) {
-  const constraints = [where('date', '==', date), orderBy('employeeId', 'asc')]
-  if (employeeId) constraints.unshift(where('employeeId', '==', employeeId))
+  const constraints = employeeId ? [where('employeeId', '==', employeeId)] : [where('date', '==', date)]
   const snapshot = await getDocs(query(collection(db, 'dispatchRecords'), ...constraints))
-  return snapshot.docs.map(item => ({ id: item.id, ...item.data() } as DispatchRecord))
+  return snapshot.docs.map(item => ({ id: item.id, ...item.data() } as DispatchRecord)).filter(record => !employeeId || record.date === date)
 }
 export async function listAreaMaster() {
   const snapshot = await getDocs(query(collection(db, 'areaMaster'), orderBy('sortOrder', 'asc')))
