@@ -476,16 +476,27 @@
   background: #fff0de;
   color: #a84b11;
 }
+.admin-schedule-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+.admin-schedule-page > .admin-page-toolbar,
+.admin-schedule-page > .admin-alert {
+  flex-shrink: 0;
+}
 .admin-schedule-wrap {
-  max-height: calc(100vh - 185px);
-  overflow: auto;
+  flex: 1;
+  min-height: 0;
+  overflow: scroll;
+  scrollbar-gutter: stable;
   border: 1px solid #d7e0e4;
   border-radius: 10px;
   background: #fff;
 }
 .admin-schedule {
-  width: max-content;
-  min-width: 100%;
+  table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
   font-size: 11px;
@@ -501,11 +512,15 @@
   white-space: nowrap;
 }
 .admin-schedule .admin-schedule-date {
-  width: 48px;
-  min-width: 48px;
-  max-width: 48px;
+  box-sizing: border-box;
+  width: 60px;
+  min-width: 60px;
+  max-width: 60px;
   padding-right: 2px;
   padding-left: 2px;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 .admin-schedule th {
   position: sticky;
@@ -546,6 +561,9 @@
   border: 0;
   background: transparent;
   color: inherit;
+  white-space: normal;
+  word-break: normal;
+  overflow-wrap: normal;
 }
 .admin-schedule td button:disabled {
   opacity: 1;

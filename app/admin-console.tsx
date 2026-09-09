@@ -30,6 +30,7 @@ import {
   X,
 } from 'lucide-react';
 import { db, functions } from '../lib/firebase';
+import { monitorDisplayRows } from '../lib/monitor-display';
 import {
   buildDispatchPreviewBlocks,
   listDispatchBlocks,
@@ -564,8 +565,9 @@ function DutyColumn({
           {line('調度副主任', duty.deputyDirectors)}
         </>
       )}
-      {line('台北監控', duty.taipei)}
-      {line('新北監控', duty.newTaipei)}
+      {monitorDisplayRows(duty.taipei, duty.newTaipei).map(({ label, name }) => (
+        <div key={`${label}-${name}`}><b>{label}</b><span>{name}</span></div>
+      ))}
     </article>
   );
 }
@@ -1167,7 +1169,7 @@ function ScheduleManager({
     }
   };
   return (
-    <>
+    <section className="admin-schedule-page">
       <div className="admin-page-toolbar filters">
         <label>
           月份
@@ -1193,7 +1195,13 @@ function ScheduleManager({
       </div>
       {error && <div className="admin-alert">{error}</div>}
       <div className="admin-schedule-wrap">
-        <table className="admin-schedule">
+        <table className="admin-schedule" style={{ width: 295 + days * 60 }}>
+          <colgroup>
+            <col style={{ width: 130 }} />
+            <col style={{ width: 75 }} />
+            <col style={{ width: 90 }} />
+            {Array.from({ length: days }, (_, index) => <col key={index} style={{ width: 60 }} />)}
+          </colgroup>
           <thead>
             <tr>
               <th>職稱</th>
@@ -1242,7 +1250,7 @@ function ScheduleManager({
           </tbody>
         </table>
       </div>
-    </>
+    </section>
   );
 }
 

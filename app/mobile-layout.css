@@ -72,3 +72,7 @@
   .app-shell .toast { left: 16px; right: 16px; bottom: 16px; z-index: 80; }
   .app-shell input, .app-shell select, .app-shell textarea { font-size: 16px; }
 }
+.profile-chip {
+  gap: 0;
+  text-align: left;
+}
