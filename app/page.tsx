@@ -294,7 +294,7 @@ function deriveDispatchRecords(schedules: ScheduleRecord[], overrides: DispatchR
   return schedules.filter(record => (!employeeId || record.employeeId === employeeId) && record.scheduleCode && !isLeave(record.scheduleCode)).map(record => {
     const source = sourceMap.get(`${record.shiftType}:${record.employeeId}`)
     const pseudoRow: ScheduleRow = { rowId: record.id, employeeId: record.employeeId, name: record.employeeName, title: record.title || source?.title || '', group: record.group || source?.group || '', area: record.area || source?.area || '', shifts: [] }
-    const areaCode = dispatchArea(record.scheduleCode) || dispatchSpecialGroup(pseudoRow)
+    const areaCode = dispatchArea(record.scheduleCode) || (pseudoRow.area ? pseudoRow.area.replace(/區$/, '') : '') || (pseudoRow.group ? pseudoRow.group.replace(/區$/, '') : '') || dispatchSpecialGroup(pseudoRow)
     const area = areaMap.get(areaCode)
     const base: DispatchRecord = {
       id: `${record.date}-${record.employeeId}-${record.shiftType}`,
