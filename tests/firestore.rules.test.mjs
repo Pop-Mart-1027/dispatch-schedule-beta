@@ -149,6 +149,32 @@ test('employee may read shared operational data but cannot mutate it or employee
       vehicleNo: 'X',
     }),
   );
+  await assertFails(
+    setDoc(doc(db, 'dispatchBlocks', '2026-09-10_day_left_1'), {
+      date: '2026-09-10',
+      shiftType: 'day',
+      blockId: '2026-09-10_day_left_1',
+      areaCode: 'A1',
+      areaName: '府前 A1區',
+      variantCode: 'standard',
+      vehicleNo: 'RFM-2661',
+      vehicleType: '',
+      drivers: [],
+      stations: [],
+      assistants: [],
+      workFocus: '',
+      balanceArea: '',
+      note: '',
+      sourceSheet: '班表預覽',
+      sourceRow: 1,
+      sourceUpdatedAt: null,
+      status: 'active',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      modifiedBy: '',
+      modifiedAt: null,
+    }),
+  );
   await assertFails(updateDoc(doc(db, 'employees', 'E001'), { role: 'admin' }));
   await assertFails(getDocs(collection(db, 'scheduleSettings')));
 });
@@ -185,6 +211,32 @@ test('monitor may edit only dispatch block operational fields', async () => {
       modifiedBy: 'D001',
       modifiedAt: serverTimestamp(),
       updatedAt: serverTimestamp(),
+    }),
+  );
+  await assertSucceeds(
+    setDoc(doc(db, 'dispatchBlocks', '2026-09-10_day_left_1'), {
+      date: '2026-09-10',
+      shiftType: 'day',
+      blockId: '2026-09-10_day_left_1',
+      areaCode: 'A1',
+      areaName: '府前 A1區',
+      variantCode: 'standard',
+      vehicleNo: 'RFM-2661',
+      vehicleType: '',
+      drivers: [{ employeeId: 'D001', employeeName: '值班監控' }],
+      stations: [],
+      assistants: [],
+      workFocus: '',
+      balanceArea: '',
+      note: '',
+      sourceSheet: '班表預覽（block 結構 2026-09-09）',
+      sourceRow: 1,
+      sourceUpdatedAt: null,
+      status: 'active',
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+      modifiedBy: 'D001',
+      modifiedAt: serverTimestamp(),
     }),
   );
 });

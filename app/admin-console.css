@@ -152,6 +152,15 @@
   background: #fff3e8;
   color: #a54414;
 }
+.admin-preview-note {
+  margin-bottom: 12px;
+  padding: 10px 13px;
+  border: 1px solid #f1be77;
+  border-radius: 8px;
+  background: #fff7e8;
+  color: #8a4a10;
+  font-weight: 700;
+}
 .dashboard-layout {
   display: grid;
   grid-template-columns: 1.15fr 1fr;

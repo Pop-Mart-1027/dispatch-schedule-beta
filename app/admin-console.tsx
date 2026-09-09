@@ -31,7 +31,10 @@ import {
 } from 'lucide-react';
 import { db, functions } from '../lib/firebase';
 import {
+  buildDispatchPreviewBlocks,
   listDispatchBlocks,
+  listDispatchBlockTemplate,
+  saveDispatchPreviewAsFormal,
   updateDispatchBlock,
   writeDispatchBlockAudit,
   type DispatchBlock,
@@ -52,6 +55,7 @@ import {
 } from '../lib/admin-employee-order';
 import {
   dispatchAssignmentStatusLabel,
+  dispatchBlockAssignmentStatus,
   assignSchedulesToDispatchBlocks,
   parseScheduleAssignment,
   summarizeDispatchAssignment,
@@ -572,6 +576,8 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
   const [blocks, setBlocks] = useState<DispatchBlock[]>([]);
   const [schedules, setSchedules] = useState<ScheduleRecord[]>([]);
   const [employees, setEmployees] = useState<EmployeeRecord[]>([]);
+  const [preview, setPreview] = useState(false);
+  const [previewSourceDate, setPreviewSourceDate] = useState('');
   const [areaSearch, setAreaSearch] = useState('');
   const [employeeSearch, setEmployeeSearch] = useState('');
   const [pickerSearch, setPickerSearch] = useState('');
@@ -588,7 +594,16 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
         listScheduleRecords(date),
         getDocs(collection(db, 'employees')),
       ]);
-      setBlocks(dispatchRows);
+      if (dispatchRows.length) {
+        setBlocks(dispatchRows);
+        setPreview(false);
+        setPreviewSourceDate('');
+      } else {
+        const template = await listDispatchBlockTemplate(date);
+        setBlocks(buildDispatchPreviewBlocks(template.blocks, date));
+        setPreview(template.blocks.length > 0);
+        setPreviewSourceDate(template.sourceDate);
+      }
       setSchedules(scheduleRows);
       setEmployees(
         employeeRows.docs.map(
@@ -604,10 +619,35 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
   useEffect(() => {
     void load();
   }, [date]);
-  const assignment = useMemo(
-    () => assignSchedulesToDispatchBlocks({ blocks, schedules, employees, shift }),
-    [blocks, schedules, employees, shift],
+  const dayAssignment = useMemo(
+    () => preview
+      ? assignSchedulesToDispatchBlocks({ blocks, schedules, employees, shift: 'day' })
+      : {
+          blocks: blocks
+            .filter((block) => block.shiftType === 'day')
+            .map((block) => ({
+              ...block,
+              assignmentStatus: dispatchBlockAssignmentStatus(block),
+            })),
+          unmatched: [],
+        },
+    [blocks, schedules, employees, preview],
   );
+  const nightAssignment = useMemo(
+    () => preview
+      ? assignSchedulesToDispatchBlocks({ blocks, schedules, employees, shift: 'night' })
+      : {
+          blocks: blocks
+            .filter((block) => block.shiftType === 'night')
+            .map((block) => ({
+              ...block,
+              assignmentStatus: dispatchBlockAssignmentStatus(block),
+            })),
+          unmatched: [],
+        },
+    [blocks, schedules, employees, preview],
+  );
+  const assignment = shift === 'day' ? dayAssignment : nightAssignment;
   const assignedBlocks = assignment.blocks;
   const areas = [
     ...new Set(
@@ -711,7 +751,16 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
   const save = async () => {
     if (!editing || !draft) return;
     try {
-      await updateDispatchBlock(editing, draft, employeeId);
+      if (preview) {
+        await saveDispatchPreviewAsFormal(
+          [...dayAssignment.blocks, ...nightAssignment.blocks],
+          editing.id,
+          draft,
+          employeeId,
+        );
+      } else {
+        await updateDispatchBlock(editing, draft, employeeId);
+      }
       await writeDispatchBlockAudit(editing, draft, employeeId);
       setEditing(null);
       setDraft(null);
@@ -793,6 +842,12 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
         <strong>{visible.length} blocks／{assignment.unmatched.length} 人無對應 block</strong>
       </div>
       {error && <div className="admin-alert">{error}</div>}
+      {preview && (
+        <div className="admin-preview-note">
+          此日期尚無正式 dispatchBlocks，目前顯示班表自動派工預覽
+          {previewSourceDate ? `（block 結構來源：${previewSourceDate}）` : ''}；第一次人工修改時才會保存整日正式 blocks。
+        </div>
+      )}
       {assignment.unmatched.length > 0 && (
         <div className="admin-alert">
           尚無對應 block：{assignment.unmatched.map((person) => `${person.employeeName}（${person.scheduleCode}）`).join('、')}

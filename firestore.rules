@@ -125,7 +125,27 @@ service cloud.firestore {
     }
     match /dispatchBlocks/{blockId} {
       allow get, list: if isActiveEmployee();
-      allow create, delete: if isAdmin();
+      allow create: if isAdmin()
+        || (isActiveEmployee() && isDuty()
+          && request.resource.data.keys().hasOnly([
+            'date', 'shiftType', 'blockId', 'areaCode', 'areaName', 'variantCode',
+            'vehicleNo', 'vehicleType', 'drivers', 'stations', 'assistants',
+            'workFocus', 'balanceArea', 'note', 'sourceSheet', 'sourceRow',
+            'sourceUpdatedAt', 'status', 'createdAt', 'updatedAt', 'modifiedBy', 'modifiedAt'
+          ])
+          && request.resource.data.blockId == blockId
+          && request.resource.data.date is string
+          && request.resource.data.shiftType in ['day', 'night']
+          && request.resource.data.drivers is list
+          && request.resource.data.stations is list
+          && request.resource.data.assistants is list
+          && request.resource.data.status == 'active'
+          && request.resource.data.createdAt == request.time
+          && request.resource.data.updatedAt == request.time
+          && ((request.resource.data.modifiedBy == '' && request.resource.data.modifiedAt == null)
+            || (request.resource.data.modifiedBy == request.auth.token.employeeId
+              && request.resource.data.modifiedAt == request.time)));
+      allow delete: if isAdmin();
       allow update: if isAdmin()
         || (isActiveEmployee() && isDuty()
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly([

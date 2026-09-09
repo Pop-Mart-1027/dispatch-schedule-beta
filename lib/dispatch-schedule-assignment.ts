@@ -67,7 +67,7 @@ export function parseScheduleAssignment(scheduleCode: string, availableAreaCodes
   }
 }
 
-function statusFor(block: DispatchBlock): DispatchAssignmentStatus {
+export function dispatchBlockAssignmentStatus(block: DispatchBlock): DispatchAssignmentStatus {
   if (block.modifiedBy?.trim()) return 'manual'
   if (block.drivers.length > 1) return 'shared-vehicle'
   if (block.drivers.length === 0) return 'no-driver'
@@ -169,7 +169,7 @@ export function assignSchedulesToDispatchBlocks({
     addRoundRobin(automaticBlocks, stations, 'stations')
   })
 
-  selectedBlocks.forEach(block => { block.assignmentStatus = statusFor(block) })
+  selectedBlocks.forEach(block => { block.assignmentStatus = dispatchBlockAssignmentStatus(block) })
   return { blocks: selectedBlocks, unmatched }
 }
 

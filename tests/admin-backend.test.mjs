@@ -8,6 +8,7 @@ after(async () => server.close())
 
 const { employeeAdminOrder, titleAdminOrder } = await server.ssrLoadModule('/lib/admin-employee-order.ts')
 const { assignSchedulesToDispatchBlocks, parseScheduleAssignment, summarizeDispatchAssignment } = await server.ssrLoadModule('/lib/dispatch-schedule-assignment.ts')
+const { buildDispatchPreviewBlocks } = await server.ssrLoadModule('/lib/dispatch-blocks-firestore.ts')
 
 const block = (blockId, areaCode, vehicleNo, variantCode = 'standard') => ({
   id: blockId, blockId, date: '2026-09-02', shiftType: 'night', areaCode, areaName: variantCode === 'small-night' ? `小夜 ${areaCode}` : `${areaCode}區`, variantCode,
@@ -139,6 +140,23 @@ test('five regular staff across three vehicles are distributed 2, 2, 1', () => {
   assert.equal(result.blocks.filter(item => item.assignmentStatus === 'shared-vehicle').length, 2)
 })
 
+test('preview blocks use the selected date and never carry source people or manual state', () => {
+  const source = {
+    ...block('source', 'A1', 'CAR-1'),
+    id: '2026-09-09_night_left_3',
+    blockId: '2026-09-09_night_left_3',
+    date: '2026-09-09',
+    drivers: [{ employeeId: 'E1', employeeName: '來源人員' }],
+    modifiedBy: 'D001',
+  }
+  const [preview] = buildDispatchPreviewBlocks([source], '2026-09-10')
+  assert.equal(preview.id, '2026-09-10_night_left_3')
+  assert.equal(preview.date, '2026-09-10')
+  assert.equal(preview.status, 'preview')
+  assert.deepEqual(preview.drivers, [])
+  assert.equal(preview.modifiedBy, '')
+})
+
 test('2026-09-09 formal dispatch blocks remain intact and schedule assignment is unique', () => {
   const source = JSON.parse(readFileSync('public/september-schedules.json', 'utf8'))
   const employees = JSON.parse(readFileSync('output/employee-master.json', 'utf8'))
@@ -183,4 +201,38 @@ test('2026-09-09 formal dispatch blocks remain intact and schedule assignment is
   assert.ok(nightSummary.positions >= nightSummary.uniquePeople)
   assert.equal(daySummary.pendingPeople, 0)
   assert.equal(nightSummary.pendingPeople, 0)
+})
+
+test('2026-09-10 through 2026-09-12 produce non-empty preview assignments from schedule records', () => {
+  const source = JSON.parse(readFileSync('public/september-schedules.json', 'utf8'))
+  const employees = JSON.parse(readFileSync('output/employee-master.json', 'utf8'))
+  const template = JSON.parse(readFileSync('output/dispatch-blocks-20260909-simulation.json', 'utf8')).blocks
+  const rowsByEmployee = new Map()
+  for (const item of [...source.morning.map(row => ({ row, shiftType: 'morning' })), ...source.night.map(row => ({ row, shiftType: 'night' }))]) {
+    rowsByEmployee.set(item.row.employeeId, [...(rowsByEmployee.get(item.row.employeeId) || []), item])
+  }
+  const results = []
+  for (const day of [10, 11, 12]) {
+    const date = `2026-09-${day}`
+    const blocks = buildDispatchPreviewBlocks(template, date)
+    const schedules = employees.map(employee => {
+      const rows = rowsByEmployee.get(employee.employeeId)
+      const codes = [...new Set(rows.map(item => item.row.shifts[day - 1]).filter(Boolean))]
+      return {
+        id: `${employee.employeeId}_${date}`, date, employeeId: employee.employeeId, employeeName: employee.name,
+        title: employee.title, shiftType: rows[0].shiftType, scheduleCode: codes.join('／'), scheduleLabel: codes.join('／'),
+        leaveType: '', source: 'september-schedules.json', status: 'active', note: '', modifiedBy: '',
+      }
+    })
+    const dayResult = assignSchedulesToDispatchBlocks({ blocks, schedules, employees, shift: 'day' })
+    const nightResult = assignSchedulesToDispatchBlocks({ blocks, schedules, employees, shift: 'night' })
+    const daySummary = summarizeDispatchAssignment(dayResult.blocks, dayResult.unmatched)
+    const nightSummary = summarizeDispatchAssignment(nightResult.blocks, nightResult.unmatched)
+    results.push({ date, day: daySummary, night: nightSummary })
+    assert.equal(daySummary.blocks, 89)
+    assert.equal(nightSummary.blocks, 94)
+    assert.ok(daySummary.positions > 0)
+    assert.ok(nightSummary.positions > 0)
+  }
+  console.log('future dispatch previews', results)
 })
