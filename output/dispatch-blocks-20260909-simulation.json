@@ -1955,9 +1955,9 @@
       "date": "2026-09-09",
       "shiftType": "day",
       "blockId": "day-single-193",
-      "areaCode": "K4",
-      "areaName": "永康 K4區",
-      "variantCode": "standard",
+      "areaCode": "ZK4",
+      "areaName": "永康 ZK4區",
+      "variantCode": "Z",
       "vehicleNo": "BFR-1731",
       "vehicleType": "",
       "drivers": [

@@ -27,7 +27,9 @@ function buildMatcher(employees) {
 }
 
 function createBlock({ date, shiftType, sourceSheet, row, side, areaName, vehicleNo }) {
-  return { date, shiftType, blockId: `${date}_${shiftType}_${side}_${row}`, areaCode: areaCodeFrom(areaName), areaName: clean(areaName), variantCode: variantFrom(areaName), vehicleNo: clean(vehicleNo), vehicleType: '', drivers: [], stations: [], assistants: [], workFocus: '', balanceArea: '', note: '', sourceSheet, sourceRow: row, status: 'active', modifiedBy: '' }
+  const normalizedVehicle = clean(vehicleNo)
+  const confirmedZK4 = areaCodeFrom(areaName) === 'K4' && normalizedVehicle === 'BFR-1731'
+  return { date, shiftType, blockId: `${date}_${shiftType}_${side}_${row}`, areaCode: confirmedZK4 ? 'ZK4' : areaCodeFrom(areaName), areaName: confirmedZK4 ? '永康 ZK4區' : clean(areaName), variantCode: confirmedZK4 ? 'Z' : variantFrom(areaName), vehicleNo: normalizedVehicle, vehicleType: '', drivers: [], stations: [], assistants: [], workFocus: '', balanceArea: '', note: '', sourceSheet, sourceRow: row, status: 'active', modifiedBy: '' }
 }
 
 function addPeople(block, cell, role, row, match, conflicts) {

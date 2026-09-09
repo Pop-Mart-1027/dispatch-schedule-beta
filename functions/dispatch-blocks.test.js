@@ -22,7 +22,9 @@ test('2026-09-09 dispatchBlocks staging totals stay intact', () => {
 
 test('K4 multi-vehicle blocks remain independent', () => {
   const dayK4 = simulation.blocks.filter(block => block.shiftType === 'day' && block.areaCode === 'K4')
-  assert.deepEqual(new Set(dayK4.map(block => block.vehicleNo)), new Set(['RFV-1019', 'BFR-1731', 'RDX-6902(小夜車)']))
+  const dayZK4 = simulation.blocks.filter(block => block.shiftType === 'day' && block.areaCode === 'ZK4')
+  assert.deepEqual(new Set(dayK4.map(block => block.vehicleNo)), new Set(['RFV-1019', 'RDX-6902(小夜車)']))
+  assert.deepEqual(new Set(dayZK4.map(block => block.vehicleNo)), new Set(['BFR-1731']))
   assert.equal(simulation.summary.oldSingleCardMergedBlocks, 43)
 })
 
