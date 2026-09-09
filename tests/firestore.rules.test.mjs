@@ -9,6 +9,7 @@ import {
 import {
   collection,
   doc,
+  getDoc,
   getDocs,
   serverTimestamp,
   setDoc,
@@ -87,6 +88,17 @@ before(async () => {
       title: '測試廣播',
       active: true,
     });
+    await setDoc(doc(db, 'announcements', 'current'), {
+      imageUrl: 'https://example.invalid/notice.png',
+      originalName: 'notice.png',
+      mediaType: 'image/png',
+      originalSize: 123,
+      storedBytes: 123,
+      width: 100,
+      height: 100,
+      updatedBy: 'A001',
+      updatedAt: new Date(),
+    });
     await setDoc(doc(db, 'scheduleSettings', '2026-10'), {
       targetMonth: '2026-10',
       status: 'scheduled',
@@ -126,6 +138,7 @@ test('employee may read shared operational data but cannot mutate it or employee
   await assertSucceeds(getDocs(collection(db, 'scheduleRecords')));
   await assertSucceeds(getDocs(collection(db, 'dispatchBlocks')));
   await assertSucceeds(getDocs(collection(db, 'broadcasts')));
+  await assertSucceeds(getDoc(doc(db, 'announcements', 'current')));
   await assertFails(
     updateDoc(doc(db, 'scheduleRecords', 'E001_2026-09-09'), {
       scheduleCode: '休',
@@ -153,6 +166,9 @@ test('monitor may edit only dispatch block operational fields', async () => {
   );
   await assertFails(
     updateDoc(doc(db, 'broadcasts', 'notice-1'), { active: false }),
+  );
+  await assertFails(
+    updateDoc(doc(db, 'announcements', 'current'), { imageUrl: '' }),
   );
   await assertFails(updateDoc(doc(db, 'employees', 'E001'), { title: '修改' }));
   await assertSucceeds(
@@ -187,6 +203,19 @@ test('admin has schedule, dispatch, broadcast and scheduling-setting management 
   );
   await assertSucceeds(
     updateDoc(doc(db, 'broadcasts', 'notice-1'), { active: false }),
+  );
+  await assertSucceeds(
+    setDoc(doc(db, 'announcements', 'current'), {
+      imageUrl: 'data:image/webp;base64,AA==',
+      originalName: 'new.png',
+      mediaType: 'image/webp',
+      originalSize: 200,
+      storedBytes: 28,
+      width: 100,
+      height: 100,
+      updatedBy: 'A001',
+      updatedAt: serverTimestamp(),
+    }),
   );
   await assertSucceeds(
     updateDoc(doc(db, 'scheduleSettings', '2026-10'), { status: 'open' }),

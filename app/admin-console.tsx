@@ -8,7 +8,6 @@ import {
   doc,
   getDoc,
   getDocs,
-  orderBy,
   query,
   serverTimestamp,
   setDoc,
@@ -22,9 +21,9 @@ import {
   BarChart3,
   CalendarDays,
   ClipboardList,
+  ImageUp,
   LogOut,
   Megaphone,
-  Radio,
   Settings,
   SlidersHorizontal,
   Users,
@@ -45,12 +44,32 @@ import {
   type ScheduleRecord,
 } from '../lib/schedule-firestore';
 import type { Broadcast } from '../lib/broadcasts';
+import {
+  ADMIN_TITLE_OPTIONS,
+  employeeAdminOrder,
+  isStandardAdminTitle,
+  permissionLabel,
+} from '../lib/admin-employee-order';
+import {
+  dispatchAssignmentStatusLabel,
+  assignSchedulesToDispatchBlocks,
+  parseScheduleAssignment,
+  summarizeDispatchAssignment,
+  type AssignedDispatchBlock,
+} from '../lib/dispatch-schedule-assignment';
+import {
+  getCurrentAnnouncement,
+  removeCurrentAnnouncement,
+  uploadCurrentAnnouncement,
+  type AnnouncementImage,
+} from '../lib/announcements';
 
 type BackendRole = 'duty' | 'admin';
 type Page =
   | 'dashboard'
   | 'dispatch'
   | 'schedule'
+  | 'announcements'
   | 'broadcasts'
   | 'employees'
   | 'pre-settings'
@@ -65,7 +84,7 @@ type EmployeeRecord = {
   active: boolean;
   mustChangePassword: boolean;
 };
-type Person = { employeeId: string; name: string };
+type Person = { employeeId: string; name: string; title: string };
 type DutyStaff = {
   directors: string[];
   deputyDirectors: string[];
@@ -79,8 +98,6 @@ const todayTaipei = () =>
   );
 const isLeave = (code: string) =>
   ['例', '休', '慰'].includes(code) || /假|病|事|特/.test(code);
-const peopleCount = (block: DispatchBlock) =>
-  block.drivers.length + block.stations.length + block.assistants.length;
 const peopleNames = (people: DispatchBlockPerson[]) =>
   people
     .map((person) => person.employeeName)
@@ -114,6 +131,11 @@ function deriveDuty(
     .filter(
       (record) => record.shiftType === shift && !isLeave(record.scheduleCode),
     )
+    .sort((left, right) => {
+      const leftEmployee = profiles.get(left.employeeId) || { employeeId: left.employeeId, title: left.title || '' };
+      const rightEmployee = profiles.get(right.employeeId) || { employeeId: right.employeeId, title: right.title || '' };
+      return employeeAdminOrder(leftEmployee, rightEmployee);
+    })
     .forEach((record) => {
       const employee = profiles.get(record.employeeId);
       const name = employee?.name || record.employeeName;
@@ -154,6 +176,7 @@ export function AdminConsole({
     ['broadcasts', admin ? '廣播管理' : '廣播事項', <Megaphone size={18} />],
   ];
   const adminItems: Array<[Page, string, React.ReactNode]> = [
+    ['announcements', '公告管理', <ImageUp size={18} />],
     ['employees', '員工管理', <Users size={18} />],
     ['pre-settings', '預排班設定', <SlidersHorizontal size={18} />],
     ['system', '系統設定', <Settings size={18} />],
@@ -163,7 +186,7 @@ export function AdminConsole({
       <aside className="admin-sidebar">
         <div className="admin-brand">
           <b>微笑Bike</b>
-          <span>{admin ? 'ADMIN CONSOLE' : 'MONITOR CONSOLE'}</span>
+          <span>{admin ? '管理後台' : '值班監控後台'}</span>
         </div>
         <nav>
           {[
@@ -214,7 +237,7 @@ export function AdminConsole({
           <div>
             <strong>{employeeName}</strong>
             <span>
-              {employeeId} · {admin ? 'admin' : 'monitor'}
+              {employeeId} · {permissionLabel(role)}
             </span>
           </div>
         </header>
@@ -228,6 +251,9 @@ export function AdminConsole({
           )}
           {page === 'broadcasts' && (
             <BroadcastManager employeeId={employeeId} admin={admin} />
+          )}
+          {page === 'announcements' && admin && (
+            <AnnouncementManager employeeId={employeeId} />
           )}
           {page === 'employees' && admin && <EmployeeManager />}
           {page === 'pre-settings' && admin && (
@@ -290,8 +316,19 @@ function Dashboard({
         setError('Dashboard 資料載入失敗');
       });
   }, [date]);
+  const employeeProfiles = new Map(
+    employees.map((employee) => [employee.employeeId, employee]),
+  );
   const names = (records: ScheduleRecord[]) =>
-    records.map((record) => record.employeeName).filter(Boolean);
+    records
+      .map((record) => ({
+        employeeId: record.employeeId,
+        name: employeeProfiles.get(record.employeeId)?.name || record.employeeName,
+        title: employeeProfiles.get(record.employeeId)?.title || record.title || '',
+      }))
+      .sort(employeeAdminOrder)
+      .map((person) => person.name)
+      .filter(Boolean);
   const working = schedules.filter((record) => !isLeave(record.scheduleCode));
   const morning = working.filter((record) => record.shiftType === 'morning');
   const night = working.filter((record) => record.shiftType === 'night');
@@ -302,23 +339,59 @@ function Dashboard({
       !['例', '休'].includes(record.scheduleCode) &&
       isLeave(record.scheduleCode),
   );
-  const assignedIds = new Set(
-    blocks
-      .flatMap((block) => [
-        ...block.drivers,
-        ...block.stations,
-        ...block.assistants,
-      ])
+  const originalPeople = blocks.flatMap((block) => [
+    ...block.drivers,
+    ...block.stations,
+    ...block.assistants,
+  ]);
+  const originalAssignedIds = new Set(
+    originalPeople
       .map((person) => person.employeeId)
       .filter(Boolean),
   );
-  const pending = blocks
-    .flatMap((block) => [
-      ...block.drivers,
-      ...block.stations,
-      ...block.assistants,
-    ])
-    .filter((person) => !person.employeeId);
+  const dayAssignment = assignSchedulesToDispatchBlocks({
+    blocks,
+    schedules,
+    employees,
+    shift: 'day',
+  });
+  const nightAssignment = assignSchedulesToDispatchBlocks({
+    blocks,
+    schedules,
+    employees,
+    shift: 'night',
+  });
+  const dayDispatch = summarizeDispatchAssignment(
+    dayAssignment.blocks,
+    dayAssignment.unmatched,
+  );
+  const nightDispatch = summarizeDispatchAssignment(
+    nightAssignment.blocks,
+    nightAssignment.unmatched,
+  );
+  const assignmentPeople = (assignment: typeof dayAssignment) => {
+    const peopleById = new Map(
+      assignment.blocks
+        .flatMap((block) => [
+          ...block.drivers,
+          ...block.stations,
+          ...block.assistants,
+        ])
+        .filter((person) => person.employeeId)
+        .map((person) => [
+          person.employeeId,
+          employeeProfiles.get(person.employeeId) || {
+            employeeId: person.employeeId,
+            name: person.employeeName,
+            title: '',
+          },
+        ]),
+    );
+    return [...peopleById.values()]
+      .sort(employeeAdminOrder)
+      .map((person) => person.name);
+  };
+  const pending = [...dayAssignment.unmatched, ...nightAssignment.unmatched];
   const dutyMorning = deriveDuty(schedules, employees, 'morning');
   const dutyNight = deriveDuty(schedules, employees, 'night');
   const now = Date.now();
@@ -379,27 +452,49 @@ function Dashboard({
           </header>
           <div className="stat-grid">
             {stat(
+              '白天派工人數',
+              dayDispatch.uniquePeople,
+              assignmentPeople(dayAssignment),
+            )}
+            {stat(
+              '夜班派工人數',
+              nightDispatch.uniquePeople,
+              assignmentPeople(nightAssignment),
+            )}
+            {stat(
               '白天 blocks',
-              blocks.filter((block) => block.shiftType === 'day').length,
+              dayDispatch.blocks,
             )}
             {stat(
               '夜班 blocks',
-              blocks.filter((block) => block.shiftType === 'night').length,
+              nightDispatch.blocks,
             )}
-            {stat('已派工人數', assignedIds.size)}
             {stat(
-              '待人工派工',
+              '多人共車 blocks',
+              dayDispatch.sharedVehicleBlocks +
+                nightDispatch.sharedVehicleBlocks,
+            )}
+            {stat(
+              '無駕駛 blocks',
+              dayDispatch.noDriverBlocks + nightDispatch.noDriverBlocks,
+            )}
+            {stat(
+              '待人工調整人數',
               pending.length,
               pending.map((person) => person.employeeName),
             )}
             {stat(
-              '特殊 blocks',
-              blocks.filter((block) => !block.areaCode).length,
+              '原始派工位置',
+              originalPeople.length,
+            )}
+            {stat(
+              '原始識別人數',
+              originalAssignedIds.size,
             )}
           </div>
           {pending.length > 0 && (
             <button className="admin-warning" onClick={onOpenDispatch}>
-              今日有 {pending.length} 人尚未完成派工
+              今日有 {pending.length} 人待人工調整
             </button>
           )}
         </section>
@@ -475,8 +570,11 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
   const [date, setDate] = useState(todayTaipei);
   const [shift, setShift] = useState<'day' | 'night'>('day');
   const [blocks, setBlocks] = useState<DispatchBlock[]>([]);
+  const [schedules, setSchedules] = useState<ScheduleRecord[]>([]);
+  const [employees, setEmployees] = useState<EmployeeRecord[]>([]);
   const [areaSearch, setAreaSearch] = useState('');
   const [employeeSearch, setEmployeeSearch] = useState('');
+  const [pickerSearch, setPickerSearch] = useState('');
   const [area, setArea] = useState('');
   const [editing, setEditing] = useState<DispatchBlock | null>(null);
   const [draft, setDraft] = useState<DispatchBlockEditable | null>(null);
@@ -485,7 +583,18 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
   const [error, setError] = useState('');
   const load = async () => {
     try {
-      setBlocks(await listDispatchBlocks(date));
+      const [dispatchRows, scheduleRows, employeeRows] = await Promise.all([
+        listDispatchBlocks(date),
+        listScheduleRecords(date),
+        getDocs(collection(db, 'employees')),
+      ]);
+      setBlocks(dispatchRows);
+      setSchedules(scheduleRows);
+      setEmployees(
+        employeeRows.docs.map(
+          (item) => ({ employeeId: item.id, ...item.data() }) as EmployeeRecord,
+        ),
+      );
       setError('');
     } catch (cause) {
       console.error('[backendDispatch] load failed', cause);
@@ -495,14 +604,17 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
   useEffect(() => {
     void load();
   }, [date]);
+  const assignment = useMemo(
+    () => assignSchedulesToDispatchBlocks({ blocks, schedules, employees, shift }),
+    [blocks, schedules, employees, shift],
+  );
+  const assignedBlocks = assignment.blocks;
   const areas = [
     ...new Set(
-      blocks
-        .filter((block) => block.shiftType === shift)
-        .map((block) => block.areaCode || '特殊派工'),
+      assignedBlocks.map((block) => block.areaCode || '特殊派工'),
     ),
   ].sort((a, b) => a.localeCompare(b, 'en', { numeric: true }));
-  const visible = blocks.filter(
+  const visible = assignedBlocks.filter(
     (block) =>
       block.shiftType === shift &&
       (!area || (block.areaCode || '特殊派工') === area) &&
@@ -518,7 +630,43 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
               .includes(employeeSearch.toLowerCase()),
         )),
   );
-  const open = (block: DispatchBlock) => {
+  const employeeById = new Map(
+    employees.map((employee) => [employee.employeeId, employee]),
+  );
+  const pickerPeople = [
+    ...new Map(
+      schedules
+        .filter(
+          (record) =>
+            record.shiftType === (shift === 'day' ? 'morning' : 'night') &&
+            parseScheduleAssignment(
+              record.scheduleCode,
+              assignedBlocks.map((block) => block.areaCode || ''),
+            ).kind !== 'off',
+        )
+        .map((record) => {
+          const profile = employeeById.get(record.employeeId);
+          return [
+            record.employeeId,
+            {
+              employeeId: record.employeeId,
+              name: profile?.name || record.employeeName,
+              title: profile?.title || record.title || '',
+            },
+          ] as const;
+        }),
+    ).values(),
+  ]
+    .filter(
+      (person) =>
+        !pickerSearch ||
+        `${person.employeeId} ${person.name} ${person.title}`.includes(
+          pickerSearch,
+        ),
+    )
+    .sort(employeeAdminOrder)
+    .slice(0, 60);
+  const open = (block: AssignedDispatchBlock) => {
     setEditing(block);
     setDraft({
       vehicleNo: block.vehicleNo,
@@ -543,6 +691,23 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
     people
       .map((person) => `${person.employeeId} ${person.employeeName}`.trim())
       .join('\n');
+  const assignPerson = (
+    person: Person,
+    field: 'drivers' | 'stations' | 'assistants',
+  ) => {
+    if (!draft) return;
+    const selected = { employeeId: person.employeeId, employeeName: person.name };
+    setDraft({
+      ...draft,
+      drivers: draft.drivers.filter((item) => item.employeeId !== person.employeeId),
+      stations: draft.stations.filter((item) => item.employeeId !== person.employeeId),
+      assistants: draft.assistants.filter((item) => item.employeeId !== person.employeeId),
+      [field]: [
+        ...draft[field].filter((item) => item.employeeId !== person.employeeId),
+        selected,
+      ],
+    });
+  };
   const save = async () => {
     if (!editing || !draft) return;
     try {
@@ -625,9 +790,14 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
             onChange={(event) => setEmployeeSearch(event.target.value)}
           />
         </label>
-        <strong>{visible.length} blocks</strong>
+        <strong>{visible.length} blocks／{assignment.unmatched.length} 人無對應 block</strong>
       </div>
       {error && <div className="admin-alert">{error}</div>}
+      {assignment.unmatched.length > 0 && (
+        <div className="admin-alert">
+          尚無對應 block：{assignment.unmatched.map((person) => `${person.employeeName}（${person.scheduleCode}）`).join('、')}
+        </div>
+      )}
       <div className="admin-table-wrap">
         <table className="admin-data-table dispatch-table">
           <thead>
@@ -638,6 +808,7 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
               <th>駐點</th>
               <th>隨車</th>
               <th>工作重點</th>
+              <th>狀態</th>
               <th>操作</th>
             </tr>
           </thead>
@@ -653,6 +824,11 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
                 <td>{peopleNames(block.stations)}</td>
                 <td>{peopleNames(block.assistants)}</td>
                 <td className="focus-cell">{block.workFocus || '—'}</td>
+                <td>
+                  <span className={`dispatch-assignment-status status-${block.assignmentStatus}`}>
+                    {dispatchAssignmentStatusLabel(block.assignmentStatus)}
+                  </span>
+                </td>
                 <td>
                   <button onClick={() => open(block)}>修改</button>
                   <button onClick={() => void showAudits(block)}>
@@ -743,6 +919,34 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
               />
             </label>
           </div>
+          <section className="dispatch-person-picker">
+            <header>
+              <div>
+                <b>依當日班表選擇人員</b>
+                <small>排序依職階，再依員編；加入時會從其他欄位移除同一人。</small>
+              </div>
+              <input
+                placeholder="員編、姓名或職稱"
+                value={pickerSearch}
+                onChange={(event) => setPickerSearch(event.target.value)}
+              />
+            </header>
+            <div>
+              {pickerPeople.map((person) => (
+                <article key={person.employeeId}>
+                  <span>
+                    <b>{person.name}</b>
+                    <small>{person.title} · {person.employeeId}</small>
+                  </span>
+                  <div>
+                    <button onClick={() => assignPerson(person, 'drivers')}>駕駛</button>
+                    <button onClick={() => assignPerson(person, 'stations')}>駐點</button>
+                    <button onClick={() => assignPerson(person, 'assistants')}>隨車</button>
+                  </div>
+                </article>
+              ))}
+            </div>
+          </section>
           <button className="admin-primary" onClick={() => void save()}>
             儲存修改
           </button>
@@ -824,6 +1028,15 @@ function ScheduleManager({
   const profiles = new Map(
     employees.map((person) => [person.employeeId, person]),
   );
+  const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+  const weekdayFor = (day: number) =>
+    weekdays[
+      new Date(
+        Number(month.slice(0, 4)),
+        Number(month.slice(5, 7)) - 1,
+        day,
+      ).getDay()
+    ];
   const rows = useMemo(() => {
     const grouped = new Map<string, ScheduleRecord[]>();
     records.forEach((record) =>
@@ -837,7 +1050,12 @@ function ScheduleManager({
       .filter(
         (row) => !search || `${row.id} ${row.employee?.name}`.includes(search),
       )
-      .sort((a, b) => a.id.localeCompare(b.id, 'en', { numeric: true }));
+      .sort((a, b) =>
+        employeeAdminOrder(
+          a.employee || { employeeId: a.id, title: a.items[0]?.title || '' },
+          b.employee || { employeeId: b.id, title: b.items[0]?.title || '' },
+        ),
+      );
   }, [records, employees, search]);
   const edit = async (
     record: ScheduleRecord | undefined,
@@ -915,7 +1133,7 @@ function ScheduleManager({
         <span className="admin-role-note">
           {admin
             ? '點擊班別可修改；儲存時同步寫入 audit'
-            : 'monitor 僅可查看正式班表'}
+            : '值班監控僅可查看正式班表'}
         </span>
       </div>
       {error && <div className="admin-alert">{error}</div>}
@@ -927,7 +1145,9 @@ function ScheduleManager({
               <th>員編</th>
               <th>姓名</th>
               {Array.from({ length: days }, (_, index) => (
-                <th key={index + 1}>{index + 1}</th>
+                <th className="admin-schedule-date" key={index + 1}>
+                  {index + 1}（{weekdayFor(index + 1)}）
+                </th>
               ))}
             </tr>
           </thead>
@@ -946,8 +1166,9 @@ function ScheduleManager({
                   return (
                     <td
                       key={index}
+                      data-date-column="true"
                       className={
-                        isLeave(record?.scheduleCode || '') ? 'leave-cell' : ''
+                        `admin-schedule-date ${isLeave(record?.scheduleCode || '') ? 'leave-cell' : ''}`
                       }
                     >
                       <button
@@ -967,6 +1188,115 @@ function ScheduleManager({
         </table>
       </div>
     </>
+  );
+}
+
+function AnnouncementManager({ employeeId }: { employeeId: string }) {
+  const [current, setCurrent] = useState<AnnouncementImage | null>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState('');
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState('');
+  const load = async () => {
+    try {
+      setCurrent(await getCurrentAnnouncement());
+      setMessage('');
+    } catch (error) {
+      console.error('[announcementAdmin] load failed', error);
+      setMessage('公告圖片載入失敗');
+    }
+  };
+  useEffect(() => {
+    void load();
+  }, []);
+  useEffect(() => {
+    if (!file) {
+      setPreviewUrl('');
+      return;
+    }
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+  const upload = async () => {
+    if (!file) return;
+    setBusy(true);
+    try {
+      const uploaded = await uploadCurrentAnnouncement(
+        file,
+        employeeId,
+      );
+      setCurrent(uploaded);
+      setFile(null);
+      setMessage('公告圖片已更新');
+    } catch (error) {
+      console.error('[announcementAdmin] upload failed', error);
+      setMessage(error instanceof Error ? error.message : '公告圖片上傳失敗');
+    } finally {
+      setBusy(false);
+    }
+  };
+  const remove = async () => {
+    if (!window.confirm('確定移除目前公告圖片並恢復預設公告？')) return;
+    setBusy(true);
+    try {
+      await removeCurrentAnnouncement(current, employeeId);
+      setCurrent(null);
+      setFile(null);
+      setMessage('公告圖片已移除，前台將顯示預設公告');
+    } catch (error) {
+      console.error('[announcementAdmin] remove failed', error);
+      setMessage('公告圖片移除失敗');
+    } finally {
+      setBusy(false);
+    }
+  };
+  const imageUrl = previewUrl || current?.imageUrl || '';
+  return (
+    <div className="announcement-admin-layout">
+      <section className="admin-panel settings-panel">
+        <header>
+          <h2>公告圖片上傳</h2>
+        </header>
+        <div className="announcement-upload-controls">
+          <label>
+            {current?.imageUrl ? '更換圖片' : '選擇圖片'}
+            <input
+              type="file"
+              accept="image/*"
+              onChange={(event) => setFile(event.target.files?.[0] || null)}
+            />
+          </label>
+          <small>支援一般圖片格式，單檔上限 12 MB；系統會自動等比例縮圖，前台不裁切內容。</small>
+          <div className="settings-actions">
+            <button
+              className="admin-primary"
+              disabled={!file || busy}
+              onClick={() => void upload()}
+            >
+              {busy ? '處理中…' : '上傳'}
+            </button>
+            <button disabled={!current?.imageUrl || busy} onClick={() => void remove()}>
+              移除
+            </button>
+          </div>
+          {current?.originalName && <p>目前檔案：{current.originalName}</p>}
+          {message && <p className="admin-role-note">{message}</p>}
+        </div>
+      </section>
+      <section className="admin-panel announcement-preview-panel">
+        <header>
+          <h2>前台顯示預覽</h2>
+        </header>
+        <div>
+          {imageUrl ? (
+            <img src={imageUrl} alt="公告圖片預覽" />
+          ) : (
+            <p>目前使用系統預設公告圖片。</p>
+          )}
+        </div>
+      </section>
+    </div>
   );
 }
 
@@ -1027,6 +1357,7 @@ function BroadcastManager({
         snapshot.docs.map((item) => ({
           employeeId: item.id,
           name: String(item.data().name || ''),
+          title: String(item.data().title || ''),
         })),
       ),
     );
@@ -1097,8 +1428,9 @@ function BroadcastManager({
       .filter(Boolean) || [];
   const candidates = people
     .filter((person) =>
-      `${person.employeeId} ${person.name}`.includes(personSearch),
+      `${person.employeeId} ${person.name} ${person.title}`.includes(personSearch),
     )
+    .sort(employeeAdminOrder)
     .slice(0, 30);
   const togglePerson = (id: string) => {
     if (!draft) return;
@@ -1113,7 +1445,7 @@ function BroadcastManager({
         <div>
           <strong>{items.length} 則廣播</strong>
           <span className="admin-role-note">
-            {admin ? '可新增、修改、複製、停用與刪除' : 'monitor 僅可查看'}
+            {admin ? '可新增、修改、複製、停用與刪除' : '值班監控僅可查看'}
           </span>
         </div>
         {admin && (
@@ -1367,9 +1699,6 @@ function EmployeeManager() {
   const [role, setRole] = useState('');
   const [active, setActive] = useState('');
   const [shift, setShift] = useState('');
-  const [sortKey, setSortKey] = useState<
-    'employeeId' | 'name' | 'title' | 'hireDate' | 'role' | 'active'
-  >('employeeId');
   const [shiftMap, setShiftMap] = useState<Map<string, Set<string>>>(new Map());
   const load = async () => {
     const call = httpsCallable<undefined, { employees: EmployeeRecord[] }>(
@@ -1390,25 +1719,19 @@ function EmployeeManager() {
   useEffect(() => {
     void load();
   }, []);
-  const titles = [
-    ...new Set(items.map((item) => item.title).filter(Boolean)),
-  ].sort();
   const visible = items
     .filter(
       (item) =>
         (!search || `${item.employeeId} ${item.name}`.includes(search)) &&
-        (!title || item.title === title) &&
+        (!title ||
+          (title === '其他'
+            ? !isStandardAdminTitle(item.title)
+            : item.title === title)) &&
         (!role || item.role === role) &&
         (!active || String(item.active) === active) &&
         (!shift || shiftMap.get(item.employeeId)?.has(shift)),
     )
-    .sort((left, right) =>
-      String(left[sortKey] ?? '').localeCompare(
-        String(right[sortKey] ?? ''),
-        'zh-TW',
-        { numeric: true },
-      ),
-    );
+    .sort(employeeAdminOrder);
   const tenure = (hireDate: string) => {
     if (!hireDate) return '—';
     const years = (Date.now() - new Date(hireDate).getTime()) / 31557600000;
@@ -1464,7 +1787,7 @@ function EmployeeManager() {
             onChange={(event) => setTitle(event.target.value)}
           >
             <option value="">全部</option>
-            {titles.map((value) => (
+            {[...ADMIN_TITLE_OPTIONS, '其他'].map((value) => (
               <option key={value}>{value}</option>
             ))}
           </select>
@@ -1481,15 +1804,15 @@ function EmployeeManager() {
           </select>
         </label>
         <label>
-          角色
+          權限
           <select
             value={role}
             onChange={(event) => setRole(event.target.value)}
           >
             <option value="">全部</option>
-            <option value="employee">employee</option>
-            <option value="duty">monitor</option>
-            <option value="admin">admin</option>
+            <option value="employee">一般員工</option>
+            <option value="duty">值班監控</option>
+            <option value="admin">管理員</option>
           </select>
         </label>
         <label>
@@ -1503,30 +1826,6 @@ function EmployeeManager() {
             <option value="false">停用</option>
           </select>
         </label>
-        <label>
-          排序
-          <select
-            value={sortKey}
-            onChange={(event) =>
-              setSortKey(
-                event.target.value as
-                  | 'employeeId'
-                  | 'name'
-                  | 'title'
-                  | 'hireDate'
-                  | 'role'
-                  | 'active',
-              )
-            }
-          >
-            <option value="employeeId">員編</option>
-            <option value="name">姓名</option>
-            <option value="title">職稱</option>
-            <option value="hireDate">到職日</option>
-            <option value="role">角色</option>
-            <option value="active">狀態</option>
-          </select>
-        </label>
       </div>
       <div className="admin-table-wrap">
         <table className="admin-data-table">
@@ -1537,7 +1836,7 @@ function EmployeeManager() {
               <th>職稱</th>
               <th>到職日</th>
               <th>年資</th>
-              <th>角色</th>
+              <th>權限</th>
               <th>狀態</th>
               <th>操作</th>
             </tr>
@@ -1550,7 +1849,7 @@ function EmployeeManager() {
                 <td>{item.title}</td>
                 <td>{item.hireDate || '—'}</td>
                 <td>{tenure(item.hireDate)}</td>
-                <td>{item.role}</td>
+                <td>{permissionLabel(item.role)}</td>
                 <td>{item.active ? '啟用' : '停用'}</td>
                 <td>
                   <button onClick={() => setEditing(item)}>編輯</button>
@@ -1583,12 +1882,25 @@ function EmployeeManager() {
             </label>
             <label>
               職稱
-              <input
-                value={editing.title}
+              <select
+                value={isStandardAdminTitle(editing.title) ? editing.title : '其他'}
                 onChange={(event) =>
                   setEditing({ ...editing, title: event.target.value })
                 }
-              />
+              >
+                {[...ADMIN_TITLE_OPTIONS, '其他'].map((value) => (
+                  <option key={value}>{value}</option>
+                ))}
+              </select>
+              {!isStandardAdminTitle(editing.title) && (
+                <input
+                  placeholder="輸入其他職稱"
+                  value={editing.title === '其他' ? '' : editing.title}
+                  onChange={(event) =>
+                    setEditing({ ...editing, title: event.target.value || '其他' })
+                  }
+                />
+              )}
             </label>
             <label>
               到職日
@@ -1601,7 +1913,7 @@ function EmployeeManager() {
               />
             </label>
             <label>
-              角色
+              權限
               <select
                 value={editing.role}
                 onChange={(event) =>
@@ -1611,9 +1923,9 @@ function EmployeeManager() {
                   })
                 }
               >
-                <option value="employee">employee</option>
-                <option value="duty">monitor</option>
-                <option value="admin">admin</option>
+                <option value="employee">一般員工</option>
+                <option value="duty">值班監控</option>
+                <option value="admin">管理員</option>
               </select>
             </label>
             <label className="check">

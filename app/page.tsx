@@ -19,6 +19,7 @@ import { listAttendanceLocations, listTodayAttendanceRecords, createAttendanceRe
 import { listMonthScheduleRecords, listScheduleRecords, type ScheduleRecord } from '../lib/schedule-firestore'
 import { listDispatchBlocks, updateDispatchBlock, writeDispatchBlockAudit, type DispatchBlock, type DispatchBlockEditable, type DispatchBlockPerson } from '../lib/dispatch-blocks-firestore'
 import { getBroadcastRead, listActiveBroadcasts, recordBroadcastShown, type Broadcast } from '../lib/broadcasts'
+import { getCurrentAnnouncement } from '../lib/announcements'
 import sourceSchedule from '../public/september-schedules.json'
 import { AdminConsole } from './admin-console'
 
@@ -296,7 +297,11 @@ function weekdayAt(index: number) {
   return weekdays[index % 7]
 }
 
-function EmptyNotice() { return <section className="notice-page"><div className="notice-heading"><Megaphone size={25} /><div><p className="eyebrow">NOTICE</p><h1>公告</h1></div></div><article className="notice-image-card"><img src={publicAssetUrl('temporary-notice.png')} alt="獎懲公告" /></article></section> }
+function EmptyNotice() {
+  const [imageUrl, setImageUrl] = useState('')
+  useEffect(() => { void getCurrentAnnouncement().then(item => setImageUrl(item?.imageUrl || '')).catch(error => console.error('[announcement] load failed', error)) }, [])
+  return <section className="notice-page"><div className="notice-heading"><Megaphone size={25} /><div><p className="eyebrow">NOTICE</p><h1>公告</h1></div></div><article className="notice-image-card"><img src={imageUrl || publicAssetUrl('temporary-notice.png')} alt="公告圖片" /></article></section>
+}
 
 function DispatchBlockPeople({ people }: { people: DispatchBlockPerson[] }) {
   return <div>{people.length ? people.map(person => <span className="person" key={`${person.employeeId}-${person.employeeName}`}>{person.employeeName}<small>{person.employeeId || '待確認員編'}</small></span>) : '—'}</div>

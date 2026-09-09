@@ -151,6 +151,21 @@ service cloud.firestore {
       allow write: if isAdmin();
     }
 
+    match /announcements/{announcementId} {
+      allow read: if isActiveEmployee();
+      allow create, update: if isAdmin()
+        && announcementId == 'current'
+        && request.resource.data.keys().hasOnly([
+          'imageUrl', 'originalName', 'mediaType', 'originalSize', 'storedBytes',
+          'width', 'height', 'updatedBy', 'updatedAt'
+        ])
+        && request.resource.data.imageUrl is string
+        && request.resource.data.imageUrl.size() <= 750000
+        && request.resource.data.updatedBy == request.auth.token.employeeId
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if false;
+    }
+
     match /broadcastReads/{readId} {
       function isOwnAuth() {
         return isActiveEmployee()
