@@ -18,10 +18,12 @@ import { listAttendanceLocations, listTodayAttendanceRecords, createAttendanceRe
 import { listMonthScheduleRecords, listScheduleRecords, type ScheduleRecord } from '../lib/schedule-firestore'
 import { listAreaMaster, listDispatchRecords, updateDispatchRecord, writeDispatchAudit, type AreaMaster, type DispatchRecord } from '../lib/dispatch-firestore'
 import { getBroadcastRead, listActiveBroadcasts, recordBroadcastShown, type Broadcast } from '../lib/broadcasts'
+import sourceSchedule from '../public/september-schedules.json'
 
 type ScheduleRow = { rowId: string; employeeId: string; name: string; title: string; group: string; area: string; shifts: string[] }
 type ScheduleData = { month: string; days: string[]; morning: ScheduleRow[]; night: ScheduleRow[] }
 type Employee = { employeeId: string; name: string; title: string; role: 'employee' | 'duty' | 'admin'; hireDate: string; active: boolean; mustChangePassword: boolean }
+type EmployeeProfile = { employeeId: string; name: string; title?: string; group?: string; area?: string }
 type PunchRecord = AttendanceRecord
 type Checkpoint = AttendanceLocation
 const attendanceEnabled = false
@@ -59,7 +61,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!currentUser) return
-    void listMonthScheduleRecords('2026-09').then(records => { console.info('[scheduleRecords] loaded', { employeeId: 'all', count: records.length }); setScheduleData(scheduleRecordsToData(records)); if (!records.length) notify('班表資料尚未匯入') }).catch(error => { console.error('[scheduleRecords] load failed', error); setScheduleData(scheduleRecordsToData([])); notify(error?.code === 'permission-denied' ? '班表讀取權限不足' : '班表資料載入失敗') })
+    void Promise.all([listMonthScheduleRecords('2026-09'), getDocs(collection(db, 'employees'))]).then(([records, employees]) => { const profiles = employees.docs.map(item => ({ employeeId: item.id, ...(item.data() as Omit<EmployeeProfile, 'employeeId'>) })); console.info('[scheduleRecords] loaded', { employeeId: 'all', count: records.length }); setScheduleData(scheduleRecordsToData(records, profiles)); if (!records.length) notify('班表資料尚未匯入') }).catch(error => { console.error('[scheduleRecords] load failed', error); setScheduleData(scheduleRecordsToData([])); notify(error?.code === 'permission-denied' ? '班表讀取權限不足' : '班表資料載入失敗') })
   }, [currentUser?.employeeId])
 
   useEffect(() => onAuthStateChanged(auth, async user => {
@@ -105,13 +107,18 @@ export default function Home() {
 
 function Nav({ label, icon, active, onClick }: { label: string; icon: React.ReactNode; active: boolean; onClick: () => void }) { return <button className={active ? 'nav-item active' : 'nav-item'} onClick={onClick}>{icon}<span>{label}</span></button> }
 
-function scheduleRecordsToData(records: ScheduleRecord[]): ScheduleData {
+function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProfile[] = []): ScheduleData {
   const days = Array.from({ length: 30 }, (_, i) => String(i + 1))
+  const profileMap = new Map(profiles.map(profile => [profile.employeeId, profile]))
+  const sourceRows = [...sourceSchedule.morning.map(row => ({ ...row, shiftType: 'morning' as const })), ...sourceSchedule.night.map(row => ({ ...row, shiftType: 'night' as const }))]
+  const sourceMap = new Map(sourceRows.map(row => [`${row.shiftType}:${row.employeeId}`, row]))
   const grouped = new Map<string, ScheduleRow>()
   for (const record of records) {
     const key = `${record.shiftType}:${record.employeeId}`
     const day = Number(record.date.slice(8)) - 1
-    const current = grouped.get(key) ?? { rowId: record.employeeId, employeeId: record.employeeId, name: record.employeeName, title: record.title || '', group: record.group || '', area: record.area || '', shifts: Array(30).fill('') }
+    const profile = profileMap.get(record.employeeId)
+    const source = sourceMap.get(key)
+    const current = grouped.get(key) ?? { rowId: record.employeeId, employeeId: record.employeeId, name: profile?.name || record.employeeName, title: profile?.title || record.title || source?.title || '', group: profile?.group || record.group || source?.group || '', area: profile?.area || record.area || source?.area || '', shifts: Array(30).fill('') }
     current.shifts[day] = record.scheduleCode || record.scheduleLabel || record.leaveType || ''
     grouped.set(key, current)
   }
@@ -282,8 +289,11 @@ function EmptyNotice() { return <section className="notice-page"><div className=
 function deriveDispatchRecords(schedules: ScheduleRecord[], overrides: DispatchRecord[], areas: AreaMaster[], employeeId?: string): DispatchRecord[] {
   const areaMap = new Map(areas.map(area => [area.areaCode, area]))
   const overrideMap = new Map(overrides.map(record => [`${record.employeeId}|${record.scheduleCode}`, record]))
+  const sourceRows = [...sourceSchedule.morning.map(row => ({ ...row, shiftType: 'morning' as const })), ...sourceSchedule.night.map(row => ({ ...row, shiftType: 'night' as const }))]
+  const sourceMap = new Map(sourceRows.map(row => [`${row.shiftType}:${row.employeeId}`, row]))
   return schedules.filter(record => (!employeeId || record.employeeId === employeeId) && record.scheduleCode && !isLeave(record.scheduleCode)).map(record => {
-    const pseudoRow: ScheduleRow = { rowId: record.id, employeeId: record.employeeId, name: record.employeeName, title: record.title || '', group: record.group || '', area: record.area || '', shifts: [] }
+    const source = sourceMap.get(`${record.shiftType}:${record.employeeId}`)
+    const pseudoRow: ScheduleRow = { rowId: record.id, employeeId: record.employeeId, name: record.employeeName, title: record.title || source?.title || '', group: record.group || source?.group || '', area: record.area || source?.area || '', shifts: [] }
     const areaCode = dispatchArea(record.scheduleCode) || dispatchSpecialGroup(pseudoRow)
     const area = areaMap.get(areaCode)
     const base: DispatchRecord = {
