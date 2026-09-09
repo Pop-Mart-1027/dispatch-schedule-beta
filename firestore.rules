@@ -98,10 +98,11 @@ service cloud.firestore {
         || (isActiveEmployee() && isDuty()
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
             'areaCode', 'areaName', 'vehicleType', 'vehicleNo', 'driver', 'assistant',
-            'station', 'workFocus', 'balanceArea', 'note', 'modifiedBy', 'modifiedAt'
+            'station', 'workFocus', 'balanceArea', 'note', 'modifiedBy', 'modifiedAt', 'updatedAt'
           ])
           && request.resource.data.modifiedBy == request.auth.token.employeeId
-          && request.resource.data.modifiedAt == request.time);
+          && request.resource.data.modifiedAt == request.time
+          && request.resource.data.updatedAt == request.time);
       allow delete: if false;
     }
     match /dispatchAuditLogs/{auditId} {
