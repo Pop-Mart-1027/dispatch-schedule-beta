@@ -119,10 +119,22 @@ service cloud.firestore {
     }
 
     match /broadcastReads/{readId} {
-      allow read: if isActiveEmployee() && (isAdmin() || resource.data.employeeId == request.auth.token.employeeId);
-      allow create, update: if isActiveEmployee()
-        && request.resource.data.employeeId == request.auth.token.employeeId
-        && request.resource.data.broadcastId is string;
+      function isOwnRead() {
+        return isActiveEmployee()
+          && resource.data.employeeId == request.auth.token.employeeId
+          && readId == resource.data.broadcastId + '_' + request.auth.token.employeeId;
+      }
+      function isOwnNewRead() {
+        return isActiveEmployee()
+          && request.resource.data.employeeId == request.auth.token.employeeId
+          && request.resource.data.broadcastId is string
+          && request.resource.id == request.resource.data.broadcastId + '_' + request.auth.token.employeeId;
+      }
+      allow get, list: if isOwnRead();
+      allow create: if isOwnNewRead()
+        && request.resource.data.keys().hasOnly(['broadcastId', 'employeeId', 'firstShownAt', 'lastShownAt', 'readAt', 'shownCount']);
+      allow update: if isOwnRead() && isOwnNewRead()
+        && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['firstShownAt', 'lastShownAt', 'readAt', 'shownCount']);
       allow delete: if false;
     }
 
