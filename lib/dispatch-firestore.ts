@@ -1,7 +1,7 @@
 import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, where } from 'firebase/firestore'
 import { db } from './firebase'
 
-export type DispatchRecord = { id: string; date: string; employeeId: string; employeeName: string; scheduleCode: string; areaCode: string; areaName: string; vehicleType: string; vehicleNo: string; driver: string; assistant: string; station: string; workFocus: string; balanceArea: string; note: string; source: string; status: string; createdAt?: unknown; updatedAt?: unknown; modifiedBy: string; modifiedAt?: unknown }
+export type DispatchRecord = { id: string; date: string; employeeId: string; employeeName: string; scheduleCode: string; shiftType?: 'morning' | 'night'; areaCode: string; areaName: string; vehicleType: string; vehicleNo: string; driver: string; assistant: string; station: string; workFocus: string; balanceArea: string; note: string; source: string; status: string; createdAt?: unknown; updatedAt?: unknown; modifiedBy: string; modifiedAt?: unknown }
 export type AreaMaster = { areaCode: string; areaName: string; defaultVehicleType: string; defaultVehicleNo: string; defaultStation: string; defaultWorkFocus: string; defaultBalanceArea: string; active: boolean; sortOrder: number }
 
 export async function listDispatchRecords(date: string, employeeId?: string) {

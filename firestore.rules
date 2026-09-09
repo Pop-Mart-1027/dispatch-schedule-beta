@@ -90,8 +90,7 @@ service cloud.firestore {
     }
 
     match /dispatchRecords/{recordId} {
-      allow get: if isActiveEmployee() && (isDuty() || resource.data.employeeId == request.auth.token.employeeId);
-      allow list: if isActiveEmployee() && (isDuty() || resource.data.employeeId == request.auth.token.employeeId);
+      allow get, list: if isActiveEmployee();
       allow create: if isActiveEmployee() && isDuty()
         && request.resource.data.employeeId is string
         && request.resource.data.employeeName is string
