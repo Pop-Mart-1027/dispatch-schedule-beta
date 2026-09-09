@@ -19,6 +19,7 @@ import { listMonthScheduleRecords, listScheduleRecords, type ScheduleRecord } fr
 import { listAreaMaster, listDispatchRecords, updateDispatchRecord, writeDispatchAudit, type AreaMaster, type DispatchRecord } from '../lib/dispatch-firestore'
 import { getBroadcastRead, listActiveBroadcasts, recordBroadcastShown, type Broadcast } from '../lib/broadcasts'
 import sourceSchedule from '../public/september-schedules.json'
+import finalDispatchMapping from '../output/dispatch-area-mapping-final.json'
 
 type ScheduleRow = { rowId: string; employeeId: string; name: string; title: string; group: string; area: string; shifts: string[] }
 type ScheduleData = { month: string; days: string[]; morning: ScheduleRow[]; night: ScheduleRow[] }
@@ -289,12 +290,16 @@ function EmptyNotice() { return <section className="notice-page"><div className=
 function deriveDispatchRecords(schedules: ScheduleRecord[], overrides: DispatchRecord[], areas: AreaMaster[], employeeId?: string): DispatchRecord[] {
   const areaMap = new Map(areas.map(area => [area.areaCode, area]))
   const overrideMap = new Map(overrides.map(record => [`${record.employeeId}|${record.scheduleCode}`, record]))
+  const genericMapping = new Map(finalDispatchMapping.filter(item => item.mappingType === 'alias').map(item => [item.scheduleCode, item]))
+  const employeeMapping = new Map(finalDispatchMapping.filter(item => item.mappingType === 'employee-specific' && 'employeeId' in item).map(item => [`${item.employeeId}|${item.scheduleCode}`, item]))
   const sourceRows = [...sourceSchedule.morning.map(row => ({ ...row, shiftType: 'morning' as const })), ...sourceSchedule.night.map(row => ({ ...row, shiftType: 'night' as const }))]
   const sourceMap = new Map(sourceRows.map(row => [`${row.shiftType}:${row.employeeId}`, row]))
   return schedules.filter(record => (!employeeId || record.employeeId === employeeId) && record.scheduleCode && !isLeave(record.scheduleCode)).map(record => {
     const source = sourceMap.get(`${record.shiftType}:${record.employeeId}`)
     const pseudoRow: ScheduleRow = { rowId: record.id, employeeId: record.employeeId, name: record.employeeName, title: record.title || source?.title || '', group: record.group || source?.group || '', area: record.area || source?.area || '', shifts: [] }
-    const areaCode = dispatchArea(record.scheduleCode) || (pseudoRow.area ? pseudoRow.area.replace(/區$/, '') : '') || (pseudoRow.group ? pseudoRow.group.replace(/區$/, '') : '') || dispatchSpecialGroup(pseudoRow)
+    const mapping = employeeMapping.get(`${record.employeeId}|${record.scheduleCode}`) || genericMapping.get(record.scheduleCode)
+    const specialGroup = dispatchSpecialGroup(pseudoRow)
+    const areaCode = mapping?.targetAreaCode || (specialGroup ? specialGroup : '')
     const area = areaMap.get(areaCode)
     const base: DispatchRecord = {
       id: `${record.date}-${record.employeeId}-${record.shiftType}`,
@@ -304,7 +309,7 @@ function deriveDispatchRecords(schedules: ScheduleRecord[], overrides: DispatchR
       scheduleCode: record.scheduleCode,
       shiftType: record.shiftType,
       areaCode,
-      areaName: area?.areaName || (areaCode ? `${areaCode}區` : ''),
+      areaName: area?.areaName || (specialGroup || (areaCode ? `${areaCode}區` : '待人工派工')),
       vehicleType: area?.defaultVehicleType || '', vehicleNo: area?.defaultVehicleNo || '',
       driver: record.title?.includes('PT') ? '' : record.employeeName,
       assistant: '', station: record.title?.includes('PT') ? (area?.defaultStation || '') : '',

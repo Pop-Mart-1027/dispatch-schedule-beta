@@ -1,0 +1,899 @@
+[
+  {
+    "scheduleCode": "早A1",
+    "targetAreaCode": "A1",
+    "targetAreaName": "府前 A1區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚A1",
+    "targetAreaCode": "A1",
+    "targetAreaName": "府前 A1區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早A2",
+    "targetAreaCode": "A2",
+    "targetAreaName": "府前 A2區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早J1",
+    "targetAreaCode": "J1",
+    "targetAreaName": "府前 J1區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早J2",
+    "targetAreaCode": "J2",
+    "targetAreaName": "府前 J2區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早C1",
+    "targetAreaCode": "C",
+    "targetAreaName": "小夜 C區(塔悠)",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚C1",
+    "targetAreaCode": "C",
+    "targetAreaName": "小夜 C區(塔悠)",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚C2",
+    "targetAreaCode": "C",
+    "targetAreaName": "小夜 C區(塔悠)",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早U",
+    "targetAreaCode": "U",
+    "targetAreaName": "南港 U區(停南港)",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚U",
+    "targetAreaCode": "U",
+    "targetAreaName": "南港 U區(停南港)",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早B1",
+    "targetAreaCode": "B",
+    "targetAreaName": "公館 大B區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚B1",
+    "targetAreaCode": "B",
+    "targetAreaName": "公館 大B區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早B2",
+    "targetAreaCode": "B",
+    "targetAreaName": "公館 大B區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早B4",
+    "targetAreaCode": "B",
+    "targetAreaName": "公館 大B區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚B4",
+    "targetAreaCode": "B",
+    "targetAreaName": "公館 大B區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早D1",
+    "targetAreaCode": "D",
+    "targetAreaName": "萬華 D區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚D1",
+    "targetAreaCode": "D",
+    "targetAreaName": "萬華 D區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚D2",
+    "targetAreaCode": "D",
+    "targetAreaName": "萬華 D區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚D3",
+    "targetAreaCode": "D",
+    "targetAreaName": "萬華 D區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚E1",
+    "targetAreaCode": "E",
+    "targetAreaName": "北投 E區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早E",
+    "targetAreaCode": "E",
+    "targetAreaName": "北投 E區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚E2",
+    "targetAreaCode": "E",
+    "targetAreaName": "北投 E區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早E1",
+    "targetAreaCode": "E",
+    "targetAreaName": "北投 E區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早E2",
+    "targetAreaCode": "E",
+    "targetAreaName": "北投 E區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早F",
+    "targetAreaCode": "F",
+    "targetAreaName": "汐止 F區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚F",
+    "targetAreaCode": "F",
+    "targetAreaName": "汐止 F區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早G2",
+    "targetAreaCode": "G",
+    "targetAreaName": "新店 G區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚G2",
+    "targetAreaCode": "G",
+    "targetAreaName": "新店 G區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚G1",
+    "targetAreaCode": "G",
+    "targetAreaName": "新店 G區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早G1",
+    "targetAreaCode": "G",
+    "targetAreaName": "新店 G區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早P2",
+    "targetAreaCode": "P2",
+    "targetAreaName": "景華 P2區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚P1",
+    "targetAreaCode": "P2",
+    "targetAreaName": "景華 P2區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚H",
+    "targetAreaCode": "H",
+    "targetAreaName": "福林 H區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚H1",
+    "targetAreaCode": "H",
+    "targetAreaName": "福林 H區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚H2",
+    "targetAreaCode": "H",
+    "targetAreaName": "福林 H區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早H2",
+    "targetAreaCode": "H",
+    "targetAreaName": "福林 H區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早I1",
+    "targetAreaCode": "I",
+    "targetAreaName": "林金 I區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚I2",
+    "targetAreaCode": "I",
+    "targetAreaName": "林金 I區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早I2",
+    "targetAreaCode": "I",
+    "targetAreaName": "林金 I區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚I3",
+    "targetAreaCode": "I",
+    "targetAreaName": "林金 I區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早I3",
+    "targetAreaCode": "I",
+    "targetAreaName": "林金 I區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚K1",
+    "targetAreaCode": "K",
+    "targetAreaName": "小夜 K區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早K1",
+    "targetAreaCode": "K",
+    "targetAreaName": "小夜 K區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早K2",
+    "targetAreaCode": "K2",
+    "targetAreaName": "正義 K2區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚K2",
+    "targetAreaCode": "K2",
+    "targetAreaName": "正義 K2區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚K3",
+    "targetAreaCode": "K3",
+    "targetAreaName": "永福 K3區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早K3",
+    "targetAreaCode": "K3",
+    "targetAreaName": "永福 K3區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早K4",
+    "targetAreaCode": "K4",
+    "targetAreaName": "永康 K4區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚K4",
+    "targetAreaCode": "K4",
+    "targetAreaName": "永康 K4區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早L1",
+    "targetAreaCode": "L1",
+    "targetAreaName": "新莊 L1區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚L1",
+    "targetAreaCode": "L1",
+    "targetAreaName": "新莊 L1區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早L2",
+    "targetAreaCode": "L2",
+    "targetAreaName": "輔大 L2區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚L2",
+    "targetAreaCode": "L2",
+    "targetAreaName": "輔大 L2區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚L3",
+    "targetAreaCode": "L3",
+    "targetAreaName": "泰山 L3區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早L3",
+    "targetAreaCode": "L3",
+    "targetAreaName": "泰山 L3區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚L4",
+    "targetAreaCode": "L",
+    "targetAreaName": "小夜 L區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早L4",
+    "targetAreaCode": "L",
+    "targetAreaName": "小夜 L區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早M",
+    "targetAreaCode": "M",
+    "targetAreaName": "小夜M區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚M",
+    "targetAreaCode": "M",
+    "targetAreaName": "小夜M區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚W1",
+    "targetAreaCode": "W",
+    "targetAreaName": "小夜W區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早W1",
+    "targetAreaCode": "W",
+    "targetAreaName": "小夜W區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早W2",
+    "targetAreaCode": "W",
+    "targetAreaName": "小夜W區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚W2",
+    "targetAreaCode": "W",
+    "targetAreaName": "小夜W區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚W3",
+    "targetAreaCode": "W",
+    "targetAreaName": "小夜W區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早W3",
+    "targetAreaCode": "W",
+    "targetAreaName": "小夜W區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早N",
+    "targetAreaCode": "N3",
+    "targetAreaName": "濱江 N3區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚N",
+    "targetAreaCode": "N3",
+    "targetAreaName": "濱江 N3區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚O1",
+    "targetAreaCode": "O1",
+    "targetAreaName": "藝文 O1區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早O1",
+    "targetAreaCode": "O1",
+    "targetAreaName": "藝文 O1區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早O2",
+    "targetAreaCode": "O2",
+    "targetAreaName": "小夜 O2區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚O2",
+    "targetAreaCode": "O2",
+    "targetAreaName": "小夜 O2區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早O4",
+    "targetAreaCode": "O4",
+    "targetAreaName": "小夜 O4區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚O4",
+    "targetAreaCode": "O4",
+    "targetAreaName": "小夜 O4區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早O3",
+    "targetAreaCode": "O3",
+    "targetAreaName": "小夜 O3區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚O3",
+    "targetAreaCode": "O3",
+    "targetAreaName": "小夜 O3區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚R",
+    "targetAreaCode": "R",
+    "targetAreaName": "土城 R區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早R",
+    "targetAreaCode": "R",
+    "targetAreaName": "土城 R區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早S",
+    "targetAreaCode": "S",
+    "targetAreaName": "樹林 S區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚S",
+    "targetAreaCode": "S",
+    "targetAreaName": "樹林 S區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早T1",
+    "targetAreaCode": "T",
+    "targetAreaName": "鶯歌 T區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚T1",
+    "targetAreaCode": "T",
+    "targetAreaName": "鶯歌 T區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚T2",
+    "targetAreaCode": "T",
+    "targetAreaName": "鶯歌 T區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早T2",
+    "targetAreaCode": "T",
+    "targetAreaName": "鶯歌 T區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚V1",
+    "targetAreaCode": "V",
+    "targetAreaName": "淡水 V區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚V",
+    "targetAreaCode": "V",
+    "targetAreaName": "淡水 V區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚V2",
+    "targetAreaCode": "V",
+    "targetAreaName": "淡水 V區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早V2",
+    "targetAreaCode": "V",
+    "targetAreaName": "淡水 V區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早V1",
+    "targetAreaCode": "V",
+    "targetAreaName": "淡水 V區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早X",
+    "targetAreaCode": "X",
+    "targetAreaName": "林口 X區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早X1",
+    "targetAreaCode": "X",
+    "targetAreaName": "林口 X區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚X",
+    "targetAreaCode": "X",
+    "targetAreaName": "林口 X區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "早X2",
+    "targetAreaCode": "X",
+    "targetAreaName": "林口 X區",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "scheduleCode": "晚X1",
+    "targetAreaCode": "X1",
+    "targetAreaName": "X1",
+    "mappingType": "alias",
+    "source": "dispatch-area-mapping-v2.json",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "95413",
+    "employeeName": "邱士晉",
+    "scheduleCode": "國上",
+    "targetAreaCode": "J2",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B3801",
+    "employeeName": "王哲鴻",
+    "scheduleCode": "國上",
+    "targetAreaCode": "C",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B2841",
+    "employeeName": "陳韻淳",
+    "scheduleCode": "國上",
+    "targetAreaCode": "B",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B4156",
+    "employeeName": "張紹楠",
+    "scheduleCode": "國上",
+    "targetAreaCode": "D",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B4964",
+    "employeeName": "刁冠傑",
+    "scheduleCode": "國上",
+    "targetAreaCode": "E",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B2673",
+    "employeeName": "林正輝",
+    "scheduleCode": "國上",
+    "targetAreaCode": "F",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B6264",
+    "employeeName": "陳博翰",
+    "scheduleCode": "國上",
+    "targetAreaCode": "F",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B0340",
+    "employeeName": "胡開泰",
+    "scheduleCode": "國上",
+    "targetAreaCode": "P2",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B4393",
+    "employeeName": "詹益晃",
+    "scheduleCode": "國上",
+    "targetAreaCode": "P2",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B5801",
+    "employeeName": "蔡松圻",
+    "scheduleCode": "國上",
+    "targetAreaCode": "H",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B0684",
+    "employeeName": "李昆翰",
+    "scheduleCode": "國上",
+    "targetAreaCode": "K3",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B6092",
+    "employeeName": "陳碧宏",
+    "scheduleCode": "國上",
+    "targetAreaCode": "K4",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B3814",
+    "employeeName": "童清標",
+    "scheduleCode": "國上",
+    "targetAreaCode": "W",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B0036",
+    "employeeName": "林秋昌",
+    "scheduleCode": "國上",
+    "targetAreaCode": "W",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "95945",
+    "employeeName": "葉昱翔",
+    "scheduleCode": "國上",
+    "targetAreaCode": "O4",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B5306",
+    "employeeName": "李孝順",
+    "scheduleCode": "國上",
+    "targetAreaCode": "R",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  },
+  {
+    "employeeId": "B4440",
+    "employeeName": "鄭景懷",
+    "scheduleCode": "國上",
+    "targetAreaCode": "X",
+    "mappingType": "employee-specific",
+    "source": "dispatch-employee-evidence.csv",
+    "evidence": "2026-09-09 original dispatch sheet"
+  }
+]
