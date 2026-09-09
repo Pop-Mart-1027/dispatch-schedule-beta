@@ -88,6 +88,20 @@ service cloud.firestore {
       allow get, list: if isActiveEmployee();
       allow create, update, delete: if isAdmin();
     }
+    match /scheduleAuditLogs/{auditId} {
+      allow read: if isDuty();
+      allow create: if isAdmin()
+        && request.resource.data.employeeId is string
+        && request.resource.data.date is string
+        && request.resource.data.modifiedBy == request.auth.token.employeeId
+        && request.resource.data.modifiedAt == request.time;
+      allow update, delete: if false;
+    }
+
+    match /scheduleSettings/{monthId} {
+      allow read: if isDuty();
+      allow create, update, delete: if isAdmin();
+    }
 
     match /dispatchRecords/{recordId} {
       allow get, list: if isActiveEmployee();
