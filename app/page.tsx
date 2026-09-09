@@ -112,6 +112,7 @@ function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProf
   const profileMap = new Map(profiles.map(profile => [profile.employeeId, profile]))
   const sourceRows = [...sourceSchedule.morning.map(row => ({ ...row, shiftType: 'morning' as const })), ...sourceSchedule.night.map(row => ({ ...row, shiftType: 'night' as const }))]
   const sourceMap = new Map(sourceRows.map(row => [`${row.shiftType}:${row.employeeId}`, row]))
+  const sourceOrder = new Map(sourceRows.map((row, index) => [`${row.shiftType}:${row.employeeId}`, index]))
   const grouped = new Map<string, ScheduleRow>()
   for (const record of records) {
     const key = `${record.shiftType}:${record.employeeId}`
@@ -122,7 +123,11 @@ function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProf
     current.shifts[day] = record.scheduleCode || record.scheduleLabel || record.leaveType || ''
     grouped.set(key, current)
   }
-  return { month: '2026-09', days, morning: [...grouped.values()].filter(row => records.some(r => r.employeeId === row.employeeId && r.shiftType === 'morning')), night: [...grouped.values()].filter(row => records.some(r => r.employeeId === row.employeeId && r.shiftType === 'night')) }
+  const rowsFor = (shiftType: 'morning' | 'night') => [...grouped.entries()]
+    .filter(([key]) => key.startsWith(`${shiftType}:`))
+    .sort(([leftKey, left], [rightKey, right]) => (sourceOrder.get(leftKey) ?? Number.MAX_SAFE_INTEGER) - (sourceOrder.get(rightKey) ?? Number.MAX_SAFE_INTEGER) || left.employeeId.localeCompare(right.employeeId, 'en', { numeric: true }))
+    .map(([, row]) => row)
+  return { month: '2026-09', days, morning: rowsFor('morning'), night: rowsFor('night') }
 }
 
 async function showEligibleBroadcast(user: Employee): Promise<Broadcast | undefined> {
@@ -252,13 +257,12 @@ function PersonalSchedule({ row, month }: { row: ScheduleRow | undefined; month:
 }
 
 function ScheduleMatrix({ rows, days }: { rows: ScheduleRow[]; days: string[] }) {
-  const groups = rows.reduce<{ area: string; people: ScheduleRow[] }[]>((result, row) => {
+  const groupedRows = rows.reduce<Map<string, ScheduleRow[]>>((result, row) => {
     const area = scheduleGroup(row)
-    const latest = result[result.length - 1]
-    if (!latest || latest.area !== area) result.push({ area, people: [row] })
-    else latest.people.push(row)
+    result.set(area, [...(result.get(area) ?? []), row])
     return result
-  }, [])
+  }, new Map())
+  const groups = [...groupedRows].map(([area, people]) => ({ area, people }))
   return <div className="matrix-wrap"><table className="schedule-matrix"><colgroup><col className="col-title" /><col className="col-id" /><col className="col-name" />{days.map(day => <col className="col-day" key={day} />)}</colgroup><thead><tr><th>職務</th><th>員編</th><th>姓名</th>{days.map((day, index) => <th className={weekdayHeaderStyle(index)} key={day}><span>9月{day}日</span><small>{weekdayAt(index)}</small></th>)}</tr></thead><tbody>{groups.map((group, index) => <Fragment key={`${group.area}-${index}`}><tr className="area-heading"><td colSpan={days.length + 3}><span className="area-label">{group.area}</span></td></tr>{group.people.map(row => <tr key={row.rowId}><td>{row.title || '—'}</td><td>{row.employeeId}</td><td><strong>{row.name}</strong><small className="pinned-role">{row.title}</small></td>{row.shifts.map((shift, dayIndex) => <td className={scheduleCellStyle(shift)} key={dayIndex}>{shift || '—'}</td>)}</tr>)}</Fragment>)}</tbody></table></div>
 }
 
@@ -294,12 +298,12 @@ function DispatchBlockPeople({ people }: { people: DispatchBlockPerson[] }) {
   return <div>{people.length ? people.map(person => <span className="person" key={`${person.employeeId}-${person.employeeName}`}>{person.employeeName}<small>{person.employeeId || '待確認員編'}</small></span>) : '—'}</div>
 }
 
-type DutyStaff = { supervisors: string[]; taipeiMonitors: string[]; newTaipeiMonitors: string[] }
+type DutyStaff = { directors: string[]; deputyDirectors: string[]; taipeiMonitors: string[]; newTaipeiMonitors: string[] }
 
 function deriveDutyStaff(records: ScheduleRecord[], profiles: EmployeeProfile[], shift: 'night' | 'day'): DutyStaff {
   const profileById = new Map(profiles.map(profile => [profile.employeeId, profile]))
   const expectedShift = shift === 'day' ? 'morning' : 'night'
-  const result: DutyStaff = { supervisors: [], taipeiMonitors: [], newTaipeiMonitors: [] }
+  const result: DutyStaff = { directors: [], deputyDirectors: [], taipeiMonitors: [], newTaipeiMonitors: [] }
   records.filter(record => record.shiftType === expectedShift && !isLeave(record.scheduleCode)).forEach(record => {
     const profile = profileById.get(record.employeeId)
     const name = profile?.name || record.employeeName
@@ -307,13 +311,15 @@ function deriveDutyStaff(records: ScheduleRecord[], profiles: EmployeeProfile[],
     const group = profile?.group || record.group || ''
     const area = profile?.area || record.area || ''
     if (!name) return
-    if (title.includes('調度主任') || title.includes('調度副主任') || title.includes('主官')) result.supervisors.push(`${title} ${name}`.trim())
+    if (title.includes('調度副主任')) result.deputyDirectors.push(name)
+    else if (title.includes('調度主任') || title.includes('主官')) result.directors.push(name)
     if (!record.scheduleCode.includes('監')) return
     const target = record.scheduleCode.includes('國上') || group.includes('新北') || area.includes('新北') ? result.newTaipeiMonitors : result.taipeiMonitors
     target.push(name)
   })
   return {
-    supervisors: [...new Set(result.supervisors)],
+    directors: [...new Set(result.directors)],
+    deputyDirectors: [...new Set(result.deputyDirectors)],
     taipeiMonitors: [...new Set(result.taipeiMonitors)],
     newTaipeiMonitors: [...new Set(result.newTaipeiMonitors)],
   }
@@ -321,7 +327,7 @@ function deriveDutyStaff(records: ScheduleRecord[], profiles: EmployeeProfile[],
 
 function DutyStaffPanel({ staff, shift }: { staff: DutyStaff; shift: 'night' | 'day' }) {
   const names = (items: string[]) => items.length ? items.join('、') : '未排定'
-  return <section className="duty-staff" aria-label="值班資訊"><header><strong>值班資訊</strong></header><div>{shift === 'day' && <><b>主官</b><span>{names(staff.supervisors)}</span></>}<b>台北監控</b><span>{names(staff.taipeiMonitors)}</span><b>新北監控</b><span>{names(staff.newTaipeiMonitors)}</span></div></section>
+  return <section className="duty-staff" aria-label="值班資訊"><header><strong>值班資訊</strong></header><div>{shift === 'day' && <><b>調度主任</b><span>{names(staff.directors)}</span><b>調度副主任</b><span>{names(staff.deputyDirectors)}</span></>}<b>台北監控</b><span>{names(staff.taipeiMonitors)}</span><b>新北監控</b><span>{names(staff.newTaipeiMonitors)}</span></div></section>
 }
 
 function dispatchBlockFrontOrder(left: DispatchBlock, right: DispatchBlock) {

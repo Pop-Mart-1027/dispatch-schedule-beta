@@ -8,7 +8,7 @@
 .dispatch-toolbar .tabs { margin: 0; }
 .duty-staff { overflow: hidden; margin: 0 0 18px; border: 1px solid #f0ddc7; border-radius: 14px; background: #fff; }
 .duty-staff header { padding: 11px 15px; background: #f58220; color: #fff; }
-.duty-staff > div { display: grid; grid-template-columns: 96px 1fr; }
+.duty-staff > div { display: grid; grid-template-columns: 112px minmax(0, 1fr); }
 .duty-staff b,.duty-staff span { min-height: 42px; padding: 10px 13px; border-bottom: 1px solid #f0e4d7; }
 .duty-staff b { background: #fff7ed; color: #a84b11; }
 .duty-staff span { min-width: 0; white-space: normal; overflow-wrap: anywhere; line-height: 1.5; }
