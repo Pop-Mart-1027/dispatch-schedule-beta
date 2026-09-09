@@ -307,7 +307,7 @@ function deriveDutyStaff(records: ScheduleRecord[], profiles: EmployeeProfile[],
     const group = profile?.group || record.group || ''
     const area = profile?.area || record.area || ''
     if (!name) return
-    if (title.includes('調度主任') || title.includes('調度副主任') || title.includes('主官')) result.supervisors.push(name)
+    if (title.includes('調度主任') || title.includes('調度副主任') || title.includes('主官')) result.supervisors.push(`${title} ${name}`.trim())
     if (!record.scheduleCode.includes('監')) return
     const target = record.scheduleCode.includes('國上') || group.includes('新北') || area.includes('新北') ? result.newTaipeiMonitors : result.taipeiMonitors
     target.push(name)
@@ -319,9 +319,9 @@ function deriveDutyStaff(records: ScheduleRecord[], profiles: EmployeeProfile[],
   }
 }
 
-function DutyStaffPanel({ staff }: { staff: DutyStaff }) {
+function DutyStaffPanel({ staff, shift }: { staff: DutyStaff; shift: 'night' | 'day' }) {
   const names = (items: string[]) => items.length ? items.join('、') : '未排定'
-  return <section className="duty-staff" aria-label="值班資訊"><header><strong>值班資訊</strong></header><div><b>主官</b><span>{names(staff.supervisors)}</span><b>台北監控</b><span>{names(staff.taipeiMonitors)}</span><b>新北監控</b><span>{names(staff.newTaipeiMonitors)}</span></div></section>
+  return <section className="duty-staff" aria-label="值班資訊"><header><strong>值班資訊</strong></header><div>{shift === 'day' && <><b>主官</b><span>{names(staff.supervisors)}</span></>}<b>台北監控</b><span>{names(staff.taipeiMonitors)}</span><b>新北監控</b><span>{names(staff.newTaipeiMonitors)}</span></div></section>
 }
 
 function FirestoreDispatchView({ isDuty }: { employeeId: string; isDuty: boolean }) {
@@ -355,7 +355,7 @@ function FirestoreDispatchView({ isDuty }: { employeeId: string; isDuty: boolean
   }, [date])
   const dutyStaff = deriveDutyStaff(schedules, profiles, shift)
   const visible = blocks.filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0))
-  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div></div>{dutyLoading ? <div className="duty-staff-status">值班資訊載入中…</div> : dutyError ? <div className="result-card result-warning">{dutyError}</div> : <DutyStaffPanel staff={dutyStaff} />}{blocksError && <div className="result-card result-warning">{blocksError}</div>}{!blocksError && !visible.length ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid">{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id}><header><span>{block.areaName || block.areaCode || '特殊派工'}</span></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} /><b>駐點</b><DispatchBlockPeople people={block.stations} /><b>工作重點</b><span>{block.workFocus || '—'}</span></div></article>)}</div>}</>
+  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div></div>{dutyLoading ? <div className="duty-staff-status">值班資訊載入中…</div> : dutyError ? <div className="result-card result-warning">{dutyError}</div> : <DutyStaffPanel staff={dutyStaff} shift={shift} />}{blocksError && <div className="result-card result-warning">{blocksError}</div>}{!blocksError && !visible.length ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid">{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id}><header><span>{block.areaName || block.areaCode || '特殊派工'}</span></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} /><b>駐點</b><DispatchBlockPeople people={block.stations} /><b>工作重點</b><span>{block.workFocus || '—'}</span></div></article>)}</div>}</>
 }
 
 const formatBlockPeople = (people: DispatchBlockPerson[]) => people.map(person => `${person.employeeId} ${person.employeeName}`.trim()).join('\n')
