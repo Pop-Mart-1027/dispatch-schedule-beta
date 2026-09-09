@@ -3,7 +3,7 @@ import { db } from './firebase'
 
 export type ScheduleRecord = {
   id: string; date: string; employeeId: string; employeeName: string; shiftType: 'morning' | 'night';
-  scheduleCode: string; scheduleLabel: string; leaveType: string; source: string; status: string; note: string;
+  scheduleCode: string; scheduleLabel: string; leaveType: string; source: string; status: string; note: string; title?: string; group?: string; area?: string;
   createdAt?: unknown; updatedAt?: unknown; modifiedBy: string
 }
 

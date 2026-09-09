@@ -15,7 +15,7 @@ import { auth, db, employeeEmail, functions } from '../lib/firebase'
 import { evaluateGeofence, GEOFENCE_WARNING_ACCURACY_METERS } from '../lib/geofence'
 import { buildAttendanceRecord, canSubmitPunch, getPunchBlockReason, hasTodayPunch, type AttendanceLocation, type AttendanceRecord, type PunchType } from '../lib/attendance'
 import { listAttendanceLocations, listTodayAttendanceRecords, createAttendanceRecord, removeAttendanceLocation, saveAttendanceLocation } from '../lib/attendance-firestore'
-import { listMonthScheduleRecords, type ScheduleRecord } from '../lib/schedule-firestore'
+import { listMonthScheduleRecords, listScheduleRecords, type ScheduleRecord } from '../lib/schedule-firestore'
 import { listAreaMaster, listDispatchRecords, updateDispatchRecord, writeDispatchAudit, type AreaMaster, type DispatchRecord } from '../lib/dispatch-firestore'
 import { getBroadcastRead, listActiveBroadcasts, recordBroadcastShown, type Broadcast } from '../lib/broadcasts'
 
@@ -59,8 +59,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!currentUser) return
-    const employeeOnly = currentUser.role === 'employee' ? currentUser.employeeId : undefined
-    void listMonthScheduleRecords('2026-09', employeeOnly).then(records => { console.info('[scheduleRecords] loaded', { employeeId: employeeOnly || 'all', count: records.length }); setScheduleData(scheduleRecordsToData(records)); if (!records.length) notify('班表資料尚未匯入') }).catch(error => { console.error('[scheduleRecords] load failed', error); setScheduleData(scheduleRecordsToData([])); notify(error?.code === 'permission-denied' ? '班表讀取權限不足' : '班表資料載入失敗') })
+    void listMonthScheduleRecords('2026-09').then(records => { console.info('[scheduleRecords] loaded', { employeeId: 'all', count: records.length }); setScheduleData(scheduleRecordsToData(records)); if (!records.length) notify('班表資料尚未匯入') }).catch(error => { console.error('[scheduleRecords] load failed', error); setScheduleData(scheduleRecordsToData([])); notify(error?.code === 'permission-denied' ? '班表讀取權限不足' : '班表資料載入失敗') })
   }, [currentUser?.employeeId])
 
   useEffect(() => onAuthStateChanged(auth, async user => {
@@ -112,7 +111,7 @@ function scheduleRecordsToData(records: ScheduleRecord[]): ScheduleData {
   for (const record of records) {
     const key = `${record.shiftType}:${record.employeeId}`
     const day = Number(record.date.slice(8)) - 1
-    const current = grouped.get(key) ?? { rowId: record.employeeId, employeeId: record.employeeId, name: record.employeeName, title: '', group: '', area: '', shifts: Array(30).fill('') }
+    const current = grouped.get(key) ?? { rowId: record.employeeId, employeeId: record.employeeId, name: record.employeeName, title: record.title || '', group: record.group || '', area: record.area || '', shifts: Array(30).fill('') }
     current.shifts[day] = record.scheduleCode || record.scheduleLabel || record.leaveType || ''
     grouped.set(key, current)
   }
@@ -280,17 +279,42 @@ function weekdayAt(index: number) {
 
 function EmptyNotice() { return <section className="notice-page"><div className="notice-heading"><Megaphone size={25} /><div><p className="eyebrow">NOTICE</p><h1>公告</h1></div></div><article className="notice-image-card"><img src={publicAssetUrl('temporary-notice.png')} alt="獎懲公告" /></article></section> }
 
+function deriveDispatchRecords(schedules: ScheduleRecord[], overrides: DispatchRecord[], areas: AreaMaster[], employeeId?: string): DispatchRecord[] {
+  const areaMap = new Map(areas.map(area => [area.areaCode, area]))
+  const overrideMap = new Map(overrides.map(record => [`${record.employeeId}|${record.scheduleCode}`, record]))
+  return schedules.filter(record => (!employeeId || record.employeeId === employeeId) && record.scheduleCode && !isLeave(record.scheduleCode)).map(record => {
+    const pseudoRow: ScheduleRow = { rowId: record.id, employeeId: record.employeeId, name: record.employeeName, title: record.title || '', group: record.group || '', area: record.area || '', shifts: [] }
+    const areaCode = dispatchArea(record.scheduleCode) || dispatchSpecialGroup(pseudoRow)
+    const area = areaMap.get(areaCode)
+    const base: DispatchRecord = {
+      id: `${record.date}-${record.employeeId}-${record.shiftType}`,
+      date: record.date,
+      employeeId: record.employeeId,
+      employeeName: record.employeeName,
+      scheduleCode: record.scheduleCode,
+      areaCode,
+      areaName: area?.areaName || (areaCode ? `${areaCode}區` : ''),
+      vehicleType: area?.defaultVehicleType || '', vehicleNo: area?.defaultVehicleNo || '',
+      driver: record.title?.includes('PT') ? '' : record.employeeName,
+      assistant: '', station: record.title?.includes('PT') ? (area?.defaultStation || '') : '',
+      workFocus: area?.defaultWorkFocus || '', balanceArea: area?.defaultBalanceArea || '', note: '',
+      source: 'scheduleRecords', status: 'active', createdAt: undefined, updatedAt: undefined, modifiedBy: '',
+    }
+    return overrideMap.get(`${record.employeeId}|${record.scheduleCode}`) || base
+  }).sort((left, right) => dispatchAreaOrder(left.areaCode) - dispatchAreaOrder(right.areaCode) || left.employeeName.localeCompare(right.employeeName, 'zh-Hant'))
+}
+
 function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isDuty: boolean }) {
   const [date, setDate] = useState(taipeiToday); const [records, setRecords] = useState<DispatchRecord[]>([]); const [error, setError] = useState('')
-  const load = () => void listDispatchRecords(date, isDuty ? undefined : employeeId).then(next => { console.info('[dispatchRecords] loaded', { date, employeeId: isDuty ? 'all' : employeeId, count: next.length }); setRecords(next); setError('') }).catch(error => { console.error('[dispatchRecords] load failed', error); setRecords([]); setError(error?.code === 'permission-denied' ? '派工讀取權限不足' : error?.code === 'failed-precondition' ? '派工查詢缺少 Firestore index' : '派工資料載入失敗') })
-  useEffect(load, [date, employeeId, isDuty])
+  const load = async () => { try { const [schedules, overrides, areas] = await Promise.all([listScheduleRecords(date), listDispatchRecords(date, isDuty ? undefined : employeeId), listAreaMaster()]); const next = deriveDispatchRecords(schedules, overrides, areas, isDuty ? undefined : employeeId); console.info('[dispatch] derived from scheduleRecords', { date, scheduleCount: schedules.length, overrideCount: overrides.length, count: next.length }); setRecords(next); setError('') } catch (error: unknown) { console.error('[dispatch] load failed', error); setRecords([]); const code = typeof error === 'object' && error && 'code' in error ? String(error.code) : ''; setError(code === 'permission-denied' ? '派工／班表讀取權限不足' : code === 'failed-precondition' ? '派工查詢缺少 Firestore index' : '派工資料載入失敗') } }
+  useEffect(() => { void load() }, [date, employeeId, isDuty])
   const groups = records.reduce<Record<string, DispatchRecord[]>>((all, record) => ({ ...all, [record.areaCode || '未分區']: [...(all[record.areaCode || '未分區'] || []), record] }), {})
   return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label></div>{error && <div className="result-card result-warning">{error}</div>}{!records.length && !error ? <p className="loading">此日期尚未產生正式派工。</p> : <div className="dispatch-grid">{Object.entries(groups).map(([area, members]) => <article className="dispatch-card" key={area}><header><span>{members[0].areaName || area}</span><small>{date}</small></header><div className="dispatch-fields"><b>人員</b><div>{members.map(record => <span className="person" key={record.id}>{record.employeeName}<small>{record.employeeId} · {record.scheduleCode}</small></span>)}</div><b>車號</b><span>{members.map(r => r.vehicleNo).filter(Boolean).join('、') || '—'}</span><b>駐點</b><span>{members[0].station || '—'}</span><b>工作重點</b><span>{members[0].workFocus || '—'}</span><b>平衡區域</b><span>{members[0].balanceArea || '—'}</span></div></article>)}</div>}</>
 }
 
 function DispatchAdmin({ employeeId }: { employeeId: string }) {
   const [date, setDate] = useState(taipeiToday); const [area, setArea] = useState(''); const [shift, setShift] = useState(''); const [search, setSearch] = useState(''); const [records, setRecords] = useState<DispatchRecord[]>([]); const [areas, setAreas] = useState<AreaMaster[]>([]); const [editing, setEditing] = useState<DispatchRecord | null>(null); const [draft, setDraft] = useState<Partial<DispatchRecord>>({}); const [error, setError] = useState('')
-  const load = async () => { try { const [nextRecords, nextAreas] = await Promise.all([listDispatchRecords(date), listAreaMaster()]); console.info('[dispatchAdmin] loaded', { date, count: nextRecords.length }); setRecords(nextRecords); setAreas(nextAreas); setError('') } catch (error) { console.error('[dispatchAdmin] load failed', error); const code = typeof error === 'object' && error && 'code' in error ? String(error.code) : ''; setError(code === 'permission-denied' ? '派工管理權限不足' : code === 'failed-precondition' ? '派工查詢缺少 Firestore index' : '派工資料載入失敗') } }
+  const load = async () => { try { const [schedules, overrides, nextAreas] = await Promise.all([listScheduleRecords(date), listDispatchRecords(date), listAreaMaster()]); const nextRecords = deriveDispatchRecords(schedules, overrides, nextAreas); console.info('[dispatchAdmin] loaded', { date, scheduleCount: schedules.length, overrideCount: overrides.length, count: nextRecords.length }); setRecords(nextRecords); setAreas(nextAreas); setError('') } catch (error) { console.error('[dispatchAdmin] load failed', error); const code = typeof error === 'object' && error && 'code' in error ? String(error.code) : ''; setError(code === 'permission-denied' ? '派工管理權限不足' : code === 'failed-precondition' ? '派工查詢缺少 Firestore index' : '派工資料載入失敗') } }
   useEffect(() => { void load() }, [date])
   const filtered = records.filter(record => (!area || record.areaCode === area) && (!shift || record.scheduleCode.includes(shift)) && (!search || `${record.employeeId} ${record.employeeName}`.toLowerCase().includes(search.toLowerCase())))
   const open = (record: DispatchRecord) => { setEditing(record); setDraft({ ...record }) }

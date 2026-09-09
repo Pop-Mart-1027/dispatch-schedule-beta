@@ -1,4 +1,4 @@
-import { addDoc, collection, doc, getDocs, orderBy, query, serverTimestamp, updateDoc, where } from 'firebase/firestore'
+import { addDoc, collection, doc, getDoc, getDocs, orderBy, query, serverTimestamp, setDoc, where } from 'firebase/firestore'
 import { db } from './firebase'
 
 export type DispatchRecord = { id: string; date: string; employeeId: string; employeeName: string; scheduleCode: string; areaCode: string; areaName: string; vehicleType: string; vehicleNo: string; driver: string; assistant: string; station: string; workFocus: string; balanceArea: string; note: string; source: string; status: string; createdAt?: unknown; updatedAt?: unknown; modifiedBy: string; modifiedAt?: unknown }
@@ -14,7 +14,10 @@ export async function listAreaMaster() {
   return snapshot.docs.map(item => ({ areaCode: item.id, ...item.data() } as AreaMaster))
 }
 export async function updateDispatchRecord(id: string, values: Partial<DispatchRecord>, modifiedBy: string) {
-  await updateDoc(doc(db, 'dispatchRecords', id), { ...values, modifiedBy, modifiedAt: serverTimestamp(), updatedAt: serverTimestamp() })
+  const ref = doc(db, 'dispatchRecords', id)
+  const payload: Record<string, unknown> = { ...values, id, modifiedBy, modifiedAt: serverTimestamp(), updatedAt: serverTimestamp() }
+  if (!(await getDoc(ref)).exists()) payload.createdAt = serverTimestamp()
+  await setDoc(ref, payload, { merge: true })
 }
 export async function writeDispatchAudit(recordId: string, date: string, before: DispatchRecord, after: Partial<DispatchRecord>, modifiedBy: string) {
   await addDoc(collection(db, 'dispatchAuditLogs'), { recordId, date, before, after, modifiedBy, createdAt: serverTimestamp() })

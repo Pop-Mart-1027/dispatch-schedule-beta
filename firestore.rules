@@ -85,15 +85,20 @@ service cloud.firestore {
     }
 
     match /scheduleRecords/{recordId} {
-      allow get, list: if isActiveEmployee() && (isDuty() || resource.data.employeeId == request.auth.token.employeeId);
-      allow create, delete: if isAdmin();
-      allow update: if isAdmin();
+      allow get, list: if isActiveEmployee();
+      allow create, update, delete: if isAdmin();
     }
 
     match /dispatchRecords/{recordId} {
       allow get: if isActiveEmployee() && (isDuty() || resource.data.employeeId == request.auth.token.employeeId);
       allow list: if isActiveEmployee() && (isDuty() || resource.data.employeeId == request.auth.token.employeeId);
-      allow create: if false;
+      allow create: if isActiveEmployee() && isDuty()
+        && request.resource.data.employeeId is string
+        && request.resource.data.employeeName is string
+        && request.resource.data.date is string
+        && request.resource.data.source is string
+        && request.resource.data.modifiedBy == request.auth.token.employeeId
+        && request.resource.data.modifiedAt == request.time;
       allow update: if isAdmin()
         || (isActiveEmployee() && isDuty()
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
