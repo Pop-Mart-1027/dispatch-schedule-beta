@@ -779,3 +779,8 @@
   object-fit: contain;
 }
 .dispatch-import-actions { display: flex; align-items: center; gap: 16px; margin-bottom: 14px; }
+.schedule-group-switch { display:flex; gap:4px; }
+.schedule-group-switch button { padding:9px 12px; border:1px solid #decdbd; border-radius:6px; background:white; color:#563924; cursor:pointer; }
+.schedule-group-switch button[aria-pressed='true'] { background:#ed7e1c; color:white; }
+.admin-schedule .admin-source-heading > td { position:static; width:auto; max-width:none; padding:8px 10px; text-align:left; background:#fff0dc; color:#754720; font-weight:700; }
+.admin-source-heading span { position:sticky; left:10px; }

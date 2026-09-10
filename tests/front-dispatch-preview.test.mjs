@@ -4,6 +4,7 @@ import test, { after } from 'node:test'
 import { createServer } from 'vite'
 import react from '@vitejs/plugin-react'
 import { chromium } from 'playwright'
+import { scheduleSections } from '../functions/pre-schedule-order.mjs'
 
 const source = JSON.parse(readFileSync('public/september-schedules.json', 'utf8'))
 const employees = JSON.parse(readFileSync('output/employee-master.json', 'utf8'))
@@ -52,19 +53,35 @@ const virtual = {
       return {data: {date: data.date, dayBlocks: 89, nightBlocks: 94, conflicts: 0}};
     };`,
   'test:entry': `import React from 'react'; import { createRoot } from 'react-dom/client';
-    import { FirestoreDispatchView, ScheduleMatrix, DutyStaffPanel, HomeView } from '/app/page.tsx';
+    import { FirestoreDispatchView, ScheduleMatrix, ScheduleView, scheduleRecordsToData, DutyStaffPanel, HomeView } from '/app/page.tsx';
     import { ScheduleManager, DutyColumn, DispatchManager, Dashboard } from '/app/admin-console.tsx';
     import '/app/globals.css';
     const root = createRoot(document.getElementById('root'));
+    function ScheduleShell({children}) {
+      return React.createElement('div', {className:'app-shell', 'data-page':'schedule'},
+        React.createElement('aside', {className:'sidebar'}),
+        React.createElement('main', {className:'workspace'},
+          React.createElement('header', {className:'topbar'}, '班表'),
+          React.createElement('section', {className:'content'}, children)));
+    }
     window.showDispatch = () => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(FirestoreDispatchView, {employeeId: 'test', isDuty: false})));
     window.showHome = () => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(HomeView, {name: '登入人員', onAction: () => {}, onGo: () => {}})));
     window.showFrontDuty = (shift, staff) => root.render(React.createElement(DutyStaffPanel, {shift, staff}));
     window.showManager = () => root.render(React.createElement('div', {className: 'admin-console'}, React.createElement(DispatchManager, {employeeId: 'test'})));
     window.showDashboard = () => root.render(React.createElement('div', {className: 'admin-console'}, React.createElement(Dashboard, {role: 'admin', onOpenDispatch: () => {}})));
-    window.showSchedule = shift => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(ScheduleMatrix, {rows: window.fixture.source[shift], days: window.fixture.source.days})));
-    window.showAdminSchedule = () => root.render(React.createElement('div', {className: 'admin-console'},
+    window.showSchedule = shift => {
+      const data = scheduleRecordsToData(window.fixture.monthSchedules, window.fixture.employees);
+      root.render(React.createElement(ScheduleShell, null, React.createElement(ScheduleMatrix, {key: shift, rows: data[shift], days: data.days, group: shift === 'morning' ? 'day' : 'night'})));
+    };
+    function ScheduleTest() {
+      const [tab, setTab] = React.useState('morning');
+      const data = React.useMemo(() => scheduleRecordsToData(window.fixture.monthSchedules, window.fixture.employees), []);
+      return React.createElement(ScheduleView, {tab, setTab, data, employeeId: '96504'});
+    }
+    window.showScheduleView = () => root.render(React.createElement(ScheduleShell, null, React.createElement(ScheduleTest)));
+    window.showAdminSchedule = (admin = false) => root.render(React.createElement('div', {className: 'admin-console'},
       React.createElement('aside', {className: 'admin-sidebar'}), React.createElement('main', {className: 'admin-main'},
-        React.createElement('header', {className: 'admin-topbar'}), React.createElement('section', {className: 'admin-content'}, React.createElement(ScheduleManager, {employeeId: 'test', admin: false})))));
+        React.createElement('header', {className: 'admin-topbar'}), React.createElement('section', {className: 'admin-content'}, React.createElement(ScheduleManager, {employeeId: 'test', admin})))));
     window.showMonitors = (taipei, newTaipei) => root.render(React.createElement('div', null,
       React.createElement(DutyColumn, {title: '夜班', duty: {directors: [], deputyDirectors: [], taipei, newTaipei}}),
       React.createElement(DutyStaffPanel, {shift: 'night', staff: {directors: [], deputyDirectors: [], taipeiMonitors: taipei, newTaipeiMonitors: newTaipei}})));
@@ -83,7 +100,7 @@ const server = await createServer({
         .replace("from 'firebase/functions'", "from 'test:functions'")
         .replace("from '../lib/dispatch-blocks-firestore'", "from 'test:blocks'")
         .replace("from '../lib/schedule-firestore'", "from 'test:schedules'")
-        + (admin ? '\nexport { ScheduleManager, DutyColumn, DispatchManager, Dashboard };' : '\nexport { FirestoreDispatchView, ScheduleMatrix, DutyStaffPanel, HomeView };')
+        + (admin ? '\nexport { ScheduleManager, DutyColumn, DispatchManager, Dashboard };' : '\nexport { FirestoreDispatchView, ScheduleMatrix, ScheduleView, scheduleRecordsToData, DutyStaffPanel, HomeView };')
     },
     configureServer(server) {
       server.middlewares.use('/preview-test', async (_req, res) => {
@@ -183,16 +200,16 @@ test('long schedule code occupies at most two lines without break-all', async ()
   console.log('府夜21-01 rendered lines', layout.lines)
 })
 
-test('admin 750-person table scrolls within the viewport and retains pinned header/columns', async () => {
+test('admin source-group table scrolls within the viewport and retains pinned header/columns', async () => {
   await page.evaluate(() => window.showAdminSchedule())
-  await page.waitForFunction(() => document.querySelectorAll('.admin-schedule tbody tr').length === 750)
+  await page.waitForFunction(() => document.querySelectorAll('.admin-schedule tbody tr[data-employee-id]').length === 597)
   const measure = () => page.locator('.admin-schedule-wrap').evaluate(wrap => {
     const table = wrap.querySelector('table')
     return {
       bottom: wrap.getBoundingClientRect().bottom, height: wrap.clientHeight, scrollHeight: wrap.scrollHeight,
       horizontal: wrap.scrollWidth > wrap.clientWidth, overflowX: getComputedStyle(wrap).overflowX,
       headTop: table.querySelector('thead th:nth-child(4)').getBoundingClientRect().top,
-      pinnedLefts: [...table.querySelector('tbody tr').children].slice(0, 3).map(cell => cell.getBoundingClientRect().left),
+      pinnedLefts: [...table.querySelector('tbody tr[data-employee-id]').children].slice(0, 3).map(cell => cell.getBoundingClientRect().left),
       widths: [...table.querySelectorAll('thead th')].map(cell => cell.getBoundingClientRect().width),
     }
   })
@@ -210,6 +227,92 @@ test('admin 750-person table scrolls within the viewport and retains pinned head
   assert.equal(after.bottom, before.bottom)
   console.log('admin viewport scroll', { bottom: before.bottom, height: before.height, columnWidth: before.widths[3] })
 })
+
+async function assertScheduleNavigation(tableSelector, wrapSelector, group) {
+  const table = page.locator(tableSelector), wrap = page.locator(wrapSelector);
+  const expected = scheduleSections(employees, group);
+  const ids = await table.locator('tr[data-employee-id]').evaluateAll(rows => rows.map(row => row.dataset.employeeId));
+  assert.deepEqual(ids, expected.flatMap(section => section.people.map(person => person.employeeId)));
+  const codes = await table.locator('tr[data-area-code]').evaluateAll(rows => rows.map(row => row.dataset.areaCode));
+  assert.equal(codes.length, new Set(codes).size);
+  assert.equal(codes.filter(code => code === 'O1').length, 1);
+  await page.locator('.area-jump-dropdown summary').click();
+  const panel = page.locator('.area-jump-panel');
+  assert.deepEqual(await panel.locator('button').allTextContents(), expected.filter(section => section.areaCode).map(section => section.label));
+  const geometry = await panel.evaluate(el => ({height:el.clientHeight, scroll:el.scrollHeight, overflow:getComputedStyle(el).overflowY}));
+  assert.ok(geometry.height <= 290 && geometry.scroll > geometry.height);
+  assert.equal(geometry.overflow, 'auto');
+  await panel.hover();
+  await page.mouse.wheel(0, 300);
+  await page.waitForFunction(() => document.querySelector('.area-jump-panel').scrollTop > 0);
+  await wrap.evaluate(el => {el.scrollLeft = 100});
+  const horizontal = await wrap.evaluate(el => el.scrollLeft);
+  await panel.getByRole('button', {name:'O1區', exact:true}).click();
+  assert.equal(await page.locator('.area-jump-dropdown').getAttribute('open'), null);
+  const position = await wrap.evaluate(el => ({
+    left:el.scrollLeft,
+    gap:el.querySelector('tr[data-area-code="O1"]').getBoundingClientRect().top - el.querySelector('thead th').getBoundingClientRect().bottom,
+  }));
+  assert.equal(position.left, horizontal);
+  assert.ok(Math.abs(position.gap) <= 2, JSON.stringify(position));
+  assert.deepEqual(await table.locator('tr[data-employee-id]').evaluateAll(rows => rows.map(row => row.dataset.employeeId)), ids);
+  console.log('schedule navigation', {group, people:ids.length, areas:codes.length, ...geometry});
+}
+
+test('front source sections are unique; bounded area dropdown scrolls without filtering and switches with tabs', async () => {
+  await page.evaluate(() => window.showScheduleView());
+  await page.waitForSelector('.schedule-matrix');
+  await assertScheduleNavigation('.schedule-matrix', '.matrix-wrap', 'day');
+  await page.getByRole('button', {name:'夜班',exact:true}).click();
+  await assertScheduleNavigation('.schedule-matrix', '.matrix-wrap', 'night');
+  await page.screenshot({path:'output/schedule-area-jump-front-1920.png'});
+  await page.locator('.area-jump-dropdown summary').click();
+  await page.keyboard.press('Escape');
+  assert.equal(await page.locator('.area-jump-dropdown').getAttribute('open'), null);
+  await page.getByRole('button', {name:'我的班表',exact:true}).click();
+  assert.equal(await page.locator('.area-jump-dropdown').count(), 0);
+  assert.equal(await page.locator('.month-day').count(), 30);
+  await page.setViewportSize({width:390,height:844});
+  await page.getByRole('button', {name:'夜班',exact:true}).click();
+  await assertScheduleNavigation('.schedule-matrix', '.matrix-wrap', 'night');
+  assert.ok(await page.locator('.matrix-wrap').evaluate(el => el.getBoundingClientRect().bottom <= innerHeight));
+  assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth));
+  await page.screenshot({path:'output/schedule-area-jump-front-mobile.png'});
+  await page.setViewportSize({width:1920,height:1080});
+});
+
+test('formal admin matrix shares source sections; navigation preserves search, month, and readonly cells', async () => {
+  await page.evaluate(() => window.showAdminSchedule());
+  await page.waitForFunction(() => document.querySelectorAll('.admin-schedule tr[data-employee-id]').length === 597);
+  await assertScheduleNavigation('.admin-schedule', '.admin-schedule-wrap', 'day');
+  await page.getByRole('button', {name:'大小夜班',exact:true}).click();
+  await assertScheduleNavigation('.admin-schedule', '.admin-schedule-wrap', 'night');
+  await page.screenshot({path:'output/schedule-area-jump-admin-1920.png'});
+  assert.equal(await page.locator('.admin-schedule td button:not(:disabled)').count(), 0);
+  assert.equal(await page.getByLabel('月份', {exact:true}).inputValue(), '2026-09');
+  await page.getByPlaceholder('員編或姓名').fill('96504');
+  assert.equal(await page.locator('.admin-schedule tr[data-employee-id]').count(), 1);
+  await page.locator('.area-jump-dropdown summary').click();
+  assert.deepEqual(await page.locator('.area-jump-panel button').allTextContents(), ['O1區']);
+  await page.getByPlaceholder('員編或姓名').fill('');
+  assert.equal(await page.locator('.admin-schedule tr[data-employee-id]').count(), 153);
+  assert.equal(await page.evaluate(() => window.writeAttempts), 0);
+  assert.deepEqual(errors, []);
+});
+
+test('admin editing still targets the selected employee/date after area navigation; cancel makes no write', async () => {
+  await page.evaluate(() => window.showAdminSchedule(true));
+  await page.getByPlaceholder('員編或姓名').fill('96504');
+  const button = page.locator('.admin-schedule tr[data-employee-id="96504"] td[data-date-column] button').nth(8);
+  assert.equal(await button.isEnabled(), true);
+  const prompt = page.waitForEvent('dialog');
+  const click = button.click();
+  const dialog = await prompt;
+  assert.equal(dialog.type(), 'prompt');
+  assert.match(dialog.message(), /96504 涂佑葦\n2026-09-09 班別/);
+  await dialog.dismiss(); await click;
+  assert.equal(await page.evaluate(() => window.writeAttempts), 0);
+});
 
 test('monitor display uses one person per populated row without empty city placeholders', async () => {
   for (const [taipei, newTaipei] of [[['黃銀堂', '曾芳英'], []], [['柯勃甫'], ['周義順']], [[], ['周義順']], [[], []]]) {

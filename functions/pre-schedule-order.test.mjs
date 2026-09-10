@@ -6,7 +6,9 @@ import {
   preScheduleRoster,
   preScheduleSource,
   preScheduleEntry,
+  scheduleSections,
 } from './pre-schedule-order.mjs';
+import { scheduleSectionIdentity } from './schedule-section-key.mjs';
 import sourceOrder from './pre-schedule-source-order.json' with { type: 'json' };
 const master = JSON.parse(
   await readFile(
@@ -14,6 +16,77 @@ const master = JSON.parse(
     'utf8',
   ),
 );
+
+test('display section codes normalize source typography without merging fine areas or variants', () => {
+  assert.equal(
+    scheduleSectionIdentity('〇1區').key,
+    scheduleSectionIdentity('O1區').key,
+  );
+  assert.equal(scheduleSectionIdentity('Ｏ１區').key, 'area:O1');
+  assert.equal(scheduleSectionIdentity('U區BFR-5181').key, 'area:U');
+  assert.equal(
+    new Set(
+      ['O1', 'O2', 'O4', 'ZO1', 'I1', 'I2', 'I3'].map(
+        (code) => scheduleSectionIdentity(`${code}區`).key,
+      ),
+    ).size,
+    7,
+  );
+  assert.equal(scheduleSectionIdentity('工兵小隊-BBK-0278').areaCode, null);
+});
+
+test('all matrices share contiguous unique sections and original in-section order without mutating rows', () => {
+  const input = master.slice().reverse(),
+    before = structuredClone(input);
+  for (const [group, count] of [
+    ['day', 597],
+    ['night', 153],
+  ]) {
+    const sections = scheduleSections(input, group),
+      people = sections.flatMap((section) => section.people);
+    assert.equal(people.length, count);
+    const areas = sections
+      .filter((section) => section.areaCode)
+      .map((section) => section.areaCode);
+    assert.equal(new Set(areas).size, areas.length);
+    for (const section of sections) {
+      const order = section.people.map(
+        (person) => preScheduleSource(person.employeeId).scheduleDisplayOrder,
+      );
+      assert.deepEqual(
+        order,
+        order.slice().sort((a, b) => a - b),
+      );
+    }
+    assert.deepEqual(
+      scheduleSections(
+        input.map((person) => ({ person })),
+        group,
+        (row) => row.person,
+      ).flatMap((section) =>
+        section.people.map((row) => row.person.employeeId),
+      ),
+      people.map((person) => person.employeeId),
+    );
+    assert.equal(
+      sections.filter((section) => section.areaCode === 'O1').length,
+      1,
+    );
+    if (group === 'night')
+      assert.deepEqual(
+        sections
+          .find((section) => section.areaCode === 'O1')
+          .people.map((person) => person.employeeId),
+        ['96504', 'B3175', 'B5784', 'B0410', 'B5167'],
+      );
+    else
+      assert.deepEqual(
+        people.slice(0, 3).map((person) => person.employeeId),
+        ['93900', '93339', '95011'],
+      );
+  }
+  assert.deepEqual(input, before);
+});
 
 test('September fixed source order covers the 750-person official master; excludes rejected source IDs', async () => {
   const bytes = await readFile(

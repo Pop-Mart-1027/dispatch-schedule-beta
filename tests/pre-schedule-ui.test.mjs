@@ -8,6 +8,7 @@ import { readFile } from 'node:fs/promises';
 import {
   preScheduleRoster,
   preScheduleSource,
+  scheduleSections,
 } from '../functions/pre-schedule-order.mjs';
 
 // All people and callable responses in this browser test are isolated fixtures.
@@ -499,6 +500,11 @@ test('September matrix exposes day/night tabs, leadership heading and exact O1 t
     await page.locator('.pre-source-heading').first().textContent(),
     '單位主官',
   );
+  assert.deepEqual(await personRows.evaluateAll(rows => rows.map(row => row.dataset.employeeId)),
+    scheduleSections(master, 'day').flatMap(section => section.people.map(person => person.employeeId)));
+  const dayAreas = await page.locator('.pre-source-heading[data-area-code]').evaluateAll(rows => rows.map(row => row.dataset.areaCode));
+  assert.equal(dayAreas.length, new Set(dayAreas).size);
+  assert.equal(dayAreas.filter(code => code === 'O1').length, 1);
   await page.getByRole('tab', { name: '大小夜班', exact: true }).click();
   await page.waitForFunction(
     () =>
@@ -508,6 +514,9 @@ test('September matrix exposes day/night tabs, leadership heading and exact O1 t
   const ids = await personRows.evaluateAll((rows) =>
     rows.map((r) => r.getAttribute('data-employee-id')),
   );
+  assert.deepEqual(ids, scheduleSections(master, 'night').flatMap(section => section.people.map(person => person.employeeId)));
+  const nightAreas = await page.locator('.pre-source-heading[data-area-code]').evaluateAll(rows => rows.map(row => row.dataset.areaCode));
+  assert.equal(nightAreas.length, new Set(nightAreas).size);
   assert.equal(ids.indexOf('96504') + 1, 122);
   assert.deepEqual(ids.slice(121, 126), [
     '96504',

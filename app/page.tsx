@@ -7,7 +7,9 @@ import './youbike-theme.css'
 import './mobile-nav.css'
 import './mobile-layout.css'
 import './admin-console.css'
-import { Fragment, useEffect, useMemo, useState } from 'react'
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
+import { scheduleSections, scheduleDisplayGroup, preScheduleSource } from '../functions/pre-schedule-order.mjs'
+import { AreaJumpDropdown, scheduleSectionId } from './area-jump-dropdown'
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, serverTimestamp, Timestamp, updateDoc, where } from 'firebase/firestore'
 import { httpsCallable } from 'firebase/functions'
@@ -121,21 +123,21 @@ function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProf
   const profileMap = new Map(profiles.map(profile => [profile.employeeId, profile]))
   const sourceRows = [...sourceSchedule.morning.map(row => ({ ...row, shiftType: 'morning' as const })), ...sourceSchedule.night.map(row => ({ ...row, shiftType: 'night' as const }))]
   const sourceMap = new Map(sourceRows.map(row => [`${row.shiftType}:${row.employeeId}`, row]))
-  const sourceOrder = new Map(sourceRows.map((row, index) => [`${row.shiftType}:${row.employeeId}`, index]))
   const grouped = new Map<string, ScheduleRow>()
+  const fallbackGroups = new Map<string, string>()
   for (const record of records) {
-    const key = `${record.shiftType}:${record.employeeId}`
+    const key = record.employeeId
     const day = Number(record.date.slice(8)) - 1
     const profile = profileMap.get(record.employeeId)
-    const source = sourceMap.get(key)
+    const source = sourceMap.get(`${preScheduleSource(record.employeeId)?.group === 'day' ? 'morning' : preScheduleSource(record.employeeId)?.group === 'night' ? 'night' : record.shiftType}:${record.employeeId}`)
     const current = grouped.get(key) ?? { rowId: record.employeeId, employeeId: record.employeeId, name: profile?.name || record.employeeName, title: profile?.title || record.title || source?.title || '', group: profile?.group || record.group || source?.group || '', area: profile?.area || record.area || source?.area || '', shifts: Array(30).fill('') }
-    current.shifts[day] = record.scheduleCode || record.scheduleLabel || record.leaveType || ''
+    const value = record.scheduleCode || record.scheduleLabel || record.leaveType || ''
+    current.shifts[day] = [...new Set([current.shifts[day], value].filter(Boolean))].join('／')
+    fallbackGroups.set(key, record.shiftType === 'morning' ? 'day' : 'night')
     grouped.set(key, current)
   }
-  const rowsFor = (shiftType: 'morning' | 'night') => [...grouped.entries()]
-    .filter(([key]) => key.startsWith(`${shiftType}:`))
-    .sort(([leftKey, left], [rightKey, right]) => (sourceOrder.get(leftKey) ?? Number.MAX_SAFE_INTEGER) - (sourceOrder.get(rightKey) ?? Number.MAX_SAFE_INTEGER) || left.employeeId.localeCompare(right.employeeId, 'en', { numeric: true }))
-    .map(([, row]) => row)
+  const rowsFor = (shiftType: 'morning' | 'night') => [...grouped.values()]
+    .filter(row => scheduleDisplayGroup(row, fallbackGroups.get(row.employeeId)) === (shiftType === 'morning' ? 'day' : 'night'))
   return { month: '2026-09', days, morning: rowsFor('morning'), night: rowsFor('night') }
 }
 
@@ -258,7 +260,7 @@ function ScheduleView({ tab, setTab, data, employeeId }: { tab: string; setTab: 
   const isMine = tab === 'mine'
   const rows = tab === 'morning' ? data?.morning ?? [] : data?.night ?? []
   const personal = data && [...data.night, ...data.morning].find(row => row.employeeId === employeeId)
-  return <><div className="page-intro"><div><p className="eyebrow">每月班表</p><h1>{isMine ? '我的班表' : tab === 'morning' ? '早班全員班表' : '夜班全員班表'}</h1><p className="muted">{isMine ? '本人的正式班表。' : `正式${tab === 'morning' ? '早班' : '夜班'}資料，共 ${rows.length} 筆。`}</p></div></div><div className="tabs"><button className={isMine ? 'tab active' : 'tab'} onClick={() => setTab('mine')}>我的班表</button><button className={tab === 'morning' ? 'tab active' : 'tab'} onClick={() => setTab('morning')}>早班</button><button className={tab === 'night' ? 'tab active' : 'tab'} onClick={() => setTab('night')}>夜班</button></div>{!data ? <p className="loading">正在載入 9 月班表…</p> : isMine ? <PersonalSchedule row={personal ?? undefined} month={data.month} /> : rows.length ? <ScheduleMatrix rows={rows} days={data.days} /> : <p className="loading">班表資料尚未匯入</p>}</>
+  return <><div className="page-intro"><div><p className="eyebrow">每月班表</p><h1>{isMine ? '我的班表' : tab === 'morning' ? '早班全員班表' : '夜班全員班表'}</h1><p className="muted">{isMine ? '本人的正式班表。' : `正式${tab === 'morning' ? '早班' : '夜班'}資料，共 ${rows.length} 筆。`}</p></div></div><div className="tabs"><button className={isMine ? 'tab active' : 'tab'} onClick={() => setTab('mine')}>我的班表</button><button className={tab === 'morning' ? 'tab active' : 'tab'} onClick={() => setTab('morning')}>早班</button><button className={tab === 'night' ? 'tab active' : 'tab'} onClick={() => setTab('night')}>夜班</button></div>{!data ? <p className="loading">正在載入 9 月班表…</p> : isMine ? <PersonalSchedule row={personal ?? undefined} month={data.month} /> : rows.length ? <ScheduleMatrix key={tab} rows={rows} days={data.days} group={tab === 'morning' ? 'day' : 'night'} /> : <p className="loading">班表資料尚未匯入</p>}</>
 }
 
 function PersonalSchedule({ row, month }: { row: ScheduleRow | undefined; month: string }) {
@@ -270,23 +272,12 @@ function PersonalSchedule({ row, month }: { row: ScheduleRow | undefined; month:
   return <section className="personal-month"><h2 className="plan-month">{year} 年 {monthNumber} 月</h2><div className="month-grid">{['日','一','二','三','四','五','六'].map(w=><div className="weekday" key={w}>{w}</div>)}{Array.from({length:offset},(_,i)=><div key={'blank'+i} aria-hidden="true" />)}{Array.from({length:count},(_,index)=>{const shift=row.shifts[index] || ''; return <article className={`month-day ${scheduleCellStyle(shift)}`} key={index} aria-label={`${monthNumber}月${index+1}日 ${shift}`}><small>{index+1}</small><strong>{labels[shift] || shift || '—'}</strong></article>})}</div></section>
 }
 
-function ScheduleMatrix({ rows, days }: { rows: ScheduleRow[]; days: string[] }) {
-  const groupedRows = rows.reduce<Map<string, ScheduleRow[]>>((result, row) => {
-    const area = scheduleGroup(row)
-    result.set(area, [...(result.get(area) ?? []), row])
-    return result
-  }, new Map())
-  const groups = [...groupedRows].map(([area, people]) => ({ area, people }))
-  return <div className="matrix-wrap"><table className="schedule-matrix"><colgroup><col className="col-title" /><col className="col-id" /><col className="col-name" />{days.map(day => <col className="col-day" key={day} />)}</colgroup><thead><tr><th>職務</th><th>員編</th><th>姓名</th>{days.map((day, index) => <th className={weekdayHeaderStyle(index)} key={day}><span>9月{day}日</span><small>{weekdayAt(index)}</small></th>)}</tr></thead><tbody>{groups.map((group, index) => <Fragment key={`${group.area}-${index}`}><tr className="area-heading"><td colSpan={days.length + 3}><span className="area-label">{group.area}</span></td></tr>{group.people.map(row => <tr key={row.rowId}><td>{row.title || '—'}</td><td>{row.employeeId}</td><td><strong>{row.name}</strong><small className="pinned-role">{row.title}</small></td>{row.shifts.map((shift, dayIndex) => <td className={scheduleCellStyle(shift)} key={dayIndex}>{shift || '—'}</td>)}</tr>)}</Fragment>)}</tbody></table></div>
-}
-
-function scheduleGroup(row: ScheduleRow) {
-  if (row.title.includes('調度主任') || row.title.includes('調度副主任')) return '單位主官'
-  if (row.group) return row.group
-  if (row.title.includes('調度監控') || row.title.includes('實習領班')) return '調度監控'
-  if (row.area) return `${row.area}區`
-  if (row.title.includes('PT')) return '支援人力'
-  return '未標示區域'
+function ScheduleMatrix({ rows, days, group = 'day' }: { rows: ScheduleRow[]; days: string[]; group?: string }) {
+  const scrollRef = useRef<HTMLDivElement>(null)
+  const groups = useMemo(() => scheduleSections(rows, group), [rows, group])
+  const areas = useMemo(() => groups.filter(section => section.areaCode), [groups])
+  return <><AreaJumpDropdown areas={areas} group={group} scope="front-schedule" scrollTarget={scrollRef} />
+    <div className="matrix-wrap" ref={scrollRef}><table className="schedule-matrix"><colgroup><col className="col-title" /><col className="col-id" /><col className="col-name" />{days.map(day => <col className="col-day" key={day} />)}</colgroup><thead><tr><th>職務</th><th>員編</th><th>姓名</th>{days.map((day, index) => <th className={weekdayHeaderStyle(index)} key={day}><span>9月{day}日</span><small>{weekdayAt(index)}</small></th>)}</tr></thead><tbody>{groups.map(section => <Fragment key={section.key}><tr className="area-heading" id={scheduleSectionId('front-schedule',group,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days.length + 3}><span className="area-label">{section.label}</span></td></tr>{section.people.map((row: ScheduleRow) => <tr key={row.rowId} data-employee-id={row.employeeId}><td>{row.title || '—'}</td><td>{row.employeeId}</td><td><strong>{row.name}</strong><small className="pinned-role">{row.title}</small></td>{row.shifts.map((shift, dayIndex) => <td className={scheduleCellStyle(shift)} key={dayIndex}>{shift || '—'}</td>)}</tr>)}</Fragment>)}</tbody></table></div></>
 }
 
 function scheduleCellStyle(shift: string) {

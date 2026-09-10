@@ -1,6 +1,8 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
+import { scheduleSections } from '../functions/pre-schedule-order.mjs';
+import { AreaJumpDropdown, scheduleSectionId } from './area-jump-dropdown';
 import { PreScheduleAdmin } from './pre-schedule-admin';
 import {
   addDoc,
@@ -1078,6 +1080,8 @@ function ScheduleManager({
   admin: boolean;
 }) {
   const [month, setMonth] = useState(todayTaipei().slice(0, 7));
+  const [group, setGroup] = useState('day');
+  const scrollRef = useRef<HTMLDivElement>(null);
   const [records, setRecords] = useState<ScheduleRecord[]>([]);
   const [employees, setEmployees] = useState<EmployeeRecord[]>([]);
   const [search, setSearch] = useState('');
@@ -1132,14 +1136,12 @@ function ScheduleManager({
       .map(([id, items]) => ({ id, employee: profiles.get(id), items }))
       .filter(
         (row) => !search || `${row.id} ${row.employee?.name}`.includes(search),
-      )
-      .sort((a, b) =>
-        employeeAdminOrder(
-          a.employee || { employeeId: a.id, title: a.items[0]?.title || '' },
-          b.employee || { employeeId: b.id, title: b.items[0]?.title || '' },
-        ),
       );
   }, [records, employees, search]);
+  const sections = useMemo(() => scheduleSections(rows, group, row => ({
+    ...row.employee, employeeId: row.id, shiftType: row.employee?.shiftType || row.items[0]?.shiftType,
+  })), [rows, group]);
+  const areas = useMemo(() => sections.filter(section => section.areaCode), [sections]);
   const edit = async (
     record: ScheduleRecord | undefined,
     person: EmployeeRecord | undefined,
@@ -1197,6 +1199,11 @@ function ScheduleManager({
   return (
     <section className="admin-schedule-page">
       <div className="admin-page-toolbar filters">
+        <div className="schedule-group-switch" aria-label="正式班表組別">
+          <button aria-pressed={group === 'day'} onClick={() => setGroup('day')}>日班</button>
+          <button aria-pressed={group === 'night'} onClick={() => setGroup('night')}>大小夜班</button>
+        </div>
+        <AreaJumpDropdown areas={areas} group={`${month}-${group}`} scope="admin-schedule" scrollTarget={scrollRef} />
         <label>
           月份
           <input
@@ -1220,7 +1227,7 @@ function ScheduleManager({
         </span>
       </div>
       {error && <div className="admin-alert">{error}</div>}
-      <div className="admin-schedule-wrap">
+      <div className="admin-schedule-wrap" ref={scrollRef}>
         <table className="admin-schedule" style={{ width: 295 + days * 60 }}>
           <colgroup>
             <col style={{ width: 130 }} />
@@ -1241,8 +1248,10 @@ function ScheduleManager({
             </tr>
           </thead>
           <tbody>
-            {rows.map((row) => (
-              <tr key={row.id}>
+            {sections.map(section => <Fragment key={section.key}>
+              <tr className="admin-source-heading" id={scheduleSectionId('admin-schedule',`${month}-${group}`,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days + 3}><span>{section.label}</span></td></tr>
+              {section.people.map((row: typeof rows[number]) => (
+              <tr key={row.id} data-employee-id={row.id}>
                 <td>{row.employee?.title || '—'}</td>
                 <td>{row.id}</td>
                 <td>
@@ -1272,7 +1281,7 @@ function ScheduleManager({
                   );
                 })}
               </tr>
-            ))}
+            ))}</Fragment>)}
           </tbody>
         </table>
       </div>

@@ -4,6 +4,7 @@ import { titleAdminOrder } from '../lib/admin-employee-order';
 import {
   preScheduleDisplayOrder,
   preScheduleSource,
+  scheduleSections,
 } from '../functions/pre-schedule-order.mjs';
 import {
   PRE_CHOICES,
@@ -180,6 +181,7 @@ function MonthMatrix({
   );
   const canEdit =
     !!data?.month && mayReview(data.month, clock) && !loading && !running;
+  const sections = scheduleSections(visible, group, row => row.person);
   const reload = () => setVersion((v) => v + 1);
   const configure = async (status: 'open' | 'locked') => {
     setSaving(true);
@@ -523,22 +525,18 @@ function MonthMatrix({
           </thead>
           <tbody>
             {!loading &&
-              visible.map(({ person, entry, checks }, rowIndex) => (
-                <Fragment key={person.employeeId}>
-                  {preScheduleSource(person.employeeId)?.section &&
-                    (rowIndex === 0 ||
-                      preScheduleSource(visible[rowIndex - 1].person.employeeId)
-                        ?.section !==
-                        preScheduleSource(person.employeeId)?.section) && (
-                      <tr className="pre-source-heading">
+              sections.map(section => (
+                <Fragment key={section.key}>
+                  {section.people.some((row: typeof rows[number]) => preScheduleSource(row.person.employeeId)) && (
+                      <tr className="pre-source-heading" data-area-code={section.areaCode || undefined}>
                         <td colSpan={monthDays(month) + 3}>
                           <span>
-                            {preScheduleSource(person.employeeId)?.section}
+                            {section.label}
                           </span>
                         </td>
                       </tr>
                     )}
-                  <tr data-employee-id={person.employeeId}>
+                  {section.people.map(({ person, entry, checks }: typeof rows[number]) => <tr key={person.employeeId} data-employee-id={person.employeeId}>
                     <td>{person.title}</td>
                     <td>{person.employeeId}</td>
                     <td title={checks.issues.join('；')}>
@@ -571,7 +569,7 @@ function MonthMatrix({
                         </button>
                       </td>
                     ))}
-                  </tr>
+                  </tr>)}
                 </Fragment>
               ))}
           </tbody>
