@@ -272,3 +272,12 @@ exports.syncDispatchBlocks = onCall({ timeoutSeconds: 120, memory: '512MiB' }, a
 exports.syncCurrentDispatchBlocks = onSchedule({ schedule: 'every 15 minutes', timeZone: 'Asia/Taipei' }, async () => ({ disabled: true }))
 
 exports._test = { cleanId, employeeEmail }
+
+// Separate monthly pre-schedule workflow; existing Auth and dispatch handlers are unchanged.
+async function preScheduleService() {
+  const { createPreScheduleService } = await import('./pre-schedule-service.mjs')
+  const { Timestamp } = require('firebase-admin/firestore')
+  return createPreScheduleService({db, FieldValue, Timestamp, HttpsError})
+}
+exports.preSchedule = onCall({timeoutSeconds:120,memory:'512MiB'}, async request => (await preScheduleService()).handle(request))
+exports.closePreScheduleMonths = onSchedule({schedule:'every 5 minutes',timeZone:'Asia/Taipei'}, async () => (await preScheduleService()).closeExpired())

@@ -103,6 +103,23 @@ service cloud.firestore {
       allow create, update, delete: if isAdmin();
     }
 
+    match /preScheduleMonths/{monthId} {
+      function preScheduleReader() { return isActiveEmployee() && request.auth.uid == request.auth.token.employeeId; }
+      allow read: if preScheduleReader();
+      // Trusted callable checks current profile + claim, deadline, revisions and audit.
+      allow write: if false;
+      match /entries/{employeeId} {
+        allow get: if preScheduleReader() && (isDuty() || request.auth.token.employeeId == employeeId);
+        allow list: if preScheduleReader() && isDuty();
+        allow write: if false;
+      }
+      match /auditLogs/{auditId} {
+        allow read: if preScheduleReader() && isDuty();
+        allow write: if false;
+      }
+      match /internal/{document=**} { allow read, write: if false; }
+    }
+
     match /dispatchRecords/{recordId} {
       allow get, list: if isActiveEmployee();
       allow create: if isActiveEmployee() && isDuty()

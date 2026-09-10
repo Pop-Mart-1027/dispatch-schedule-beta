@@ -25,6 +25,7 @@ import { getBroadcastRead, listActiveBroadcasts, recordBroadcastShown, type Broa
 import { getCurrentAnnouncement } from '../lib/announcements'
 import sourceSchedule from '../public/september-schedules.json'
 import { AdminConsole } from './admin-console'
+import { EmployeePreSchedule } from './pre-schedule-employee'
 
 type ScheduleRow = { rowId: string; employeeId: string; name: string; title: string; group: string; area: string; shifts: string[] }
 type ScheduleData = { month: string; days: string[]; morning: ScheduleRow[]; night: ScheduleRow[] }
@@ -483,26 +484,8 @@ function dispatchAreaOrder(area: string) {
   return 0
 }
 
-function PreSchedule({ onSave }: { onSave: () => void }) {
-  const [month] = useState(() => { const today = taipeiToday(); return new Date(Number(today.slice(0, 4)), Number(today.slice(5, 7)), 1) })
-  const days = new Date(month.getFullYear(), month.getMonth() + 1, 0).getDate()
-  const offset = month.getDay()
-  const [plan, setPlan] = useState<string[]>(() => Array(days).fill(''))
-  const [activeDay, setActiveDay] = useState(0)
-  const [tool, setTool] = useState('上班')
-  const choices = ['上班', '休', '休上', '例', '慰', '病', '事', '特']
-  const applyToDay = (index: number) => { setActiveDay(index); setPlan(current => current.map((value, day) => day === index ? tool : value)) }
-  const checks = plan.map((_, index) => index).filter(index => (offset + index) % 7 === 0 && index + 7 <= plan.length).map(start => {
-    const week = plan.slice(start, start + 7)
-    const hasRegularDay = week.includes('例')
-    const hasRestDay = week.some(value => value === '休' || value.includes('休上'))
-    const hasWorkDay = week.includes('上班')
-    return { start: start + 1, end: start + 7, ok: hasRegularDay && hasRestDay && hasWorkDay }
-  })
-  const longestWorkRun = plan.reduce((state, value) => value === '上班' ? { current: state.current + 1, longest: Math.max(state.longest, state.current + 1) } : { current: 0, longest: state.longest }, { current: 0, longest: 0 }).longest
-  const hasContinuousWorkError = longestWorkRun > 5
-  const canSubmit = plan.every(Boolean) && checks.every(check => check.ok) && !hasContinuousWorkError
-  return <section className="pre-card"><h2 className="plan-month">{month.getFullYear()} 年 {month.getMonth() + 1} 月</h2><div className="plan-tools"><div>{choices.map(choice => <button key={choice} aria-pressed={tool === choice} onClick={() => setTool(choice)} className={tool === choice ? 'choice active' : 'choice'}>{choice}</button>)}<button className={tool === '' ? 'choice active' : 'choice'} onClick={() => setTool('')}>清除</button></div></div><div className="month-grid">{['日','一','二','三','四','五','六'].map(w => <div className="weekday" key={w}>{w}</div>)}{Array.from({length:offset},(_,i)=><div aria-hidden="true" key={'blank'+i} />)}{plan.map((shift,index)=><button aria-label={`${month.getMonth()+1}月${index+1}日 ${shift || '未排'}`} key={index} onClick={()=>applyToDay(index)} className={`month-day ${activeDay===index?'selected':''} ${scheduleCellStyle(shift)}`}><small>{index+1}</small><strong>{shift || '—'}</strong></button>)}</div><label>備註<textarea placeholder="排班備註" /></label><button className="primary" disabled={!canSubmit} onClick={onSave}>儲存預排班</button></section>
+function PreSchedule({ onSave: _onSave }: { onSave: () => void }) {
+  return <EmployeePreSchedule cellStyle={scheduleCellStyle} />
 }
 
 function LeaveView({ onAction }: { onAction: (text: string) => void }) { const leaves = [['特休', '15 天', '0 天', '0 天'], ['病假', '30 天', '0 天', '0 天'], ['事假', '14 天', '0 天', '0 天']]; return <><div className="leave-actions"><button className="primary" onClick={() => onAction('已開啟請假申請（示意）')}>我要請假</button></div><div className="leave-table"><div className="leave-row head"><span>假別</span><span>可用／額度</span><span>已使用</span><span>簽核中</span></div>{leaves.map(row => <div className="leave-row" key={row[0]}>{row.map((cell, i) => <span key={`${cell}-${i}`}>{cell}</span>)}</div>)}</div></> }

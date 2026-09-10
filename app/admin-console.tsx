@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useMemo, useState } from 'react';
+import { PreScheduleAdmin } from './pre-schedule-admin';
 import {
   addDoc,
   collection,
@@ -78,6 +79,7 @@ type Page =
   | 'broadcasts'
   | 'employees'
   | 'pre-settings'
+  | 'pre-management'
   | 'system'
   | 'leave';
 type EmployeeRecord = {
@@ -177,6 +179,7 @@ export function AdminConsole({
   const monitorItems: Array<[Page, string, React.ReactNode]> = [
     ['dashboard', admin ? '管理總覽' : '監控總覽', <BarChart3 size={18} />],
     ['dispatch', admin ? '派工管理' : '今日派工', <ClipboardList size={18} />],
+    ['pre-management', '預排管理', <CalendarDays size={18} />],
     ['schedule', admin ? '班表管理' : '班表', <CalendarDays size={18} />],
     ['broadcasts', admin ? '廣播管理' : '廣播事項', <Megaphone size={18} />],
   ];
@@ -264,6 +267,7 @@ export function AdminConsole({
           {page === 'pre-settings' && admin && (
             <PreScheduleSettings employeeId={employeeId} />
           )}
+          {page === 'pre-management' && <PreScheduleAdmin admin={admin} />}
           {page === 'system' && admin && <SystemSettings />}
           {page === 'leave' && (
             <Placeholder
