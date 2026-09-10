@@ -54,16 +54,24 @@
 .admin-schedule tr[data-drop='after'] td {
   border-bottom: 2px solid #f58220;
 }
-.admin-schedule .admin-source-heading td .section-edit {
+.admin-schedule .section-title-control {
   position: sticky;
-  left: 170px;
+  left: 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.admin-schedule .section-title-control > span {
+  position: static;
+}
+.admin-schedule .admin-source-heading td .section-edit {
   display: inline-flex;
   justify-content: center;
   align-items: center;
   width: 26px;
   min-width: 26px;
   height: 24px;
-  margin-left: 12px;
+  margin-left: 0;
   padding: 0;
   border: 1px solid currentColor;
   border-radius: 4px;

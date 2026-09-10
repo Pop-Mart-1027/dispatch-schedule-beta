@@ -82,13 +82,11 @@ export function MonthRowManager({
       <DialogContent className="month-row-dialog" showCloseButton={false}>
         <button className="month-dialog-close" aria-label="關閉" disabled={busy} onClick={onClose}>×</button>
         <DialogTitle>{selected ? '班表人員異動' : '新增人員'}</DialogTitle>
-        <DialogDescription>
-          {month} ·{' '}
-          {selected
-            ? people.find((p) => p.employeeId === selected)?.name
-            : '新增人員'}
-          {selected ? '；換區會轉換本月原區域的工作班碼，保留休假與其他區域班碼。無區碼的特殊區域只移動位置，班碼不變。' : '；加入目前月份，日期先留白。'}
-        </DialogDescription>
+        {!selected && (
+          <DialogDescription>
+            {month} · 新增人員；加入目前月份，日期先留白。
+          </DialogDescription>
+        )}
         <div className="month-row-actions">
           {(selected
             ? [
@@ -178,7 +176,7 @@ export function MonthRowManager({
           <p role="alert">
             確定要將 {person?.name} 移出 {Number(month.slice(0, 4))}年
             {Number(month.slice(5))}
-            月班表嗎？本月不再納入正式班表與派工；保留歷史紀錄，不刪除員工帳號、不影響其他月份。
+            月班表嗎？
           </p>
         )}
         {error && <p role="alert">{error}</p>}

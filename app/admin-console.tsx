@@ -1249,7 +1249,7 @@ function ScheduleManager({
           </thead>
           <tbody>
             {sections.map(section => <Fragment key={section.key}>
-              <tr className="admin-source-heading" id={scheduleSectionId('admin-schedule',`${month}-${group}`,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days + 3}><span>{section.label}</span>{admin&&<button className="section-edit" aria-label={`編輯區域名稱 ${section.label}`} disabled={monthLoading||orderBusy} onClick={()=>setSectionAction({action:'section-rename',key:section.key})}>✎</button>}</td></tr>
+              <tr className="admin-source-heading" id={scheduleSectionId('admin-schedule',`${month}-${group}`,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days + 3}><div className="section-title-control"><span>{section.label}</span>{admin&&<button className="section-edit" aria-label={`編輯區域名稱 ${section.label}`} disabled={monthLoading||orderBusy} onClick={()=>setSectionAction({action:'section-rename',key:section.key})}>✎</button>}</div></td></tr>
               {section.people.map((row: typeof rows[number]) => (
               <tr key={row.id} data-employee-id={row.id} data-dragging={dragging?.id===row.id || undefined} data-drop={drop?.id===row.id?drop.position:undefined}
                 onDragOver={event=>{
