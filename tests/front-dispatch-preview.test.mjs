@@ -30,6 +30,21 @@ fixture.monthSchedules = Array.from({ length: 30 }, (_, index) => employees.map(
     scheduleCode: [...new Set(rows.map(({ row }) => row.shifts[index]).filter(Boolean))].join('／') }
 })).flat()
 const virtual = {
+  'test:month-layout': `import {initialMonthRows,changeMonthRows} from '/functions/month-schedule-layout.mjs';
+    import {moveWorkArea} from '/functions/month-schedule-policy.mjs';
+    export async function getMonthLayout(month){return window.monthLayouts?.[month] || null;}
+    export async function manageMonthRow(input){
+      window.monthLayouts ||= {};window.rowCalls ||= [];window.rowCalls.push(input);
+      const old=window.monthLayouts[input.monthKey];
+      const ids=new Set(window.fixture.monthSchedules.map(r=>r.employeeId));
+      const rows=old?.rows || initialMonthRows(window.fixture.employees.filter(p=>ids.has(p.employeeId)));
+      const result=changeMonthRows(rows,input,window.fixture.employees.find(p=>p.employeeId===input.employeeId),input.monthKey);
+      const excluded=new Set(old?.excludedEmployeeIds||[]);
+      if(input.action==='remove')excluded.add(input.employeeId);
+      if(input.action==='add')excluded.delete(input.employeeId);
+      if(input.action==='move')for(const record of [...window.fixture.monthSchedules,...Object.values(window.fixture.schedules).flat()])if(record.employeeId===input.employeeId&&record.date.startsWith(input.monthKey))record.scheduleCode=moveWorkArea(record.scheduleCode,result.before.areaCode,result.after.areaCode);
+      window.monthLayouts[input.monthKey]={monthKey:input.monthKey,revision:(old?.revision || 0)+1,rows:result.rows,excludedEmployeeIds:[...excluded]};
+    }`,
   'test:firestore': `export * from 'firebase/firestore';
     export function onSnapshot(ref,next) {
       if(ref.path === 'systemSettings/features') {
@@ -55,24 +70,26 @@ const virtual = {
     export async function listActiveBroadcasts(){window.broadcastLoads=(window.broadcastLoads||0)+1;return window.testBroadcasts||[];}
     export async function getBroadcastRead(){return null;} export async function recordBroadcastShown(){}`,
   'test:blocks': `export * from '/lib/dispatch-blocks-firestore.ts';
+    import {eligibleMonthBlocks} from '/functions/month-schedule-policy.mjs';
     const denyWrite = () => { window.writeAttempts++; throw new Error('Front preview must remain read-only') };
     export const updateDispatchBlock = denyWrite, writeDispatchBlockAudit = denyWrite, saveDispatchPreviewAsFormal = denyWrite;
     export async function listDispatchBlocks(date) {
       await new Promise(resolve => setTimeout(resolve, window.delays?.[date] || 0));
-      return window.formalByDate?.[date] || (date === '2026-09-09' ? window.fixture.template : []);
+      return eligibleMonthBlocks(window.formalByDate?.[date] || (date === '2026-09-09' ? window.fixture.template : []),window.monthLayouts?.[date.slice(0,7)]);
     }
     export async function listDispatchBlockTemplate() { window.templateReads++; return { sourceDate: '2026-09-09', blocks: window.fixture.template } }`,
   'test:schedules': `export * from '/lib/schedule-firestore.ts';
+    import {eligibleMonthSchedules} from '/functions/month-schedule-policy.mjs';
     export async function updateFormalScheduleCell(record,code,modifiedBy) {
       window.scheduleEdits ||= [];
       window.scheduleEdits.push({recordId:record.id,employeeId:record.employeeId,date:record.date,before:record.scheduleCode,after:code,modifiedBy});
       const target=window.fixture.monthSchedules.find(item=>item.employeeId===record.employeeId&&item.date===record.date);
       target.scheduleCode=code;
     }
-    export async function listMonthScheduleRecords() { return window.fixture.monthSchedules }
+    export async function listMonthScheduleRecords(month='2026-09') { return eligibleMonthSchedules(window.fixture.monthSchedules.filter(r=>r.date.startsWith(month)),window.monthLayouts?.[month]); }
     export async function listScheduleRecords(date) {
       await new Promise(resolve => setTimeout(resolve, window.delays?.[date] || 0));
-      return window.fixture.schedules[date] || [];
+      return eligibleMonthSchedules(window.fixture.schedules[date] || [],window.monthLayouts?.[date.slice(0,7)]);
     }`,
   'test:functions': `export * from 'firebase/functions';
     export const httpsCallable = (_service, name) => async data => {
@@ -86,8 +103,10 @@ const virtual = {
     import Home, { FirestoreDispatchView, ScheduleMatrix, ScheduleView, scheduleRecordsToData, DutyStaffPanel, HomeView } from '/app/page.tsx';
     import { ScheduleManager, DutyColumn, DispatchManager, Dashboard, PreScheduleSettings } from '/app/admin-console.tsx';
     import {SystemFeatureSettings} from '/app/system-feature-settings.tsx';
+    import {WorkFocus} from '/app/work-focus.tsx';
     import '/app/globals.css';
     const root = createRoot(document.getElementById('root'));
+    window.showFocus = (text,collapsible)=>root.render(React.createElement('div',{style:{width:300}},React.createElement(WorkFocus,{key:String(collapsible),text,collapsible})));
     window.showFullApp = ()=>root.render(React.createElement(Home));
     window.showSettings = ()=>root.render(React.createElement('div',{className:'admin-console'},React.createElement('aside',{className:'admin-sidebar'},'調度工作台'),React.createElement('main',{className:'admin-main'},React.createElement(SystemFeatureSettings,{employeeId:'A001'}))));
     window.showPreSettings = ()=>root.render(React.createElement('div',{className:'admin-console'},React.createElement(PreScheduleSettings,{employeeId:'A001'})));
@@ -129,6 +148,7 @@ const server = await createServer({
     resolveId(id) { if (id in virtual) return '\0' + id + '.tsx' },
     load(id) { if (id.startsWith('\0test:')) return virtual[id.slice(1, -4)] },
     transform(code, id) {
+      if(id.replaceAll('\\', '/').endsWith('/app/month-row-manager.tsx')) return code.replace("from '../lib/month-schedule-layout'", "from 'test:month-layout'");
       if(id.replaceAll('\\', '/').endsWith('/lib/system-features.ts')) return code.replace("from 'firebase/firestore'", "from 'test:firestore'");
       const admin = id.replaceAll('\\', '/').endsWith('/app/admin-console.tsx')
       if (!admin && !id.replaceAll('\\', '/').endsWith('/app/page.tsx')) return
@@ -138,6 +158,7 @@ const server = await createServer({
         .replace("from 'firebase/functions'", "from 'test:functions'")
         .replace("from '../lib/dispatch-blocks-firestore'", "from 'test:blocks'")
         .replaceAll("from '../lib/schedule-firestore'", "from 'test:schedules'")
+        .replaceAll("from '../lib/month-schedule-layout'", "from 'test:month-layout'")
         + (admin ? '\nexport { ScheduleManager, DutyColumn, DispatchManager, Dashboard, PreScheduleSettings };' : '\nexport { FirestoreDispatchView, ScheduleMatrix, ScheduleView, scheduleRecordsToData, DutyStaffPanel, HomeView };')
     },
     configureServer(server) {
@@ -153,6 +174,7 @@ await server.listen()
 const browser = await chromium.launch({ headless: true, channel: 'msedge' })
 after(async () => { await browser.close(); await server.close() })
 const page = await browser.newPage({ viewport: { width: 1920, height: 1080 } })
+page.setDefaultTimeout(15000);
 const errors = []
 page.on('pageerror', error => errors.push(error.message))
 await page.addInitScript(data => {
@@ -558,4 +580,122 @@ test('pre-schedule save text is readable and announcement uses 12 MB without cha
   assert.notEqual(await page.getByRole('status').evaluate(el=>getComputedStyle(el).color),'rgba(0, 0, 0, 0)');
   assert.match(readFileSync('app/admin-console.tsx','utf8'),/支援一般圖片格式，單檔上限 12 MB；系統會自動等比例縮圖，前台不裁切內容。/);
   assert.match(readFileSync('lib/announcements.ts','utf8'),/12 \* 1024 \* 1024/);
+});
+
+test('work focus preserves all text, front expands and admin collapses with a toggle',async()=>{
+ const text='開始\nA1:第一區工作內容'.repeat(4)+'\nA2：第二區完整內容\nO1:最後不可省略';
+ await page.evaluate(text=>window.showFocus(text,false),text);
+ assert.equal(await page.locator('.work-focus-text').textContent(),text);
+ assert.equal(await page.getByRole('button',{name:'展開',exact:true}).count(),0);
+ assert.equal(await page.locator('.work-focus strong').count(),6);
+ await page.evaluate(text=>window.showFocus(text,true),text);
+ await page.getByRole('button',{name:'展開',exact:true}).click();
+ assert.equal(await page.locator('.work-focus-text').textContent(),text);
+ await page.getByRole('button',{name:'收合',exact:true}).click();
+ assert.ok(await page.locator('.work-focus-text').evaluate(el=>el.scrollHeight>el.clientHeight));
+});
+
+test('admin whole-row move converts only original-area codes; remove/re-add is month scoped',async()=>{
+ await page.reload();
+ await page.evaluate(()=>{window.monthLayouts={};window.showAdminSchedule(true);});
+ await page.locator('.admin-schedule tr[data-employee-id="93339"]').waitFor();
+ await page.getByRole('button',{name:'大小夜班',exact:true}).click();
+ const before=await page.locator('.admin-schedule tr[data-employee-id="96504"] [data-date-column]').allTextContents();
+ await page.getByRole('button',{name:'管理 96504 涂佑葦',exact:true}).click();
+ await page.getByRole('button',{name:'移動到區域',exact:true}).click();
+ await page.getByLabel('區域',{exact:true}).selectOption('area:K1');
+ await page.getByRole('button',{name:'儲存',exact:true}).click();
+ await page.getByRole('dialog').waitFor({state:'hidden'});
+ assert.deepEqual(await page.locator('.admin-schedule tr[data-employee-id="96504"] [data-date-column]').allTextContents(),before.map(code=>code.replaceAll('O1','K1')));
+ await page.getByRole('button',{name:'管理 96504 涂佑葦',exact:true}).click();
+ await page.getByRole('button',{name:'移出本月班表',exact:true}).first().click();
+ await page.getByRole('button',{name:'移出本月班表',exact:true}).last().click();
+ await page.getByRole('button',{name:'確認移出',exact:true}).click();
+ await page.getByRole('dialog').waitFor({state:'hidden'});
+ assert.equal(await page.locator('.admin-schedule tr[data-employee-id="96504"]').count(),0);
+ // The fixture swaps React roots directly; wait for modal teardown (not merely
+ // an inaccessible/hidden dialog) before replacing its owning screen.
+ await page.locator('[role="dialog"]').waitFor({state:'detached'});
+ await page.evaluate(()=>window.showDispatch());await page.locator('.dispatch-card').first().waitFor();
+ assert.equal(await page.locator('.dispatch-card .person').filter({hasText:'96504'}).count(),0);
+ await page.evaluate(()=>window.showAdminSchedule(true));await page.locator('.admin-schedule').waitFor();
+ await page.getByRole('button',{name:'大小夜班',exact:true}).click();
+ await page.getByRole('button',{name:'新增人員',exact:true}).click();
+ await page.getByPlaceholder('員編／姓名').fill('96504');
+ await page.getByRole('button',{name:'96504 涂佑葦',exact:true}).click();
+ await page.getByLabel('組別',{exact:true}).selectOption('night');
+ await page.getByLabel('區域',{exact:true}).selectOption('area:K1');
+ await page.getByRole('button',{name:'儲存',exact:true}).click();
+ await page.getByRole('dialog').waitFor({state:'hidden'});
+ assert.ok((await page.locator('.admin-schedule tr[data-employee-id="96504"] [data-date-column]').allTextContents()).every(v=>v==='—'));
+ await page.evaluate(()=>window.showHome());await page.evaluate(()=>window.showAdminSchedule(true));
+ await page.locator('.admin-schedule').waitFor();await page.getByRole('button',{name:'大小夜班',exact:true}).click();
+ await page.locator('.admin-schedule tr[data-employee-id="96504"]').waitFor();
+ assert.ok((await page.locator('.admin-schedule tr[data-employee-id="96504"] [data-date-column]').allTextContents()).every(v=>v==='—'));
+});
+
+test('four employee views share read-only text while real controls stay interactive', async () => {
+  await page.reload();
+  const checkText = async selector => {
+    const nodes = page.locator(selector);
+    assert.ok(await nodes.count(), selector);
+    const failures = await nodes.evaluateAll(elements => elements.filter(el => {
+      const style = getComputedStyle(el);
+      return style.cursor !== 'default' || style.caretColor !== 'rgba(0, 0, 0, 0)' ||
+        style.outlineStyle !== 'none' || el.isContentEditable ||
+        el.matches('input,textarea,select,button,[tabindex]');
+    }).map(el => el.outerHTML.slice(0, 180)));
+    assert.deepEqual(failures, [], selector);
+    const first = nodes.first();
+    const appearance = () => first.evaluate(el => {
+      const s = getComputedStyle(el);
+      return [s.backgroundColor, s.boxShadow, s.outlineStyle, s.transform];
+    });
+    const before = await appearance();
+    await first.hover();
+    await first.click();
+    assert.deepEqual(await appearance(), before, 'display text has no editable hover/focus');
+    assert.equal(await first.evaluate(el => document.activeElement === el), false);
+  };
+  for (const viewport of [{width:1920,height:1080},{width:390,height:844}]) {
+    await page.setViewportSize(viewport);
+    await page.evaluate(() => window.showScheduleView());
+    await page.waitForSelector('.schedule-matrix');
+    await page.getByRole('button', {name:'我的班表',exact:true}).click();
+    await checkText('.personal-month :is(h2,.weekday,.month-day,.month-day small,.month-day strong)');
+    assert.equal(await page.locator('.personal-month :is(input,textarea,[contenteditable])').count(), 0);
+    for (const name of ['早班','夜班']) {
+      const tab = page.getByRole('button', {name,exact:true});
+      assert.equal(await tab.evaluate(el => getComputedStyle(el).cursor), 'pointer');
+      await tab.click();
+      await checkText('.schedule-matrix :is(th,td,th span,th small)');
+      assert.equal(await page.locator('.schedule-matrix :is(input,textarea,[contenteditable])').count(), 0);
+    }
+    await page.evaluate(() => window.showDispatch());
+    await page.waitForSelector('.dispatch-card .person');
+    await checkText('.dispatch-card :is(header,header span,b,.person,.person small,.work-focus,.work-focus-text), .duty-staff :is(header,strong,b,span)');
+    assert.equal(await page.locator('.dispatch-card :is(input,textarea,[contenteditable]),.duty-staff :is(input,textarea,[contenteditable])').count(), 0);
+    const jump = page.locator('.area-jump-dropdown summary');
+    assert.equal(await jump.evaluate(el => getComputedStyle(el).cursor), 'pointer');
+    assert.equal(await jump.locator('span').evaluate(el => getComputedStyle(el).cursor), 'pointer');
+    await jump.click();
+    assert.notEqual(await page.locator('.area-jump-dropdown').getAttribute('open'), null);
+    await page.keyboard.press('Escape');
+    await page.locator('input[type=date]').fill('2026-09-13');
+    assert.equal(await page.locator('input[type=date]').inputValue(), '2026-09-13');
+    assert.notEqual(await page.locator('input[type=date]').evaluate(el => getComputedStyle(el).caretColor), 'rgba(0, 0, 0, 0)');
+    await page.waitForFunction(() => !document.querySelector('.loading') && document.querySelector('.dispatch-card .person'));
+    assert.equal(await page.evaluate(() => window.writeAttempts), 0);
+  }
+  await page.setViewportSize({width:1920,height:1080});
+});
+
+test('night row management defaults to the existing monthly group, not day',async()=>{
+ await page.evaluate(()=>{window.monthLayouts={};window.showHome();});
+ await page.evaluate(()=>window.showAdminSchedule(true));
+ await page.getByRole('button',{name:'大小夜班',exact:true}).click();
+ await page.getByRole('button',{name:'管理 96504 涂佑葦',exact:true}).click();
+ await page.getByRole('button',{name:'移動到區域',exact:true}).click();
+ assert.equal(await page.getByLabel('組別',{exact:true}).inputValue(),'night');
+ await page.getByRole('button',{name:'取消',exact:true}).click();
 });

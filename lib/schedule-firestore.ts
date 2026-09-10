@@ -8,6 +8,8 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
+import { getMonthLayout } from './month-schedule-layout';
+import { eligibleMonthSchedules, monthParticipation } from '../functions/month-schedule-policy.mjs';
 
 export type ScheduleRecord = {
   id: string;
@@ -29,31 +31,32 @@ export type ScheduleRecord = {
   modifiedBy: string;
 };
 
-export async function listScheduleRecords(date: string, employeeId?: string) {
+export async function listScheduleRecords(date: string, employeeId?: string, database = db) {
   const constraints = employeeId
     ? [where('employeeId', '==', employeeId)]
     : [where('date', '==', date)];
-  const snapshot = await getDocs(
-    query(collection(db, 'scheduleRecords'), ...constraints),
-  );
-  return snapshot.docs
+  const [snapshot, layout] = await Promise.all([getDocs(
+    query(collection(database, 'scheduleRecords'), ...constraints),
+  ), getMonthLayout(date.slice(0, 7), database)]);
+  return eligibleMonthSchedules(snapshot.docs
     .map((doc) => ({ id: doc.id, ...doc.data() }) as ScheduleRecord)
-    .filter((record) => !employeeId || record.date === date);
+    .filter((record) => !employeeId || record.date === date), layout) as ScheduleRecord[];
 }
 
 export async function listMonthScheduleRecords(
   month: string,
   employeeId?: string,
+  database = db,
 ) {
   const constraints = employeeId
     ? [where('employeeId', '==', employeeId)]
     : [where('date', '>=', `${month}-01`), where('date', '<=', `${month}-31`)];
-  const snapshot = await getDocs(
-    query(collection(db, 'scheduleRecords'), ...constraints),
-  );
-  return snapshot.docs
+  const [snapshot, layout] = await Promise.all([getDocs(
+    query(collection(database, 'scheduleRecords'), ...constraints),
+  ), getMonthLayout(month, database)]);
+  return eligibleMonthSchedules(snapshot.docs
     .map((doc) => ({ id: doc.id, ...doc.data() }) as ScheduleRecord)
-    .filter((record) => record.date.startsWith(`${month}-`));
+    .filter((record) => record.date.startsWith(`${month}-`)), layout) as ScheduleRecord[];
 }
 
 export async function updateFormalScheduleCell(
@@ -66,6 +69,9 @@ export async function updateFormalScheduleCell(
     audit = doc(collection(database, 'scheduleAuditLogs'));
   await runTransaction(database, async (transaction) => {
     const snap = await transaction.get(ref);
+    const layout = await transaction.get(doc(database, 'scheduleMonthLayouts', record.date.slice(0, 7)));
+    if (!monthParticipation(layout.data(), record.employeeId, record.date))
+      throw new Error('此員工已移出本月班表，或此格尚未加入正式排班，請重新載入。');
     const current = snap.data();
     if (
       !current ||

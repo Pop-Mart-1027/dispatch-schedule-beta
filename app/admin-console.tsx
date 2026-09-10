@@ -2,6 +2,10 @@
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { scheduleSections } from '../functions/pre-schedule-order.mjs';
+import { monthSections } from '../functions/month-schedule-layout.mjs';
+import { getMonthLayout, manageMonthRow, type MonthLayout } from '../lib/month-schedule-layout';
+import { MonthRowManager } from './month-row-manager';
+import { WorkFocus } from './work-focus';
 import { AreaJumpDropdown, scheduleSectionId } from './area-jump-dropdown';
 import { SystemFeatureSettings } from './system-feature-settings';
 import { ScheduleCellEditor } from './schedule-cell-editor';
@@ -906,13 +910,12 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
               <tr key={block.id}>
                 <td>
                   <b>{block.areaName || '特殊派工'}</b>
-                  <small>{block.areaCode || variantLabels[block.variantCode] || '特殊派工'}</small>
                 </td>
                 <td>{block.vehicleNo || '—'}</td>
                 <td>{peopleNames(block.drivers)}</td>
                 <td>{peopleNames(block.stations)}</td>
                 <td>{peopleNames(block.assistants)}</td>
-                <td className="focus-cell">{block.workFocus || '—'}</td>
+                <td className="focus-cell"><WorkFocus key={block.workFocus} text={block.workFocus} collapsible /></td>
                 <td>
                   <span className={`dispatch-assignment-status status-${block.assignmentStatus}`}>
                     {dispatchAssignmentStatusLabel(block.assignmentStatus)}
@@ -921,7 +924,7 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
                 <td>
                   <button onClick={() => open(block)}>修改</button>
                   <button onClick={() => void showAudits(block)}>
-                    查看修改紀錄
+                    查看紀錄
                   </button>
                 </td>
               </tr>
@@ -1084,6 +1087,11 @@ function ScheduleManager({
   admin: boolean;
 }) {
   const [month, setMonth] = useState(todayTaipei().slice(0, 7));
+  const [layout, setLayout] = useState<MonthLayout|null>(null);
+  const layoutById=useMemo(()=>new Map(layout?.rows.map(row=>[row.employeeId,row]) || []),[layout]);
+  const loadRevision=useRef(0);
+  const [monthLoading,setMonthLoading]=useState(true);
+  const [rowAction, setRowAction] = useState<string|null>(null);
   const [group, setGroup] = useState('day');
   const scrollRef = useRef<HTMLDivElement>(null);
   const [records, setRecords] = useState<ScheduleRecord[]>([]);
@@ -1091,11 +1099,16 @@ function ScheduleManager({
   const [search, setSearch] = useState('');
   const [error, setError] = useState('');
   const load = async () => {
+    const revision=++loadRevision.current;
+    setMonthLoading(true);
     try {
-      const [rows, people] = await Promise.all([
+      const [rows, people, monthLayout] = await Promise.all([
         listMonthScheduleRecords(month),
         getDocs(collection(db, 'employees')),
+        getMonthLayout(month),
       ]);
+      if(revision!==loadRevision.current)return;
+      setLayout(monthLayout);
       setRecords(rows);
       setEmployees(
         people.docs.map(
@@ -1104,12 +1117,17 @@ function ScheduleManager({
       );
       setError('');
     } catch (cause) {
+      if(revision!==loadRevision.current)return;
       console.error('[scheduleManager] load failed', cause);
       setError('班表載入失敗');
+    } finally {
+      if(revision===loadRevision.current)setMonthLoading(false);
     }
   };
   useEffect(() => {
+    setRecords([]);setLayout(null);setRowAction(null);setEditing(null);
     void load();
+    return ()=>{loadRevision.current++;};
   }, [month]);
   const days = new Date(
     Number(month.slice(0, 4)),
@@ -1136,15 +1154,17 @@ function ScheduleManager({
         record,
       ]),
     );
+    if(layout) for(const item of layout.rows) if(!grouped.has(item.employeeId)) grouped.set(item.employeeId,[]);
     return [...grouped]
+      .filter(([id])=>!layout || layoutById.has(id))
       .map(([id, items]) => ({ id, employee: profiles.get(id), items }))
       .filter(
         (row) => !search || `${row.id} ${row.employee?.name}`.includes(search),
       );
-  }, [records, employees, search]);
-  const sections = useMemo(() => scheduleSections(rows, group, row => ({
+  }, [records, employees, search, layout, layoutById]);
+  const sections = useMemo(() => monthSections(rows, group, layout, row => ({
     ...row.employee, employeeId: row.id, shiftType: row.employee?.shiftType || row.items[0]?.shiftType,
-  })), [rows, group]);
+  })), [rows, group, layout]);
   const areas = sections;
   const [editing, setEditing] = useState<{record:ScheduleRecord; person:EmployeeRecord} | null>(null);
   const catalog = useMemo(()=>buildScheduleEditCatalog(records,group),[records,group]);
@@ -1180,6 +1200,7 @@ function ScheduleManager({
             ? '點擊班別可修改；儲存時留下修改紀錄'
             : '值班監控僅可查看正式班表'}
         </span>
+        {admin&&<button disabled={monthLoading||!!error} onClick={()=>setRowAction('')}>新增人員</button>}
       </div>
       {error && <div className="admin-alert">{error}</div>}
       <div className="admin-schedule-wrap" ref={scrollRef}>
@@ -1211,11 +1232,15 @@ function ScheduleManager({
                 <td>{row.id}</td>
                 <td>
                   {row.employee?.name || row.items[0]?.employeeName || '—'}
+                  {admin&&<button className="schedule-row-action" aria-label={`管理 ${row.id} ${row.employee?.name || ''}`} onClick={()=>setRowAction(row.id)}>⋮</button>}
                 </td>
                 {Array.from({ length: days }, (_, index) => {
-                  const record = row.items.find(
+                  const stored = row.items.find(
                     (item) => Number(item.date.slice(8)) === index + 1,
                   );
+                  const blank=layoutById.get(row.id)?.blankDays.includes(String(index+1));
+                  const record=blank?undefined:stored;
+                  const draftRecord=record || {id:`${row.id}_${month}-${String(index+1).padStart(2,'0')}`,employeeId:row.id,employeeName:row.employee?.name || '',date:`${month}-${String(index+1).padStart(2,'0')}`,shiftType:group==='day'?'morning':'night',scheduleCode:'',scheduleLabel:'',leaveType:'',source:'admin-month-schedule',status:'active',note:'',modifiedBy:''} as ScheduleRecord;
                   return (
                     <td
                       key={index}
@@ -1225,9 +1250,9 @@ function ScheduleManager({
                       }
                     >
                       <button
-                        disabled={!admin || !record}
+                        disabled={!admin || (!record && !layoutById.has(row.id))}
                         onClick={() =>
-                          edit(record, row.employee)
+                          edit(draftRecord, row.employee)
                         }
                       >
                         {record?.scheduleCode || '—'}
@@ -1240,7 +1265,8 @@ function ScheduleManager({
           </tbody>
         </table>
       </div>
-      {editing && <ScheduleCellEditor employeeId={editing.person.employeeId} name={editing.person.name} date={editing.record.date} currentCode={editing.record.scheduleCode} catalog={catalog} onClose={()=>setEditing(null)} onSave={async code=>{if(!catalog.leaves.includes(code) && !catalog.special.includes(code) && !catalog.areas.some(area=>area.codes.includes(code))) throw new Error('請選擇既有正式班碼');await updateFormalScheduleCell(editing.record,code,employeeId);await load();}} />}
+      {rowAction!==null&&<MonthRowManager month={month} layout={layout} people={employees} present={layout?.rows.map(r=>r.employeeId) || [...new Set(records.map(r=>r.employeeId))]} selected={rowAction || undefined} onClose={()=>setRowAction(null)} onSaved={load} />}
+      {editing && <ScheduleCellEditor employeeId={editing.person.employeeId} name={editing.person.name} date={editing.record.date} currentCode={editing.record.scheduleCode} catalog={catalog} onClose={()=>setEditing(null)} onSave={async code=>{if(!catalog.leaves.includes(code) && !catalog.special.includes(code) && !catalog.areas.some(area=>area.codes.includes(code))) throw new Error('請選擇既有正式班碼');const row=layout?.rows.find(r=>r.employeeId===editing.person.employeeId);if(row&&(row.blankDays.includes(String(Number(editing.record.date.slice(8))))||!records.some(r=>r.id===editing.record.id)))await manageMonthRow({action:'cell',monthKey:month,revision:layout?.revision,employeeId:editing.person.employeeId,date:editing.record.date,code});else await updateFormalScheduleCell(editing.record,code,employeeId);await load();}} />}
     </section>
   );
 }

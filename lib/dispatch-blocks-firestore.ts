@@ -1,5 +1,7 @@
 import { addDoc, collection, doc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, where, writeBatch } from 'firebase/firestore'
 import { db } from './firebase'
+import { getMonthLayout } from './month-schedule-layout'
+import { eligibleMonthBlocks } from '../functions/month-schedule-policy.mjs'
 
 export type DispatchBlockPerson = {
   employeeId: string
@@ -32,13 +34,15 @@ export type DispatchBlock = {
   updatedAt?: unknown
   modifiedBy: string
   modifiedAt?: unknown
+  /** Derived monthly reset marker; not part of the Firestore block schema. */
+  monthAssignmentResetIds?: string[]
 }
 
 export type DispatchBlockEditable = Pick<DispatchBlock, 'vehicleNo' | 'drivers' | 'stations' | 'assistants' | 'workFocus' | 'balanceArea' | 'note'>
 
-export async function listDispatchBlocks(date: string) {
-  const snapshot = await getDocs(query(collection(db, 'dispatchBlocks'), where('date', '==', date)))
-  return snapshot.docs.map(item => ({ id: item.id, ...item.data() } as DispatchBlock))
+export async function listDispatchBlocks(date: string, database = db) {
+  const [snapshot, layout] = await Promise.all([getDocs(query(collection(database, 'dispatchBlocks'), where('date', '==', date))), getMonthLayout(date.slice(0,7), database)])
+  return (eligibleMonthBlocks(snapshot.docs.map(item => ({ id: item.id, ...item.data() } as DispatchBlock)), layout) as DispatchBlock[])
     .filter(item => item.status !== 'deleted')
     .sort((left, right) => left.shiftType.localeCompare(right.shiftType) || left.sourceRow - right.sourceRow || left.blockId.localeCompare(right.blockId))
 }

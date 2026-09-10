@@ -13,6 +13,7 @@ export function getScheduleAreaDisplayLabel(section, sourceGroup = '') {
     .replace(/〇/g, 'O')
     .trim();
   if (/^工兵小隊(?:\s*[-－].*)?$/.test(text)) return '工兵小隊';
+  if (/^B機動(?:\s*[-－].*)?$/.test(text)) return 'B區PT';
   if (['J2區', 'J2', '晚PT數字', '府前PT'].includes(text)) return '府前PT';
   const match = text.match(/^(Z?[A-Z]+\d*)\s*區$/i);
   // No source group means no numeric alias. Never infer it from a daily work code.

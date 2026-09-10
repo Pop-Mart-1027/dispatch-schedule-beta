@@ -1,0 +1,95 @@
+.work-focus {
+  min-width: 0;
+  max-width: 100%;
+  text-align: left;
+}
+.work-focus-text {
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+  word-break: normal;
+  line-height: 1.55;
+}
+.work-focus-text.collapsed {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.work-focus button {
+  white-space: nowrap;
+  color: #b84b0b;
+  font-size: 13px;
+  margin-top: 4px;
+}
+.dispatch-table .focus-cell {
+  min-width: 290px;
+  max-width: 420px;
+}
+.dispatch-table td:last-child button {
+  white-space: nowrap;
+}
+.schedule-row-action {
+  display: inline-block;
+  margin-left: 3px;
+  padding: 0 4px !important;
+  min-width: 20px !important;
+}
+.month-row-dialog .month-person-list {
+  max-height: 240px;
+  overflow: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+}
+.month-row-dialog button {
+  min-height: 34px;
+}
+.month-row-dialog label {
+  display: grid;
+  gap: 6px;
+  margin: 12px 0;
+}
+.month-row-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.month-row-dialog {
+  position: fixed;
+  z-index: 220;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 640px;
+  max-width: 90vw;
+  max-height: 85vh;
+  overflow: auto;
+  background: white;
+  color: #263b45;
+  border: 1px solid #e8ccb4;
+  border-radius: 14px;
+  padding: 24px;
+  box-shadow: 0 16px 60px #0003;
+  display: grid;
+  gap: 12px;
+}
+.month-row-dialog input,
+.month-row-dialog select {
+  color: #263b45;
+  background: white;
+  border: 1px solid #cfd8dc;
+  border-radius: 6px;
+  padding: 8px;
+}
+.month-row-dialog button {
+  cursor: pointer;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 6px 12px;
+}
+.month-row-dialog button[aria-pressed='true'] {
+  background: #fff0dc;
+  color: #b64d13;
+  border-color: #ed8a39;
+}
+.dispatch-fields > .work-focus { display:block; }

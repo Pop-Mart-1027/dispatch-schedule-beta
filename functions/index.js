@@ -244,11 +244,14 @@ exports.generateDailyDispatch = onCall(async request => {
   const date = String(request.data?.date || '')
   if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) throw new HttpsError('invalid-argument', '日期格式不正確')
   const schedules = await db.collection('scheduleRecords').where('date', '==', date).get()
+  const { monthParticipation } = await import('./month-schedule-policy.mjs')
+  const monthLayout = (await db.collection('scheduleMonthLayouts').doc(date.slice(0, 7)).get()).data()
   const areas = await db.collection('areaMaster').where('active', '==', true).get()
   const areaMap = new Map(areas.docs.map(item => [item.id, item.data()]))
   const batch = db.batch(); let count = 0
   for (const schedule of schedules.docs) {
     const data = schedule.data(); const code = String(data.scheduleCode || '')
+    if (!monthParticipation(monthLayout, data.employeeId, date)) continue
     if (!code || ['例', '休', '休上', '慰', '假'].includes(code) || /病|事|特/.test(code)) continue
     const areaCode = [...areaMap.keys()].sort((a, b) => b.length - a.length).find(area => code.includes(area)) || ''
     if (!areaCode) continue
@@ -272,6 +275,11 @@ exports.syncDispatchBlocks = onCall({ timeoutSeconds: 120, memory: '512MiB' }, a
 exports.syncCurrentDispatchBlocks = onSchedule({ schedule: 'every 15 minutes', timeZone: 'Asia/Taipei' }, async () => ({ disabled: true }))
 
 exports._test = { cleanId, employeeEmail }
+
+exports.manageScheduleMonthRow = onCall({timeoutSeconds:120,memory:'512MiB'}, async request => {
+  const { createMonthScheduleService } = await import('./month-schedule-service.mjs')
+  return createMonthScheduleService({db,FieldValue,HttpsError})(request)
+})
 
 // Separate monthly pre-schedule workflow; existing Auth and dispatch handlers are unchanged.
 async function preScheduleService() {

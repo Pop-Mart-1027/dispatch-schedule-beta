@@ -88,6 +88,11 @@ service cloud.firestore {
       allow get, list: if isActiveEmployee();
       allow create, update, delete: if isAdmin();
     }
+    match /scheduleMonthLayouts/{monthId} {
+      allow read: if isActiveEmployee();
+      // Row operations and their audit are committed together by the admin callable.
+      allow write: if false;
+    }
     match /scheduleAuditLogs/{auditId} {
       allow read: if isDuty();
       allow create: if isAdmin()

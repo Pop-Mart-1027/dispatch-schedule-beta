@@ -7,7 +7,7 @@ export function scheduleSectionIdentity(
 ) {
   const text = String(section).normalize('NFKC').replace(/〇/g, 'O').trim();
   const specialLabel = getScheduleAreaDisplayLabel(text, sourceGroup);
-  if (['府前PT', '工兵小隊'].includes(specialLabel))
+  if (['府前PT', '工兵小隊', 'B區PT'].includes(specialLabel))
     return {
       key: `section:${specialLabel}`,
       areaCode: null,

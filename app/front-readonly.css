@@ -1,0 +1,14 @@
+/* Shared by personal/all-staff schedules and dispatch. Keep real controls,
+   including their labels/icons, outside the display-only rule. */
+.app-shell:is([data-page='schedule'], [data-page='dispatch'])
+  :where(*):not(:where(button, a[href], input, textarea, select, summary, [role='button'], [role='link'], [tabindex], [contenteditable='true'])):not(:where(button, a[href], input, textarea, select, summary, [role='button'], [role='link'], [tabindex], [contenteditable='true']) *) {
+  cursor: default;
+  caret-color: transparent;
+  outline: none;
+}
+
+/* Caret color inherits: date selectors and genuine editors keep their caret. */
+.app-shell:is([data-page='schedule'], [data-page='dispatch'])
+  :where(input, textarea, [contenteditable='true']) {
+  caret-color: auto;
+}

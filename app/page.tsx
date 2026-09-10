@@ -7,8 +7,12 @@ import './youbike-theme.css'
 import './mobile-nav.css'
 import './mobile-layout.css'
 import './admin-console.css'
+import './front-readonly.css'
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
 import { scheduleSections, scheduleDisplayGroup, preScheduleSource } from '../functions/pre-schedule-order.mjs'
+import { monthSections } from '../functions/month-schedule-layout.mjs'
+import { getMonthLayout, type MonthLayout } from '../lib/month-schedule-layout'
+import { WorkFocus } from './work-focus'
 import { AreaJumpDropdown, scheduleSectionId } from './area-jump-dropdown'
 import { browserLocalPersistence, onAuthStateChanged, setPersistence, signInWithEmailAndPassword, signOut } from 'firebase/auth'
 import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, orderBy, query, serverTimestamp, Timestamp, updateDoc, where } from 'firebase/firestore'
@@ -31,7 +35,7 @@ import { useSystemFeatures } from '../lib/system-features'
 import { EmployeePreSchedule } from './pre-schedule-employee'
 
 type ScheduleRow = { rowId: string; employeeId: string; name: string; title: string; group: string; area: string; shifts: string[] }
-type ScheduleData = { month: string; days: string[]; morning: ScheduleRow[]; night: ScheduleRow[] }
+type ScheduleData = { month: string; days: string[]; morning: ScheduleRow[]; night: ScheduleRow[]; layout?: MonthLayout|null }
 type Employee = { employeeId: string; name: string; title: string; role: 'employee' | 'duty' | 'admin'; hireDate: string; active: boolean; mustChangePassword: boolean }
 type EmployeeProfile = { employeeId: string; name: string; title?: string; group?: string; area?: string }
 type PunchRecord = AttendanceRecord
@@ -72,7 +76,7 @@ export default function Home() {
 
   useEffect(() => {
     if (!currentUser) return
-    void Promise.all([listMonthScheduleRecords('2026-09'), getDocs(collection(db, 'employees'))]).then(([records, employees]) => { const profiles = employees.docs.map(item => ({ employeeId: item.id, ...(item.data() as Omit<EmployeeProfile, 'employeeId'>) })); console.info('[scheduleRecords] loaded', { employeeId: 'all', count: records.length }); setScheduleData(scheduleRecordsToData(records, profiles)); if (!records.length) notify('班表資料尚未匯入') }).catch(error => { console.error('[scheduleRecords] load failed', error); setScheduleData(scheduleRecordsToData([])); notify(error?.code === 'permission-denied' ? '班表讀取權限不足' : '班表資料載入失敗') })
+    void Promise.all([listMonthScheduleRecords('2026-09'), getDocs(collection(db, 'employees')), getMonthLayout('2026-09')]).then(([records, employees, layout]) => { const profiles = employees.docs.map(item => ({ employeeId: item.id, ...(item.data() as Omit<EmployeeProfile, 'employeeId'>) })); console.info('[scheduleRecords] loaded', { employeeId: 'all', count: records.length }); setScheduleData(scheduleRecordsToData(records, profiles, layout)); if (!records.length) notify('班表資料尚未匯入') }).catch(error => { console.error('[scheduleRecords] load failed', error); setScheduleData(scheduleRecordsToData([])); notify(error?.code === 'permission-denied' ? '班表讀取權限不足' : '班表資料載入失敗') })
   }, [currentUser?.employeeId])
 
   useEffect(() => onAuthStateChanged(auth, async user => {
@@ -122,7 +126,7 @@ export default function Home() {
 
 function Nav({ label, icon, active, onClick }: { label: string; icon: React.ReactNode; active: boolean; onClick: () => void }) { return <button className={active ? 'nav-item active' : 'nav-item'} onClick={onClick}>{icon}<span>{label}</span></button> }
 
-function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProfile[] = []): ScheduleData {
+function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProfile[] = [], layout:MonthLayout|null=null): ScheduleData {
   const days = Array.from({ length: 30 }, (_, i) => String(i + 1))
   const profileMap = new Map(profiles.map(profile => [profile.employeeId, profile]))
   const sourceRows = [...sourceSchedule.morning.map(row => ({ ...row, shiftType: 'morning' as const })), ...sourceSchedule.night.map(row => ({ ...row, shiftType: 'night' as const }))]
@@ -140,9 +144,18 @@ function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProf
     fallbackGroups.set(key, record.shiftType === 'morning' ? 'day' : 'night')
     grouped.set(key, current)
   }
+  if(layout) {
+    const ids=new Set(layout.rows.map(r=>r.employeeId));
+    for(const id of grouped.keys()) if(!ids.has(id)) grouped.delete(id);
+    for(const entry of layout.rows){
+      const person=profileMap.get(entry.employeeId);
+      if(!grouped.has(entry.employeeId)&&person)grouped.set(entry.employeeId,{rowId:entry.employeeId,employeeId:entry.employeeId,name:person.name,title:person.title || '',group:entry.group,area:entry.areaCode || '',shifts:Array(30).fill('')});
+      const row=grouped.get(entry.employeeId);if(row)for(const day of entry.blankDays)row.shifts[Number(day)-1]='';
+    }
+  }
   const rowsFor = (shiftType: 'morning' | 'night') => [...grouped.values()]
-    .filter(row => scheduleDisplayGroup(row, fallbackGroups.get(row.employeeId)) === (shiftType === 'morning' ? 'day' : 'night'))
-  return { month: '2026-09', days, morning: rowsFor('morning'), night: rowsFor('night') }
+    .filter(row => (layout?.rows.find(r=>r.employeeId===row.employeeId)?.group || scheduleDisplayGroup(row, fallbackGroups.get(row.employeeId))) === (shiftType === 'morning' ? 'day' : 'night'))
+  return { month: '2026-09', days, morning: rowsFor('morning'), night: rowsFor('night'),layout }
 }
 
 async function showEligibleBroadcast(user: Employee, isCurrent = () => true): Promise<Broadcast | undefined> {
@@ -265,7 +278,7 @@ function ScheduleView({ tab, setTab, data, employeeId }: { tab: string; setTab: 
   const isMine = tab === 'mine'
   const rows = tab === 'morning' ? data?.morning ?? [] : data?.night ?? []
   const personal = data && [...data.night, ...data.morning].find(row => row.employeeId === employeeId)
-  return <><div className="page-intro"><div><p className="eyebrow">每月班表</p><h1>{isMine ? '我的班表' : tab === 'morning' ? '早班全員班表' : '夜班全員班表'}</h1><p className="muted">{isMine ? '本人的正式班表。' : `正式${tab === 'morning' ? '早班' : '夜班'}資料，共 ${rows.length} 筆。`}</p></div></div><div className="tabs"><button className={isMine ? 'tab active' : 'tab'} onClick={() => setTab('mine')}>我的班表</button><button className={tab === 'morning' ? 'tab active' : 'tab'} onClick={() => setTab('morning')}>早班</button><button className={tab === 'night' ? 'tab active' : 'tab'} onClick={() => setTab('night')}>夜班</button></div>{!data ? <p className="loading">正在載入 9 月班表…</p> : isMine ? <PersonalSchedule row={personal ?? undefined} month={data.month} /> : rows.length ? <ScheduleMatrix key={tab} rows={rows} days={data.days} group={tab === 'morning' ? 'day' : 'night'} /> : <p className="loading">班表資料尚未匯入</p>}</>
+  return <><div className="page-intro"><div><p className="eyebrow">每月班表</p><h1>{isMine ? '我的班表' : tab === 'morning' ? '早班全員班表' : '夜班全員班表'}</h1><p className="muted">{isMine ? '本人的正式班表。' : `正式${tab === 'morning' ? '早班' : '夜班'}資料，共 ${rows.length} 筆。`}</p></div></div><div className="tabs"><button className={isMine ? 'tab active' : 'tab'} onClick={() => setTab('mine')}>我的班表</button><button className={tab === 'morning' ? 'tab active' : 'tab'} onClick={() => setTab('morning')}>早班</button><button className={tab === 'night' ? 'tab active' : 'tab'} onClick={() => setTab('night')}>夜班</button></div>{!data ? <p className="loading">正在載入 9 月班表…</p> : isMine ? <PersonalSchedule row={personal ?? undefined} month={data.month} /> : rows.length ? <ScheduleMatrix key={tab} layout={data.layout} rows={rows} days={data.days} group={tab === 'morning' ? 'day' : 'night'} /> : <p className="loading">班表資料尚未匯入</p>}</>
 }
 
 function PersonalSchedule({ row, month }: { row: ScheduleRow | undefined; month: string }) {
@@ -277,9 +290,9 @@ function PersonalSchedule({ row, month }: { row: ScheduleRow | undefined; month:
   return <section className="personal-month"><h2 className="plan-month">{year} 年 {monthNumber} 月</h2><div className="month-grid">{['日','一','二','三','四','五','六'].map(w=><div className="weekday" key={w}>{w}</div>)}{Array.from({length:offset},(_,i)=><div key={'blank'+i} aria-hidden="true" />)}{Array.from({length:count},(_,index)=>{const shift=row.shifts[index] || ''; return <article className={`month-day ${scheduleCellStyle(shift)}`} key={index} aria-label={`${monthNumber}月${index+1}日 ${shift}`}><small>{index+1}</small><strong>{labels[shift] || shift || '—'}</strong></article>})}</div></section>
 }
 
-function ScheduleMatrix({ rows, days, group = 'day' }: { rows: ScheduleRow[]; days: string[]; group?: string }) {
+function ScheduleMatrix({ rows, days, group = 'day',layout }: { rows: ScheduleRow[]; days: string[]; group?: string;layout?:MonthLayout|null }) {
   const scrollRef = useRef<HTMLDivElement>(null)
-  const groups = useMemo(() => scheduleSections(rows, group), [rows, group])
+  const groups = useMemo(() => monthSections(rows, group,layout), [rows, group,layout])
   const areas = groups
   return <><AreaJumpDropdown areas={areas} group={group} scope="front-schedule" scrollTarget={scrollRef} />
     <div className="matrix-wrap" ref={scrollRef}><table className="schedule-matrix"><colgroup><col className="col-title" /><col className="col-id" /><col className="col-name" />{days.map(day => <col className="col-day" key={day} />)}</colgroup><thead><tr><th>職務</th><th>員編</th><th>姓名</th>{days.map((day, index) => <th className={weekdayHeaderStyle(index)} key={day}><span>9月{day}日</span><small>{weekdayAt(index)}</small></th>)}</tr></thead><tbody>{groups.map(section => <Fragment key={section.key}><tr className="area-heading" id={scheduleSectionId('front-schedule',group,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days.length + 3}><span className="area-label">{section.label}</span></td></tr>{section.people.map((row: ScheduleRow) => <tr key={row.rowId} data-employee-id={row.employeeId}><td>{row.title || '—'}</td><td>{row.employeeId}</td><td><strong>{row.name}</strong><small className="pinned-role">{row.title}</small></td>{row.shifts.map((shift, dayIndex) => <td className={scheduleCellStyle(shift)} key={dayIndex}>{shift || '—'}</td>)}</tr>)}</Fragment>)}</tbody></table></div></>
@@ -418,7 +431,7 @@ function FirestoreDispatchView({ isDuty }: { employeeId: string; isDuty: boolean
   const jumpAreas=useMemo(()=>{const areas=new Map();for(const block of visible){if(block.areaCode&&!areas.has(block.areaCode))areas.set(block.areaCode,{key:block.id,areaCode:block.areaCode,label:block.areaName || `${block.areaCode}區`});}return [...areas.values()]},[visible])
   const dispatchLoading = blocksLoading || (dutyLoading && !displayBlocks.length)
   const dispatchError = blocksError || (dutyError ? '班表或員工資料載入失敗，無法產生自動派工' : '')
-  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div><AreaJumpDropdown areas={jumpAreas} group={`${date}-${shift}`} scope="front-dispatch" scrollTarget={dispatchRef} scrollMode="page" /></div>{dutyLoading ? <div className="duty-staff-status">值班資訊載入中…</div> : dutyError ? <div className="result-card result-warning">{dutyError}</div> : <DutyStaffPanel staff={dutyStaff} shift={shift} />}{dispatchError && <div className="result-card result-warning">{dispatchError}</div>}{dispatchLoading ? <p className="loading">派工資料載入中…</p> : !dispatchError && !visible.length ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid" ref={dispatchRef}>{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id} id={scheduleSectionId('front-dispatch',`${date}-${shift}`,block.id)} data-area-code={block.areaCode || undefined}><header><span>{block.areaName || block.areaCode || '特殊派工'}</span></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} /><b>駐點</b><DispatchBlockPeople people={block.stations} /><b>工作重點</b><span>{block.workFocus || '—'}</span></div></article>)}</div>}</>
+  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div><AreaJumpDropdown areas={jumpAreas} group={`${date}-${shift}`} scope="front-dispatch" scrollTarget={dispatchRef} scrollMode="page" /></div>{dutyLoading ? <div className="duty-staff-status">值班資訊載入中…</div> : dutyError ? <div className="result-card result-warning">{dutyError}</div> : <DutyStaffPanel staff={dutyStaff} shift={shift} />}{dispatchError && <div className="result-card result-warning">{dispatchError}</div>}{dispatchLoading ? <p className="loading">派工資料載入中…</p> : !dispatchError && !visible.length ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid" ref={dispatchRef}>{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id} id={scheduleSectionId('front-dispatch',`${date}-${shift}`,block.id)} data-area-code={block.areaCode || undefined}><header><span>{block.areaName || block.areaCode || '特殊派工'}</span></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} /><b>駐點</b><DispatchBlockPeople people={block.stations} /><b>工作重點</b><WorkFocus text={block.workFocus} /></div></article>)}</div>}</>
 }
 
 const formatBlockPeople = (people: DispatchBlockPerson[]) => people.map(person => `${person.employeeId} ${person.employeeName}`.trim()).join('\n')

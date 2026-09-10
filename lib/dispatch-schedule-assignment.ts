@@ -160,7 +160,16 @@ export function assignSchedulesToDispatchBlocks({
       .filter(row => !manuallyAssignedIds.has(row.employee.employeeId))
       .sort((left, right) => employeeAdminOrder(left.employee, right.employee))
     if (!automaticBlocks.length) {
-      remaining.forEach(({ employee, scheduleCode }) => unmatched.push({ ...employee, employeeName: employee.name, scheduleCode, reason: candidates.length ? '該區 block 已由人工修改' : '找不到相同區域與 variant 的 block' }))
+      remaining.forEach(({ employee, scheduleCode }) => {
+        // A month move/re-add explicitly cancels this person's older override.
+        // Preserve everyone else and vehicle/work-focus edits in the same block.
+        const resetCandidates = candidates.filter(block => block.monthAssignmentResetIds?.includes(employee.employeeId));
+        if (resetCandidates.length) {
+          const field = employee.title.startsWith('PT-') ? 'stations' : 'drivers';
+          const target = [...resetCandidates].sort((a,b) => a[field].length-b[field].length)[0];
+          target[field].push(personFrom(employee,scheduleCode));
+        } else unmatched.push({ ...employee, employeeName: employee.name, scheduleCode, reason: candidates.length ? '該區 block 已由人工修改' : '找不到相同區域與 variant 的 block' });
+      });
       return
     }
     const drivers = remaining.filter(row => !row.employee.title.startsWith('PT-')).map(row => personFrom(row.employee, row.scheduleCode))
