@@ -1,4 +1,5 @@
 import { createHash, randomUUID } from 'node:crypto';
+import { preScheduleRoster, preScheduleEntry } from './pre-schedule-order.mjs';
 import {
   monthDays,
   assessDays,
@@ -190,39 +191,30 @@ export function createPreScheduleService({
     });
   }
   async function roster(key) {
-    return (
+    return preScheduleRoster(
       (await monthRef(key).collection('internal').doc('roster').get()).data()
-        ?.people || []
+        ?.people || [],
     );
   }
   async function buildRoster() {
-    const [employees, latest] = await Promise.all([
-      db.collection('employees').where('active', '==', true).get(),
-      db.collection('scheduleRecords').orderBy('date', 'desc').limit(1).get(),
-    ]);
-    const formal = latest.empty
-      ? []
-      : (
-          await db
-            .collection('scheduleRecords')
-            .where('date', '==', latest.docs[0].data().date)
-            .get()
-        ).docs;
-    const shifts = new Map(
-      formal.map((d) => [d.data().employeeId, d.data().shiftType]),
+    const employees = await db
+      .collection('employees')
+      .where('active', '==', true)
+      .get();
+    const people = preScheduleRoster(
+      employees.docs.map((d) => ({
+        employeeId: d.id,
+        name: d.data().name,
+        title: d.data().title || '',
+        group: preScheduleGroup(d.data()),
+      })),
     );
-    const people = employees.docs.map((d) => ({
-      employeeId: d.id,
-      name: d.data().name,
-      title: d.data().title || '',
-      group: preScheduleGroup(d.data(), shifts.get(d.id)),
-    }));
     if (!people.length || people.some((p) => !p.group))
       fail(
         'failed-precondition',
         '部分員工缺少可確認班別，請先確認既有正式員工／班表資料',
       );
-    return people.sort((a, b) => a.employeeId.localeCompare(b.employeeId));
+    return people;
   }
   async function summary(key) {
     const [people, entries, formal, snap, catalog] = await Promise.all([
@@ -236,7 +228,7 @@ export function createPreScheduleService({
       monthRef(key).get(),
       formalCodeCatalog(key, true),
     ]);
-    const values = entries.docs.map((d) => d.data());
+    const values = entries.docs.map((d) => preScheduleEntry(d.data()));
     const currentEmployees = people.length
       ? await db.getAll(
           ...people.map((p) => db.collection('employees').doc(p.employeeId)),
@@ -352,7 +344,11 @@ export function createPreScheduleService({
     const ctx = await context(key);
     if (input.action === 'context') {
       const entry = await ref.collection('entries').doc(a.id).get();
-      return { ...ctx, ownerId: a.id, entry: serializeEntry(entry.data()) };
+      return {
+        ...ctx,
+        ownerId: a.id,
+        entry: serializeEntry(preScheduleEntry(entry.data())),
+      };
     }
     if (!ctx.month)
       fail(
@@ -362,16 +358,31 @@ export function createPreScheduleService({
     if (input.action === 'group') {
       requireDuty(a);
       if (!['day', 'night'].includes(input.group))
-        fail('invalid-argument', '只能選早班組或夜班組');
-      const [people, entries, catalog] = await Promise.all([
+        fail('invalid-argument', '只能選日班或大小夜班');
+      const [people, catalog] = await Promise.all([
         roster(key),
-        ref.collection('entries').where('group', '==', input.group).get(),
         formalCodeCatalog(key),
       ]);
+      const selected = people.filter((p) => p.group === input.group);
+      // Legacy entries may still store an old group. Batch by selected employee IDs,
+      // not that stale field, so switching groups cannot hide saved requests.
+      const batches = [];
+      for (let start = 0; start < selected.length; start += 30)
+        batches.push(
+          ref
+            .collection('entries')
+            .where(
+              'employeeId',
+              'in',
+              selected.slice(start, start + 30).map((p) => p.employeeId),
+            )
+            .get(),
+        );
+      const entries = (await Promise.all(batches)).flatMap((snap) => snap.docs);
       return {
         ...ctx,
-        roster: people.filter((p) => p.group === input.group),
-        entries: entries.docs.map((d) => serializeEntry(d.data())),
+        roster: selected,
+        entries: entries.map((d) => serializeEntry(preScheduleEntry(d.data()))),
         formalCodes: catalog[input.group],
         formalCodeSourceMonth: catalog.sourceMonth,
       };

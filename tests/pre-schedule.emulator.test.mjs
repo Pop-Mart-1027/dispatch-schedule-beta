@@ -507,3 +507,86 @@ test('a concurrent formal edit pauses publication without overwriting or orphani
     null,
   );
 });
+
+test('source groups recover legacy entries in batches without rewriting any saved content or scheduleRecords', async () => {
+  const key = '2026-12';
+  const ref = db.doc(`preScheduleMonths/${key}`);
+  await ref.set({
+    monthKey: key,
+    status: 'reviewing',
+    openAt: Timestamp.fromMillis(clock - 2000),
+    closeAt: Timestamp.fromMillis(clock - 1000),
+  });
+  const roster = [
+    { employeeId: 'B0410', name: '測試 PT', title: 'PT-晚夜', group: 'day' },
+    { employeeId: '96504', name: '測試 O1', title: '調度專員-N', group: 'day' },
+    {
+      employeeId: '93900',
+      name: '測試主管',
+      title: '調度主任',
+      group: 'night',
+    },
+  ];
+  await ref.collection('internal').doc('roster').set({ people: roster });
+  for (const p of roster)
+    await ref
+      .collection('entries')
+      .doc(p.employeeId)
+      .set({
+        employeeId: p.employeeId,
+        employeeName: p.name,
+        jobTitle: p.title,
+        group: p.group,
+        days,
+        arrangedDays: days.map((v) => (v === '上班' ? '夜O4' : null)),
+        submitted: true,
+        revision: 7,
+        note: '保留原內容',
+        updatedAt: Timestamp.fromMillis(clock - 999),
+      });
+  const before = (await ref.collection('entries').get()).docs.map((d) => ({
+    id: d.id,
+    time: d.updateTime.toMillis(),
+    data: d.data(),
+  }));
+  const officialBefore = await formalCount();
+  const getGroup = (group) =>
+    service.handle({
+      auth: auth('M1'),
+      data: { monthKey: key, action: 'group', group },
+    });
+  const day = await getGroup('day'),
+    night = await getGroup('night');
+  assert.deepEqual(
+    day.roster.map((p) => p.employeeId),
+    ['93900'],
+  );
+  assert.deepEqual(
+    night.roster.map((p) => p.employeeId),
+    ['96504', 'B0410'],
+  );
+  assert.equal(day.entries[0].group, 'day');
+  assert.ok(
+    night.entries.every(
+      (e) => e.group === 'night' && e.submitted && e.revision === 7,
+    ),
+  );
+  assert.deepEqual(
+    night.entries.find((e) => e.employeeId === '96504').days,
+    days,
+  );
+  await getGroup('day');
+  assert.deepEqual(
+    (await ref.collection('entries').get()).docs.map((d) => ({
+      id: d.id,
+      time: d.updateTime.toMillis(),
+      data: d.data(),
+    })),
+    before,
+  );
+  assert.deepEqual(
+    (await ref.collection('internal').doc('roster').get()).data().people,
+    roster,
+  );
+  assert.equal(await formalCount(), officialBefore);
+});

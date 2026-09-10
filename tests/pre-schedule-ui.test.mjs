@@ -4,6 +4,11 @@ import { createServer } from 'vite';
 import react from '@vitejs/plugin-react';
 import { chromium } from 'playwright';
 import { toFormalRecords } from '../functions/pre-schedule-domain.mjs';
+import { readFile } from 'node:fs/promises';
+import {
+  preScheduleRoster,
+  preScheduleSource,
+} from '../functions/pre-schedule-order.mjs';
 
 // All people and callable responses in this browser test are isolated fixtures.
 // External requests are blocked; this test never reads/writes production Firebase.
@@ -240,7 +245,7 @@ test('750-person desktop management uses two monthly matrices, shared sorting an
     await page.locator('.pre-month-table thead th').nth(3).textContent(),
     '1（四）',
   );
-  await page.getByRole('button', { name: '夜班組', exact: true }).click();
+  await page.getByRole('tab', { name: '大小夜班', exact: true }).click();
   await page.waitForFunction(
     () => document.querySelectorAll('.pre-month-table tbody tr').length === 250,
   );
@@ -439,4 +444,105 @@ test('reviewed 夜O4 is published and feeds the unchanged dispatch helper into O
   assert.equal(records[0].scheduleCode, '夜O4');
   assert.equal(result.blocks[0].stations[0].employeeId, p.employeeId);
   assert.equal(result.unmatched.length, 0);
+});
+
+test('September matrix exposes day/night tabs, leadership heading and exact O1 team order, preserving entries on switching', async () => {
+  const master = JSON.parse(
+    await readFile(
+      new URL('../output/employee-master.json', import.meta.url),
+      'utf8',
+    ),
+  );
+  const ordered = preScheduleRoster(master);
+  await page.evaluate(
+    ({ people, days }) => {
+      window.state.people = people.slice().reverse();
+      window.state.entries = people.map((p) => ({
+        employeeId: p.employeeId,
+        employeeName: p.name,
+        jobTitle: p.title,
+        group: p.group,
+        days,
+        submitted: true,
+        revision: 7,
+        note: '保留預排',
+      }));
+      window.state.month.status = 'reviewing';
+      window.calls = [];
+      window.manager(false);
+    },
+    { people: ordered, days },
+  );
+  const personRows = page.locator('.pre-month-table tr[data-employee-id]');
+  await page.waitForFunction(
+    () =>
+      document.querySelectorAll('.pre-month-table tr[data-employee-id]')
+        .length === 597,
+  );
+  await page
+    .getByRole('tab', { name: '日班', exact: true })
+    .waitFor({ state: 'visible' });
+  assert.equal(
+    await page
+      .getByRole('tablist', { name: '預排組別' })
+      .getByRole('tab')
+      .count(),
+    2,
+  );
+  assert.deepEqual(
+    await personRows.evaluateAll((rows) =>
+      rows.slice(0, 3).map((r) => r.getAttribute('data-employee-id')),
+    ),
+    ['93900', '93339', '95011'],
+  );
+  assert.equal(
+    await page.locator('.pre-source-heading').first().textContent(),
+    '單位主官',
+  );
+  await page.getByRole('tab', { name: '大小夜班', exact: true }).click();
+  await page.waitForFunction(
+    () =>
+      document.querySelectorAll('.pre-month-table tr[data-employee-id]')
+        .length === 153,
+  );
+  const ids = await personRows.evaluateAll((rows) =>
+    rows.map((r) => r.getAttribute('data-employee-id')),
+  );
+  assert.equal(ids.indexOf('96504') + 1, 122);
+  assert.deepEqual(ids.slice(121, 126), [
+    '96504',
+    'B3175',
+    'B5784',
+    'B0410',
+    'B5167',
+  ]);
+  assert.ok(ids.every((id) => preScheduleSource(id).category === 'area'));
+  const sourceHeading = await page
+    .locator('tr[data-employee-id="96504"]')
+    .evaluate((el) => el.previousElementSibling.textContent);
+  assert.equal(sourceHeading, 'O1區');
+  await page.getByLabel('搜尋預排員工').fill('96504');
+  assert.equal(await personRows.count(), 1);
+  await page.getByRole('tab', { name: '日班', exact: true }).click();
+  await page.waitForFunction(
+    () =>
+      document.querySelectorAll('.pre-month-table tr[data-employee-id]')
+        .length === 597,
+  );
+  assert.equal(await page.getByLabel('搜尋預排員工').inputValue(), '');
+  assert.equal(
+    await page.evaluate(
+      () =>
+        window.calls.filter((c) => !['group', 'context'].includes(c.action))
+          .length,
+    ),
+    0,
+  );
+  assert.ok(
+    await page.evaluate(() =>
+      window.state.entries.every(
+        (e) => e.submitted && e.revision === 7 && e.note === '保留預排',
+      ),
+    ),
+  );
 });

@@ -1,0 +1,7517 @@
+{
+  "source": "public/september-schedules.json",
+  "sourceSha256": "d0d484ea93f737dff7f560d4796de27083bb42f501d453bd5ac8b306e2b6bb9d",
+  "month": "2026-09",
+  "rows": [
+    {
+      "employeeId": "93900",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 4,
+      "sourceOrder": 0,
+      "section": "單位主官",
+      "category": "supervisor",
+      "scheduleDisplayOrder": 0
+    },
+    {
+      "employeeId": "93339",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 5,
+      "sourceOrder": 1,
+      "section": "單位主官",
+      "category": "supervisor",
+      "scheduleDisplayOrder": 1
+    },
+    {
+      "employeeId": "95011",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 6,
+      "sourceOrder": 2,
+      "section": "單位主官",
+      "category": "supervisor",
+      "scheduleDisplayOrder": 2
+    },
+    {
+      "employeeId": "95422",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 135,
+      "sourceOrder": 89,
+      "section": "單位主官",
+      "category": "supervisor",
+      "scheduleDisplayOrder": 3
+    },
+    {
+      "employeeId": "94268",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 249,
+      "sourceOrder": 184,
+      "section": "單位主官",
+      "category": "supervisor",
+      "scheduleDisplayOrder": 4
+    },
+    {
+      "employeeId": "95660",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 327,
+      "sourceOrder": 250,
+      "section": "單位主官",
+      "category": "supervisor",
+      "scheduleDisplayOrder": 5
+    },
+    {
+      "employeeId": "94245",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 434,
+      "sourceOrder": 334,
+      "section": "單位主官",
+      "category": "supervisor",
+      "scheduleDisplayOrder": 6
+    },
+    {
+      "employeeId": "95896",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 524,
+      "sourceOrder": 405,
+      "section": "單位主官",
+      "category": "supervisor",
+      "scheduleDisplayOrder": 7
+    },
+    {
+      "employeeId": "95195",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 651,
+      "sourceOrder": 506,
+      "section": "單位主官",
+      "category": "supervisor",
+      "scheduleDisplayOrder": 8
+    },
+    {
+      "employeeId": "93950",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 702,
+      "sourceOrder": 546,
+      "section": "單位主官",
+      "category": "supervisor",
+      "scheduleDisplayOrder": 9
+    },
+    {
+      "employeeId": "93890",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 8,
+      "sourceOrder": 3,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 10
+    },
+    {
+      "employeeId": "94621",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 9,
+      "sourceOrder": 4,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 11
+    },
+    {
+      "employeeId": "95136",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 10,
+      "sourceOrder": 5,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 12
+    },
+    {
+      "employeeId": "95451",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 11,
+      "sourceOrder": 6,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 13
+    },
+    {
+      "employeeId": "95899",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 12,
+      "sourceOrder": 7,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 14
+    },
+    {
+      "employeeId": "95627",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 13,
+      "sourceOrder": 8,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 15
+    },
+    {
+      "employeeId": "B1133",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 14,
+      "sourceOrder": 9,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 16
+    },
+    {
+      "employeeId": "97305",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 47,
+      "sourceOrder": 23,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 17
+    },
+    {
+      "employeeId": "B0036",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 571,
+      "sourceOrder": 440,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 18
+    },
+    {
+      "employeeId": "95964",
+      "group": "day",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 9,
+      "sourceOrder": 3,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 19
+    },
+    {
+      "employeeId": "96409",
+      "group": "day",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 10,
+      "sourceOrder": 4,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 20
+    },
+    {
+      "employeeId": "B0957",
+      "group": "day",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 11,
+      "sourceOrder": 5,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 21
+    },
+    {
+      "employeeId": "B1460",
+      "group": "day",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 12,
+      "sourceOrder": 6,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 22
+    },
+    {
+      "employeeId": "96746",
+      "group": "day",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 13,
+      "sourceOrder": 7,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 23
+    },
+    {
+      "employeeId": "B3658",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 25,
+      "sourceOrder": 10,
+      "section": "文書小秘",
+      "category": "area",
+      "scheduleDisplayOrder": 24
+    },
+    {
+      "employeeId": "B3880",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 26,
+      "sourceOrder": 11,
+      "section": "文書小秘",
+      "category": "area",
+      "scheduleDisplayOrder": 25
+    },
+    {
+      "employeeId": "B5311",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 27,
+      "sourceOrder": 12,
+      "section": "文書小秘",
+      "category": "area",
+      "scheduleDisplayOrder": 26
+    },
+    {
+      "employeeId": "93947",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 29,
+      "sourceOrder": 13,
+      "section": "工兵小隊-BBK-0278",
+      "category": "area",
+      "scheduleDisplayOrder": 27
+    },
+    {
+      "employeeId": "B5456",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 30,
+      "sourceOrder": 14,
+      "section": "工兵小隊-BBK-0278",
+      "category": "area",
+      "scheduleDisplayOrder": 28
+    },
+    {
+      "employeeId": "B2382",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 33,
+      "sourceOrder": 15,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 29
+    },
+    {
+      "employeeId": "B2577",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 34,
+      "sourceOrder": 16,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 30
+    },
+    {
+      "employeeId": "B4943",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 35,
+      "sourceOrder": 17,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 31
+    },
+    {
+      "employeeId": "B5039",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 36,
+      "sourceOrder": 18,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 32
+    },
+    {
+      "employeeId": "B0996",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 37,
+      "sourceOrder": 19,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 33
+    },
+    {
+      "employeeId": "96801",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 41,
+      "sourceOrder": 20,
+      "section": "A2區",
+      "category": "area",
+      "scheduleDisplayOrder": 34
+    },
+    {
+      "employeeId": "B1325",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 42,
+      "sourceOrder": 21,
+      "section": "A2區",
+      "category": "area",
+      "scheduleDisplayOrder": 35
+    },
+    {
+      "employeeId": "B3069",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 43,
+      "sourceOrder": 22,
+      "section": "A2區",
+      "category": "area",
+      "scheduleDisplayOrder": 36
+    },
+    {
+      "employeeId": "B2971",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 48,
+      "sourceOrder": 24,
+      "section": "J區",
+      "category": "area",
+      "scheduleDisplayOrder": 37
+    },
+    {
+      "employeeId": "95413",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 49,
+      "sourceOrder": 25,
+      "section": "J區",
+      "category": "area",
+      "scheduleDisplayOrder": 38
+    },
+    {
+      "employeeId": "B4081",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 50,
+      "sourceOrder": 26,
+      "section": "J區",
+      "category": "area",
+      "scheduleDisplayOrder": 39
+    },
+    {
+      "employeeId": "B1369",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 51,
+      "sourceOrder": 27,
+      "section": "J區",
+      "category": "area",
+      "scheduleDisplayOrder": 40
+    },
+    {
+      "employeeId": "96780",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 54,
+      "sourceOrder": 28,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 41
+    },
+    {
+      "employeeId": "B1202",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 55,
+      "sourceOrder": 29,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 42
+    },
+    {
+      "employeeId": "B2477",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 56,
+      "sourceOrder": 30,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 43
+    },
+    {
+      "employeeId": "B3037",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 57,
+      "sourceOrder": 31,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 44
+    },
+    {
+      "employeeId": "B1461",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 58,
+      "sourceOrder": 32,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 45
+    },
+    {
+      "employeeId": "B4652",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 59,
+      "sourceOrder": 33,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 46
+    },
+    {
+      "employeeId": "97880",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 60,
+      "sourceOrder": 34,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 47
+    },
+    {
+      "employeeId": "B1082",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 61,
+      "sourceOrder": 35,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 48
+    },
+    {
+      "employeeId": "B3623",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 62,
+      "sourceOrder": 36,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 49
+    },
+    {
+      "employeeId": "B3816",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 63,
+      "sourceOrder": 37,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 50
+    },
+    {
+      "employeeId": "B3915",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 64,
+      "sourceOrder": 38,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 51
+    },
+    {
+      "employeeId": "B0066",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 65,
+      "sourceOrder": 39,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 52
+    },
+    {
+      "employeeId": "B4846",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 66,
+      "sourceOrder": 40,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 53
+    },
+    {
+      "employeeId": "B6086",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 67,
+      "sourceOrder": 41,
+      "section": "J2區",
+      "category": "area",
+      "scheduleDisplayOrder": 54
+    },
+    {
+      "employeeId": "B3276",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 77,
+      "sourceOrder": 48,
+      "section": "晚PT數字",
+      "category": "area",
+      "scheduleDisplayOrder": 55
+    },
+    {
+      "employeeId": "B3428",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 78,
+      "sourceOrder": 49,
+      "section": "晚PT數字",
+      "category": "area",
+      "scheduleDisplayOrder": 56
+    },
+    {
+      "employeeId": "B3884",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 80,
+      "sourceOrder": 51,
+      "section": "晚PT數字",
+      "category": "area",
+      "scheduleDisplayOrder": 57
+    },
+    {
+      "employeeId": "B3885",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 81,
+      "sourceOrder": 52,
+      "section": "晚PT數字",
+      "category": "area",
+      "scheduleDisplayOrder": 58
+    },
+    {
+      "employeeId": "B3917",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 82,
+      "sourceOrder": 53,
+      "section": "晚PT數字",
+      "category": "area",
+      "scheduleDisplayOrder": 59
+    },
+    {
+      "employeeId": "B5828",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 83,
+      "sourceOrder": 54,
+      "section": "晚PT數字",
+      "category": "area",
+      "scheduleDisplayOrder": 60
+    },
+    {
+      "employeeId": "B1618",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 87,
+      "sourceOrder": 55,
+      "section": "C區",
+      "category": "area",
+      "scheduleDisplayOrder": 61
+    },
+    {
+      "employeeId": "B2319",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 88,
+      "sourceOrder": 56,
+      "section": "C區",
+      "category": "area",
+      "scheduleDisplayOrder": 62
+    },
+    {
+      "employeeId": "B3801",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 89,
+      "sourceOrder": 57,
+      "section": "C區",
+      "category": "area",
+      "scheduleDisplayOrder": 63
+    },
+    {
+      "employeeId": "B5257",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 90,
+      "sourceOrder": 58,
+      "section": "C區",
+      "category": "area",
+      "scheduleDisplayOrder": 64
+    },
+    {
+      "employeeId": "B5959",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 91,
+      "sourceOrder": 59,
+      "section": "C區",
+      "category": "area",
+      "scheduleDisplayOrder": 65
+    },
+    {
+      "employeeId": "B0585",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 94,
+      "sourceOrder": 60,
+      "section": "C2區",
+      "category": "area",
+      "scheduleDisplayOrder": 66
+    },
+    {
+      "employeeId": "B5437",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 95,
+      "sourceOrder": 61,
+      "section": "C2區",
+      "category": "area",
+      "scheduleDisplayOrder": 67
+    },
+    {
+      "employeeId": "B5549",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 96,
+      "sourceOrder": 62,
+      "section": "C2區",
+      "category": "area",
+      "scheduleDisplayOrder": 68
+    },
+    {
+      "employeeId": "B5552",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 97,
+      "sourceOrder": 63,
+      "section": "C2區",
+      "category": "area",
+      "scheduleDisplayOrder": 69
+    },
+    {
+      "employeeId": "B3435",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 100,
+      "sourceOrder": 65,
+      "section": "C2區",
+      "category": "area",
+      "scheduleDisplayOrder": 70
+    },
+    {
+      "employeeId": "B4364",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 101,
+      "sourceOrder": 66,
+      "section": "C2區",
+      "category": "area",
+      "scheduleDisplayOrder": 71
+    },
+    {
+      "employeeId": "B5632",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 102,
+      "sourceOrder": 67,
+      "section": "C2區",
+      "category": "area",
+      "scheduleDisplayOrder": 72
+    },
+    {
+      "employeeId": "B5933",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 103,
+      "sourceOrder": 68,
+      "section": "C2區",
+      "category": "area",
+      "scheduleDisplayOrder": 73
+    },
+    {
+      "employeeId": "B2871",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 105,
+      "sourceOrder": 69,
+      "section": "U區",
+      "category": "area",
+      "scheduleDisplayOrder": 74
+    },
+    {
+      "employeeId": "B3351",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 106,
+      "sourceOrder": 70,
+      "section": "U區",
+      "category": "area",
+      "scheduleDisplayOrder": 75
+    },
+    {
+      "employeeId": "B2337",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 110,
+      "sourceOrder": 71,
+      "section": "U區",
+      "category": "area",
+      "scheduleDisplayOrder": 76
+    },
+    {
+      "employeeId": "B6008",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 111,
+      "sourceOrder": 72,
+      "section": "U區",
+      "category": "area",
+      "scheduleDisplayOrder": 77
+    },
+    {
+      "employeeId": "B6258",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 112,
+      "sourceOrder": 73,
+      "section": "U區",
+      "category": "area",
+      "scheduleDisplayOrder": 78
+    },
+    {
+      "employeeId": "B1704",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 114,
+      "sourceOrder": 74,
+      "section": "U區BFR-5181",
+      "category": "area",
+      "scheduleDisplayOrder": 79
+    },
+    {
+      "employeeId": "B0403",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 115,
+      "sourceOrder": 75,
+      "section": "U區BFR-5181",
+      "category": "area",
+      "scheduleDisplayOrder": 80
+    },
+    {
+      "employeeId": "B5949",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 116,
+      "sourceOrder": 76,
+      "section": "U區BFR-5181",
+      "category": "area",
+      "scheduleDisplayOrder": 81
+    },
+    {
+      "employeeId": "B1209",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 119,
+      "sourceOrder": 78,
+      "section": "U區BFR-5181",
+      "category": "area",
+      "scheduleDisplayOrder": 82
+    },
+    {
+      "employeeId": "B2015",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 120,
+      "sourceOrder": 79,
+      "section": "U區BFR-5181",
+      "category": "area",
+      "scheduleDisplayOrder": 83
+    },
+    {
+      "employeeId": "97607",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 121,
+      "sourceOrder": 80,
+      "section": "U區BFR-5181",
+      "category": "area",
+      "scheduleDisplayOrder": 84
+    },
+    {
+      "employeeId": "B6072",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 122,
+      "sourceOrder": 81,
+      "section": "U區BFR-5181",
+      "category": "area",
+      "scheduleDisplayOrder": 85
+    },
+    {
+      "employeeId": "B6296",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 123,
+      "sourceOrder": 82,
+      "section": "U區BFR-5181",
+      "category": "area",
+      "scheduleDisplayOrder": 86
+    },
+    {
+      "employeeId": "B3288",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 126,
+      "sourceOrder": 83,
+      "section": "B1區",
+      "category": "area",
+      "scheduleDisplayOrder": 87
+    },
+    {
+      "employeeId": "B4029",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 127,
+      "sourceOrder": 84,
+      "section": "B1區",
+      "category": "area",
+      "scheduleDisplayOrder": 88
+    },
+    {
+      "employeeId": "B2902",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 128,
+      "sourceOrder": 85,
+      "section": "B1區",
+      "category": "area",
+      "scheduleDisplayOrder": 89
+    },
+    {
+      "employeeId": "95640",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 130,
+      "sourceOrder": 86,
+      "section": "B2區",
+      "category": "area",
+      "scheduleDisplayOrder": 90
+    },
+    {
+      "employeeId": "B2841",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 131,
+      "sourceOrder": 87,
+      "section": "B2區",
+      "category": "area",
+      "scheduleDisplayOrder": 91
+    },
+    {
+      "employeeId": "B4569",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 132,
+      "sourceOrder": 88,
+      "section": "B2區",
+      "category": "area",
+      "scheduleDisplayOrder": 92
+    },
+    {
+      "employeeId": "B1699",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 136,
+      "sourceOrder": 90,
+      "section": "B3區",
+      "category": "area",
+      "scheduleDisplayOrder": 93
+    },
+    {
+      "employeeId": "B1015",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 137,
+      "sourceOrder": 91,
+      "section": "B3區",
+      "category": "area",
+      "scheduleDisplayOrder": 94
+    },
+    {
+      "employeeId": "B4293",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 140,
+      "sourceOrder": 92,
+      "section": "B4區",
+      "category": "area",
+      "scheduleDisplayOrder": 95
+    },
+    {
+      "employeeId": "B4870",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 141,
+      "sourceOrder": 93,
+      "section": "B4區",
+      "category": "area",
+      "scheduleDisplayOrder": 96
+    },
+    {
+      "employeeId": "B6095",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 142,
+      "sourceOrder": 94,
+      "section": "B4區",
+      "category": "area",
+      "scheduleDisplayOrder": 97
+    },
+    {
+      "employeeId": "B0079",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 149,
+      "sourceOrder": 95,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 98
+    },
+    {
+      "employeeId": "B0880",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 150,
+      "sourceOrder": 96,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 99
+    },
+    {
+      "employeeId": "B1044",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 151,
+      "sourceOrder": 97,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 100
+    },
+    {
+      "employeeId": "B1100",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 152,
+      "sourceOrder": 98,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 101
+    },
+    {
+      "employeeId": "B2236",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 153,
+      "sourceOrder": 99,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 102
+    },
+    {
+      "employeeId": "B2768",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 154,
+      "sourceOrder": 100,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 103
+    },
+    {
+      "employeeId": "B3677",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 155,
+      "sourceOrder": 101,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 104
+    },
+    {
+      "employeeId": "B3721",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 156,
+      "sourceOrder": 102,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 105
+    },
+    {
+      "employeeId": "B4027",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 157,
+      "sourceOrder": 103,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 106
+    },
+    {
+      "employeeId": "B4416",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 158,
+      "sourceOrder": 104,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 107
+    },
+    {
+      "employeeId": "B4630",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 159,
+      "sourceOrder": 105,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 108
+    },
+    {
+      "employeeId": "B5205",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 160,
+      "sourceOrder": 106,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 109
+    },
+    {
+      "employeeId": "B5613",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 161,
+      "sourceOrder": 107,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 110
+    },
+    {
+      "employeeId": "B5664",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 162,
+      "sourceOrder": 108,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 111
+    },
+    {
+      "employeeId": "B6051",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 163,
+      "sourceOrder": 109,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 112
+    },
+    {
+      "employeeId": "B6299",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 164,
+      "sourceOrder": 110,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 113
+    },
+    {
+      "employeeId": "B0084",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 165,
+      "sourceOrder": 111,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 114
+    },
+    {
+      "employeeId": "B1075",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 167,
+      "sourceOrder": 113,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 115
+    },
+    {
+      "employeeId": "B1759",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 168,
+      "sourceOrder": 114,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 116
+    },
+    {
+      "employeeId": "B4478",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 171,
+      "sourceOrder": 117,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 117
+    },
+    {
+      "employeeId": "B4662",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 172,
+      "sourceOrder": 118,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 118
+    },
+    {
+      "employeeId": "B5067",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 174,
+      "sourceOrder": 120,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 119
+    },
+    {
+      "employeeId": "B5447",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 175,
+      "sourceOrder": 121,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 120
+    },
+    {
+      "employeeId": "B5588",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 176,
+      "sourceOrder": 122,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 121
+    },
+    {
+      "employeeId": "B5651",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 177,
+      "sourceOrder": 123,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 122
+    },
+    {
+      "employeeId": "B5787",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 178,
+      "sourceOrder": 124,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 123
+    },
+    {
+      "employeeId": "B6110",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 179,
+      "sourceOrder": 125,
+      "section": "B機動-BKK-9183/ATT-5950",
+      "category": "area",
+      "scheduleDisplayOrder": 124
+    },
+    {
+      "employeeId": "B4260",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 181,
+      "sourceOrder": 126,
+      "section": "D1區",
+      "category": "area",
+      "scheduleDisplayOrder": 125
+    },
+    {
+      "employeeId": "B1368",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 182,
+      "sourceOrder": 127,
+      "section": "D1區",
+      "category": "area",
+      "scheduleDisplayOrder": 126
+    },
+    {
+      "employeeId": "B5805",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 183,
+      "sourceOrder": 128,
+      "section": "D1區",
+      "category": "area",
+      "scheduleDisplayOrder": 127
+    },
+    {
+      "employeeId": "B2056",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 185,
+      "sourceOrder": 129,
+      "section": "D2區",
+      "category": "area",
+      "scheduleDisplayOrder": 128
+    },
+    {
+      "employeeId": "B2424",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 186,
+      "sourceOrder": 130,
+      "section": "D2區",
+      "category": "area",
+      "scheduleDisplayOrder": 129
+    },
+    {
+      "employeeId": "B4942",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 187,
+      "sourceOrder": 131,
+      "section": "D2區",
+      "category": "area",
+      "scheduleDisplayOrder": 130
+    },
+    {
+      "employeeId": "B1715",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 190,
+      "sourceOrder": 132,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 131
+    },
+    {
+      "employeeId": "B3894",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 191,
+      "sourceOrder": 133,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 132
+    },
+    {
+      "employeeId": "B4156",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 192,
+      "sourceOrder": 134,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 133
+    },
+    {
+      "employeeId": "B3664",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 194,
+      "sourceOrder": 135,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 134
+    },
+    {
+      "employeeId": "B3741",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 195,
+      "sourceOrder": 136,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 135
+    },
+    {
+      "employeeId": "B3958",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 196,
+      "sourceOrder": 137,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 136
+    },
+    {
+      "employeeId": "B2296",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 197,
+      "sourceOrder": 138,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 137
+    },
+    {
+      "employeeId": "B0281",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 198,
+      "sourceOrder": 139,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 138
+    },
+    {
+      "employeeId": "98183",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 199,
+      "sourceOrder": 140,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 139
+    },
+    {
+      "employeeId": "B4469",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 200,
+      "sourceOrder": 141,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 140
+    },
+    {
+      "employeeId": "B3882",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 201,
+      "sourceOrder": 142,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 141
+    },
+    {
+      "employeeId": "B5951",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 202,
+      "sourceOrder": 143,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 142
+    },
+    {
+      "employeeId": "95963",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 204,
+      "sourceOrder": 144,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 143
+    },
+    {
+      "employeeId": "97859",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 205,
+      "sourceOrder": 145,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 144
+    },
+    {
+      "employeeId": "B3979",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 206,
+      "sourceOrder": 146,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 145
+    },
+    {
+      "employeeId": "B4417",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 207,
+      "sourceOrder": 147,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 146
+    },
+    {
+      "employeeId": "B4098",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 212,
+      "sourceOrder": 152,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 147
+    },
+    {
+      "employeeId": "B5166",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 213,
+      "sourceOrder": 153,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 148
+    },
+    {
+      "employeeId": "B5111",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 214,
+      "sourceOrder": 154,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 149
+    },
+    {
+      "employeeId": "B3822",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 215,
+      "sourceOrder": 155,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 150
+    },
+    {
+      "employeeId": "B5017",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 216,
+      "sourceOrder": 156,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 151
+    },
+    {
+      "employeeId": "B5806",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 217,
+      "sourceOrder": 157,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 152
+    },
+    {
+      "employeeId": "B5887",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 218,
+      "sourceOrder": 158,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 153
+    },
+    {
+      "employeeId": "B6202",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 219,
+      "sourceOrder": 159,
+      "section": "D3區",
+      "category": "area",
+      "scheduleDisplayOrder": 154
+    },
+    {
+      "employeeId": "95967",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 223,
+      "sourceOrder": 160,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 155
+    },
+    {
+      "employeeId": "B0770",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 224,
+      "sourceOrder": 161,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 156
+    },
+    {
+      "employeeId": "B2184",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 225,
+      "sourceOrder": 162,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 157
+    },
+    {
+      "employeeId": "97983",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 226,
+      "sourceOrder": 163,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 158
+    },
+    {
+      "employeeId": "B4912",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 227,
+      "sourceOrder": 164,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 159
+    },
+    {
+      "employeeId": "B4964",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 228,
+      "sourceOrder": 165,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 160
+    },
+    {
+      "employeeId": "B5544",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 229,
+      "sourceOrder": 166,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 161
+    },
+    {
+      "employeeId": "B1581",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 231,
+      "sourceOrder": 167,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 162
+    },
+    {
+      "employeeId": "B3347",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 232,
+      "sourceOrder": 168,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 163
+    },
+    {
+      "employeeId": "B4629",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 233,
+      "sourceOrder": 169,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 164
+    },
+    {
+      "employeeId": "B5136",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 234,
+      "sourceOrder": 170,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 165
+    },
+    {
+      "employeeId": "B5298",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 235,
+      "sourceOrder": 171,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 166
+    },
+    {
+      "employeeId": "B5392",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 236,
+      "sourceOrder": 172,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 167
+    },
+    {
+      "employeeId": "B5649",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 237,
+      "sourceOrder": 173,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 168
+    },
+    {
+      "employeeId": "B5748",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 238,
+      "sourceOrder": 174,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 169
+    },
+    {
+      "employeeId": "B6030",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 239,
+      "sourceOrder": 175,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 170
+    },
+    {
+      "employeeId": "B2313",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 240,
+      "sourceOrder": 176,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 171
+    },
+    {
+      "employeeId": "B2606",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 241,
+      "sourceOrder": 177,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 172
+    },
+    {
+      "employeeId": "B4568",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 242,
+      "sourceOrder": 178,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 173
+    },
+    {
+      "employeeId": "B6069",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 245,
+      "sourceOrder": 181,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 174
+    },
+    {
+      "employeeId": "B6185",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 246,
+      "sourceOrder": 182,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 175
+    },
+    {
+      "employeeId": "B6234",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 247,
+      "sourceOrder": 183,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 176
+    },
+    {
+      "employeeId": "96438",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 250,
+      "sourceOrder": 185,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 177
+    },
+    {
+      "employeeId": "B2673",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 251,
+      "sourceOrder": 186,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 178
+    },
+    {
+      "employeeId": "B5621",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 252,
+      "sourceOrder": 187,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 179
+    },
+    {
+      "employeeId": "B5907",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 253,
+      "sourceOrder": 188,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 180
+    },
+    {
+      "employeeId": "B6264",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 254,
+      "sourceOrder": 189,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 181
+    },
+    {
+      "employeeId": "B6291",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 255,
+      "sourceOrder": 190,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 182
+    },
+    {
+      "employeeId": "B1702",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 257,
+      "sourceOrder": 191,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 183
+    },
+    {
+      "employeeId": "B3004",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 258,
+      "sourceOrder": 192,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 184
+    },
+    {
+      "employeeId": "B4085",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 259,
+      "sourceOrder": 193,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 185
+    },
+    {
+      "employeeId": "B4712",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 260,
+      "sourceOrder": 194,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 186
+    },
+    {
+      "employeeId": "B5860",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 261,
+      "sourceOrder": 195,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 187
+    },
+    {
+      "employeeId": "B6282",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 262,
+      "sourceOrder": 196,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 188
+    },
+    {
+      "employeeId": "B2626",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 264,
+      "sourceOrder": 197,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 189
+    },
+    {
+      "employeeId": "B3076",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 266,
+      "sourceOrder": 199,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 190
+    },
+    {
+      "employeeId": "B3252",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 267,
+      "sourceOrder": 200,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 191
+    },
+    {
+      "employeeId": "B4475",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 268,
+      "sourceOrder": 201,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 192
+    },
+    {
+      "employeeId": "B4904",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 269,
+      "sourceOrder": 202,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 193
+    },
+    {
+      "employeeId": "B4947",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 270,
+      "sourceOrder": 203,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 194
+    },
+    {
+      "employeeId": "B5545",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 271,
+      "sourceOrder": 204,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 195
+    },
+    {
+      "employeeId": "B5913",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 272,
+      "sourceOrder": 205,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 196
+    },
+    {
+      "employeeId": "B6297",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 273,
+      "sourceOrder": 206,
+      "section": "F區",
+      "category": "area",
+      "scheduleDisplayOrder": 197
+    },
+    {
+      "employeeId": "B1153",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 276,
+      "sourceOrder": 207,
+      "section": "G區",
+      "category": "area",
+      "scheduleDisplayOrder": 198
+    },
+    {
+      "employeeId": "B3785",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 277,
+      "sourceOrder": 208,
+      "section": "G區",
+      "category": "area",
+      "scheduleDisplayOrder": 199
+    },
+    {
+      "employeeId": "B4586",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 278,
+      "sourceOrder": 209,
+      "section": "G區",
+      "category": "area",
+      "scheduleDisplayOrder": 200
+    },
+    {
+      "employeeId": "B5377",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 279,
+      "sourceOrder": 210,
+      "section": "G區",
+      "category": "area",
+      "scheduleDisplayOrder": 201
+    },
+    {
+      "employeeId": "B5474",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 280,
+      "sourceOrder": 211,
+      "section": "G區",
+      "category": "area",
+      "scheduleDisplayOrder": 202
+    },
+    {
+      "employeeId": "B5526",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 281,
+      "sourceOrder": 212,
+      "section": "G區",
+      "category": "area",
+      "scheduleDisplayOrder": 203
+    },
+    {
+      "employeeId": "B1310",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 284,
+      "sourceOrder": 213,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 204
+    },
+    {
+      "employeeId": "B2560",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 285,
+      "sourceOrder": 214,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 205
+    },
+    {
+      "employeeId": "B3592",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 286,
+      "sourceOrder": 215,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 206
+    },
+    {
+      "employeeId": "B4118",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 287,
+      "sourceOrder": 216,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 207
+    },
+    {
+      "employeeId": "B4472",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 288,
+      "sourceOrder": 217,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 208
+    },
+    {
+      "employeeId": "B5089",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 289,
+      "sourceOrder": 218,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 209
+    },
+    {
+      "employeeId": "B5665",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 290,
+      "sourceOrder": 219,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 210
+    },
+    {
+      "employeeId": "B5690",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 291,
+      "sourceOrder": 220,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 211
+    },
+    {
+      "employeeId": "B5987",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 292,
+      "sourceOrder": 221,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 212
+    },
+    {
+      "employeeId": "B6124",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 293,
+      "sourceOrder": 222,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 213
+    },
+    {
+      "employeeId": "97306",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 295,
+      "sourceOrder": 224,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 214
+    },
+    {
+      "employeeId": "B1862",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 296,
+      "sourceOrder": 225,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 215
+    },
+    {
+      "employeeId": "B2570",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 297,
+      "sourceOrder": 226,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 216
+    },
+    {
+      "employeeId": "B3845",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 298,
+      "sourceOrder": 227,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 217
+    },
+    {
+      "employeeId": "B4025",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 299,
+      "sourceOrder": 228,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 218
+    },
+    {
+      "employeeId": "B4399",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 300,
+      "sourceOrder": 229,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 219
+    },
+    {
+      "employeeId": "B4479",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 301,
+      "sourceOrder": 230,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 220
+    },
+    {
+      "employeeId": "B4983",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 302,
+      "sourceOrder": 231,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 221
+    },
+    {
+      "employeeId": "B5997",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 304,
+      "sourceOrder": 233,
+      "section": "G2區",
+      "category": "area",
+      "scheduleDisplayOrder": 222
+    },
+    {
+      "employeeId": "B2152",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 307,
+      "sourceOrder": 234,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 223
+    },
+    {
+      "employeeId": "B0340",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 308,
+      "sourceOrder": 235,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 224
+    },
+    {
+      "employeeId": "B5164",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 309,
+      "sourceOrder": 236,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 225
+    },
+    {
+      "employeeId": "B3126",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 310,
+      "sourceOrder": 237,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 226
+    },
+    {
+      "employeeId": "B4393",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 311,
+      "sourceOrder": 238,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 227
+    },
+    {
+      "employeeId": "B6093",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 312,
+      "sourceOrder": 239,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 228
+    },
+    {
+      "employeeId": "B2537",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 314,
+      "sourceOrder": 240,
+      "section": "P2區",
+      "category": "area",
+      "scheduleDisplayOrder": 229
+    },
+    {
+      "employeeId": "B2708",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 315,
+      "sourceOrder": 241,
+      "section": "P2區",
+      "category": "area",
+      "scheduleDisplayOrder": 230
+    },
+    {
+      "employeeId": "B3844",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 316,
+      "sourceOrder": 242,
+      "section": "P2區",
+      "category": "area",
+      "scheduleDisplayOrder": 231
+    },
+    {
+      "employeeId": "98324",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 318,
+      "sourceOrder": 243,
+      "section": "P2區",
+      "category": "area",
+      "scheduleDisplayOrder": 232
+    },
+    {
+      "employeeId": "B3361",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 320,
+      "sourceOrder": 245,
+      "section": "P2區",
+      "category": "area",
+      "scheduleDisplayOrder": 233
+    },
+    {
+      "employeeId": "B3485",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 321,
+      "sourceOrder": 246,
+      "section": "P2區",
+      "category": "area",
+      "scheduleDisplayOrder": 234
+    },
+    {
+      "employeeId": "B5796",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 322,
+      "sourceOrder": 247,
+      "section": "P2區",
+      "category": "area",
+      "scheduleDisplayOrder": 235
+    },
+    {
+      "employeeId": "B6100",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 324,
+      "sourceOrder": 249,
+      "section": "P2區",
+      "category": "area",
+      "scheduleDisplayOrder": 236
+    },
+    {
+      "employeeId": "93924",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 328,
+      "sourceOrder": 251,
+      "section": "H區",
+      "category": "area",
+      "scheduleDisplayOrder": 237
+    },
+    {
+      "employeeId": "95418",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 329,
+      "sourceOrder": 252,
+      "section": "H區",
+      "category": "area",
+      "scheduleDisplayOrder": 238
+    },
+    {
+      "employeeId": "B2101",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 330,
+      "sourceOrder": 253,
+      "section": "H區",
+      "category": "area",
+      "scheduleDisplayOrder": 239
+    },
+    {
+      "employeeId": "B4294",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 331,
+      "sourceOrder": 254,
+      "section": "H區",
+      "category": "area",
+      "scheduleDisplayOrder": 240
+    },
+    {
+      "employeeId": "B5169",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 332,
+      "sourceOrder": 255,
+      "section": "H區",
+      "category": "area",
+      "scheduleDisplayOrder": 241
+    },
+    {
+      "employeeId": "B5801",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 333,
+      "sourceOrder": 256,
+      "section": "H區",
+      "category": "area",
+      "scheduleDisplayOrder": 242
+    },
+    {
+      "employeeId": "B6201",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 334,
+      "sourceOrder": 257,
+      "section": "H區",
+      "category": "area",
+      "scheduleDisplayOrder": 243
+    },
+    {
+      "employeeId": "93893",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 337,
+      "sourceOrder": 258,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 244
+    },
+    {
+      "employeeId": "94288",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 338,
+      "sourceOrder": 259,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 245
+    },
+    {
+      "employeeId": "95191",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 339,
+      "sourceOrder": 260,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 246
+    },
+    {
+      "employeeId": "B0469",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 340,
+      "sourceOrder": 261,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 247
+    },
+    {
+      "employeeId": "B1277",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 341,
+      "sourceOrder": 262,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 248
+    },
+    {
+      "employeeId": "B3883",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 342,
+      "sourceOrder": 263,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 249
+    },
+    {
+      "employeeId": "B4135",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 343,
+      "sourceOrder": 264,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 250
+    },
+    {
+      "employeeId": "B5040",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 344,
+      "sourceOrder": 265,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 251
+    },
+    {
+      "employeeId": "B5061",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 345,
+      "sourceOrder": 266,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 252
+    },
+    {
+      "employeeId": "B5346",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 346,
+      "sourceOrder": 267,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 253
+    },
+    {
+      "employeeId": "B2045",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 348,
+      "sourceOrder": 268,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 254
+    },
+    {
+      "employeeId": "B2778",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 349,
+      "sourceOrder": 269,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 255
+    },
+    {
+      "employeeId": "B3608",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 350,
+      "sourceOrder": 270,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 256
+    },
+    {
+      "employeeId": "B3754",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 351,
+      "sourceOrder": 271,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 257
+    },
+    {
+      "employeeId": "B4474",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 352,
+      "sourceOrder": 272,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 258
+    },
+    {
+      "employeeId": "B6236",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 353,
+      "sourceOrder": 273,
+      "section": "H2區",
+      "category": "area",
+      "scheduleDisplayOrder": 259
+    },
+    {
+      "employeeId": "B1156",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 355,
+      "sourceOrder": 274,
+      "section": "I1區",
+      "category": "area",
+      "scheduleDisplayOrder": 260
+    },
+    {
+      "employeeId": "B1191",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 356,
+      "sourceOrder": 275,
+      "section": "I1區",
+      "category": "area",
+      "scheduleDisplayOrder": 261
+    },
+    {
+      "employeeId": "B4373",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 357,
+      "sourceOrder": 276,
+      "section": "I1區",
+      "category": "area",
+      "scheduleDisplayOrder": 262
+    },
+    {
+      "employeeId": "95930",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 359,
+      "sourceOrder": 277,
+      "section": "I1區",
+      "category": "area",
+      "scheduleDisplayOrder": 263
+    },
+    {
+      "employeeId": "B1064",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 360,
+      "sourceOrder": 278,
+      "section": "I1區",
+      "category": "area",
+      "scheduleDisplayOrder": 264
+    },
+    {
+      "employeeId": "B5470",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 361,
+      "sourceOrder": 279,
+      "section": "I1區",
+      "category": "area",
+      "scheduleDisplayOrder": 265
+    },
+    {
+      "employeeId": "B0613",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 365,
+      "sourceOrder": 282,
+      "section": "I1區",
+      "category": "area",
+      "scheduleDisplayOrder": 266
+    },
+    {
+      "employeeId": "B5524",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 366,
+      "sourceOrder": 283,
+      "section": "I1區",
+      "category": "area",
+      "scheduleDisplayOrder": 267
+    },
+    {
+      "employeeId": "97131",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 368,
+      "sourceOrder": 284,
+      "section": "I2區",
+      "category": "area",
+      "scheduleDisplayOrder": 268
+    },
+    {
+      "employeeId": "96429",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 369,
+      "sourceOrder": 285,
+      "section": "I2區",
+      "category": "area",
+      "scheduleDisplayOrder": 269
+    },
+    {
+      "employeeId": "B3716",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 370,
+      "sourceOrder": 286,
+      "section": "I2區",
+      "category": "area",
+      "scheduleDisplayOrder": 270
+    },
+    {
+      "employeeId": "96653",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 372,
+      "sourceOrder": 287,
+      "section": "I2區",
+      "category": "area",
+      "scheduleDisplayOrder": 271
+    },
+    {
+      "employeeId": "B2359",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 373,
+      "sourceOrder": 288,
+      "section": "I2區",
+      "category": "area",
+      "scheduleDisplayOrder": 272
+    },
+    {
+      "employeeId": "B5666",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 374,
+      "sourceOrder": 289,
+      "section": "I2區",
+      "category": "area",
+      "scheduleDisplayOrder": 273
+    },
+    {
+      "employeeId": "B4632",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 377,
+      "sourceOrder": 291,
+      "section": "I2區",
+      "category": "area",
+      "scheduleDisplayOrder": 274
+    },
+    {
+      "employeeId": "95630",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 380,
+      "sourceOrder": 293,
+      "section": "I3區",
+      "category": "area",
+      "scheduleDisplayOrder": 275
+    },
+    {
+      "employeeId": "B4905",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 381,
+      "sourceOrder": 294,
+      "section": "I3區",
+      "category": "area",
+      "scheduleDisplayOrder": 276
+    },
+    {
+      "employeeId": "B6038",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 382,
+      "sourceOrder": 295,
+      "section": "I3區",
+      "category": "area",
+      "scheduleDisplayOrder": 277
+    },
+    {
+      "employeeId": "97562",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 384,
+      "sourceOrder": 296,
+      "section": "I3區",
+      "category": "area",
+      "scheduleDisplayOrder": 278
+    },
+    {
+      "employeeId": "B1050",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 385,
+      "sourceOrder": 297,
+      "section": "I3區",
+      "category": "area",
+      "scheduleDisplayOrder": 279
+    },
+    {
+      "employeeId": "B4200",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 386,
+      "sourceOrder": 298,
+      "section": "I3區",
+      "category": "area",
+      "scheduleDisplayOrder": 280
+    },
+    {
+      "employeeId": "B0581",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 393,
+      "sourceOrder": 301,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 281
+    },
+    {
+      "employeeId": "97246",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 394,
+      "sourceOrder": 302,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 282
+    },
+    {
+      "employeeId": "B2367",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 395,
+      "sourceOrder": 303,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 283
+    },
+    {
+      "employeeId": "B5931",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 396,
+      "sourceOrder": 304,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 284
+    },
+    {
+      "employeeId": "B0106",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 399,
+      "sourceOrder": 305,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 285
+    },
+    {
+      "employeeId": "B0112",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 400,
+      "sourceOrder": 306,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 286
+    },
+    {
+      "employeeId": "B2954",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 401,
+      "sourceOrder": 307,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 287
+    },
+    {
+      "employeeId": "B5691",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 402,
+      "sourceOrder": 308,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 288
+    },
+    {
+      "employeeId": "B2358",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 403,
+      "sourceOrder": 309,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 289
+    },
+    {
+      "employeeId": "98250",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 404,
+      "sourceOrder": 310,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 290
+    },
+    {
+      "employeeId": "B2524",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 408,
+      "sourceOrder": 313,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 291
+    },
+    {
+      "employeeId": "B2576",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 409,
+      "sourceOrder": 314,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 292
+    },
+    {
+      "employeeId": "B4408",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 410,
+      "sourceOrder": 315,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 293
+    },
+    {
+      "employeeId": "B5760",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 411,
+      "sourceOrder": 316,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 294
+    },
+    {
+      "employeeId": "B3451",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 413,
+      "sourceOrder": 317,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 295
+    },
+    {
+      "employeeId": "B0837",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 414,
+      "sourceOrder": 318,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 296
+    },
+    {
+      "employeeId": "95858",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 415,
+      "sourceOrder": 319,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 297
+    },
+    {
+      "employeeId": "B5671",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 416,
+      "sourceOrder": 320,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 298
+    },
+    {
+      "employeeId": "97243",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 419,
+      "sourceOrder": 321,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 299
+    },
+    {
+      "employeeId": "97430",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 420,
+      "sourceOrder": 322,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 300
+    },
+    {
+      "employeeId": "B0971",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 421,
+      "sourceOrder": 323,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 301
+    },
+    {
+      "employeeId": "B2651",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 422,
+      "sourceOrder": 324,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 302
+    },
+    {
+      "employeeId": "B3888",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 423,
+      "sourceOrder": 325,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 303
+    },
+    {
+      "employeeId": "B5883",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 424,
+      "sourceOrder": 326,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 304
+    },
+    {
+      "employeeId": "B6011",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 425,
+      "sourceOrder": 327,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 305
+    },
+    {
+      "employeeId": "97143",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 426,
+      "sourceOrder": 328,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 306
+    },
+    {
+      "employeeId": "98213",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 428,
+      "sourceOrder": 330,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 307
+    },
+    {
+      "employeeId": "B0411",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 429,
+      "sourceOrder": 331,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 308
+    },
+    {
+      "employeeId": "B0684",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 435,
+      "sourceOrder": 335,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 309
+    },
+    {
+      "employeeId": "95003",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 436,
+      "sourceOrder": 336,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 310
+    },
+    {
+      "employeeId": "B5291",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 437,
+      "sourceOrder": 337,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 311
+    },
+    {
+      "employeeId": "B2023",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 439,
+      "sourceOrder": 338,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 312
+    },
+    {
+      "employeeId": "96818",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 440,
+      "sourceOrder": 339,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 313
+    },
+    {
+      "employeeId": "B0047",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 441,
+      "sourceOrder": 340,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 314
+    },
+    {
+      "employeeId": "B2764",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 442,
+      "sourceOrder": 341,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 315
+    },
+    {
+      "employeeId": "B2916",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 443,
+      "sourceOrder": 342,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 316
+    },
+    {
+      "employeeId": "B4724",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 444,
+      "sourceOrder": 343,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 317
+    },
+    {
+      "employeeId": "B3799",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 447,
+      "sourceOrder": 346,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 318
+    },
+    {
+      "employeeId": "B4847",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 449,
+      "sourceOrder": 348,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 319
+    },
+    {
+      "employeeId": "B5874",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 450,
+      "sourceOrder": 349,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 320
+    },
+    {
+      "employeeId": "B2371",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 452,
+      "sourceOrder": 350,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 321
+    },
+    {
+      "employeeId": "B4749",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 453,
+      "sourceOrder": 351,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 322
+    },
+    {
+      "employeeId": "B5920",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 454,
+      "sourceOrder": 352,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 323
+    },
+    {
+      "employeeId": "B6092",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 455,
+      "sourceOrder": 353,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 324
+    },
+    {
+      "employeeId": "B0094",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 458,
+      "sourceOrder": 354,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 325
+    },
+    {
+      "employeeId": "B0164",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 459,
+      "sourceOrder": 355,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 326
+    },
+    {
+      "employeeId": "B0941",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 460,
+      "sourceOrder": 356,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 327
+    },
+    {
+      "employeeId": "B1788",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 461,
+      "sourceOrder": 357,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 328
+    },
+    {
+      "employeeId": "B5797",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 462,
+      "sourceOrder": 358,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 329
+    },
+    {
+      "employeeId": "B5859",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 463,
+      "sourceOrder": 359,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 330
+    },
+    {
+      "employeeId": "B5645",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 464,
+      "sourceOrder": 360,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 331
+    },
+    {
+      "employeeId": "B0590",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 466,
+      "sourceOrder": 362,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 332
+    },
+    {
+      "employeeId": "B2340",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 467,
+      "sourceOrder": 363,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 333
+    },
+    {
+      "employeeId": "B4530",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 468,
+      "sourceOrder": 364,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 334
+    },
+    {
+      "employeeId": "B5109",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 469,
+      "sourceOrder": 365,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 335
+    },
+    {
+      "employeeId": "B5102",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 470,
+      "sourceOrder": 366,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 336
+    },
+    {
+      "employeeId": "97551",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 473,
+      "sourceOrder": 368,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 337
+    },
+    {
+      "employeeId": "96556",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 474,
+      "sourceOrder": 369,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 338
+    },
+    {
+      "employeeId": "B0637",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 475,
+      "sourceOrder": 370,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 339
+    },
+    {
+      "employeeId": "B5325",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 476,
+      "sourceOrder": 371,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 340
+    },
+    {
+      "employeeId": "B2142",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 478,
+      "sourceOrder": 372,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 341
+    },
+    {
+      "employeeId": "B1061",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 479,
+      "sourceOrder": 373,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 342
+    },
+    {
+      "employeeId": "B2520",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 480,
+      "sourceOrder": 374,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 343
+    },
+    {
+      "employeeId": "B5103",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 481,
+      "sourceOrder": 375,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 344
+    },
+    {
+      "employeeId": "97842",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 485,
+      "sourceOrder": 377,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 345
+    },
+    {
+      "employeeId": "B1978",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 486,
+      "sourceOrder": 378,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 346
+    },
+    {
+      "employeeId": "B3650",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 487,
+      "sourceOrder": 379,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 347
+    },
+    {
+      "employeeId": "B4729",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 488,
+      "sourceOrder": 380,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 348
+    },
+    {
+      "employeeId": "B0578",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 491,
+      "sourceOrder": 381,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 349
+    },
+    {
+      "employeeId": "B3662",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 492,
+      "sourceOrder": 382,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 350
+    },
+    {
+      "employeeId": "B4449",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 493,
+      "sourceOrder": 383,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 351
+    },
+    {
+      "employeeId": "B4636",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 494,
+      "sourceOrder": 384,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 352
+    },
+    {
+      "employeeId": "B3103",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 497,
+      "sourceOrder": 385,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 353
+    },
+    {
+      "employeeId": "B2798",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 498,
+      "sourceOrder": 386,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 354
+    },
+    {
+      "employeeId": "B3786",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 499,
+      "sourceOrder": 387,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 355
+    },
+    {
+      "employeeId": "B5236",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 500,
+      "sourceOrder": 388,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 356
+    },
+    {
+      "employeeId": "B3453",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 503,
+      "sourceOrder": 390,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 357
+    },
+    {
+      "employeeId": "B3818",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 504,
+      "sourceOrder": 391,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 358
+    },
+    {
+      "employeeId": "B4984",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 505,
+      "sourceOrder": 392,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 359
+    },
+    {
+      "employeeId": "96473",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 509,
+      "sourceOrder": 394,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 360
+    },
+    {
+      "employeeId": "95591",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 510,
+      "sourceOrder": 395,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 361
+    },
+    {
+      "employeeId": "B4965",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 511,
+      "sourceOrder": 396,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 362
+    },
+    {
+      "employeeId": "B5937",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 512,
+      "sourceOrder": 397,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 363
+    },
+    {
+      "employeeId": "96670",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 514,
+      "sourceOrder": 398,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 364
+    },
+    {
+      "employeeId": "B0807",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 515,
+      "sourceOrder": 399,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 365
+    },
+    {
+      "employeeId": "B5059",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 516,
+      "sourceOrder": 400,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 366
+    },
+    {
+      "employeeId": "B0927",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 518,
+      "sourceOrder": 401,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 367
+    },
+    {
+      "employeeId": "B2711",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 519,
+      "sourceOrder": 402,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 368
+    },
+    {
+      "employeeId": "B3951",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 520,
+      "sourceOrder": 403,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 369
+    },
+    {
+      "employeeId": "B4723",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 521,
+      "sourceOrder": 404,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 370
+    },
+    {
+      "employeeId": "98284",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 525,
+      "sourceOrder": 406,
+      "section": "L4區",
+      "category": "area",
+      "scheduleDisplayOrder": 371
+    },
+    {
+      "employeeId": "B2235",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 526,
+      "sourceOrder": 407,
+      "section": "L4區",
+      "category": "area",
+      "scheduleDisplayOrder": 372
+    },
+    {
+      "employeeId": "B4136",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 527,
+      "sourceOrder": 408,
+      "section": "L4區",
+      "category": "area",
+      "scheduleDisplayOrder": 373
+    },
+    {
+      "employeeId": "B5060",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 530,
+      "sourceOrder": 409,
+      "section": "L4區",
+      "category": "area",
+      "scheduleDisplayOrder": 374
+    },
+    {
+      "employeeId": "B5165",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 531,
+      "sourceOrder": 410,
+      "section": "L4區",
+      "category": "area",
+      "scheduleDisplayOrder": 375
+    },
+    {
+      "employeeId": "B5641",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 532,
+      "sourceOrder": 411,
+      "section": "L4區",
+      "category": "area",
+      "scheduleDisplayOrder": 376
+    },
+    {
+      "employeeId": "B6033",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 533,
+      "sourceOrder": 412,
+      "section": "L4區",
+      "category": "area",
+      "scheduleDisplayOrder": 377
+    },
+    {
+      "employeeId": "B1176",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 535,
+      "sourceOrder": 413,
+      "section": "L4區",
+      "category": "area",
+      "scheduleDisplayOrder": 378
+    },
+    {
+      "employeeId": "B2926",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 536,
+      "sourceOrder": 414,
+      "section": "L4區",
+      "category": "area",
+      "scheduleDisplayOrder": 379
+    },
+    {
+      "employeeId": "B3678",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 537,
+      "sourceOrder": 415,
+      "section": "L4區",
+      "category": "area",
+      "scheduleDisplayOrder": 380
+    },
+    {
+      "employeeId": "B3709",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 538,
+      "sourceOrder": 416,
+      "section": "L4區",
+      "category": "area",
+      "scheduleDisplayOrder": 381
+    },
+    {
+      "employeeId": "B4567",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 539,
+      "sourceOrder": 417,
+      "section": "L4區",
+      "category": "area",
+      "scheduleDisplayOrder": 382
+    },
+    {
+      "employeeId": "96688",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 542,
+      "sourceOrder": 418,
+      "section": "M區",
+      "category": "area",
+      "scheduleDisplayOrder": 383
+    },
+    {
+      "employeeId": "B0799",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 543,
+      "sourceOrder": 419,
+      "section": "M區",
+      "category": "area",
+      "scheduleDisplayOrder": 384
+    },
+    {
+      "employeeId": "B0426",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 544,
+      "sourceOrder": 420,
+      "section": "M區",
+      "category": "area",
+      "scheduleDisplayOrder": 385
+    },
+    {
+      "employeeId": "B5533",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 545,
+      "sourceOrder": 421,
+      "section": "M區",
+      "category": "area",
+      "scheduleDisplayOrder": 386
+    },
+    {
+      "employeeId": "B0687",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 548,
+      "sourceOrder": 422,
+      "section": "M區",
+      "category": "area",
+      "scheduleDisplayOrder": 387
+    },
+    {
+      "employeeId": "B2707",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 549,
+      "sourceOrder": 423,
+      "section": "M區",
+      "category": "area",
+      "scheduleDisplayOrder": 388
+    },
+    {
+      "employeeId": "B4570",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 550,
+      "sourceOrder": 424,
+      "section": "M區",
+      "category": "area",
+      "scheduleDisplayOrder": 389
+    },
+    {
+      "employeeId": "B5948",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 551,
+      "sourceOrder": 425,
+      "section": "M區",
+      "category": "area",
+      "scheduleDisplayOrder": 390
+    },
+    {
+      "employeeId": "B6078",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 552,
+      "sourceOrder": 426,
+      "section": "M區",
+      "category": "area",
+      "scheduleDisplayOrder": 391
+    },
+    {
+      "employeeId": "B3697",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 554,
+      "sourceOrder": 428,
+      "section": "M區",
+      "category": "area",
+      "scheduleDisplayOrder": 392
+    },
+    {
+      "employeeId": "B5337",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 555,
+      "sourceOrder": 429,
+      "section": "M區",
+      "category": "area",
+      "scheduleDisplayOrder": 393
+    },
+    {
+      "employeeId": "B5759",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 556,
+      "sourceOrder": 430,
+      "section": "M區",
+      "category": "area",
+      "scheduleDisplayOrder": 394
+    },
+    {
+      "employeeId": "B0172",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 559,
+      "sourceOrder": 432,
+      "section": "W1區",
+      "category": "area",
+      "scheduleDisplayOrder": 395
+    },
+    {
+      "employeeId": "B2578",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 560,
+      "sourceOrder": 433,
+      "section": "W1區",
+      "category": "area",
+      "scheduleDisplayOrder": 396
+    },
+    {
+      "employeeId": "B5312",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 561,
+      "sourceOrder": 434,
+      "section": "W1區",
+      "category": "area",
+      "scheduleDisplayOrder": 397
+    },
+    {
+      "employeeId": "B5758",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 562,
+      "sourceOrder": 435,
+      "section": "W1區",
+      "category": "area",
+      "scheduleDisplayOrder": 398
+    },
+    {
+      "employeeId": "B6169",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 563,
+      "sourceOrder": 436,
+      "section": "W1區",
+      "category": "area",
+      "scheduleDisplayOrder": 399
+    },
+    {
+      "employeeId": "B3864",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 566,
+      "sourceOrder": 437,
+      "section": "W2區",
+      "category": "area",
+      "scheduleDisplayOrder": 400
+    },
+    {
+      "employeeId": "B3814",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 567,
+      "sourceOrder": 438,
+      "section": "W2區",
+      "category": "area",
+      "scheduleDisplayOrder": 401
+    },
+    {
+      "employeeId": "B5891",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 568,
+      "sourceOrder": 439,
+      "section": "W2區",
+      "category": "area",
+      "scheduleDisplayOrder": 402
+    },
+    {
+      "employeeId": "B1854",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 572,
+      "sourceOrder": 441,
+      "section": "W2區",
+      "category": "area",
+      "scheduleDisplayOrder": 403
+    },
+    {
+      "employeeId": "B5054",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 573,
+      "sourceOrder": 442,
+      "section": "W2區",
+      "category": "area",
+      "scheduleDisplayOrder": 404
+    },
+    {
+      "employeeId": "B6153",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 574,
+      "sourceOrder": 443,
+      "section": "W2區",
+      "category": "area",
+      "scheduleDisplayOrder": 405
+    },
+    {
+      "employeeId": "97133",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 576,
+      "sourceOrder": 444,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 406
+    },
+    {
+      "employeeId": "98229",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 577,
+      "sourceOrder": 445,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 407
+    },
+    {
+      "employeeId": "B1035",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 578,
+      "sourceOrder": 446,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 408
+    },
+    {
+      "employeeId": "B0868",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 579,
+      "sourceOrder": 447,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 409
+    },
+    {
+      "employeeId": "B2958",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 580,
+      "sourceOrder": 448,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 410
+    },
+    {
+      "employeeId": "B3666",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 581,
+      "sourceOrder": 449,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 411
+    },
+    {
+      "employeeId": "B3843",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 582,
+      "sourceOrder": 450,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 412
+    },
+    {
+      "employeeId": "B4595",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 583,
+      "sourceOrder": 451,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 413
+    },
+    {
+      "employeeId": "B5220",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 584,
+      "sourceOrder": 452,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 414
+    },
+    {
+      "employeeId": "B5513",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 585,
+      "sourceOrder": 453,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 415
+    },
+    {
+      "employeeId": "B1706",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 589,
+      "sourceOrder": 456,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 416
+    },
+    {
+      "employeeId": "B2872",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 591,
+      "sourceOrder": 458,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 417
+    },
+    {
+      "employeeId": "B4464",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 593,
+      "sourceOrder": 460,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 418
+    },
+    {
+      "employeeId": "B5399",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 594,
+      "sourceOrder": 461,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 419
+    },
+    {
+      "employeeId": "B5479",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 595,
+      "sourceOrder": 462,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 420
+    },
+    {
+      "employeeId": "95873",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 600,
+      "sourceOrder": 463,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 421
+    },
+    {
+      "employeeId": "B2057",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 601,
+      "sourceOrder": 464,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 422
+    },
+    {
+      "employeeId": "98334",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 602,
+      "sourceOrder": 465,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 423
+    },
+    {
+      "employeeId": "B4258",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 603,
+      "sourceOrder": 466,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 424
+    },
+    {
+      "employeeId": "B4259",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 604,
+      "sourceOrder": 467,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 425
+    },
+    {
+      "employeeId": "B5208",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 605,
+      "sourceOrder": 468,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 426
+    },
+    {
+      "employeeId": "B0602",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 606,
+      "sourceOrder": 469,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 427
+    },
+    {
+      "employeeId": "B1825",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 608,
+      "sourceOrder": 470,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 428
+    },
+    {
+      "employeeId": "B3425",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 609,
+      "sourceOrder": 471,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 429
+    },
+    {
+      "employeeId": "B3447",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 610,
+      "sourceOrder": 472,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 430
+    },
+    {
+      "employeeId": "B3836",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 611,
+      "sourceOrder": 473,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 431
+    },
+    {
+      "employeeId": "B4426",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 612,
+      "sourceOrder": 474,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 432
+    },
+    {
+      "employeeId": "B4992",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 613,
+      "sourceOrder": 475,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 433
+    },
+    {
+      "employeeId": "B6058",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 614,
+      "sourceOrder": 476,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 434
+    },
+    {
+      "employeeId": "96410",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 615,
+      "sourceOrder": 477,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 435
+    },
+    {
+      "employeeId": "B0603",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 616,
+      "sourceOrder": 478,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 436
+    },
+    {
+      "employeeId": "B3231",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 617,
+      "sourceOrder": 479,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 437
+    },
+    {
+      "employeeId": "B3251",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 618,
+      "sourceOrder": 480,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 438
+    },
+    {
+      "employeeId": "B3823",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 619,
+      "sourceOrder": 481,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 439
+    },
+    {
+      "employeeId": "B4594",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 620,
+      "sourceOrder": 482,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 440
+    },
+    {
+      "employeeId": "B5168",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 621,
+      "sourceOrder": 483,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 441
+    },
+    {
+      "employeeId": "B5702",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 622,
+      "sourceOrder": 484,
+      "section": "N區",
+      "category": "area",
+      "scheduleDisplayOrder": 442
+    },
+    {
+      "employeeId": "B1190",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 625,
+      "sourceOrder": 485,
+      "section": "〇1區",
+      "category": "area",
+      "scheduleDisplayOrder": 443
+    },
+    {
+      "employeeId": "B2863",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 626,
+      "sourceOrder": 486,
+      "section": "〇1區",
+      "category": "area",
+      "scheduleDisplayOrder": 444
+    },
+    {
+      "employeeId": "B4866",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 627,
+      "sourceOrder": 487,
+      "section": "〇1區",
+      "category": "area",
+      "scheduleDisplayOrder": 445
+    },
+    {
+      "employeeId": "B5134",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 628,
+      "sourceOrder": 488,
+      "section": "〇1區",
+      "category": "area",
+      "scheduleDisplayOrder": 446
+    },
+    {
+      "employeeId": "B5471",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 629,
+      "sourceOrder": 489,
+      "section": "〇1區",
+      "category": "area",
+      "scheduleDisplayOrder": 447
+    },
+    {
+      "employeeId": "B3367",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 632,
+      "sourceOrder": 490,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 448
+    },
+    {
+      "employeeId": "B4022",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 633,
+      "sourceOrder": 491,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 449
+    },
+    {
+      "employeeId": "B5101",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 634,
+      "sourceOrder": 492,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 450
+    },
+    {
+      "employeeId": "B5405",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 635,
+      "sourceOrder": 493,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 451
+    },
+    {
+      "employeeId": "B5692",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 636,
+      "sourceOrder": 494,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 452
+    },
+    {
+      "employeeId": "B5823",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 637,
+      "sourceOrder": 495,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 453
+    },
+    {
+      "employeeId": "B3788",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 639,
+      "sourceOrder": 497,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 454
+    },
+    {
+      "employeeId": "B5728",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 642,
+      "sourceOrder": 500,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 455
+    },
+    {
+      "employeeId": "B5829",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 643,
+      "sourceOrder": 501,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 456
+    },
+    {
+      "employeeId": "94996",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 645,
+      "sourceOrder": 502,
+      "section": "O2區",
+      "category": "area",
+      "scheduleDisplayOrder": 457
+    },
+    {
+      "employeeId": "B1579",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 646,
+      "sourceOrder": 503,
+      "section": "O2區",
+      "category": "area",
+      "scheduleDisplayOrder": 458
+    },
+    {
+      "employeeId": "B3482",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 647,
+      "sourceOrder": 504,
+      "section": "O2區",
+      "category": "area",
+      "scheduleDisplayOrder": 459
+    },
+    {
+      "employeeId": "B6094",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 648,
+      "sourceOrder": 505,
+      "section": "O2區",
+      "category": "area",
+      "scheduleDisplayOrder": 460
+    },
+    {
+      "employeeId": "95945",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 652,
+      "sourceOrder": 507,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 461
+    },
+    {
+      "employeeId": "B3784",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 653,
+      "sourceOrder": 508,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 462
+    },
+    {
+      "employeeId": "B0542",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 656,
+      "sourceOrder": 509,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 463
+    },
+    {
+      "employeeId": "B1004",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 657,
+      "sourceOrder": 510,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 464
+    },
+    {
+      "employeeId": "B0897",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 658,
+      "sourceOrder": 511,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 465
+    },
+    {
+      "employeeId": "B2734",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 659,
+      "sourceOrder": 512,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 466
+    },
+    {
+      "employeeId": "B2788",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 660,
+      "sourceOrder": 513,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 467
+    },
+    {
+      "employeeId": "B2310",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 661,
+      "sourceOrder": 514,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 468
+    },
+    {
+      "employeeId": "B3081",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 662,
+      "sourceOrder": 515,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 469
+    },
+    {
+      "employeeId": "B3696",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 663,
+      "sourceOrder": 516,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 470
+    },
+    {
+      "employeeId": "B3941",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 664,
+      "sourceOrder": 517,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 471
+    },
+    {
+      "employeeId": "B3965",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 665,
+      "sourceOrder": 518,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 472
+    },
+    {
+      "employeeId": "96792",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 668,
+      "sourceOrder": 519,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 473
+    },
+    {
+      "employeeId": "97351",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 669,
+      "sourceOrder": 520,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 474
+    },
+    {
+      "employeeId": "97182",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 670,
+      "sourceOrder": 521,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 475
+    },
+    {
+      "employeeId": "B3653",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 674,
+      "sourceOrder": 525,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 476
+    },
+    {
+      "employeeId": "B3978",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 675,
+      "sourceOrder": 526,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 477
+    },
+    {
+      "employeeId": "B4095",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 676,
+      "sourceOrder": 527,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 478
+    },
+    {
+      "employeeId": "B5001",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 678,
+      "sourceOrder": 529,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 479
+    },
+    {
+      "employeeId": "96471",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 681,
+      "sourceOrder": 530,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 480
+    },
+    {
+      "employeeId": "B0685",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 682,
+      "sourceOrder": 531,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 481
+    },
+    {
+      "employeeId": "B1906",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 683,
+      "sourceOrder": 532,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 482
+    },
+    {
+      "employeeId": "B4056",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 684,
+      "sourceOrder": 533,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 483
+    },
+    {
+      "employeeId": "98189",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 687,
+      "sourceOrder": 534,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 484
+    },
+    {
+      "employeeId": "B0612",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 688,
+      "sourceOrder": 535,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 485
+    },
+    {
+      "employeeId": "B2277",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 689,
+      "sourceOrder": 536,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 486
+    },
+    {
+      "employeeId": "B3817",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 690,
+      "sourceOrder": 537,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 487
+    },
+    {
+      "employeeId": "B3942",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 691,
+      "sourceOrder": 538,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 488
+    },
+    {
+      "employeeId": "B4807",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 692,
+      "sourceOrder": 539,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 489
+    },
+    {
+      "employeeId": "97330",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 695,
+      "sourceOrder": 542,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 490
+    },
+    {
+      "employeeId": "B3362",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 697,
+      "sourceOrder": 544,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 491
+    },
+    {
+      "employeeId": "B4418",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 698,
+      "sourceOrder": 545,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 492
+    },
+    {
+      "employeeId": "B0093",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 703,
+      "sourceOrder": 547,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 493
+    },
+    {
+      "employeeId": "B0893",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 704,
+      "sourceOrder": 548,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 494
+    },
+    {
+      "employeeId": "B3511",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 705,
+      "sourceOrder": 549,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 495
+    },
+    {
+      "employeeId": "B3987",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 706,
+      "sourceOrder": 550,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 496
+    },
+    {
+      "employeeId": "B3012",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 707,
+      "sourceOrder": 551,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 497
+    },
+    {
+      "employeeId": "B5306",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 708,
+      "sourceOrder": 552,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 498
+    },
+    {
+      "employeeId": "B5324",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 709,
+      "sourceOrder": 553,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 499
+    },
+    {
+      "employeeId": "B6154",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 710,
+      "sourceOrder": 554,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 500
+    },
+    {
+      "employeeId": "97108",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 713,
+      "sourceOrder": 555,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 501
+    },
+    {
+      "employeeId": "B3663",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 714,
+      "sourceOrder": 556,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 502
+    },
+    {
+      "employeeId": "B3821",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 715,
+      "sourceOrder": 557,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 503
+    },
+    {
+      "employeeId": "B4625",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 716,
+      "sourceOrder": 558,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 504
+    },
+    {
+      "employeeId": "B5299",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 717,
+      "sourceOrder": 559,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 505
+    },
+    {
+      "employeeId": "B5406",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 718,
+      "sourceOrder": 560,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 506
+    },
+    {
+      "employeeId": "B5577",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 719,
+      "sourceOrder": 561,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 507
+    },
+    {
+      "employeeId": "B5822",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 720,
+      "sourceOrder": 562,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 508
+    },
+    {
+      "employeeId": "B0974",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 721,
+      "sourceOrder": 563,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 509
+    },
+    {
+      "employeeId": "B3649",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 722,
+      "sourceOrder": 564,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 510
+    },
+    {
+      "employeeId": "B4987",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 723,
+      "sourceOrder": 565,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 511
+    },
+    {
+      "employeeId": "94467",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 728,
+      "sourceOrder": 569,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 512
+    },
+    {
+      "employeeId": "95599",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 729,
+      "sourceOrder": 570,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 513
+    },
+    {
+      "employeeId": "B1052",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 730,
+      "sourceOrder": 571,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 514
+    },
+    {
+      "employeeId": "B3541",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 731,
+      "sourceOrder": 572,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 515
+    },
+    {
+      "employeeId": "B3597",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 732,
+      "sourceOrder": 573,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 516
+    },
+    {
+      "employeeId": "B3811",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 733,
+      "sourceOrder": 574,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 517
+    },
+    {
+      "employeeId": "B4317",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 734,
+      "sourceOrder": 575,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 518
+    },
+    {
+      "employeeId": "B4450",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 735,
+      "sourceOrder": 576,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 519
+    },
+    {
+      "employeeId": "B4635",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 736,
+      "sourceOrder": 577,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 520
+    },
+    {
+      "employeeId": "B4678",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 737,
+      "sourceOrder": 578,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 521
+    },
+    {
+      "employeeId": "B4972",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 738,
+      "sourceOrder": 579,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 522
+    },
+    {
+      "employeeId": "95629",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 742,
+      "sourceOrder": 580,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 523
+    },
+    {
+      "employeeId": "94445",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 743,
+      "sourceOrder": 581,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 524
+    },
+    {
+      "employeeId": "98209",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 744,
+      "sourceOrder": 582,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 525
+    },
+    {
+      "employeeId": "B6229",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 745,
+      "sourceOrder": 583,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 526
+    },
+    {
+      "employeeId": "97323",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 747,
+      "sourceOrder": 584,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 527
+    },
+    {
+      "employeeId": "97332",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 748,
+      "sourceOrder": 585,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 528
+    },
+    {
+      "employeeId": "B1109",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 749,
+      "sourceOrder": 586,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 529
+    },
+    {
+      "employeeId": "B4958",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 750,
+      "sourceOrder": 587,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 530
+    },
+    {
+      "employeeId": "95958",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 752,
+      "sourceOrder": 588,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 531
+    },
+    {
+      "employeeId": "B0126",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 754,
+      "sourceOrder": 590,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 532
+    },
+    {
+      "employeeId": "98283",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 755,
+      "sourceOrder": 591,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 533
+    },
+    {
+      "employeeId": "B3938",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 756,
+      "sourceOrder": 592,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 534
+    },
+    {
+      "employeeId": "96171",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 758,
+      "sourceOrder": 593,
+      "section": "T1區",
+      "category": "area",
+      "scheduleDisplayOrder": 535
+    },
+    {
+      "employeeId": "B3071",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 759,
+      "sourceOrder": 594,
+      "section": "T1區",
+      "category": "area",
+      "scheduleDisplayOrder": 536
+    },
+    {
+      "employeeId": "B5331",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 760,
+      "sourceOrder": 595,
+      "section": "T1區",
+      "category": "area",
+      "scheduleDisplayOrder": 537
+    },
+    {
+      "employeeId": "B3765",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 762,
+      "sourceOrder": 596,
+      "section": "T1區",
+      "category": "area",
+      "scheduleDisplayOrder": 538
+    },
+    {
+      "employeeId": "B4448",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 763,
+      "sourceOrder": 597,
+      "section": "T1區",
+      "category": "area",
+      "scheduleDisplayOrder": 539
+    },
+    {
+      "employeeId": "B5515",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 764,
+      "sourceOrder": 598,
+      "section": "T1區",
+      "category": "area",
+      "scheduleDisplayOrder": 540
+    },
+    {
+      "employeeId": "B5851",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 765,
+      "sourceOrder": 599,
+      "section": "T1區",
+      "category": "area",
+      "scheduleDisplayOrder": 541
+    },
+    {
+      "employeeId": "B3104",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 766,
+      "sourceOrder": 600,
+      "section": "T1區",
+      "category": "area",
+      "scheduleDisplayOrder": 542
+    },
+    {
+      "employeeId": "B5000",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 767,
+      "sourceOrder": 601,
+      "section": "T1區",
+      "category": "area",
+      "scheduleDisplayOrder": 543
+    },
+    {
+      "employeeId": "B5069",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 768,
+      "sourceOrder": 602,
+      "section": "T1區",
+      "category": "area",
+      "scheduleDisplayOrder": 544
+    },
+    {
+      "employeeId": "B6073",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 770,
+      "sourceOrder": 604,
+      "section": "T1區",
+      "category": "area",
+      "scheduleDisplayOrder": 545
+    },
+    {
+      "employeeId": "96827",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 772,
+      "sourceOrder": 605,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 546
+    },
+    {
+      "employeeId": "B2706",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 773,
+      "sourceOrder": 606,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 547
+    },
+    {
+      "employeeId": "B4470",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 774,
+      "sourceOrder": 607,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 548
+    },
+    {
+      "employeeId": "B6037",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 775,
+      "sourceOrder": 608,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 549
+    },
+    {
+      "employeeId": "B6170",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 776,
+      "sourceOrder": 609,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 550
+    },
+    {
+      "employeeId": "B6155",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 777,
+      "sourceOrder": 610,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 551
+    },
+    {
+      "employeeId": "96724",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 779,
+      "sourceOrder": 611,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 552
+    },
+    {
+      "employeeId": "B4918",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 780,
+      "sourceOrder": 612,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 553
+    },
+    {
+      "employeeId": "B5132",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 781,
+      "sourceOrder": 613,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 554
+    },
+    {
+      "employeeId": "B6032",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 782,
+      "sourceOrder": 614,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 555
+    },
+    {
+      "employeeId": "B4356",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 783,
+      "sourceOrder": 615,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 556
+    },
+    {
+      "employeeId": "B5286",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 784,
+      "sourceOrder": 616,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 557
+    },
+    {
+      "employeeId": "B5761",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 785,
+      "sourceOrder": 617,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 558
+    },
+    {
+      "employeeId": "B6044",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 786,
+      "sourceOrder": 618,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 559
+    },
+    {
+      "employeeId": "B6070",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 787,
+      "sourceOrder": 619,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 560
+    },
+    {
+      "employeeId": "B6182",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 788,
+      "sourceOrder": 620,
+      "section": "T2區",
+      "category": "area",
+      "scheduleDisplayOrder": 561
+    },
+    {
+      "employeeId": "95161",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 790,
+      "sourceOrder": 621,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 562
+    },
+    {
+      "employeeId": "95575",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 791,
+      "sourceOrder": 622,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 563
+    },
+    {
+      "employeeId": "97248",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 792,
+      "sourceOrder": 623,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 564
+    },
+    {
+      "employeeId": "B4473",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 793,
+      "sourceOrder": 624,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 565
+    },
+    {
+      "employeeId": "B5407",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 794,
+      "sourceOrder": 625,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 566
+    },
+    {
+      "employeeId": "B5553",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 795,
+      "sourceOrder": 626,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 567
+    },
+    {
+      "employeeId": "B6259",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 796,
+      "sourceOrder": 627,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 568
+    },
+    {
+      "employeeId": "96806",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 799,
+      "sourceOrder": 628,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 569
+    },
+    {
+      "employeeId": "B1758",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 800,
+      "sourceOrder": 629,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 570
+    },
+    {
+      "employeeId": "B4120",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 802,
+      "sourceOrder": 631,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 571
+    },
+    {
+      "employeeId": "97485",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 805,
+      "sourceOrder": 634,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 572
+    },
+    {
+      "employeeId": "B1371",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 807,
+      "sourceOrder": 636,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 573
+    },
+    {
+      "employeeId": "B5634",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 809,
+      "sourceOrder": 638,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 574
+    },
+    {
+      "employeeId": "B6235",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 810,
+      "sourceOrder": 639,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 575
+    },
+    {
+      "employeeId": "95875",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 812,
+      "sourceOrder": 640,
+      "section": "X1區",
+      "category": "area",
+      "scheduleDisplayOrder": 576
+    },
+    {
+      "employeeId": "B0508",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 813,
+      "sourceOrder": 641,
+      "section": "X1區",
+      "category": "area",
+      "scheduleDisplayOrder": 577
+    },
+    {
+      "employeeId": "B4209",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 814,
+      "sourceOrder": 642,
+      "section": "X1區",
+      "category": "area",
+      "scheduleDisplayOrder": 578
+    },
+    {
+      "employeeId": "B4440",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 815,
+      "sourceOrder": 643,
+      "section": "X1區",
+      "category": "area",
+      "scheduleDisplayOrder": 579
+    },
+    {
+      "employeeId": "B5960",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 816,
+      "sourceOrder": 644,
+      "section": "X1區",
+      "category": "area",
+      "scheduleDisplayOrder": 580
+    },
+    {
+      "employeeId": "B0503",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 818,
+      "sourceOrder": 645,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 581
+    },
+    {
+      "employeeId": "B0224",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 819,
+      "sourceOrder": 646,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 582
+    },
+    {
+      "employeeId": "B2762",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 820,
+      "sourceOrder": 647,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 583
+    },
+    {
+      "employeeId": "B5955",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 821,
+      "sourceOrder": 648,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 584
+    },
+    {
+      "employeeId": "98757",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 823,
+      "sourceOrder": 649,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 585
+    },
+    {
+      "employeeId": "B2240",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 824,
+      "sourceOrder": 650,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 586
+    },
+    {
+      "employeeId": "B3098",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 825,
+      "sourceOrder": 651,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 587
+    },
+    {
+      "employeeId": "B4653",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 826,
+      "sourceOrder": 652,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 588
+    },
+    {
+      "employeeId": "B5886",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 827,
+      "sourceOrder": 653,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 589
+    },
+    {
+      "employeeId": "B5950",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 828,
+      "sourceOrder": 654,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 590
+    },
+    {
+      "employeeId": "B1720",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 831,
+      "sourceOrder": 656,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 591
+    },
+    {
+      "employeeId": "B2153",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 832,
+      "sourceOrder": 657,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 592
+    },
+    {
+      "employeeId": "B3130",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 833,
+      "sourceOrder": 658,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 593
+    },
+    {
+      "employeeId": "B4634",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 834,
+      "sourceOrder": 659,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 594
+    },
+    {
+      "employeeId": "B4933",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 835,
+      "sourceOrder": 660,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 595
+    },
+    {
+      "employeeId": "B6012",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 837,
+      "sourceOrder": 662,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 596
+    },
+    {
+      "employeeId": "每日 日班",
+      "group": "day",
+      "sourceSheet": "9月日班",
+      "sourceRow": 1060,
+      "sourceOrder": 663,
+      "section": "X2區",
+      "category": "area",
+      "scheduleDisplayOrder": 597
+    },
+    {
+      "employeeId": "94402",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 24,
+      "sourceOrder": 8,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 0
+    },
+    {
+      "employeeId": "98251",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 25,
+      "sourceOrder": 9,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 1
+    },
+    {
+      "employeeId": "97237",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 26,
+      "sourceOrder": 10,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 2
+    },
+    {
+      "employeeId": "B2030",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 27,
+      "sourceOrder": 11,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 3
+    },
+    {
+      "employeeId": "B3810",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 28,
+      "sourceOrder": 12,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 4
+    },
+    {
+      "employeeId": "B4996",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 29,
+      "sourceOrder": 13,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 5
+    },
+    {
+      "employeeId": "B5408",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 30,
+      "sourceOrder": 14,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 6
+    },
+    {
+      "employeeId": "B5569",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 31,
+      "sourceOrder": 15,
+      "section": "A1區",
+      "category": "area",
+      "scheduleDisplayOrder": 7
+    },
+    {
+      "employeeId": "97561",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 33,
+      "sourceOrder": 16,
+      "section": "A2區",
+      "category": "area",
+      "scheduleDisplayOrder": 8
+    },
+    {
+      "employeeId": "B5956",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 34,
+      "sourceOrder": 17,
+      "section": "A2區",
+      "category": "area",
+      "scheduleDisplayOrder": 9
+    },
+    {
+      "employeeId": "B6105",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 35,
+      "sourceOrder": 18,
+      "section": "A2區",
+      "category": "area",
+      "scheduleDisplayOrder": 10
+    },
+    {
+      "employeeId": "B6206",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 36,
+      "sourceOrder": 19,
+      "section": "A2區",
+      "category": "area",
+      "scheduleDisplayOrder": 11
+    },
+    {
+      "employeeId": "B6241",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 37,
+      "sourceOrder": 20,
+      "section": "A2區",
+      "category": "area",
+      "scheduleDisplayOrder": 12
+    },
+    {
+      "employeeId": "B4261",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 40,
+      "sourceOrder": 21,
+      "section": "J區",
+      "category": "area",
+      "scheduleDisplayOrder": 13
+    },
+    {
+      "employeeId": "B4431",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 41,
+      "sourceOrder": 22,
+      "section": "J區",
+      "category": "area",
+      "scheduleDisplayOrder": 14
+    },
+    {
+      "employeeId": "B4969",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 42,
+      "sourceOrder": 23,
+      "section": "J區",
+      "category": "area",
+      "scheduleDisplayOrder": 15
+    },
+    {
+      "employeeId": "B5888",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 43,
+      "sourceOrder": 24,
+      "section": "J區",
+      "category": "area",
+      "scheduleDisplayOrder": 16
+    },
+    {
+      "employeeId": "96781",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 45,
+      "sourceOrder": 25,
+      "section": "C區",
+      "category": "area",
+      "scheduleDisplayOrder": 17
+    },
+    {
+      "employeeId": "98335",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 46,
+      "sourceOrder": 26,
+      "section": "C區",
+      "category": "area",
+      "scheduleDisplayOrder": 18
+    },
+    {
+      "employeeId": "B4218",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 47,
+      "sourceOrder": 27,
+      "section": "C區",
+      "category": "area",
+      "scheduleDisplayOrder": 19
+    },
+    {
+      "employeeId": "B1670",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 50,
+      "sourceOrder": 28,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 20
+    },
+    {
+      "employeeId": "B1829",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 51,
+      "sourceOrder": 29,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 21
+    },
+    {
+      "employeeId": "B5639",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 52,
+      "sourceOrder": 30,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 22
+    },
+    {
+      "employeeId": "B1159",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 53,
+      "sourceOrder": 31,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 23
+    },
+    {
+      "employeeId": "B2615",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 54,
+      "sourceOrder": 32,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 24
+    },
+    {
+      "employeeId": "B4032",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 55,
+      "sourceOrder": 33,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 25
+    },
+    {
+      "employeeId": "96736",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 59,
+      "sourceOrder": 34,
+      "section": "ZN區",
+      "category": "area",
+      "scheduleDisplayOrder": 26
+    },
+    {
+      "employeeId": "B3655",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 60,
+      "sourceOrder": 35,
+      "section": "ZN區",
+      "category": "area",
+      "scheduleDisplayOrder": 27
+    },
+    {
+      "employeeId": "B4441",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 61,
+      "sourceOrder": 36,
+      "section": "ZN區",
+      "category": "area",
+      "scheduleDisplayOrder": 28
+    },
+    {
+      "employeeId": "B6183",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 62,
+      "sourceOrder": 37,
+      "section": "ZN區",
+      "category": "area",
+      "scheduleDisplayOrder": 29
+    },
+    {
+      "employeeId": "B0989",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 64,
+      "sourceOrder": 38,
+      "section": "ZN區",
+      "category": "area",
+      "scheduleDisplayOrder": 30
+    },
+    {
+      "employeeId": "B2179",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 65,
+      "sourceOrder": 39,
+      "section": "ZN區",
+      "category": "area",
+      "scheduleDisplayOrder": 31
+    },
+    {
+      "employeeId": "B5281",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 66,
+      "sourceOrder": 40,
+      "section": "ZN區",
+      "category": "area",
+      "scheduleDisplayOrder": 32
+    },
+    {
+      "employeeId": "97968",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 70,
+      "sourceOrder": 41,
+      "section": "ZB區",
+      "category": "area",
+      "scheduleDisplayOrder": 33
+    },
+    {
+      "employeeId": "B0920",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 71,
+      "sourceOrder": 42,
+      "section": "ZB區",
+      "category": "area",
+      "scheduleDisplayOrder": 34
+    },
+    {
+      "employeeId": "B4558",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 72,
+      "sourceOrder": 43,
+      "section": "ZB區",
+      "category": "area",
+      "scheduleDisplayOrder": 35
+    },
+    {
+      "employeeId": "B3569",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 73,
+      "sourceOrder": 44,
+      "section": "ZB區",
+      "category": "area",
+      "scheduleDisplayOrder": 36
+    },
+    {
+      "employeeId": "B5638",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 74,
+      "sourceOrder": 45,
+      "section": "ZB區",
+      "category": "area",
+      "scheduleDisplayOrder": 37
+    },
+    {
+      "employeeId": "B5016",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 75,
+      "sourceOrder": 46,
+      "section": "ZB區",
+      "category": "area",
+      "scheduleDisplayOrder": 38
+    },
+    {
+      "employeeId": "B5401",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 76,
+      "sourceOrder": 47,
+      "section": "ZB區",
+      "category": "area",
+      "scheduleDisplayOrder": 39
+    },
+    {
+      "employeeId": "B5492",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 77,
+      "sourceOrder": 48,
+      "section": "ZB區",
+      "category": "area",
+      "scheduleDisplayOrder": 40
+    },
+    {
+      "employeeId": "B5739",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 78,
+      "sourceOrder": 49,
+      "section": "ZB區",
+      "category": "area",
+      "scheduleDisplayOrder": 41
+    },
+    {
+      "employeeId": "B5762",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 79,
+      "sourceOrder": 50,
+      "section": "ZB區",
+      "category": "area",
+      "scheduleDisplayOrder": 42
+    },
+    {
+      "employeeId": "B6082",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 80,
+      "sourceOrder": 51,
+      "section": "ZB區",
+      "category": "area",
+      "scheduleDisplayOrder": 43
+    },
+    {
+      "employeeId": "94232",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 83,
+      "sourceOrder": 52,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 44
+    },
+    {
+      "employeeId": "96145",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 84,
+      "sourceOrder": 53,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 45
+    },
+    {
+      "employeeId": "B3002",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 85,
+      "sourceOrder": 54,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 46
+    },
+    {
+      "employeeId": "95183",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 86,
+      "sourceOrder": 55,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 47
+    },
+    {
+      "employeeId": "95644",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 87,
+      "sourceOrder": 56,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 48
+    },
+    {
+      "employeeId": "B4896",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 88,
+      "sourceOrder": 57,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 49
+    },
+    {
+      "employeeId": "B5637",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 89,
+      "sourceOrder": 58,
+      "section": "P區",
+      "category": "area",
+      "scheduleDisplayOrder": 50
+    },
+    {
+      "employeeId": "98729",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 93,
+      "sourceOrder": 59,
+      "section": "G區",
+      "category": "area",
+      "scheduleDisplayOrder": 51
+    },
+    {
+      "employeeId": "B3238",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 94,
+      "sourceOrder": 60,
+      "section": "G區",
+      "category": "area",
+      "scheduleDisplayOrder": 52
+    },
+    {
+      "employeeId": "B6138",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 95,
+      "sourceOrder": 61,
+      "section": "G區",
+      "category": "area",
+      "scheduleDisplayOrder": 53
+    },
+    {
+      "employeeId": "B2712",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 96,
+      "sourceOrder": 62,
+      "section": "G區",
+      "category": "area",
+      "scheduleDisplayOrder": 54
+    },
+    {
+      "employeeId": "94253",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 101,
+      "sourceOrder": 63,
+      "section": "D區",
+      "category": "area",
+      "scheduleDisplayOrder": 55
+    },
+    {
+      "employeeId": "95424",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 102,
+      "sourceOrder": 64,
+      "section": "D區",
+      "category": "area",
+      "scheduleDisplayOrder": 56
+    },
+    {
+      "employeeId": "94986",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 103,
+      "sourceOrder": 65,
+      "section": "D區",
+      "category": "area",
+      "scheduleDisplayOrder": 57
+    },
+    {
+      "employeeId": "97900",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 104,
+      "sourceOrder": 66,
+      "section": "D區",
+      "category": "area",
+      "scheduleDisplayOrder": 58
+    },
+    {
+      "employeeId": "B2268",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 105,
+      "sourceOrder": 67,
+      "section": "D區",
+      "category": "area",
+      "scheduleDisplayOrder": 59
+    },
+    {
+      "employeeId": "98214",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 106,
+      "sourceOrder": 68,
+      "section": "D區",
+      "category": "area",
+      "scheduleDisplayOrder": 60
+    },
+    {
+      "employeeId": "B3824",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 107,
+      "sourceOrder": 69,
+      "section": "D區",
+      "category": "area",
+      "scheduleDisplayOrder": 61
+    },
+    {
+      "employeeId": "B5041",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 108,
+      "sourceOrder": 70,
+      "section": "D區",
+      "category": "area",
+      "scheduleDisplayOrder": 62
+    },
+    {
+      "employeeId": "94488",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 112,
+      "sourceOrder": 71,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 63
+    },
+    {
+      "employeeId": "95991",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 113,
+      "sourceOrder": 72,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 64
+    },
+    {
+      "employeeId": "B6045",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 114,
+      "sourceOrder": 73,
+      "section": "E區",
+      "category": "area",
+      "scheduleDisplayOrder": 65
+    },
+    {
+      "employeeId": "96165",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 117,
+      "sourceOrder": 74,
+      "section": "F1區",
+      "category": "area",
+      "scheduleDisplayOrder": 66
+    },
+    {
+      "employeeId": "96697",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 118,
+      "sourceOrder": 75,
+      "section": "F1區",
+      "category": "area",
+      "scheduleDisplayOrder": 67
+    },
+    {
+      "employeeId": "B4696",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 119,
+      "sourceOrder": 76,
+      "section": "F1區",
+      "category": "area",
+      "scheduleDisplayOrder": 68
+    },
+    {
+      "employeeId": "95205",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 123,
+      "sourceOrder": 77,
+      "section": "ZH2區",
+      "category": "area",
+      "scheduleDisplayOrder": 69
+    },
+    {
+      "employeeId": "B1944",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 124,
+      "sourceOrder": 78,
+      "section": "ZH2區",
+      "category": "area",
+      "scheduleDisplayOrder": 70
+    },
+    {
+      "employeeId": "B2207",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 125,
+      "sourceOrder": 79,
+      "section": "ZH2區",
+      "category": "area",
+      "scheduleDisplayOrder": 71
+    },
+    {
+      "employeeId": "B3733",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 126,
+      "sourceOrder": 80,
+      "section": "ZH2區",
+      "category": "area",
+      "scheduleDisplayOrder": 72
+    },
+    {
+      "employeeId": "B5336",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 127,
+      "sourceOrder": 81,
+      "section": "ZH2區",
+      "category": "area",
+      "scheduleDisplayOrder": 73
+    },
+    {
+      "employeeId": "B0048",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 128,
+      "sourceOrder": 82,
+      "section": "ZH2區",
+      "category": "area",
+      "scheduleDisplayOrder": 74
+    },
+    {
+      "employeeId": "B0831",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 129,
+      "sourceOrder": 83,
+      "section": "ZH2區",
+      "category": "area",
+      "scheduleDisplayOrder": 75
+    },
+    {
+      "employeeId": "B1598",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 130,
+      "sourceOrder": 84,
+      "section": "ZH2區",
+      "category": "area",
+      "scheduleDisplayOrder": 76
+    },
+    {
+      "employeeId": "B4419",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 131,
+      "sourceOrder": 85,
+      "section": "ZH2區",
+      "category": "area",
+      "scheduleDisplayOrder": 77
+    },
+    {
+      "employeeId": "95181",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 134,
+      "sourceOrder": 86,
+      "section": "I2區",
+      "category": "area",
+      "scheduleDisplayOrder": 78
+    },
+    {
+      "employeeId": "B1065",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 135,
+      "sourceOrder": 87,
+      "section": "I2區",
+      "category": "area",
+      "scheduleDisplayOrder": 79
+    },
+    {
+      "employeeId": "B2858",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 136,
+      "sourceOrder": 88,
+      "section": "I2區",
+      "category": "area",
+      "scheduleDisplayOrder": 80
+    },
+    {
+      "employeeId": "B5326",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 137,
+      "sourceOrder": 89,
+      "section": "I2區",
+      "category": "area",
+      "scheduleDisplayOrder": 81
+    },
+    {
+      "employeeId": "B5636",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 138,
+      "sourceOrder": 90,
+      "section": "I2區",
+      "category": "area",
+      "scheduleDisplayOrder": 82
+    },
+    {
+      "employeeId": "95207",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 141,
+      "sourceOrder": 91,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 83
+    },
+    {
+      "employeeId": "97520",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 142,
+      "sourceOrder": 92,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 84
+    },
+    {
+      "employeeId": "B0773",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 144,
+      "sourceOrder": 93,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 85
+    },
+    {
+      "employeeId": "B0895",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 145,
+      "sourceOrder": 94,
+      "section": "K1區",
+      "category": "area",
+      "scheduleDisplayOrder": 86
+    },
+    {
+      "employeeId": "95641",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 147,
+      "sourceOrder": 95,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 87
+    },
+    {
+      "employeeId": "96708",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 148,
+      "sourceOrder": 96,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 88
+    },
+    {
+      "employeeId": "B1006",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 149,
+      "sourceOrder": 97,
+      "section": "K2區",
+      "category": "area",
+      "scheduleDisplayOrder": 89
+    },
+    {
+      "employeeId": "94466",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 151,
+      "sourceOrder": 98,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 90
+    },
+    {
+      "employeeId": "B0211",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 152,
+      "sourceOrder": 99,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 91
+    },
+    {
+      "employeeId": "B4362",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 153,
+      "sourceOrder": 100,
+      "section": "K3區",
+      "category": "area",
+      "scheduleDisplayOrder": 92
+    },
+    {
+      "employeeId": "96484",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 156,
+      "sourceOrder": 101,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 93
+    },
+    {
+      "employeeId": "B0919",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 157,
+      "sourceOrder": 102,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 94
+    },
+    {
+      "employeeId": "B4593",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 158,
+      "sourceOrder": 103,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 95
+    },
+    {
+      "employeeId": "98309",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 159,
+      "sourceOrder": 104,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 96
+    },
+    {
+      "employeeId": "B2083",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 160,
+      "sourceOrder": 105,
+      "section": "K4區",
+      "category": "area",
+      "scheduleDisplayOrder": 97
+    },
+    {
+      "employeeId": "B1192",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 162,
+      "sourceOrder": 106,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 98
+    },
+    {
+      "employeeId": "B2517",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 163,
+      "sourceOrder": 107,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 99
+    },
+    {
+      "employeeId": "96477",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 164,
+      "sourceOrder": 108,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 100
+    },
+    {
+      "employeeId": "B0414",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 165,
+      "sourceOrder": 109,
+      "section": "L1區",
+      "category": "area",
+      "scheduleDisplayOrder": 101
+    },
+    {
+      "employeeId": "95392",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 168,
+      "sourceOrder": 110,
+      "section": "L區",
+      "category": "area",
+      "scheduleDisplayOrder": 102
+    },
+    {
+      "employeeId": "B5272",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 170,
+      "sourceOrder": 111,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 103
+    },
+    {
+      "employeeId": "B5482",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 171,
+      "sourceOrder": 112,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 104
+    },
+    {
+      "employeeId": "B5653",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 172,
+      "sourceOrder": 113,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 105
+    },
+    {
+      "employeeId": "98746",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 173,
+      "sourceOrder": 114,
+      "section": "L2區",
+      "category": "area",
+      "scheduleDisplayOrder": 106
+    },
+    {
+      "employeeId": "B3217",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 175,
+      "sourceOrder": 115,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 107
+    },
+    {
+      "employeeId": "B1994",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 176,
+      "sourceOrder": 116,
+      "section": "L3區",
+      "category": "area",
+      "scheduleDisplayOrder": 108
+    },
+    {
+      "employeeId": "97435",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 179,
+      "sourceOrder": 117,
+      "section": "M2區",
+      "category": "area",
+      "scheduleDisplayOrder": 109
+    },
+    {
+      "employeeId": "97436",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 180,
+      "sourceOrder": 118,
+      "section": "M2區",
+      "category": "area",
+      "scheduleDisplayOrder": 110
+    },
+    {
+      "employeeId": "B5379",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 181,
+      "sourceOrder": 119,
+      "section": "M2區",
+      "category": "area",
+      "scheduleDisplayOrder": 111
+    },
+    {
+      "employeeId": "B0832",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 184,
+      "sourceOrder": 120,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 112
+    },
+    {
+      "employeeId": "B1811",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 185,
+      "sourceOrder": 121,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 113
+    },
+    {
+      "employeeId": "B6013",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 186,
+      "sourceOrder": 122,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 114
+    },
+    {
+      "employeeId": "B2146",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 188,
+      "sourceOrder": 123,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 115
+    },
+    {
+      "employeeId": "B2386",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 189,
+      "sourceOrder": 124,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 116
+    },
+    {
+      "employeeId": "B3581",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 190,
+      "sourceOrder": 125,
+      "section": "W3區",
+      "category": "area",
+      "scheduleDisplayOrder": 117
+    },
+    {
+      "employeeId": "95848",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 193,
+      "sourceOrder": 126,
+      "section": "W2區",
+      "category": "area",
+      "scheduleDisplayOrder": 118
+    },
+    {
+      "employeeId": "B0429",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 194,
+      "sourceOrder": 127,
+      "section": "W2區",
+      "category": "area",
+      "scheduleDisplayOrder": 119
+    },
+    {
+      "employeeId": "B4509",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 195,
+      "sourceOrder": 128,
+      "section": "W2區",
+      "category": "area",
+      "scheduleDisplayOrder": 120
+    },
+    {
+      "employeeId": "96504",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 198,
+      "sourceOrder": 129,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 121
+    },
+    {
+      "employeeId": "B3175",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 199,
+      "sourceOrder": 130,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 122
+    },
+    {
+      "employeeId": "B5784",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 200,
+      "sourceOrder": 131,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 123
+    },
+    {
+      "employeeId": "B0410",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 201,
+      "sourceOrder": 132,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 124
+    },
+    {
+      "employeeId": "B5167",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 202,
+      "sourceOrder": 133,
+      "section": "O1區",
+      "category": "area",
+      "scheduleDisplayOrder": 125
+    },
+    {
+      "employeeId": "95415",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 207,
+      "sourceOrder": 134,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 126
+    },
+    {
+      "employeeId": "B2109",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 208,
+      "sourceOrder": 135,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 127
+    },
+    {
+      "employeeId": "B2461",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 209,
+      "sourceOrder": 136,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 128
+    },
+    {
+      "employeeId": "B1025",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 210,
+      "sourceOrder": 137,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 129
+    },
+    {
+      "employeeId": "B1875",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 212,
+      "sourceOrder": 138,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 130
+    },
+    {
+      "employeeId": "95897",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 213,
+      "sourceOrder": 139,
+      "section": "O4區",
+      "category": "area",
+      "scheduleDisplayOrder": 131
+    },
+    {
+      "employeeId": "B1000",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 216,
+      "sourceOrder": 140,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 132
+    },
+    {
+      "employeeId": "B2955",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 217,
+      "sourceOrder": 141,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 133
+    },
+    {
+      "employeeId": "96400",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 218,
+      "sourceOrder": 142,
+      "section": "O3區",
+      "category": "area",
+      "scheduleDisplayOrder": 134
+    },
+    {
+      "employeeId": "96463",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 221,
+      "sourceOrder": 143,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 135
+    },
+    {
+      "employeeId": "B0947",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 222,
+      "sourceOrder": 144,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 136
+    },
+    {
+      "employeeId": "B4802",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 223,
+      "sourceOrder": 145,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 137
+    },
+    {
+      "employeeId": "B4913",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 224,
+      "sourceOrder": 146,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 138
+    },
+    {
+      "employeeId": "95656",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 225,
+      "sourceOrder": 147,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 139
+    },
+    {
+      "employeeId": "B4366",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 226,
+      "sourceOrder": 148,
+      "section": "R區",
+      "category": "area",
+      "scheduleDisplayOrder": 140
+    },
+    {
+      "employeeId": "95857",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 228,
+      "sourceOrder": 149,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 141
+    },
+    {
+      "employeeId": "96716",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 229,
+      "sourceOrder": 150,
+      "section": "S區",
+      "category": "area",
+      "scheduleDisplayOrder": 142
+    },
+    {
+      "employeeId": "94980",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 232,
+      "sourceOrder": 151,
+      "section": "T區",
+      "category": "area",
+      "scheduleDisplayOrder": 143
+    },
+    {
+      "employeeId": "B3348",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 233,
+      "sourceOrder": 152,
+      "section": "T區",
+      "category": "area",
+      "scheduleDisplayOrder": 144
+    },
+    {
+      "employeeId": "B4684",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 234,
+      "sourceOrder": 153,
+      "section": "T區",
+      "category": "area",
+      "scheduleDisplayOrder": 145
+    },
+    {
+      "employeeId": "95850",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 235,
+      "sourceOrder": 154,
+      "section": "T區",
+      "category": "area",
+      "scheduleDisplayOrder": 146
+    },
+    {
+      "employeeId": "96172",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 238,
+      "sourceOrder": 155,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 147
+    },
+    {
+      "employeeId": "94622",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 239,
+      "sourceOrder": 156,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 148
+    },
+    {
+      "employeeId": "B4132",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 240,
+      "sourceOrder": 157,
+      "section": "V區",
+      "category": "area",
+      "scheduleDisplayOrder": 149
+    },
+    {
+      "employeeId": "B0976",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 244,
+      "sourceOrder": 158,
+      "section": "X區",
+      "category": "area",
+      "scheduleDisplayOrder": 150
+    },
+    {
+      "employeeId": "B2697",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 245,
+      "sourceOrder": 159,
+      "section": "X區",
+      "category": "area",
+      "scheduleDisplayOrder": 151
+    },
+    {
+      "employeeId": "B2147",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 247,
+      "sourceOrder": 160,
+      "section": "X區",
+      "category": "area",
+      "scheduleDisplayOrder": 152
+    }
+  ]
+}

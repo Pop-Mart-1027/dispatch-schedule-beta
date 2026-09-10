@@ -12,7 +12,13 @@
 
 ## 分組與期限
 
-優先使用既有正式班表 `shiftType`；沒有正式班別時才採員工已明確提供的 shiftType／shiftGroup。只轉成 day／night；小夜屬 night。無法確認的員工不猜分組，阻止開放並提示確認資料。
+畫面只使用「日班／大小夜班」，內部仍為 day／night，不新增第三組。分組與順序固定使用 `functions/pre-schedule-source-order.json`，由 `scripts/build-pre-schedule-source-order.mjs` 依原始 `public/september-schedules.json` 的「9月日班／9月夜班」列順序產生，保留來源檔雜湊、sourceSheet、sourceRow、sourceOrder、scheduleDisplayOrder、區域／車組標題。這些是獨立唯讀來源中繼資料，不增加預排 entry 或 scheduleRecords 欄位。
+
+主管／監控固定在日班前端，主管、監控各自保留來源相對順序；一般區域人員保留原表順序，不依員編／職稱重新排序。兩表都有的主管採日班來源；跨表 PT-晚夜採夜班車組位置。小夜人員與夜班同組，不依某一天的 scheduleCode／shiftType 跳組。正式主檔沒有的人不因來源有列而新增。沒有 9 月來源的新員工才沿用明確的固定 shiftType／shiftGroup 或既有快照組別，放在該組最後；不猜區域順序。
+
+共用 `preScheduleRoster()`／`preScheduleDisplayOrder()` 套用固定來源。已建立月份仍保留原應預排名單，讀取時投影正確分組；舊 entries 即使 group 錯誤，也按所選組的員編每 30 人批次讀取，避免漏掉已填內容。切換只讀取，不改 days、arrangedDays、送出狀態、revision 或時間，也不遷移或覆寫舊文件。原發布確認、截止、audit 與派工規則不變。
+
+正式 750 人唯讀核對：日班 597 人／大小夜班 153 人。96504 位於大小夜班第 122 人、原夜班第 198 列；O1 順序：96504、B3175、B5784、B0410、B5167。組別標題列不計入人員位置。
 
 管理員第一次開放月份時建立應預排名單快照。設定期間沿用 `scheduleSettings/{month}` 的 startAt／endAt／status；新介面也更新同一設定，日期未寫死在元件。
 

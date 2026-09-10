@@ -23,8 +23,42 @@
   margin-bottom: 10px;
   padding: 8px 12px;
 }
-.pre-month-admin .tabs {
+.pre-month-admin .pre-group-tabs {
   margin: 0;
+  display: flex;
+  flex: 0 0 auto;
+  gap: 4px;
+  padding: 4px;
+  background: #f3e9dc;
+  border-radius: 8px;
+}
+.pre-group-tabs button {
+  min-width: 116px;
+  padding: 10px 20px;
+  border: 0;
+  background: transparent;
+  color: #694727;
+  font-size: 16px;
+  font-weight: 700;
+  border-radius: 6px;
+}
+.pre-group-tabs button[aria-selected='true'] {
+  background: #ec7418;
+  color: white;
+}
+.pre-month-table .pre-source-heading > td {
+  position: static;
+  width: auto;
+  min-width: 0;
+  max-width: none;
+  padding: 7px 10px;
+  background: #fff1df;
+  color: #794c24;
+  font-weight: 700;
+}
+.pre-source-heading span {
+  position: sticky;
+  left: 10px;
 }
 .pre-month-admin .admin-page-toolbar > input {
   width: 230px;

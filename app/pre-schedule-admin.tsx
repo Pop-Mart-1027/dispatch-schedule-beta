@@ -1,9 +1,10 @@
 'use client';
-import { useEffect, useMemo, useState, useRef } from 'react';
+import { Fragment, useEffect, useMemo, useState, useRef } from 'react';
+import { titleAdminOrder } from '../lib/admin-employee-order';
 import {
-  employeeAdminOrder,
-  titleAdminOrder,
-} from '../lib/admin-employee-order';
+  preScheduleDisplayOrder,
+  preScheduleSource,
+} from '../functions/pre-schedule-order.mjs';
 import {
   PRE_CHOICES,
   monthDays,
@@ -156,7 +157,7 @@ function MonthMatrix({
           checks: assessArrangement(month, entry, data?.formalCodes || []),
         };
       })
-      .sort((a, b) => employeeAdminOrder(a.person, b.person));
+      .sort((a, b) => preScheduleDisplayOrder(a.person, b.person));
   }, [data, month]);
   const stats = {
     expected: rows.length,
@@ -308,23 +309,35 @@ function MonthMatrix({
   return (
     <section className="pre-month-admin">
       <div className="admin-page-toolbar">
-        <div className="tabs">
+        <div className="pre-group-tabs" role="tablist" aria-label="預排組別">
           <button
+            role="tab"
+            aria-selected={group === 'day'}
             disabled={running}
-            className={group === 'day' ? 'tab active' : 'tab'}
-            onClick={() => setGroup('day')}
+            onClick={() => {
+              setSearch('');
+              setTitle('');
+              setFilter('all');
+              setGroup('day');
+            }}
           >
-            早班組
+            日班
           </button>
           <button
+            role="tab"
+            aria-selected={group === 'night'}
             disabled={running}
-            className={group === 'night' ? 'tab active' : 'tab'}
-            onClick={() => setGroup('night')}
+            onClick={() => {
+              setSearch('');
+              setTitle('');
+              setFilter('all');
+              setGroup('night');
+            }}
           >
-            夜班組
+            大小夜班
           </button>
         </div>
-        <span>夜班組包含夜班與小夜班</span>
+        <span>依原班表編制與車組順序排列；大小夜班包含夜班與小夜班</span>
         <button onClick={reload} disabled={running}>
           重新載入
         </button>
@@ -510,41 +523,56 @@ function MonthMatrix({
           </thead>
           <tbody>
             {!loading &&
-              visible.map(({ person, entry, checks }) => (
-                <tr key={person.employeeId}>
-                  <td>{person.title}</td>
-                  <td>{person.employeeId}</td>
-                  <td title={checks.issues.join('；')}>
-                    <strong>{person.name}</strong>
-                    <small>
-                      {entry?.submitted ? '已送出' : '未送出'}
-                      {checks.incomplete ? ' · 未完成' : ''}
-                      {checks.abnormal ? ' · 異常' : ''}
-                    </small>
-                  </td>
-                  {Array.from({ length: monthDays(month) }, (_, i) => (
-                    <td
-                      key={i}
-                      className={
-                        checks.pendingIndices.includes(i)
-                          ? 'pre-unarranged'
-                          : ''
-                      }
-                      data-unarranged={
-                        checks.pendingIndices.includes(i) ? 'true' : undefined
-                      }
-                    >
-                      <button
-                        disabled={!canEdit || saving}
-                        aria-label={`${person.employeeId} ${i + 1}日`}
-                        onClick={() => openCell(person, i)}
-                        title={`員工預排：${entry?.days[i] || '未填'}${checks.pendingIndices.includes(i) ? '；待監控安排正式班碼' : ''}`}
-                      >
-                        {checks.days[i] || '—'}
-                      </button>
+              visible.map(({ person, entry, checks }, rowIndex) => (
+                <Fragment key={person.employeeId}>
+                  {preScheduleSource(person.employeeId)?.section &&
+                    (rowIndex === 0 ||
+                      preScheduleSource(visible[rowIndex - 1].person.employeeId)
+                        ?.section !==
+                        preScheduleSource(person.employeeId)?.section) && (
+                      <tr className="pre-source-heading">
+                        <td colSpan={monthDays(month) + 3}>
+                          <span>
+                            {preScheduleSource(person.employeeId)?.section}
+                          </span>
+                        </td>
+                      </tr>
+                    )}
+                  <tr data-employee-id={person.employeeId}>
+                    <td>{person.title}</td>
+                    <td>{person.employeeId}</td>
+                    <td title={checks.issues.join('；')}>
+                      <strong>{person.name}</strong>
+                      <small>
+                        {entry?.submitted ? '已送出' : '未送出'}
+                        {checks.incomplete ? ' · 未完成' : ''}
+                        {checks.abnormal ? ' · 異常' : ''}
+                      </small>
                     </td>
-                  ))}
-                </tr>
+                    {Array.from({ length: monthDays(month) }, (_, i) => (
+                      <td
+                        key={i}
+                        className={
+                          checks.pendingIndices.includes(i)
+                            ? 'pre-unarranged'
+                            : ''
+                        }
+                        data-unarranged={
+                          checks.pendingIndices.includes(i) ? 'true' : undefined
+                        }
+                      >
+                        <button
+                          disabled={!canEdit || saving}
+                          aria-label={`${person.employeeId} ${i + 1}日`}
+                          onClick={() => openCell(person, i)}
+                          title={`員工預排：${entry?.days[i] || '未填'}${checks.pendingIndices.includes(i) ? '；待監控安排正式班碼' : ''}`}
+                        >
+                          {checks.days[i] || '—'}
+                        </button>
+                      </td>
+                    ))}
+                  </tr>
+                </Fragment>
               ))}
           </tbody>
         </table>
@@ -610,7 +638,7 @@ function MonthMatrix({
           >
             <h3>轉為正式班表：{summary.monthKey}</h3>
             <p>
-              早班組 {summary.day} 人／夜班組 {summary.night} 人
+              日班 {summary.day} 人／大小夜班 {summary.night} 人
             </p>
             <p>
               尚未送出 {summary.unsubmitted}／未完成 {summary.incomplete}／異常{' '}
@@ -624,7 +652,7 @@ function MonthMatrix({
                   個出勤班次未完成班別／區域安排
                 </strong>
                 <p>
-                  早班組 {summary.unarrangedGroups.day}／夜班組{' '}
+                  日班 {summary.unarrangedGroups.day}／大小夜班{' '}
                   {summary.unarrangedGroups.night}
                 </p>
                 <button
