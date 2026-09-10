@@ -1,10 +1,20 @@
-import { initialMonthRows, changeMonthRows } from './month-schedule-layout.mjs';
+import {
+  initialMonthRows,
+  changeMonthRows,
+  monthSectionCatalog,
+  changeMonthSections,
+} from './month-schedule-layout.mjs';
 import { moveWorkArea } from './month-schedule-policy.mjs';
 export function createMonthScheduleService({ db, FieldValue, HttpsError }) {
   return async (request) => {
     const input = request.data || {},
       token = request.auth?.token,
       uid = request.auth?.uid;
+    const sectionAction = [
+      'section-add',
+      'section-delete',
+      'section-rename',
+    ].includes(input.action);
     if (
       !uid ||
       token?.employeeId !== uid ||
@@ -17,9 +27,10 @@ export function createMonthScheduleService({ db, FieldValue, HttpsError }) {
       );
     if (
       !/^\d{4}-(0[1-9]|1[0-2])$/.test(input.monthKey || '') ||
-      typeof input.employeeId !== 'string' ||
-      /[\/]/.test(input.employeeId) ||
-      !input.employeeId
+      (!sectionAction &&
+        (typeof input.employeeId !== 'string' ||
+          /[\/]/.test(input.employeeId) ||
+          !input.employeeId))
     )
       throw new HttpsError('invalid-argument', '月份或員編不正確');
     const ref = db.collection('scheduleMonthLayouts').doc(input.monthKey);
@@ -27,7 +38,9 @@ export function createMonthScheduleService({ db, FieldValue, HttpsError }) {
     return db.runTransaction(async (tx) => {
       const [actor, employee, snapshot] = await Promise.all([
         tx.get(db.collection('employees').doc(uid)),
-        tx.get(db.collection('employees').doc(input.employeeId)),
+        sectionAction
+          ? Promise.resolve(null)
+          : tx.get(db.collection('employees').doc(input.employeeId)),
         tx.get(ref),
       ]);
       if (
@@ -37,7 +50,8 @@ export function createMonthScheduleService({ db, FieldValue, HttpsError }) {
         actor.data().mustChangePassword !== false
       )
         throw new HttpsError('permission-denied', '管理員權限已失效');
-      if (!employee.exists) throw new HttpsError('not-found', '找不到正式員工');
+      if (!sectionAction && !employee.exists)
+        throw new HttpsError('not-found', '找不到正式員工');
       const current = snapshot.data();
       if ((current?.revision || 0) !== input.revision)
         throw new HttpsError('aborted', '本月人員已被修改，請重新載入後再試');
@@ -52,7 +66,8 @@ export function createMonthScheduleService({ db, FieldValue, HttpsError }) {
           0,
         ).getDate();
         if (
-          !row || current?.excludedEmployeeIds?.includes(input.employeeId) ||
+          !row ||
+          current?.excludedEmployeeIds?.includes(input.employeeId) ||
           input.date !== `${input.monthKey}-${String(day).padStart(2, '0')}` ||
           day < 1 ||
           day > count ||
@@ -154,11 +169,66 @@ export function createMonthScheduleService({ db, FieldValue, HttpsError }) {
             })),
         );
       }
+      const sections = monthSectionCatalog(rows, current);
+      if (sectionAction) {
+        let result;
+        try {
+          result = changeMonthSections(
+            sections,
+            rows,
+            input,
+            `custom:${audit.id}`,
+          );
+        } catch (error) {
+          throw new HttpsError('failed-precondition', error.message);
+        }
+        const revision = (current?.revision || 0) + 1;
+        tx.set(ref, {
+          ...(current || {}),
+          monthKey: input.monthKey,
+          rows,
+          sections: result.sections,
+          revision,
+          modifiedBy: uid,
+          modifiedAt: FieldValue.serverTimestamp(),
+        });
+        tx.set(audit, {
+          action: input.action,
+          monthKey: input.monthKey,
+          date: `${input.monthKey}-01`,
+          before: result.before,
+          after: result.after,
+          modifiedBy: uid,
+          modifiedAt: FieldValue.serverTimestamp(),
+        });
+        return { revision };
+      }
+      let command = input;
+      if (['add', 'move'].includes(input.action)) {
+        const destination = sections.find(
+          (s) =>
+            s.group === input.group &&
+            (input.sectionKey
+              ? s.key === input.sectionKey
+              : s.section === input.section && s.areaCode === input.areaCode),
+        );
+        if (!destination)
+          throw new HttpsError(
+            'failed-precondition',
+            '區域不存在或已刪除，請重新載入',
+          );
+        command = {
+          ...input,
+          sectionKey: destination.key,
+          section: destination.section,
+          areaCode: destination.areaCode,
+        };
+      }
       let result;
       try {
         result = changeMonthRows(
           rows,
-          input,
+          command,
           { ...employee.data(), employeeId: employee.id },
           input.monthKey,
         );
@@ -170,36 +240,83 @@ export function createMonthScheduleService({ db, FieldValue, HttpsError }) {
       if (input.action === 'remove') excluded.add(employee.id);
       if (input.action === 'add') excluded.delete(employee.id);
       const changes = [];
-      if (input.action === 'move' && result.before.areaCode !== result.after.areaCode) {
-        if (!result.before.areaCode || !result.after.areaCode)
-          throw new HttpsError('failed-precondition', '原區域或新區域沒有可確認區碼，無法自動轉換工作班碼');
-        const records = await tx.get(db.collection('scheduleRecords')
-          .where('employeeId', '==', employee.id)
-          .where('date', '>=', `${input.monthKey}-01`)
-          .where('date', '<=', `${input.monthKey}-31`));
+      if (
+        input.action === 'move' &&
+        result.before.areaCode &&
+        result.after.areaCode &&
+        result.before.areaCode !== result.after.areaCode
+      ) {
+        const records = await tx.get(
+          db
+            .collection('scheduleRecords')
+            .where('employeeId', '==', employee.id)
+            .where('date', '>=', `${input.monthKey}-01`)
+            .where('date', '<=', `${input.monthKey}-31`),
+        );
         const dates = new Set();
         for (const record of records.docs) {
           const before = record.data();
-          if (dates.has(before.date)) throw new HttpsError('failed-precondition', '本月存在重複班表，請先確認');
+          if (dates.has(before.date))
+            throw new HttpsError(
+              'failed-precondition',
+              '本月存在重複班表，請先確認',
+            );
           dates.add(before.date);
-          if (result.before.blankDays.includes(String(Number(before.date.slice(8))))) continue;
-          const code = moveWorkArea(before.scheduleCode || '', result.before.areaCode, result.after.areaCode);
+          if (
+            result.before.blankDays.includes(
+              String(Number(before.date.slice(8))),
+            )
+          )
+            continue;
+          const code = moveWorkArea(
+            before.scheduleCode || '',
+            result.before.areaCode,
+            result.after.areaCode,
+          );
           if (code === before.scheduleCode || !code) continue;
-          const after = { scheduleCode: code, scheduleLabel: moveWorkArea(before.scheduleLabel || before.scheduleCode, result.before.areaCode, result.after.areaCode) };
-          changes.push({ recordId: record.id, date: before.date,
-            before: { scheduleCode: before.scheduleCode, scheduleLabel: before.scheduleLabel || '' }, after });
-          tx.update(record.ref, { ...after, updatedAt: FieldValue.serverTimestamp(), modifiedBy: uid, modifiedAt: FieldValue.serverTimestamp() });
+          const after = {
+            scheduleCode: code,
+            scheduleLabel: moveWorkArea(
+              before.scheduleLabel || before.scheduleCode,
+              result.before.areaCode,
+              result.after.areaCode,
+            ),
+          };
+          changes.push({
+            recordId: record.id,
+            date: before.date,
+            before: {
+              scheduleCode: before.scheduleCode,
+              scheduleLabel: before.scheduleLabel || '',
+            },
+            after,
+          });
+          tx.update(record.ref, {
+            ...after,
+            updatedAt: FieldValue.serverTimestamp(),
+            modifiedBy: uid,
+            modifiedAt: FieldValue.serverTimestamp(),
+          });
         }
       }
-      const resetDates = input.action === 'move' ? changes.map(change => change.date)
-        : input.action === 'add' ? result.after.blankDays.map(day => `${input.monthKey}-${day.padStart(2, '0')}`) : [];
+      const resetDates =
+        input.action === 'move'
+          ? changes.map((change) => change.date)
+          : input.action === 'add'
+            ? result.after.blankDays.map(
+                (day) => `${input.monthKey}-${day.padStart(2, '0')}`,
+              )
+            : [];
       const assignmentResetAt = { ...(current?.assignmentResetAt || {}) };
-      for (const date of resetDates) assignmentResetAt[date] = {
-        ...(assignmentResetAt[date] || {}), [employee.id]: FieldValue.serverTimestamp(),
-      };
+      for (const date of resetDates)
+        assignmentResetAt[date] = {
+          ...(assignmentResetAt[date] || {}),
+          [employee.id]: FieldValue.serverTimestamp(),
+        };
       tx.set(ref, {
         monthKey: input.monthKey,
         rows: result.rows,
+        sections,
         excludedEmployeeIds: [...excluded],
         assignmentResetAt,
         revision,
@@ -216,7 +333,14 @@ export function createMonthScheduleService({ db, FieldValue, HttpsError }) {
         toSection: result.after?.section || null,
         convertedDates: changes,
         resetManualAssignmentDates: resetDates,
-        participationBefore: !!result.before && !(current?.excludedEmployeeIds || []).includes(employee.id),
+        note:
+          input.action === 'move' &&
+          (!result.before.areaCode || !result.after.areaCode)
+            ? '無區碼移動，班碼未轉換'
+            : '',
+        participationBefore:
+          !!result.before &&
+          !(current?.excludedEmployeeIds || []).includes(employee.id),
         participationAfter: !!result.after && !excluded.has(employee.id),
         before: { row: result.before, order: rows.map((r) => r.employeeId) },
         after: {

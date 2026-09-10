@@ -6,12 +6,9 @@ import {
   DialogTitle,
   DialogDescription,
 } from '../components/ui/dialog';
-import { manageMonthRow, type MonthLayout } from '../lib/month-schedule-layout';
-import {
-  scheduleSections,
-  preScheduleSource,
-} from '../functions/pre-schedule-order.mjs';
-import { scheduleSectionIdentity } from '../functions/schedule-section-key.mjs';
+import { manageMonthRow, type MonthLayout, type MonthSection } from '../lib/month-schedule-layout';
+import { preScheduleSource } from '../functions/pre-schedule-order.mjs';
+import { initialMonthRows, monthSectionCatalog } from '../functions/month-schedule-layout.mjs';
 import './work-focus.css';
 export function MonthRowManager({
   month,
@@ -38,18 +35,7 @@ export function MonthRowManager({
     [busy, setBusy] = useState(false),
     [error, setError] = useState(''),
     [confirm, setConfirm] = useState(false);
-  const options = scheduleSections(people, group);
-  // Include month-specific sections without replacing original source choices.
-  for (const row of layout?.rows || [])
-    if (row.group === group) {
-      const identity = scheduleSectionIdentity(
-        row.section,
-        row.areaCode || '',
-        group,
-      );
-      if (!options.some((s) => s.key === identity.key))
-        options.push({ ...identity, people: [] });
-    }
+  const options = (monthSectionCatalog(layout?.rows || initialMonthRows(people.filter(p=>present.includes(p.employeeId))),layout) as MonthSection[]).filter(s=>s.group===group);
   const person = people.find((p) => p.employeeId === personId),
     option = options.find((s) => s.key === sectionKey);
   const save = async () => {
@@ -69,12 +55,11 @@ export function MonthRowManager({
         action,
         employeeId: personId,
         confirmed: confirm,
-        ...(['move', 'add'].includes(action)
+        ...(['move', 'add'].includes(action) && option
           ? {
               group,
-              section:
-                preScheduleSource(option.people[0]?.employeeId)?.section ||
-                option.label,
+              sectionKey: option.key,
+              section: option.section,
               areaCode: option.areaCode,
             }
           : {}),
@@ -94,23 +79,21 @@ export function MonthRowManager({
         if (!open && !busy) onClose();
       }}
     >
-      <DialogContent className="month-row-dialog" showCloseButton={!busy}>
-        <DialogTitle>本月班表人員管理</DialogTitle>
+      <DialogContent className="month-row-dialog" showCloseButton={false}>
+        <button className="month-dialog-close" aria-label="關閉" disabled={busy} onClick={onClose}>×</button>
+        <DialogTitle>{selected ? '班表人員異動' : '新增人員'}</DialogTitle>
         <DialogDescription>
           {month} ·{' '}
           {selected
             ? people.find((p) => p.employeeId === selected)?.name
             : '新增人員'}
-          ；移區會同步轉換本月原區域的工作班碼，並取消這些日期該人的舊人工派工。保留班型、休假與其他區域班碼；上／下移只調整順序。
+          {selected ? '；換區會轉換本月原區域的工作班碼，保留休假與其他區域班碼。無區碼的特殊區域只移動位置，班碼不變。' : '；加入目前月份，日期先留白。'}
         </DialogDescription>
         <div className="month-row-actions">
           {(selected
             ? [
-                ['move', '移動到區域'],
-                ['up', '上移'],
-                ['down', '下移'],
-                ['add', '新增人員'],
-                ['remove', '移出本月班表'],
+                ['move', '換區'],
+                ['remove', '移出'],
               ]
             : [['add', '新增人員']]
           ).map(([value, label]) => (
@@ -200,17 +183,12 @@ export function MonthRowManager({
         )}
         {error && <p role="alert">{error}</p>}
         <div className="month-row-actions">
-          <button disabled={busy} onClick={onClose}>
-            取消
-          </button>
           <button disabled={busy || !action} onClick={() => void save()}>
             {busy
               ? '儲存中…'
               : confirm
                 ? '確認移出'
-                : action === 'remove'
-                  ? '移出本月班表'
-                  : '儲存'}
+                : '儲存'}
           </button>
         </div>
       </DialogContent>

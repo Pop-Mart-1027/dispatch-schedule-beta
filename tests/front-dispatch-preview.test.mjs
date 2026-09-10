@@ -30,7 +30,7 @@ fixture.monthSchedules = Array.from({ length: 30 }, (_, index) => employees.map(
     scheduleCode: [...new Set(rows.map(({ row }) => row.shifts[index]).filter(Boolean))].join('／') }
 })).flat()
 const virtual = {
-  'test:month-layout': `import {initialMonthRows,changeMonthRows} from '/functions/month-schedule-layout.mjs';
+  'test:month-layout': `import {initialMonthRows,changeMonthRows,monthSectionCatalog,changeMonthSections} from '/functions/month-schedule-layout.mjs';
     import {moveWorkArea} from '/functions/month-schedule-policy.mjs';
     export async function getMonthLayout(month){return window.monthLayouts?.[month] || null;}
     export async function manageMonthRow(input){
@@ -38,12 +38,17 @@ const virtual = {
       const old=window.monthLayouts[input.monthKey];
       const ids=new Set(window.fixture.monthSchedules.map(r=>r.employeeId));
       const rows=old?.rows || initialMonthRows(window.fixture.employees.filter(p=>ids.has(p.employeeId)));
+      const sections=monthSectionCatalog(rows,old);
+      if(input.action.startsWith('section-')){
+        const result=changeMonthSections(sections,rows,input,'custom:'+window.rowCalls.length);
+        window.monthLayouts[input.monthKey]={...old,monthKey:input.monthKey,rows,sections:result.sections,revision:(old?.revision||0)+1};return;
+      }
       const result=changeMonthRows(rows,input,window.fixture.employees.find(p=>p.employeeId===input.employeeId),input.monthKey);
       const excluded=new Set(old?.excludedEmployeeIds||[]);
       if(input.action==='remove')excluded.add(input.employeeId);
       if(input.action==='add')excluded.delete(input.employeeId);
-      if(input.action==='move')for(const record of [...window.fixture.monthSchedules,...Object.values(window.fixture.schedules).flat()])if(record.employeeId===input.employeeId&&record.date.startsWith(input.monthKey))record.scheduleCode=moveWorkArea(record.scheduleCode,result.before.areaCode,result.after.areaCode);
-      window.monthLayouts[input.monthKey]={monthKey:input.monthKey,revision:(old?.revision || 0)+1,rows:result.rows,excludedEmployeeIds:[...excluded]};
+      if(input.action==='move'&&result.before.areaCode&&result.after.areaCode)for(const record of [...window.fixture.monthSchedules,...Object.values(window.fixture.schedules).flat()])if(record.employeeId===input.employeeId&&record.date.startsWith(input.monthKey))record.scheduleCode=moveWorkArea(record.scheduleCode,result.before.areaCode,result.after.areaCode);
+      window.monthLayouts[input.monthKey]={monthKey:input.monthKey,revision:(old?.revision || 0)+1,rows:result.rows,sections,excludedEmployeeIds:[...excluded]};
     }`,
   'test:firestore': `export * from 'firebase/firestore';
     export function onSnapshot(ref,next) {
@@ -148,7 +153,7 @@ const server = await createServer({
     resolveId(id) { if (id in virtual) return '\0' + id + '.tsx' },
     load(id) { if (id.startsWith('\0test:')) return virtual[id.slice(1, -4)] },
     transform(code, id) {
-      if(id.replaceAll('\\', '/').endsWith('/app/month-row-manager.tsx')) return code.replace("from '../lib/month-schedule-layout'", "from 'test:month-layout'");
+      if(['/app/month-row-manager.tsx','/app/month-section-manager.tsx'].some(path=>id.replaceAll('\\', '/').endsWith(path))) return code.replace("from '../lib/month-schedule-layout'", "from 'test:month-layout'");
       if(id.replaceAll('\\', '/').endsWith('/lib/system-features.ts')) return code.replace("from 'firebase/firestore'", "from 'test:firestore'");
       const admin = id.replaceAll('\\', '/').endsWith('/app/admin-console.tsx')
       if (!admin && !id.replaceAll('\\', '/').endsWith('/app/page.tsx')) return
@@ -599,17 +604,19 @@ test('admin whole-row move converts only original-area codes; remove/re-add is m
  await page.reload();
  await page.evaluate(()=>{window.monthLayouts={};window.showAdminSchedule(true);});
  await page.locator('.admin-schedule tr[data-employee-id="93339"]').waitFor();
- await page.getByRole('button',{name:'大小夜班',exact:true}).click();
+ const toolbar=page.locator('.admin-schedule-page > .admin-page-toolbar');
+ await toolbar.getByPlaceholder('員編或姓名').fill('96504');
+ await toolbar.getByRole('button',{name:'大小夜班',exact:true}).click();
  const before=await page.locator('.admin-schedule tr[data-employee-id="96504"] [data-date-column]').allTextContents();
  await page.getByRole('button',{name:'管理 96504 涂佑葦',exact:true}).click();
- await page.getByRole('button',{name:'移動到區域',exact:true}).click();
+ await page.getByRole('button',{name:'換區',exact:true}).click();
  await page.getByLabel('區域',{exact:true}).selectOption('area:K1');
  await page.getByRole('button',{name:'儲存',exact:true}).click();
  await page.getByRole('dialog').waitFor({state:'hidden'});
  assert.deepEqual(await page.locator('.admin-schedule tr[data-employee-id="96504"] [data-date-column]').allTextContents(),before.map(code=>code.replaceAll('O1','K1')));
  await page.getByRole('button',{name:'管理 96504 涂佑葦',exact:true}).click();
- await page.getByRole('button',{name:'移出本月班表',exact:true}).first().click();
- await page.getByRole('button',{name:'移出本月班表',exact:true}).last().click();
+ await page.getByRole('button',{name:'移出',exact:true}).click();
+ await page.getByRole('button',{name:'儲存',exact:true}).click();
  await page.getByRole('button',{name:'確認移出',exact:true}).click();
  await page.getByRole('dialog').waitFor({state:'hidden'});
  assert.equal(await page.locator('.admin-schedule tr[data-employee-id="96504"]').count(),0);
@@ -619,8 +626,9 @@ test('admin whole-row move converts only original-area codes; remove/re-add is m
  await page.evaluate(()=>window.showDispatch());await page.locator('.dispatch-card').first().waitFor();
  assert.equal(await page.locator('.dispatch-card .person').filter({hasText:'96504'}).count(),0);
  await page.evaluate(()=>window.showAdminSchedule(true));await page.locator('.admin-schedule').waitFor();
- await page.getByRole('button',{name:'大小夜班',exact:true}).click();
- await page.getByRole('button',{name:'新增人員',exact:true}).click();
+ await toolbar.getByPlaceholder('員編或姓名').fill('96504');
+ await toolbar.getByRole('button',{name:'大小夜班',exact:true}).click();
+ await toolbar.getByRole('button',{name:'新增人員',exact:true}).click();
  await page.getByPlaceholder('員編／姓名').fill('96504');
  await page.getByRole('button',{name:'96504 涂佑葦',exact:true}).click();
  await page.getByLabel('組別',{exact:true}).selectOption('night');
@@ -629,7 +637,7 @@ test('admin whole-row move converts only original-area codes; remove/re-add is m
  await page.getByRole('dialog').waitFor({state:'hidden'});
  assert.ok((await page.locator('.admin-schedule tr[data-employee-id="96504"] [data-date-column]').allTextContents()).every(v=>v==='—'));
  await page.evaluate(()=>window.showHome());await page.evaluate(()=>window.showAdminSchedule(true));
- await page.locator('.admin-schedule').waitFor();await page.getByRole('button',{name:'大小夜班',exact:true}).click();
+ await page.locator('.admin-schedule').waitFor();await toolbar.getByPlaceholder('員編或姓名').fill('96504');await toolbar.getByRole('button',{name:'大小夜班',exact:true}).click();
  await page.locator('.admin-schedule tr[data-employee-id="96504"]').waitFor();
  assert.ok((await page.locator('.admin-schedule tr[data-employee-id="96504"] [data-date-column]').allTextContents()).every(v=>v==='—'));
 });
@@ -695,7 +703,89 @@ test('night row management defaults to the existing monthly group, not day',asyn
  await page.evaluate(()=>window.showAdminSchedule(true));
  await page.getByRole('button',{name:'大小夜班',exact:true}).click();
  await page.getByRole('button',{name:'管理 96504 涂佑葦',exact:true}).click();
- await page.getByRole('button',{name:'移動到區域',exact:true}).click();
+ await page.getByRole('button',{name:'換區',exact:true}).click();
  assert.equal(await page.getByLabel('組別',{exact:true}).inputValue(),'night');
- await page.getByRole('button',{name:'取消',exact:true}).click();
+ await page.getByRole('button',{name:'關閉',exact:true}).click();
+});
+
+test('admin handle drags the whole row within a section; saved order reloads without code changes',async()=>{
+ await page.reload();await page.evaluate(()=>window.showAdminSchedule(true));
+ await page.locator('.admin-schedule tr[data-employee-id="93339"]').waitFor();
+ await page.getByRole('button',{name:'大小夜班',exact:true}).click();
+ const o1=scheduleSections(employees,'night').find(s=>s.areaCode==='O1').people.map(p=>p.employeeId);
+ const first=page.locator(`tr[data-employee-id="${o1[0]}"]`),target=page.locator(`tr[data-employee-id="${o1[2]}"]`);
+ const codes=await first.locator('[data-date-column]').allTextContents();
+ await first.scrollIntoViewIfNeeded();
+ const size=await target.boundingBox();
+ await first.locator('.schedule-drag-handle').dragTo(target,{targetPosition:{x:50,y:size.height-3}});
+ await page.getByText('順序已儲存',{exact:true}).waitFor();
+ const order=()=>page.evaluate(ids=>[...document.querySelectorAll('tr[data-employee-id]')].map(r=>r.dataset.employeeId).filter(id=>ids.includes(id)),o1);
+ assert.deepEqual(await order(),[o1[1],o1[2],o1[0],...o1.slice(3)]);
+ assert.deepEqual(await first.locator('[data-date-column]').allTextContents(),codes);
+ const writes=await page.evaluate(()=>window.rowCalls.length);
+ const other=page.locator('tr[data-employee-id]').filter({has:page.locator('.schedule-drag-handle')}).first();
+ // The positive path above uses a physical pointer drag. For the forbidden
+ // cross-section drop, dispatch the browser drag events without scrolling the
+ // entire 158-person matrix while a native OS drag is active.
+ const transfer=await page.evaluateHandle(()=>new DataTransfer());
+ await first.locator('.schedule-drag-handle').dispatchEvent('dragstart',{dataTransfer:transfer});
+ await other.dispatchEvent('drop',{dataTransfer:transfer,clientY:1});
+ await first.locator('.schedule-drag-handle').dispatchEvent('dragend',{dataTransfer:transfer});
+ await transfer.dispose();
+ assert.equal(await page.evaluate(()=>window.rowCalls.length),writes,'cross-section drag does not save');
+ await page.evaluate(()=>window.showHome());await page.getByText('工作總覽',{exact:true}).first().waitFor();
+ await page.evaluate(()=>window.showAdminSchedule(true));await page.getByRole('button',{name:'大小夜班',exact:true}).click();
+ await page.locator(`tr[data-employee-id="${o1[0]}"]`).waitFor();assert.deepEqual(await order(),[o1[1],o1[2],o1[0],...o1.slice(3)]);
+});
+
+test('structure toolbar creates/renames/deletes empty sections; person modal only changes selected person',async()=>{
+ await page.reload();await page.evaluate(()=>{
+   // Exercise structural operations with real source staff; 750-person rendering
+   // and drag coverage are tested separately above.
+   window.fixture.monthSchedules=window.fixture.monthSchedules.filter(r=>['93339','93900','96504'].includes(r.employeeId));
+   window.showAdminSchedule(true);
+ });
+ await page.locator('.admin-schedule tr[data-employee-id="93339"]').waitFor();
+ const buttons=page.locator('.schedule-structure-actions button');
+ assert.deepEqual(await buttons.allTextContents(),['新增人員','新增區域','刪除區域']);
+ const heights=await buttons.evaluateAll(nodes=>nodes.map(n=>n.getBoundingClientRect().height));assert.equal(new Set(heights).size,1);
+ await page.getByRole('button',{name:'新增區域',exact:true}).click();
+ await page.getByLabel('區域名稱',{exact:true}).fill('支援小隊');
+ await page.getByRole('button',{name:'儲存',exact:true}).click();
+ await page.locator('[role="dialog"]').waitFor({state:'detached'});
+ await page.locator('.admin-source-heading span').filter({hasText:'支援小隊'}).waitFor();
+ await page.getByRole('button',{name:'編輯區域名稱 支援小隊',exact:true}).click();
+ await page.getByLabel('區域名稱',{exact:true}).fill('臨時支援');
+ await page.getByRole('button',{name:'儲存',exact:true}).click();
+ await page.locator('[role="dialog"]').waitFor({state:'detached'});
+ await page.getByRole('button',{name:'管理 93339 蔡文翔',exact:true}).click();
+ await page.getByRole('heading',{name:'班表人員異動',exact:true}).waitFor();
+ const modal=page.getByRole('dialog');
+ await modal.getByRole('button',{name:'換區',exact:true}).waitFor();
+ await page.screenshot({path:'output/month-person-change-dialog.png'});
+ for(const text of ['上移','下移','新增人員','取消','Close'])assert.equal(await modal.getByRole('button',{name:text,exact:true}).count(),0);
+ assert.equal(await modal.getByRole('button',{name:'換區',exact:true}).count(),1);
+ assert.equal(await modal.getByRole('button',{name:'移出',exact:true}).count(),1);
+ await page.getByRole('button',{name:'換區',exact:true}).click();
+ await page.getByLabel('區域',{exact:true}).selectOption({label:'臨時支援'});
+ const before=await page.evaluate(()=>window.rowCalls.length);
+ await page.getByRole('button',{name:'關閉',exact:true}).click();
+ await page.locator('[role="dialog"]').waitFor({state:'detached'});
+ assert.equal(await page.evaluate(()=>window.rowCalls.length),before,'X discards unconfirmed changes');
+ await page.getByRole('button',{name:'刪除區域',exact:true}).click();
+ await page.getByLabel('區域',{exact:true}).selectOption({label:'臨時支援'});
+ await modal.getByRole('button',{name:'刪除區域',exact:true}).click();
+ await page.getByRole('button',{name:'確認刪除',exact:true}).click();
+ await page.locator('[role="dialog"]').waitFor({state:'detached'});
+ assert.equal(await page.locator('.admin-source-heading span').filter({hasText:'臨時支援'}).count(),0);
+ await page.getByRole('button',{name:'刪除區域',exact:true}).click();
+ await page.getByLabel('區域',{exact:true}).selectOption({label:'單位主官'});
+ await modal.getByRole('button',{name:'刪除區域',exact:true}).click();await page.getByRole('button',{name:'確認刪除',exact:true}).click();
+ await page.getByText('此區域仍有人員，請先換區或移出人員後再刪除。',{exact:true}).waitFor();
+ await page.getByRole('button',{name:'關閉',exact:true}).click();await page.locator('[role="dialog"]').waitFor({state:'detached'});
+ const editWidth=await page.locator('.section-edit').first().evaluate(el=>el.getBoundingClientRect().width);
+ assert.ok(editWidth<=30,'section pencil remains a small control, not a full-row button');
+ await page.screenshot({path:'output/month-structure-admin-1920.png',fullPage:false});
+ await page.evaluate(()=>window.showAdminSchedule(false));
+ await page.waitForFunction(()=>document.querySelectorAll('.schedule-structure-actions,.schedule-drag-handle,.section-edit,.schedule-row-action').length===0);
 });

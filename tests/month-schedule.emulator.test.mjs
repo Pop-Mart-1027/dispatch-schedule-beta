@@ -34,6 +34,7 @@ const token = (id, role) => ({
 });
 const call = (data, auth = token('ADMIN', 'admin')) =>
   handle({ auth, data: { monthKey: '2026-09', revision: 0, ...data } });
+const section=(group,areaCode)=>({key:`area:${areaCode}`,group,section:`${areaCode}區`,areaCode,label:`${areaCode}區`});
 before(async () => {
   moduleServer = await createServer({configFile:false,server:{middlewareMode:true},appType:'custom',logLevel:'silent',
     plugins:[{name:'emulator-only-firebase',enforce:'pre',
@@ -79,6 +80,9 @@ before(async () => {
     date: '2026-08-01',
     scheduleCode: '晚B1',
   });
+  batch.set(db.doc('scheduleMonthLayouts/2026-09'),{monthKey:'2026-09',revision:0,
+    rows:['P1','P2'].map(employeeId=>({employeeId,group:'day',section:'A1區',areaCode:'A1',blankDays:[]})),
+    sections:[section('day','A1'),section('day','O1'),section('night','O1')]});
   await batch.commit();
 });
 after(async () => {
@@ -275,7 +279,7 @@ test('real Firestore readers and assignment follow O1→K1, monthly exclusion an
   const monthKey='2026-10', id='P3';
   const codes=['夜O1','國上夜O1','小夜O1','國上小夜O1','O1夜21-01','夜O4','休','例','病','事','慰','公','假'];
   const batch=db.batch();
-  batch.set(db.doc(`scheduleMonthLayouts/${monthKey}`),{monthKey,revision:0,rows:[{employeeId:id,group:'night',section:'O1區',areaCode:'O1',blankDays:[]}],excludedEmployeeIds:[]});
+  batch.set(db.doc(`scheduleMonthLayouts/${monthKey}`),{monthKey,revision:0,rows:[{employeeId:id,group:'night',section:'O1區',areaCode:'O1',blankDays:[]}],sections:[section('night','O1'),section('night','K1')],excludedEmployeeIds:[]});
   codes.forEach((code,i)=>{
     const date=`${monthKey}-${String(i+1).padStart(2,'0')}`,recordId=`${id}_${date}`;
     batch.set(db.doc(`scheduleRecords/${recordId}`),{id:recordId,date,employeeId:id,employeeName:id,shiftType:'night',scheduleCode:code,scheduleLabel:code,leaveType:'',source:'fixture',status:'active',note:''});
@@ -339,11 +343,51 @@ test('real Firestore readers and assignment follow O1→K1, monthly exclusion an
 
 test('duplicate day rejects the entire move without partial code/layout/audit writes',async()=>{
   const monthKey='2026-11',row={employeeId:'P3',group:'night',section:'O1區',areaCode:'O1',blankDays:[]};
-  await db.doc(`scheduleMonthLayouts/${monthKey}`).set({monthKey,rows:[row],revision:0});
+  await db.doc(`scheduleMonthLayouts/${monthKey}`).set({monthKey,rows:[row],sections:[section('night','O1'),section('night','K1')],revision:0});
   for(const id of ['first','duplicate'])await db.doc(`scheduleRecords/rollback-${id}`).set({employeeId:'P3',date:`${monthKey}-01`,scheduleCode:'夜O1'});
   const before=(await db.doc(`scheduleMonthLayouts/${monthKey}`).get()).data();
   await assert.rejects(call({monthKey,action:'move',employeeId:'P3',group:'night',section:'K1區',areaCode:'K1'}),/重複班表/);
   assert.deepEqual((await db.doc(`scheduleMonthLayouts/${monthKey}`).get()).data(),before);
   for(const id of ['first','duplicate'])assert.equal((await db.doc(`scheduleRecords/rollback-${id}`).get()).data().scheduleCode,'夜O1');
   assert.equal((await db.collection('scheduleAuditLogs').where('monthKey','==',monthKey).get()).size,0);
+});
+
+test('monthly structure operations persist, audit, reject cross-section drag and protect occupied/deleted sections',async()=>{
+  const monthKey='2027-01', ref=db.doc(`scheduleMonthLayouts/${monthKey}`);
+  const rows=['P1','P2','P3'].map((employeeId,i)=>({employeeId,group:'night',section:i===2?'K1區':'O1區',areaCode:i===2?'K1':'O1',blankDays:[]}));
+  await ref.set({monthKey,rows,revision:0,sections:[section('night','O1'),section('night','K1')]});
+  for(const row of rows)await db.doc(`scheduleRecords/${row.employeeId}_${monthKey}-01`).set({employeeId:row.employeeId,date:`${monthKey}-01`,scheduleCode:`夜${row.areaCode}`});
+  const records=async()=>(await db.collection('scheduleRecords').where('date','==',`${monthKey}-01`).get()).docs.map(d=>d.data());
+  const original=await records();
+  const run=async(data)=>call({monthKey,revision:(await ref.get()).data().revision,...data});
+  for(const auth of [token('MON','monitor'),token('P1','employee')]) await assert.rejects(call({monthKey,action:'section-add',group:'night',label:'支援小隊'},auth),{code:'permission-denied'});
+  await assert.rejects(run({action:'reorder',employeeId:'P1',targetEmployeeId:'P3',position:'after'}),/同一區域/);
+  await run({action:'reorder',employeeId:'P1',targetEmployeeId:'P2',position:'after'});
+  assert.deepEqual((await ref.get()).data().rows.map(r=>r.employeeId),['P2','P1','P3']);
+  assert.deepEqual(await records(),original);
+  await assert.rejects(call({monthKey,revision:0,action:'section-rename',group:'night',sectionKey:'area:O1',label:'stale'}),{code:'aborted'});
+  await run({action:'section-rename',group:'night',sectionKey:'area:O1',label:'藝文車組'});
+  let layout=(await ref.get()).data();
+  assert.equal(layout.sections[0].label,'藝文車組');
+  assert.equal(layout.sections[0].areaCode,'O1');
+  assert.deepEqual(await records(),original);
+  await assert.rejects(run({action:'section-delete',group:'night',sectionKey:'area:O1',confirmed:true}),/仍有人員/);
+  await run({action:'section-add',group:'night',label:'支援小隊'});
+  layout=(await ref.get()).data();
+  const custom=layout.sections.find(s=>s.label==='支援小隊');assert.equal(custom.areaCode,null);
+  await run({action:'move',employeeId:'P1',group:'night',sectionKey:custom.key});
+  assert.deepEqual(await records(),original,'no-code move preserves all formal work codes');
+  let audits=(await db.collection('scheduleAuditLogs').where('monthKey','==',monthKey).get()).docs.map(d=>d.data());
+  const move=audits.find(a=>a.action==='month-row-move');
+  assert.equal(move.note,'無區碼移動，班碼未轉換');assert.deepEqual(move.convertedDates,[]);assert.deepEqual(move.resetManualAssignmentDates,[]);
+  await assert.rejects(run({action:'section-delete',group:'night',sectionKey:custom.key,confirmed:true}),/仍有人員/);
+  await run({action:'remove',employeeId:'P1',confirmed:true});
+  await assert.rejects(run({action:'section-delete',group:'night',sectionKey:custom.key}),/再次確認/);
+  await run({action:'section-delete',group:'night',sectionKey:custom.key,confirmed:true});
+  await assert.rejects(run({action:'move',employeeId:'P2',group:'night',sectionKey:custom.key}),/不存在或已刪除/);
+  assert.deepEqual(await records(),original);
+  assert.equal((await db.doc('scheduleMonthLayouts/2027-02').get()).exists,false);
+  audits=(await db.collection('scheduleAuditLogs').where('monthKey','==',monthKey).get()).docs.map(d=>d.data());
+  assert.equal(audits.length,6);assert.ok(audits.every(a=>a.modifiedBy==='ADMIN'&&a.modifiedAt));
+  assert.ok(audits.some(a=>a.action==='section-delete'&&a.before.key===custom.key&&a.after===null));
 });

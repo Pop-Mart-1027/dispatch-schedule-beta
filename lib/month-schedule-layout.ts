@@ -7,11 +7,20 @@ export type MonthRow = {
   section: string;
   areaCode: string | null;
   blankDays: string[];
+  sectionKey?: string;
+};
+export type MonthSection = {
+  key: string;
+  group: 'day' | 'night';
+  section: string;
+  areaCode: string | null;
+  label: string;
 };
 export type MonthLayout = {
   monthKey: string;
   rows: MonthRow[];
   revision: number;
+  sections?: MonthSection[];
   excludedEmployeeIds?: string[];
   assignmentResetAt?: Record<string, Record<string, unknown>>;
 };

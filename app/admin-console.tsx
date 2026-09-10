@@ -2,9 +2,11 @@
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { scheduleSections } from '../functions/pre-schedule-order.mjs';
-import { monthSections } from '../functions/month-schedule-layout.mjs';
-import { getMonthLayout, manageMonthRow, type MonthLayout } from '../lib/month-schedule-layout';
+import { monthSections, initialMonthRows, monthSectionCatalog } from '../functions/month-schedule-layout.mjs';
+import { getMonthLayout, manageMonthRow, type MonthLayout, type MonthSection } from '../lib/month-schedule-layout';
 import { MonthRowManager } from './month-row-manager';
+import { MonthSectionManager } from './month-section-manager';
+import './month-structure.css';
 import { WorkFocus } from './work-focus';
 import { AreaJumpDropdown, scheduleSectionId } from './area-jump-dropdown';
 import { SystemFeatureSettings } from './system-feature-settings';
@@ -1092,6 +1094,10 @@ function ScheduleManager({
   const loadRevision=useRef(0);
   const [monthLoading,setMonthLoading]=useState(true);
   const [rowAction, setRowAction] = useState<string|null>(null);
+  const [sectionAction,setSectionAction]=useState<{action:'section-add'|'section-delete'|'section-rename';key?:string}|null>(null);
+  const [dragging,setDragging]=useState<{id:string;section:string}|null>(null);
+  const [drop,setDrop]=useState<{id:string;position:'before'|'after'}|null>(null);
+  const [orderBusy,setOrderBusy]=useState(false),[orderStatus,setOrderStatus]=useState('');
   const [group, setGroup] = useState('day');
   const scrollRef = useRef<HTMLDivElement>(null);
   const [records, setRecords] = useState<ScheduleRecord[]>([]);
@@ -1125,7 +1131,7 @@ function ScheduleManager({
     }
   };
   useEffect(() => {
-    setRecords([]);setLayout(null);setRowAction(null);setEditing(null);
+    setRecords([]);setLayout(null);setRowAction(null);setEditing(null);setSectionAction(null);setDragging(null);setDrop(null);setOrderStatus('');
     void load();
     return ()=>{loadRevision.current++;};
   }, [month]);
@@ -1164,8 +1170,20 @@ function ScheduleManager({
   }, [records, employees, search, layout, layoutById]);
   const sections = useMemo(() => monthSections(rows, group, layout, row => ({
     ...row.employee, employeeId: row.id, shiftType: row.employee?.shiftType || row.items[0]?.shiftType,
-  })), [rows, group, layout]);
+  }), !search), [rows, group, layout, search]);
   const areas = sections;
+  const catalogSections = useMemo(()=>monthSectionCatalog(layout?.rows || initialMonthRows(employees.filter(p=>records.some(r=>r.employeeId===p.employeeId))),layout) as MonthSection[],[employees,records,layout]);
+  const reorder = async (targetId:string,section:string,position:'before'|'after') => {
+    const source=dragging;
+    setDragging(null);setDrop(null);
+    if(!source || source.id===targetId || source.section!==section || !admin || orderBusy)return;
+    setOrderBusy(true);setOrderStatus('正在儲存順序…');
+    try {
+      await manageMonthRow({action:'reorder',monthKey:month,revision:layout?.revision||0,employeeId:source.id,targetEmployeeId:targetId,position});
+      await load();setOrderStatus('順序已儲存');
+    } catch(cause){setOrderStatus(cause instanceof Error?cause.message:'順序儲存失敗，請重新載入');}
+    finally{setOrderBusy(false);}
+  };
   const [editing, setEditing] = useState<{record:ScheduleRecord; person:EmployeeRecord} | null>(null);
   const catalog = useMemo(()=>buildScheduleEditCatalog(records,group),[records,group]);
   const edit = (record:ScheduleRecord | undefined, person:EmployeeRecord | undefined) => {
@@ -1175,14 +1193,15 @@ function ScheduleManager({
     <section className="admin-schedule-page">
       <div className="admin-page-toolbar filters">
         <div className="schedule-group-switch" aria-label="正式班表組別">
-          <button aria-pressed={group === 'day'} onClick={() => setGroup('day')}>日班</button>
-          <button aria-pressed={group === 'night'} onClick={() => setGroup('night')}>大小夜班</button>
+          <button disabled={orderBusy} aria-pressed={group === 'day'} onClick={() => {setGroup('day');setDragging(null);setDrop(null);}}>日班</button>
+          <button disabled={orderBusy} aria-pressed={group === 'night'} onClick={() => {setGroup('night');setDragging(null);setDrop(null);}}>大小夜班</button>
         </div>
         <AreaJumpDropdown areas={areas} group={`${month}-${group}`} scope="admin-schedule" scrollTarget={scrollRef} />
         <label>
           月份
           <input
             type="month"
+            disabled={orderBusy}
             value={month}
             onChange={(event) => setMonth(event.target.value)}
           />
@@ -1200,8 +1219,13 @@ function ScheduleManager({
             ? '點擊班別可修改；儲存時留下修改紀錄'
             : '值班監控僅可查看正式班表'}
         </span>
-        {admin&&<button disabled={monthLoading||!!error} onClick={()=>setRowAction('')}>新增人員</button>}
+        {admin&&<div className="schedule-structure-actions" aria-label="結構管理">
+          <button disabled={monthLoading||!!error||orderBusy} onClick={()=>setRowAction('')}>新增人員</button>
+          <button disabled={monthLoading||!!error||orderBusy} onClick={()=>setSectionAction({action:'section-add'})}>新增區域</button>
+          <button disabled={monthLoading||!!error||orderBusy} onClick={()=>setSectionAction({action:'section-delete'})}>刪除區域</button>
+        </div>}
       </div>
+      {orderStatus&&<p role="status" className="schedule-order-status">{orderStatus}</p>}
       {error && <div className="admin-alert">{error}</div>}
       <div className="admin-schedule-wrap" ref={scrollRef}>
         <table className="admin-schedule" style={{ width: 295 + days * 60 }}>
@@ -1225,14 +1249,25 @@ function ScheduleManager({
           </thead>
           <tbody>
             {sections.map(section => <Fragment key={section.key}>
-              <tr className="admin-source-heading" id={scheduleSectionId('admin-schedule',`${month}-${group}`,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days + 3}><span>{section.label}</span></td></tr>
+              <tr className="admin-source-heading" id={scheduleSectionId('admin-schedule',`${month}-${group}`,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days + 3}><span>{section.label}</span>{admin&&<button className="section-edit" aria-label={`編輯區域名稱 ${section.label}`} disabled={monthLoading||orderBusy} onClick={()=>setSectionAction({action:'section-rename',key:section.key})}>✎</button>}</td></tr>
               {section.people.map((row: typeof rows[number]) => (
-              <tr key={row.id} data-employee-id={row.id}>
-                <td>{row.employee?.title || '—'}</td>
+              <tr key={row.id} data-employee-id={row.id} data-dragging={dragging?.id===row.id || undefined} data-drop={drop?.id===row.id?drop.position:undefined}
+                onDragOver={event=>{
+                  if(!dragging||dragging.section!==section.key||orderBusy)return;
+                  event.preventDefault();event.dataTransfer.dropEffect='move';
+                  const rect=event.currentTarget.getBoundingClientRect();
+                  setDrop({id:row.id,position:event.clientY<rect.top+rect.height/2?'before':'after'});
+                  const container=scrollRef.current;
+                  if(container){const bounds=container.getBoundingClientRect();if(event.clientY>bounds.bottom-60)container.scrollTop+=20;else if(event.clientY<bounds.top+90)container.scrollTop-=20;}
+                }}
+                onDrop={event=>{event.preventDefault();const rect=event.currentTarget.getBoundingClientRect();void reorder(row.id,section.key,event.clientY<rect.top+rect.height/2?'before':'after');}}>
+                <td>{admin&&<button className="schedule-drag-handle" aria-label={`拖曳排序 ${row.id}`} title="拖曳整列，同區排序" disabled={monthLoading||orderBusy} draggable={!monthLoading&&!orderBusy}
+                  onDragStart={event=>{setDragging({id:row.id,section:section.key});setOrderStatus('');event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',row.id);const tr=event.currentTarget.closest('tr');if(tr)event.dataTransfer.setDragImage(tr,12,12);}}
+                  onDragEnd={()=>{setDragging(null);setDrop(null);}}>⋮⋮</button>}{row.employee?.title || '—'}</td>
                 <td>{row.id}</td>
                 <td>
                   {row.employee?.name || row.items[0]?.employeeName || '—'}
-                  {admin&&<button className="schedule-row-action" aria-label={`管理 ${row.id} ${row.employee?.name || ''}`} onClick={()=>setRowAction(row.id)}>⋮</button>}
+                  {admin&&<button disabled={monthLoading||orderBusy} className="schedule-row-action" aria-label={`管理 ${row.id} ${row.employee?.name || ''}`} onClick={()=>setRowAction(row.id)}>⋮</button>}
                 </td>
                 {Array.from({ length: days }, (_, index) => {
                   const stored = row.items.find(
@@ -1250,7 +1285,7 @@ function ScheduleManager({
                       }
                     >
                       <button
-                        disabled={!admin || (!record && !layoutById.has(row.id))}
+                        disabled={!admin || orderBusy || (!record && !layoutById.has(row.id))}
                         onClick={() =>
                           edit(draftRecord, row.employee)
                         }
@@ -1266,6 +1301,7 @@ function ScheduleManager({
         </table>
       </div>
       {rowAction!==null&&<MonthRowManager month={month} layout={layout} people={employees} present={layout?.rows.map(r=>r.employeeId) || [...new Set(records.map(r=>r.employeeId))]} selected={rowAction || undefined} onClose={()=>setRowAction(null)} onSaved={load} />}
+      {sectionAction&&<MonthSectionManager month={month} layout={layout} sections={catalogSections} initialGroup={group} action={sectionAction.action} selected={catalogSections.find(s=>s.group===group&&s.key===sectionAction.key)} onClose={()=>setSectionAction(null)} onSaved={load}/>}
       {editing && <ScheduleCellEditor employeeId={editing.person.employeeId} name={editing.person.name} date={editing.record.date} currentCode={editing.record.scheduleCode} catalog={catalog} onClose={()=>setEditing(null)} onSave={async code=>{if(!catalog.leaves.includes(code) && !catalog.special.includes(code) && !catalog.areas.some(area=>area.codes.includes(code))) throw new Error('請選擇既有正式班碼');const row=layout?.rows.find(r=>r.employeeId===editing.person.employeeId);if(row&&(row.blankDays.includes(String(Number(editing.record.date.slice(8))))||!records.some(r=>r.id===editing.record.id)))await manageMonthRow({action:'cell',monthKey:month,revision:layout?.revision,employeeId:editing.person.employeeId,date:editing.record.date,code});else await updateFormalScheduleCell(editing.record,code,employeeId);await load();}} />}
     </section>
   );

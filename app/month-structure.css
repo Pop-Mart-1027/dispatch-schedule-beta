@@ -1,0 +1,77 @@
+.month-dialog-close {
+  position: absolute;
+  right: 12px;
+  top: 10px;
+  width: 34px;
+  height: 34px;
+  padding: 0 !important;
+  font-size: 24px;
+}
+.month-row-dialog [data-slot='dialog-title'] {
+  padding-right: 34px;
+}
+.schedule-structure-actions {
+  display: flex;
+  gap: 8px;
+  margin-left: auto;
+}
+.schedule-structure-actions button {
+  height: 38px;
+  min-width: 96px;
+  padding: 6px 12px;
+  border: 1px solid #edbf96;
+  border-radius: 8px;
+  background: #fff7ed;
+  color: #a4470c;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.admin-schedule td .schedule-drag-handle {
+  display: inline-flex;
+  width: 20px;
+  min-width: 20px;
+  padding: 0;
+  margin-right: 3px;
+  cursor: grab;
+  color: #6a7b83;
+  border: 0;
+  background: transparent;
+  touch-action: none;
+  user-select: none;
+}
+.admin-schedule td .schedule-drag-handle:enabled {
+  cursor: grab;
+}
+.admin-schedule td .schedule-drag-handle:enabled:active {
+  cursor: grabbing;
+}
+.admin-schedule tr[data-dragging='true'] td {
+  box-shadow: inset 0 0 0 1px #eda466;
+}
+.admin-schedule tr[data-drop='before'] td {
+  border-top: 2px solid #f58220;
+}
+.admin-schedule tr[data-drop='after'] td {
+  border-bottom: 2px solid #f58220;
+}
+.admin-schedule .admin-source-heading td .section-edit {
+  position: sticky;
+  left: 170px;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  width: 26px;
+  min-width: 26px;
+  height: 24px;
+  margin-left: 12px;
+  padding: 0;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+.schedule-order-status {
+  color: #485c64;
+  font-size: 14px;
+}
