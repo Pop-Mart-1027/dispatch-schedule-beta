@@ -39,8 +39,8 @@ test('all matrices share contiguous unique sections and original in-section orde
   const input = master.slice().reverse(),
     before = structuredClone(input);
   for (const [group, count] of [
-    ['day', 597],
-    ['night', 153],
+    ['day', 592],
+    ['night', 158],
   ]) {
     const sections = scheduleSections(input, group),
       people = sections.flatMap((section) => section.people);
@@ -98,14 +98,14 @@ test('September fixed source order covers the 750-person official master; exclud
   );
   const people = preScheduleRoster(master);
   assert.equal(people.length, 750);
-  assert.equal(people.filter((p) => p.group === 'day').length, 597);
-  assert.equal(people.filter((p) => p.group === 'night').length, 153);
+  assert.equal(people.filter((p) => p.group === 'day').length, 592);
+  assert.equal(people.filter((p) => p.group === 'night').length, 158);
   assert.ok(people.every((p) => preScheduleSource(p.employeeId)));
   assert.ok(!people.some((p) => p.employeeId === 'B6033'));
   assert.equal(new Set(people.map((p) => p.employeeId)).size, 750);
 });
 
-test('leaders and monitors stay day regardless of daily codes; night O1 retains source order including small-night/PT', () => {
+test('source sheet fixes membership regardless of title/daily codes; night O1 retains original team order', () => {
   const people = preScheduleRoster(
     master
       .map((p) => ({
@@ -124,10 +124,10 @@ test('leaders and monitors stay day regardless of daily codes; night O1 retains 
   );
   assert.ok(
     people
-      .filter((p) => preScheduleSource(p.employeeId).category !== 'area')
+      .filter((p) => preScheduleSource(p.employeeId).sourceSheet === '9月日班')
       .every((p) => p.group === 'day'),
   );
-  assert.equal(night.findIndex((p) => p.employeeId === '96504') + 1, 122);
+  assert.equal(night.findIndex((p) => p.employeeId === '96504') + 1, 127);
   assert.deepEqual(
     night
       .filter((p) => preScheduleSource(p.employeeId).section === 'O1區')
@@ -159,4 +159,14 @@ test('legacy group projection never mutates submitted days or stored entry', () 
   assert.deepEqual(result.days, before.days);
   assert.deepEqual(result.arrangedDays, before.arrangedDays);
   assert.equal(result.revision, 8);
+});
+
+test('all five night duty staff use their night source regardless of misleading job titles', () => {
+  const ids=['95964','96409','B0957','B1460','96746'];
+  for(const id of ids) {
+    const person=preScheduleRoster([{employeeId:id,title:'調度主任',group:'day',scheduleCode:'早A1'}])[0];
+    assert.equal(person.group,'night');
+    assert.equal(preScheduleSource(id).sourceSheet,'9月夜班');
+    assert.equal(preScheduleEntry({employeeId:id,group:'day',days:['夜監']}).group,'night');
+  }
 });

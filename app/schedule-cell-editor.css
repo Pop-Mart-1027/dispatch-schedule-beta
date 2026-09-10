@@ -1,0 +1,71 @@
+.schedule-cell-editor {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 110;
+  width: 680px;
+  max-width: calc(100vw - 32px);
+  max-height: 90vh;
+  overflow: auto;
+  padding: 24px;
+  border-radius: 14px;
+  background: white;
+  color: #293c46;
+  box-shadow: 0 12px 60px #0004;
+  display: grid;
+  gap: 14px;
+}
+[data-slot='dialog-overlay'] {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  background: #0005;
+}
+.schedule-cell-editor h2 {
+  font-size: 22px;
+  font-weight: 700;
+}
+.schedule-cell-editor h3 {
+  margin: 16px 0 10px;
+  font-weight: 700;
+}
+.schedule-edit-tabs,
+.schedule-cell-editor footer {
+  display: flex;
+  gap: 10px;
+}
+.schedule-cell-editor footer {
+  justify-content: flex-end;
+}
+.schedule-edit-options {
+  max-height: 48vh;
+  overflow: auto;
+}
+.schedule-choice-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 8px;
+}
+.schedule-cell-editor button {
+  padding: 10px 8px;
+  border: 1px solid #d2dce0;
+  border-radius: 7px;
+  background: #fff;
+  font-size: 14px;
+  cursor: pointer;
+  overflow-wrap: anywhere;
+}
+.schedule-cell-editor button:is([aria-pressed='true'], [aria-selected='true']),
+.schedule-cell-editor footer button:last-child {
+  background: #e8731a;
+  color: white;
+  border-color: #e8731a;
+}
+.schedule-cell-editor button:disabled {
+  opacity: 0.55;
+  cursor: default;
+}
+.schedule-cell-editor [role='alert'] {
+  color: #b4232e;
+}

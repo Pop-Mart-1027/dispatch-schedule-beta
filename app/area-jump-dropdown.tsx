@@ -11,11 +11,13 @@ export function AreaJumpDropdown({
   group,
   scope,
   scrollTarget,
+  scrollMode = 'container',
 }: {
   areas: JumpArea[];
   group: string;
   scope: string;
   scrollTarget: RefObject<HTMLDivElement | null>;
+  scrollMode?: 'container' | 'page';
 }) {
   const ref = useRef<HTMLDetailsElement>(null);
   useEffect(() => {
@@ -43,18 +45,26 @@ export function AreaJumpDropdown({
     const container = scrollTarget.current,
       target = document.getElementById(scheduleSectionId(scope, group, key));
     if (container && target && container.contains(target)) {
-      const header =
-        container.querySelector('thead')?.getBoundingClientRect().height || 0;
-      container.scrollTo({
-        top:
-          container.scrollTop +
-          target.getBoundingClientRect().top -
-          container.getBoundingClientRect().top -
-          container.clientTop -
-          header,
-        left: container.scrollLeft,
-        behavior: 'auto',
-      });
+      if (scrollMode === 'page') {
+        target.scrollIntoView({
+          block: 'start',
+          inline: 'nearest',
+          behavior: 'auto',
+        });
+      } else {
+        const header =
+          container.querySelector('thead')?.getBoundingClientRect().height || 0;
+        container.scrollTo({
+          top:
+            container.scrollTop +
+            target.getBoundingClientRect().top -
+            container.getBoundingClientRect().top -
+            container.clientTop -
+            header,
+          left: container.scrollLeft,
+          behavior: 'auto',
+        });
+      }
     }
     if (ref.current) ref.current.open = false;
     ref.current?.querySelector('summary')?.focus({ preventScroll: true });

@@ -194,56 +194,6 @@
       "scheduleDisplayOrder": 18
     },
     {
-      "employeeId": "95964",
-      "group": "day",
-      "sourceSheet": "9月夜班",
-      "sourceRow": 9,
-      "sourceOrder": 3,
-      "section": "調度監控",
-      "category": "monitor",
-      "scheduleDisplayOrder": 19
-    },
-    {
-      "employeeId": "96409",
-      "group": "day",
-      "sourceSheet": "9月夜班",
-      "sourceRow": 10,
-      "sourceOrder": 4,
-      "section": "調度監控",
-      "category": "monitor",
-      "scheduleDisplayOrder": 20
-    },
-    {
-      "employeeId": "B0957",
-      "group": "day",
-      "sourceSheet": "9月夜班",
-      "sourceRow": 11,
-      "sourceOrder": 5,
-      "section": "調度監控",
-      "category": "monitor",
-      "scheduleDisplayOrder": 21
-    },
-    {
-      "employeeId": "B1460",
-      "group": "day",
-      "sourceSheet": "9月夜班",
-      "sourceRow": 12,
-      "sourceOrder": 6,
-      "section": "調度監控",
-      "category": "monitor",
-      "scheduleDisplayOrder": 22
-    },
-    {
-      "employeeId": "96746",
-      "group": "day",
-      "sourceSheet": "9月夜班",
-      "sourceRow": 13,
-      "sourceOrder": 7,
-      "section": "調度監控",
-      "category": "monitor",
-      "scheduleDisplayOrder": 23
-    },
-    {
       "employeeId": "B3658",
       "group": "day",
       "sourceSheet": "9月日班",
@@ -251,7 +201,7 @@
       "sourceOrder": 10,
       "section": "文書小秘",
       "category": "area",
-      "scheduleDisplayOrder": 24
+      "scheduleDisplayOrder": 19
     },
     {
       "employeeId": "B3880",
@@ -261,7 +211,7 @@
       "sourceOrder": 11,
       "section": "文書小秘",
       "category": "area",
-      "scheduleDisplayOrder": 25
+      "scheduleDisplayOrder": 20
     },
     {
       "employeeId": "B5311",
@@ -271,7 +221,7 @@
       "sourceOrder": 12,
       "section": "文書小秘",
       "category": "area",
-      "scheduleDisplayOrder": 26
+      "scheduleDisplayOrder": 21
     },
     {
       "employeeId": "93947",
@@ -281,7 +231,7 @@
       "sourceOrder": 13,
       "section": "工兵小隊-BBK-0278",
       "category": "area",
-      "scheduleDisplayOrder": 27
+      "scheduleDisplayOrder": 22
     },
     {
       "employeeId": "B5456",
@@ -291,7 +241,7 @@
       "sourceOrder": 14,
       "section": "工兵小隊-BBK-0278",
       "category": "area",
-      "scheduleDisplayOrder": 28
+      "scheduleDisplayOrder": 23
     },
     {
       "employeeId": "B2382",
@@ -301,7 +251,7 @@
       "sourceOrder": 15,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 29
+      "scheduleDisplayOrder": 24
     },
     {
       "employeeId": "B2577",
@@ -311,7 +261,7 @@
       "sourceOrder": 16,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 30
+      "scheduleDisplayOrder": 25
     },
     {
       "employeeId": "B4943",
@@ -321,7 +271,7 @@
       "sourceOrder": 17,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 31
+      "scheduleDisplayOrder": 26
     },
     {
       "employeeId": "B5039",
@@ -331,7 +281,7 @@
       "sourceOrder": 18,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 32
+      "scheduleDisplayOrder": 27
     },
     {
       "employeeId": "B0996",
@@ -341,7 +291,7 @@
       "sourceOrder": 19,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 33
+      "scheduleDisplayOrder": 28
     },
     {
       "employeeId": "96801",
@@ -351,7 +301,7 @@
       "sourceOrder": 20,
       "section": "A2區",
       "category": "area",
-      "scheduleDisplayOrder": 34
+      "scheduleDisplayOrder": 29
     },
     {
       "employeeId": "B1325",
@@ -361,7 +311,7 @@
       "sourceOrder": 21,
       "section": "A2區",
       "category": "area",
-      "scheduleDisplayOrder": 35
+      "scheduleDisplayOrder": 30
     },
     {
       "employeeId": "B3069",
@@ -371,7 +321,7 @@
       "sourceOrder": 22,
       "section": "A2區",
       "category": "area",
-      "scheduleDisplayOrder": 36
+      "scheduleDisplayOrder": 31
     },
     {
       "employeeId": "B2971",
@@ -381,7 +331,7 @@
       "sourceOrder": 24,
       "section": "J區",
       "category": "area",
-      "scheduleDisplayOrder": 37
+      "scheduleDisplayOrder": 32
     },
     {
       "employeeId": "95413",
@@ -391,7 +341,7 @@
       "sourceOrder": 25,
       "section": "J區",
       "category": "area",
-      "scheduleDisplayOrder": 38
+      "scheduleDisplayOrder": 33
     },
     {
       "employeeId": "B4081",
@@ -401,7 +351,7 @@
       "sourceOrder": 26,
       "section": "J區",
       "category": "area",
-      "scheduleDisplayOrder": 39
+      "scheduleDisplayOrder": 34
     },
     {
       "employeeId": "B1369",
@@ -411,7 +361,7 @@
       "sourceOrder": 27,
       "section": "J區",
       "category": "area",
-      "scheduleDisplayOrder": 40
+      "scheduleDisplayOrder": 35
     },
     {
       "employeeId": "96780",
@@ -421,7 +371,7 @@
       "sourceOrder": 28,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 41
+      "scheduleDisplayOrder": 36
     },
     {
       "employeeId": "B1202",
@@ -431,7 +381,7 @@
       "sourceOrder": 29,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 42
+      "scheduleDisplayOrder": 37
     },
     {
       "employeeId": "B2477",
@@ -441,7 +391,7 @@
       "sourceOrder": 30,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 43
+      "scheduleDisplayOrder": 38
     },
     {
       "employeeId": "B3037",
@@ -451,7 +401,7 @@
       "sourceOrder": 31,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 44
+      "scheduleDisplayOrder": 39
     },
     {
       "employeeId": "B1461",
@@ -461,7 +411,7 @@
       "sourceOrder": 32,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 45
+      "scheduleDisplayOrder": 40
     },
     {
       "employeeId": "B4652",
@@ -471,7 +421,7 @@
       "sourceOrder": 33,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 46
+      "scheduleDisplayOrder": 41
     },
     {
       "employeeId": "97880",
@@ -481,7 +431,7 @@
       "sourceOrder": 34,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 47
+      "scheduleDisplayOrder": 42
     },
     {
       "employeeId": "B1082",
@@ -491,7 +441,7 @@
       "sourceOrder": 35,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 48
+      "scheduleDisplayOrder": 43
     },
     {
       "employeeId": "B3623",
@@ -501,7 +451,7 @@
       "sourceOrder": 36,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 49
+      "scheduleDisplayOrder": 44
     },
     {
       "employeeId": "B3816",
@@ -511,7 +461,7 @@
       "sourceOrder": 37,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 50
+      "scheduleDisplayOrder": 45
     },
     {
       "employeeId": "B3915",
@@ -521,7 +471,7 @@
       "sourceOrder": 38,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 51
+      "scheduleDisplayOrder": 46
     },
     {
       "employeeId": "B0066",
@@ -531,7 +481,7 @@
       "sourceOrder": 39,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 52
+      "scheduleDisplayOrder": 47
     },
     {
       "employeeId": "B4846",
@@ -541,7 +491,7 @@
       "sourceOrder": 40,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 53
+      "scheduleDisplayOrder": 48
     },
     {
       "employeeId": "B6086",
@@ -551,7 +501,7 @@
       "sourceOrder": 41,
       "section": "J2區",
       "category": "area",
-      "scheduleDisplayOrder": 54
+      "scheduleDisplayOrder": 49
     },
     {
       "employeeId": "B3276",
@@ -561,7 +511,7 @@
       "sourceOrder": 48,
       "section": "晚PT數字",
       "category": "area",
-      "scheduleDisplayOrder": 55
+      "scheduleDisplayOrder": 50
     },
     {
       "employeeId": "B3428",
@@ -571,7 +521,7 @@
       "sourceOrder": 49,
       "section": "晚PT數字",
       "category": "area",
-      "scheduleDisplayOrder": 56
+      "scheduleDisplayOrder": 51
     },
     {
       "employeeId": "B3884",
@@ -581,7 +531,7 @@
       "sourceOrder": 51,
       "section": "晚PT數字",
       "category": "area",
-      "scheduleDisplayOrder": 57
+      "scheduleDisplayOrder": 52
     },
     {
       "employeeId": "B3885",
@@ -591,7 +541,7 @@
       "sourceOrder": 52,
       "section": "晚PT數字",
       "category": "area",
-      "scheduleDisplayOrder": 58
+      "scheduleDisplayOrder": 53
     },
     {
       "employeeId": "B3917",
@@ -601,7 +551,7 @@
       "sourceOrder": 53,
       "section": "晚PT數字",
       "category": "area",
-      "scheduleDisplayOrder": 59
+      "scheduleDisplayOrder": 54
     },
     {
       "employeeId": "B5828",
@@ -611,7 +561,7 @@
       "sourceOrder": 54,
       "section": "晚PT數字",
       "category": "area",
-      "scheduleDisplayOrder": 60
+      "scheduleDisplayOrder": 55
     },
     {
       "employeeId": "B1618",
@@ -621,7 +571,7 @@
       "sourceOrder": 55,
       "section": "C區",
       "category": "area",
-      "scheduleDisplayOrder": 61
+      "scheduleDisplayOrder": 56
     },
     {
       "employeeId": "B2319",
@@ -631,7 +581,7 @@
       "sourceOrder": 56,
       "section": "C區",
       "category": "area",
-      "scheduleDisplayOrder": 62
+      "scheduleDisplayOrder": 57
     },
     {
       "employeeId": "B3801",
@@ -641,7 +591,7 @@
       "sourceOrder": 57,
       "section": "C區",
       "category": "area",
-      "scheduleDisplayOrder": 63
+      "scheduleDisplayOrder": 58
     },
     {
       "employeeId": "B5257",
@@ -651,7 +601,7 @@
       "sourceOrder": 58,
       "section": "C區",
       "category": "area",
-      "scheduleDisplayOrder": 64
+      "scheduleDisplayOrder": 59
     },
     {
       "employeeId": "B5959",
@@ -661,7 +611,7 @@
       "sourceOrder": 59,
       "section": "C區",
       "category": "area",
-      "scheduleDisplayOrder": 65
+      "scheduleDisplayOrder": 60
     },
     {
       "employeeId": "B0585",
@@ -671,7 +621,7 @@
       "sourceOrder": 60,
       "section": "C2區",
       "category": "area",
-      "scheduleDisplayOrder": 66
+      "scheduleDisplayOrder": 61
     },
     {
       "employeeId": "B5437",
@@ -681,7 +631,7 @@
       "sourceOrder": 61,
       "section": "C2區",
       "category": "area",
-      "scheduleDisplayOrder": 67
+      "scheduleDisplayOrder": 62
     },
     {
       "employeeId": "B5549",
@@ -691,7 +641,7 @@
       "sourceOrder": 62,
       "section": "C2區",
       "category": "area",
-      "scheduleDisplayOrder": 68
+      "scheduleDisplayOrder": 63
     },
     {
       "employeeId": "B5552",
@@ -701,7 +651,7 @@
       "sourceOrder": 63,
       "section": "C2區",
       "category": "area",
-      "scheduleDisplayOrder": 69
+      "scheduleDisplayOrder": 64
     },
     {
       "employeeId": "B3435",
@@ -711,7 +661,7 @@
       "sourceOrder": 65,
       "section": "C2區",
       "category": "area",
-      "scheduleDisplayOrder": 70
+      "scheduleDisplayOrder": 65
     },
     {
       "employeeId": "B4364",
@@ -721,7 +671,7 @@
       "sourceOrder": 66,
       "section": "C2區",
       "category": "area",
-      "scheduleDisplayOrder": 71
+      "scheduleDisplayOrder": 66
     },
     {
       "employeeId": "B5632",
@@ -731,7 +681,7 @@
       "sourceOrder": 67,
       "section": "C2區",
       "category": "area",
-      "scheduleDisplayOrder": 72
+      "scheduleDisplayOrder": 67
     },
     {
       "employeeId": "B5933",
@@ -741,7 +691,7 @@
       "sourceOrder": 68,
       "section": "C2區",
       "category": "area",
-      "scheduleDisplayOrder": 73
+      "scheduleDisplayOrder": 68
     },
     {
       "employeeId": "B2871",
@@ -751,7 +701,7 @@
       "sourceOrder": 69,
       "section": "U區",
       "category": "area",
-      "scheduleDisplayOrder": 74
+      "scheduleDisplayOrder": 69
     },
     {
       "employeeId": "B3351",
@@ -761,7 +711,7 @@
       "sourceOrder": 70,
       "section": "U區",
       "category": "area",
-      "scheduleDisplayOrder": 75
+      "scheduleDisplayOrder": 70
     },
     {
       "employeeId": "B2337",
@@ -771,7 +721,7 @@
       "sourceOrder": 71,
       "section": "U區",
       "category": "area",
-      "scheduleDisplayOrder": 76
+      "scheduleDisplayOrder": 71
     },
     {
       "employeeId": "B6008",
@@ -781,7 +731,7 @@
       "sourceOrder": 72,
       "section": "U區",
       "category": "area",
-      "scheduleDisplayOrder": 77
+      "scheduleDisplayOrder": 72
     },
     {
       "employeeId": "B6258",
@@ -791,7 +741,7 @@
       "sourceOrder": 73,
       "section": "U區",
       "category": "area",
-      "scheduleDisplayOrder": 78
+      "scheduleDisplayOrder": 73
     },
     {
       "employeeId": "B1704",
@@ -801,7 +751,7 @@
       "sourceOrder": 74,
       "section": "U區BFR-5181",
       "category": "area",
-      "scheduleDisplayOrder": 79
+      "scheduleDisplayOrder": 74
     },
     {
       "employeeId": "B0403",
@@ -811,7 +761,7 @@
       "sourceOrder": 75,
       "section": "U區BFR-5181",
       "category": "area",
-      "scheduleDisplayOrder": 80
+      "scheduleDisplayOrder": 75
     },
     {
       "employeeId": "B5949",
@@ -821,7 +771,7 @@
       "sourceOrder": 76,
       "section": "U區BFR-5181",
       "category": "area",
-      "scheduleDisplayOrder": 81
+      "scheduleDisplayOrder": 76
     },
     {
       "employeeId": "B1209",
@@ -831,7 +781,7 @@
       "sourceOrder": 78,
       "section": "U區BFR-5181",
       "category": "area",
-      "scheduleDisplayOrder": 82
+      "scheduleDisplayOrder": 77
     },
     {
       "employeeId": "B2015",
@@ -841,7 +791,7 @@
       "sourceOrder": 79,
       "section": "U區BFR-5181",
       "category": "area",
-      "scheduleDisplayOrder": 83
+      "scheduleDisplayOrder": 78
     },
     {
       "employeeId": "97607",
@@ -851,7 +801,7 @@
       "sourceOrder": 80,
       "section": "U區BFR-5181",
       "category": "area",
-      "scheduleDisplayOrder": 84
+      "scheduleDisplayOrder": 79
     },
     {
       "employeeId": "B6072",
@@ -861,7 +811,7 @@
       "sourceOrder": 81,
       "section": "U區BFR-5181",
       "category": "area",
-      "scheduleDisplayOrder": 85
+      "scheduleDisplayOrder": 80
     },
     {
       "employeeId": "B6296",
@@ -871,7 +821,7 @@
       "sourceOrder": 82,
       "section": "U區BFR-5181",
       "category": "area",
-      "scheduleDisplayOrder": 86
+      "scheduleDisplayOrder": 81
     },
     {
       "employeeId": "B3288",
@@ -881,7 +831,7 @@
       "sourceOrder": 83,
       "section": "B1區",
       "category": "area",
-      "scheduleDisplayOrder": 87
+      "scheduleDisplayOrder": 82
     },
     {
       "employeeId": "B4029",
@@ -891,7 +841,7 @@
       "sourceOrder": 84,
       "section": "B1區",
       "category": "area",
-      "scheduleDisplayOrder": 88
+      "scheduleDisplayOrder": 83
     },
     {
       "employeeId": "B2902",
@@ -901,7 +851,7 @@
       "sourceOrder": 85,
       "section": "B1區",
       "category": "area",
-      "scheduleDisplayOrder": 89
+      "scheduleDisplayOrder": 84
     },
     {
       "employeeId": "95640",
@@ -911,7 +861,7 @@
       "sourceOrder": 86,
       "section": "B2區",
       "category": "area",
-      "scheduleDisplayOrder": 90
+      "scheduleDisplayOrder": 85
     },
     {
       "employeeId": "B2841",
@@ -921,7 +871,7 @@
       "sourceOrder": 87,
       "section": "B2區",
       "category": "area",
-      "scheduleDisplayOrder": 91
+      "scheduleDisplayOrder": 86
     },
     {
       "employeeId": "B4569",
@@ -931,7 +881,7 @@
       "sourceOrder": 88,
       "section": "B2區",
       "category": "area",
-      "scheduleDisplayOrder": 92
+      "scheduleDisplayOrder": 87
     },
     {
       "employeeId": "B1699",
@@ -941,7 +891,7 @@
       "sourceOrder": 90,
       "section": "B3區",
       "category": "area",
-      "scheduleDisplayOrder": 93
+      "scheduleDisplayOrder": 88
     },
     {
       "employeeId": "B1015",
@@ -951,7 +901,7 @@
       "sourceOrder": 91,
       "section": "B3區",
       "category": "area",
-      "scheduleDisplayOrder": 94
+      "scheduleDisplayOrder": 89
     },
     {
       "employeeId": "B4293",
@@ -961,7 +911,7 @@
       "sourceOrder": 92,
       "section": "B4區",
       "category": "area",
-      "scheduleDisplayOrder": 95
+      "scheduleDisplayOrder": 90
     },
     {
       "employeeId": "B4870",
@@ -971,7 +921,7 @@
       "sourceOrder": 93,
       "section": "B4區",
       "category": "area",
-      "scheduleDisplayOrder": 96
+      "scheduleDisplayOrder": 91
     },
     {
       "employeeId": "B6095",
@@ -981,7 +931,7 @@
       "sourceOrder": 94,
       "section": "B4區",
       "category": "area",
-      "scheduleDisplayOrder": 97
+      "scheduleDisplayOrder": 92
     },
     {
       "employeeId": "B0079",
@@ -991,7 +941,7 @@
       "sourceOrder": 95,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 98
+      "scheduleDisplayOrder": 93
     },
     {
       "employeeId": "B0880",
@@ -1001,7 +951,7 @@
       "sourceOrder": 96,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 99
+      "scheduleDisplayOrder": 94
     },
     {
       "employeeId": "B1044",
@@ -1011,7 +961,7 @@
       "sourceOrder": 97,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 100
+      "scheduleDisplayOrder": 95
     },
     {
       "employeeId": "B1100",
@@ -1021,7 +971,7 @@
       "sourceOrder": 98,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 101
+      "scheduleDisplayOrder": 96
     },
     {
       "employeeId": "B2236",
@@ -1031,7 +981,7 @@
       "sourceOrder": 99,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 102
+      "scheduleDisplayOrder": 97
     },
     {
       "employeeId": "B2768",
@@ -1041,7 +991,7 @@
       "sourceOrder": 100,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 103
+      "scheduleDisplayOrder": 98
     },
     {
       "employeeId": "B3677",
@@ -1051,7 +1001,7 @@
       "sourceOrder": 101,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 104
+      "scheduleDisplayOrder": 99
     },
     {
       "employeeId": "B3721",
@@ -1061,7 +1011,7 @@
       "sourceOrder": 102,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 105
+      "scheduleDisplayOrder": 100
     },
     {
       "employeeId": "B4027",
@@ -1071,7 +1021,7 @@
       "sourceOrder": 103,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 106
+      "scheduleDisplayOrder": 101
     },
     {
       "employeeId": "B4416",
@@ -1081,7 +1031,7 @@
       "sourceOrder": 104,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 107
+      "scheduleDisplayOrder": 102
     },
     {
       "employeeId": "B4630",
@@ -1091,7 +1041,7 @@
       "sourceOrder": 105,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 108
+      "scheduleDisplayOrder": 103
     },
     {
       "employeeId": "B5205",
@@ -1101,7 +1051,7 @@
       "sourceOrder": 106,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 109
+      "scheduleDisplayOrder": 104
     },
     {
       "employeeId": "B5613",
@@ -1111,7 +1061,7 @@
       "sourceOrder": 107,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 110
+      "scheduleDisplayOrder": 105
     },
     {
       "employeeId": "B5664",
@@ -1121,7 +1071,7 @@
       "sourceOrder": 108,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 111
+      "scheduleDisplayOrder": 106
     },
     {
       "employeeId": "B6051",
@@ -1131,7 +1081,7 @@
       "sourceOrder": 109,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 112
+      "scheduleDisplayOrder": 107
     },
     {
       "employeeId": "B6299",
@@ -1141,7 +1091,7 @@
       "sourceOrder": 110,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 113
+      "scheduleDisplayOrder": 108
     },
     {
       "employeeId": "B0084",
@@ -1151,7 +1101,7 @@
       "sourceOrder": 111,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 114
+      "scheduleDisplayOrder": 109
     },
     {
       "employeeId": "B1075",
@@ -1161,7 +1111,7 @@
       "sourceOrder": 113,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 115
+      "scheduleDisplayOrder": 110
     },
     {
       "employeeId": "B1759",
@@ -1171,7 +1121,7 @@
       "sourceOrder": 114,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 116
+      "scheduleDisplayOrder": 111
     },
     {
       "employeeId": "B4478",
@@ -1181,7 +1131,7 @@
       "sourceOrder": 117,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 117
+      "scheduleDisplayOrder": 112
     },
     {
       "employeeId": "B4662",
@@ -1191,7 +1141,7 @@
       "sourceOrder": 118,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 118
+      "scheduleDisplayOrder": 113
     },
     {
       "employeeId": "B5067",
@@ -1201,7 +1151,7 @@
       "sourceOrder": 120,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 119
+      "scheduleDisplayOrder": 114
     },
     {
       "employeeId": "B5447",
@@ -1211,7 +1161,7 @@
       "sourceOrder": 121,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 120
+      "scheduleDisplayOrder": 115
     },
     {
       "employeeId": "B5588",
@@ -1221,7 +1171,7 @@
       "sourceOrder": 122,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 121
+      "scheduleDisplayOrder": 116
     },
     {
       "employeeId": "B5651",
@@ -1231,7 +1181,7 @@
       "sourceOrder": 123,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 122
+      "scheduleDisplayOrder": 117
     },
     {
       "employeeId": "B5787",
@@ -1241,7 +1191,7 @@
       "sourceOrder": 124,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 123
+      "scheduleDisplayOrder": 118
     },
     {
       "employeeId": "B6110",
@@ -1251,7 +1201,7 @@
       "sourceOrder": 125,
       "section": "B機動-BKK-9183/ATT-5950",
       "category": "area",
-      "scheduleDisplayOrder": 124
+      "scheduleDisplayOrder": 119
     },
     {
       "employeeId": "B4260",
@@ -1261,7 +1211,7 @@
       "sourceOrder": 126,
       "section": "D1區",
       "category": "area",
-      "scheduleDisplayOrder": 125
+      "scheduleDisplayOrder": 120
     },
     {
       "employeeId": "B1368",
@@ -1271,7 +1221,7 @@
       "sourceOrder": 127,
       "section": "D1區",
       "category": "area",
-      "scheduleDisplayOrder": 126
+      "scheduleDisplayOrder": 121
     },
     {
       "employeeId": "B5805",
@@ -1281,7 +1231,7 @@
       "sourceOrder": 128,
       "section": "D1區",
       "category": "area",
-      "scheduleDisplayOrder": 127
+      "scheduleDisplayOrder": 122
     },
     {
       "employeeId": "B2056",
@@ -1291,7 +1241,7 @@
       "sourceOrder": 129,
       "section": "D2區",
       "category": "area",
-      "scheduleDisplayOrder": 128
+      "scheduleDisplayOrder": 123
     },
     {
       "employeeId": "B2424",
@@ -1301,7 +1251,7 @@
       "sourceOrder": 130,
       "section": "D2區",
       "category": "area",
-      "scheduleDisplayOrder": 129
+      "scheduleDisplayOrder": 124
     },
     {
       "employeeId": "B4942",
@@ -1311,7 +1261,7 @@
       "sourceOrder": 131,
       "section": "D2區",
       "category": "area",
-      "scheduleDisplayOrder": 130
+      "scheduleDisplayOrder": 125
     },
     {
       "employeeId": "B1715",
@@ -1321,7 +1271,7 @@
       "sourceOrder": 132,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 131
+      "scheduleDisplayOrder": 126
     },
     {
       "employeeId": "B3894",
@@ -1331,7 +1281,7 @@
       "sourceOrder": 133,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 132
+      "scheduleDisplayOrder": 127
     },
     {
       "employeeId": "B4156",
@@ -1341,7 +1291,7 @@
       "sourceOrder": 134,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 133
+      "scheduleDisplayOrder": 128
     },
     {
       "employeeId": "B3664",
@@ -1351,7 +1301,7 @@
       "sourceOrder": 135,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 134
+      "scheduleDisplayOrder": 129
     },
     {
       "employeeId": "B3741",
@@ -1361,7 +1311,7 @@
       "sourceOrder": 136,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 135
+      "scheduleDisplayOrder": 130
     },
     {
       "employeeId": "B3958",
@@ -1371,7 +1321,7 @@
       "sourceOrder": 137,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 136
+      "scheduleDisplayOrder": 131
     },
     {
       "employeeId": "B2296",
@@ -1381,7 +1331,7 @@
       "sourceOrder": 138,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 137
+      "scheduleDisplayOrder": 132
     },
     {
       "employeeId": "B0281",
@@ -1391,7 +1341,7 @@
       "sourceOrder": 139,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 138
+      "scheduleDisplayOrder": 133
     },
     {
       "employeeId": "98183",
@@ -1401,7 +1351,7 @@
       "sourceOrder": 140,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 139
+      "scheduleDisplayOrder": 134
     },
     {
       "employeeId": "B4469",
@@ -1411,7 +1361,7 @@
       "sourceOrder": 141,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 140
+      "scheduleDisplayOrder": 135
     },
     {
       "employeeId": "B3882",
@@ -1421,7 +1371,7 @@
       "sourceOrder": 142,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 141
+      "scheduleDisplayOrder": 136
     },
     {
       "employeeId": "B5951",
@@ -1431,7 +1381,7 @@
       "sourceOrder": 143,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 142
+      "scheduleDisplayOrder": 137
     },
     {
       "employeeId": "95963",
@@ -1441,7 +1391,7 @@
       "sourceOrder": 144,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 143
+      "scheduleDisplayOrder": 138
     },
     {
       "employeeId": "97859",
@@ -1451,7 +1401,7 @@
       "sourceOrder": 145,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 144
+      "scheduleDisplayOrder": 139
     },
     {
       "employeeId": "B3979",
@@ -1461,7 +1411,7 @@
       "sourceOrder": 146,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 145
+      "scheduleDisplayOrder": 140
     },
     {
       "employeeId": "B4417",
@@ -1471,7 +1421,7 @@
       "sourceOrder": 147,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 146
+      "scheduleDisplayOrder": 141
     },
     {
       "employeeId": "B4098",
@@ -1481,7 +1431,7 @@
       "sourceOrder": 152,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 147
+      "scheduleDisplayOrder": 142
     },
     {
       "employeeId": "B5166",
@@ -1491,7 +1441,7 @@
       "sourceOrder": 153,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 148
+      "scheduleDisplayOrder": 143
     },
     {
       "employeeId": "B5111",
@@ -1501,7 +1451,7 @@
       "sourceOrder": 154,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 149
+      "scheduleDisplayOrder": 144
     },
     {
       "employeeId": "B3822",
@@ -1511,7 +1461,7 @@
       "sourceOrder": 155,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 150
+      "scheduleDisplayOrder": 145
     },
     {
       "employeeId": "B5017",
@@ -1521,7 +1471,7 @@
       "sourceOrder": 156,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 151
+      "scheduleDisplayOrder": 146
     },
     {
       "employeeId": "B5806",
@@ -1531,7 +1481,7 @@
       "sourceOrder": 157,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 152
+      "scheduleDisplayOrder": 147
     },
     {
       "employeeId": "B5887",
@@ -1541,7 +1491,7 @@
       "sourceOrder": 158,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 153
+      "scheduleDisplayOrder": 148
     },
     {
       "employeeId": "B6202",
@@ -1551,7 +1501,7 @@
       "sourceOrder": 159,
       "section": "D3區",
       "category": "area",
-      "scheduleDisplayOrder": 154
+      "scheduleDisplayOrder": 149
     },
     {
       "employeeId": "95967",
@@ -1561,7 +1511,7 @@
       "sourceOrder": 160,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 155
+      "scheduleDisplayOrder": 150
     },
     {
       "employeeId": "B0770",
@@ -1571,7 +1521,7 @@
       "sourceOrder": 161,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 156
+      "scheduleDisplayOrder": 151
     },
     {
       "employeeId": "B2184",
@@ -1581,7 +1531,7 @@
       "sourceOrder": 162,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 157
+      "scheduleDisplayOrder": 152
     },
     {
       "employeeId": "97983",
@@ -1591,7 +1541,7 @@
       "sourceOrder": 163,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 158
+      "scheduleDisplayOrder": 153
     },
     {
       "employeeId": "B4912",
@@ -1601,7 +1551,7 @@
       "sourceOrder": 164,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 159
+      "scheduleDisplayOrder": 154
     },
     {
       "employeeId": "B4964",
@@ -1611,7 +1561,7 @@
       "sourceOrder": 165,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 160
+      "scheduleDisplayOrder": 155
     },
     {
       "employeeId": "B5544",
@@ -1621,7 +1571,7 @@
       "sourceOrder": 166,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 161
+      "scheduleDisplayOrder": 156
     },
     {
       "employeeId": "B1581",
@@ -1631,7 +1581,7 @@
       "sourceOrder": 167,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 162
+      "scheduleDisplayOrder": 157
     },
     {
       "employeeId": "B3347",
@@ -1641,7 +1591,7 @@
       "sourceOrder": 168,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 163
+      "scheduleDisplayOrder": 158
     },
     {
       "employeeId": "B4629",
@@ -1651,7 +1601,7 @@
       "sourceOrder": 169,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 164
+      "scheduleDisplayOrder": 159
     },
     {
       "employeeId": "B5136",
@@ -1661,7 +1611,7 @@
       "sourceOrder": 170,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 165
+      "scheduleDisplayOrder": 160
     },
     {
       "employeeId": "B5298",
@@ -1671,7 +1621,7 @@
       "sourceOrder": 171,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 166
+      "scheduleDisplayOrder": 161
     },
     {
       "employeeId": "B5392",
@@ -1681,7 +1631,7 @@
       "sourceOrder": 172,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 167
+      "scheduleDisplayOrder": 162
     },
     {
       "employeeId": "B5649",
@@ -1691,7 +1641,7 @@
       "sourceOrder": 173,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 168
+      "scheduleDisplayOrder": 163
     },
     {
       "employeeId": "B5748",
@@ -1701,7 +1651,7 @@
       "sourceOrder": 174,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 169
+      "scheduleDisplayOrder": 164
     },
     {
       "employeeId": "B6030",
@@ -1711,7 +1661,7 @@
       "sourceOrder": 175,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 170
+      "scheduleDisplayOrder": 165
     },
     {
       "employeeId": "B2313",
@@ -1721,7 +1671,7 @@
       "sourceOrder": 176,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 171
+      "scheduleDisplayOrder": 166
     },
     {
       "employeeId": "B2606",
@@ -1731,7 +1681,7 @@
       "sourceOrder": 177,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 172
+      "scheduleDisplayOrder": 167
     },
     {
       "employeeId": "B4568",
@@ -1741,7 +1691,7 @@
       "sourceOrder": 178,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 173
+      "scheduleDisplayOrder": 168
     },
     {
       "employeeId": "B6069",
@@ -1751,7 +1701,7 @@
       "sourceOrder": 181,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 174
+      "scheduleDisplayOrder": 169
     },
     {
       "employeeId": "B6185",
@@ -1761,7 +1711,7 @@
       "sourceOrder": 182,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 175
+      "scheduleDisplayOrder": 170
     },
     {
       "employeeId": "B6234",
@@ -1771,7 +1721,7 @@
       "sourceOrder": 183,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 176
+      "scheduleDisplayOrder": 171
     },
     {
       "employeeId": "96438",
@@ -1781,7 +1731,7 @@
       "sourceOrder": 185,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 177
+      "scheduleDisplayOrder": 172
     },
     {
       "employeeId": "B2673",
@@ -1791,7 +1741,7 @@
       "sourceOrder": 186,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 178
+      "scheduleDisplayOrder": 173
     },
     {
       "employeeId": "B5621",
@@ -1801,7 +1751,7 @@
       "sourceOrder": 187,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 179
+      "scheduleDisplayOrder": 174
     },
     {
       "employeeId": "B5907",
@@ -1811,7 +1761,7 @@
       "sourceOrder": 188,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 180
+      "scheduleDisplayOrder": 175
     },
     {
       "employeeId": "B6264",
@@ -1821,7 +1771,7 @@
       "sourceOrder": 189,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 181
+      "scheduleDisplayOrder": 176
     },
     {
       "employeeId": "B6291",
@@ -1831,7 +1781,7 @@
       "sourceOrder": 190,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 182
+      "scheduleDisplayOrder": 177
     },
     {
       "employeeId": "B1702",
@@ -1841,7 +1791,7 @@
       "sourceOrder": 191,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 183
+      "scheduleDisplayOrder": 178
     },
     {
       "employeeId": "B3004",
@@ -1851,7 +1801,7 @@
       "sourceOrder": 192,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 184
+      "scheduleDisplayOrder": 179
     },
     {
       "employeeId": "B4085",
@@ -1861,7 +1811,7 @@
       "sourceOrder": 193,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 185
+      "scheduleDisplayOrder": 180
     },
     {
       "employeeId": "B4712",
@@ -1871,7 +1821,7 @@
       "sourceOrder": 194,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 186
+      "scheduleDisplayOrder": 181
     },
     {
       "employeeId": "B5860",
@@ -1881,7 +1831,7 @@
       "sourceOrder": 195,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 187
+      "scheduleDisplayOrder": 182
     },
     {
       "employeeId": "B6282",
@@ -1891,7 +1841,7 @@
       "sourceOrder": 196,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 188
+      "scheduleDisplayOrder": 183
     },
     {
       "employeeId": "B2626",
@@ -1901,7 +1851,7 @@
       "sourceOrder": 197,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 189
+      "scheduleDisplayOrder": 184
     },
     {
       "employeeId": "B3076",
@@ -1911,7 +1861,7 @@
       "sourceOrder": 199,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 190
+      "scheduleDisplayOrder": 185
     },
     {
       "employeeId": "B3252",
@@ -1921,7 +1871,7 @@
       "sourceOrder": 200,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 191
+      "scheduleDisplayOrder": 186
     },
     {
       "employeeId": "B4475",
@@ -1931,7 +1881,7 @@
       "sourceOrder": 201,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 192
+      "scheduleDisplayOrder": 187
     },
     {
       "employeeId": "B4904",
@@ -1941,7 +1891,7 @@
       "sourceOrder": 202,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 193
+      "scheduleDisplayOrder": 188
     },
     {
       "employeeId": "B4947",
@@ -1951,7 +1901,7 @@
       "sourceOrder": 203,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 194
+      "scheduleDisplayOrder": 189
     },
     {
       "employeeId": "B5545",
@@ -1961,7 +1911,7 @@
       "sourceOrder": 204,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 195
+      "scheduleDisplayOrder": 190
     },
     {
       "employeeId": "B5913",
@@ -1971,7 +1921,7 @@
       "sourceOrder": 205,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 196
+      "scheduleDisplayOrder": 191
     },
     {
       "employeeId": "B6297",
@@ -1981,7 +1931,7 @@
       "sourceOrder": 206,
       "section": "F區",
       "category": "area",
-      "scheduleDisplayOrder": 197
+      "scheduleDisplayOrder": 192
     },
     {
       "employeeId": "B1153",
@@ -1991,7 +1941,7 @@
       "sourceOrder": 207,
       "section": "G區",
       "category": "area",
-      "scheduleDisplayOrder": 198
+      "scheduleDisplayOrder": 193
     },
     {
       "employeeId": "B3785",
@@ -2001,7 +1951,7 @@
       "sourceOrder": 208,
       "section": "G區",
       "category": "area",
-      "scheduleDisplayOrder": 199
+      "scheduleDisplayOrder": 194
     },
     {
       "employeeId": "B4586",
@@ -2011,7 +1961,7 @@
       "sourceOrder": 209,
       "section": "G區",
       "category": "area",
-      "scheduleDisplayOrder": 200
+      "scheduleDisplayOrder": 195
     },
     {
       "employeeId": "B5377",
@@ -2021,7 +1971,7 @@
       "sourceOrder": 210,
       "section": "G區",
       "category": "area",
-      "scheduleDisplayOrder": 201
+      "scheduleDisplayOrder": 196
     },
     {
       "employeeId": "B5474",
@@ -2031,7 +1981,7 @@
       "sourceOrder": 211,
       "section": "G區",
       "category": "area",
-      "scheduleDisplayOrder": 202
+      "scheduleDisplayOrder": 197
     },
     {
       "employeeId": "B5526",
@@ -2041,7 +1991,7 @@
       "sourceOrder": 212,
       "section": "G區",
       "category": "area",
-      "scheduleDisplayOrder": 203
+      "scheduleDisplayOrder": 198
     },
     {
       "employeeId": "B1310",
@@ -2051,7 +2001,7 @@
       "sourceOrder": 213,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 204
+      "scheduleDisplayOrder": 199
     },
     {
       "employeeId": "B2560",
@@ -2061,7 +2011,7 @@
       "sourceOrder": 214,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 205
+      "scheduleDisplayOrder": 200
     },
     {
       "employeeId": "B3592",
@@ -2071,7 +2021,7 @@
       "sourceOrder": 215,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 206
+      "scheduleDisplayOrder": 201
     },
     {
       "employeeId": "B4118",
@@ -2081,7 +2031,7 @@
       "sourceOrder": 216,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 207
+      "scheduleDisplayOrder": 202
     },
     {
       "employeeId": "B4472",
@@ -2091,7 +2041,7 @@
       "sourceOrder": 217,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 208
+      "scheduleDisplayOrder": 203
     },
     {
       "employeeId": "B5089",
@@ -2101,7 +2051,7 @@
       "sourceOrder": 218,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 209
+      "scheduleDisplayOrder": 204
     },
     {
       "employeeId": "B5665",
@@ -2111,7 +2061,7 @@
       "sourceOrder": 219,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 210
+      "scheduleDisplayOrder": 205
     },
     {
       "employeeId": "B5690",
@@ -2121,7 +2071,7 @@
       "sourceOrder": 220,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 211
+      "scheduleDisplayOrder": 206
     },
     {
       "employeeId": "B5987",
@@ -2131,7 +2081,7 @@
       "sourceOrder": 221,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 212
+      "scheduleDisplayOrder": 207
     },
     {
       "employeeId": "B6124",
@@ -2141,7 +2091,7 @@
       "sourceOrder": 222,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 213
+      "scheduleDisplayOrder": 208
     },
     {
       "employeeId": "97306",
@@ -2151,7 +2101,7 @@
       "sourceOrder": 224,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 214
+      "scheduleDisplayOrder": 209
     },
     {
       "employeeId": "B1862",
@@ -2161,7 +2111,7 @@
       "sourceOrder": 225,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 215
+      "scheduleDisplayOrder": 210
     },
     {
       "employeeId": "B2570",
@@ -2171,7 +2121,7 @@
       "sourceOrder": 226,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 216
+      "scheduleDisplayOrder": 211
     },
     {
       "employeeId": "B3845",
@@ -2181,7 +2131,7 @@
       "sourceOrder": 227,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 217
+      "scheduleDisplayOrder": 212
     },
     {
       "employeeId": "B4025",
@@ -2191,7 +2141,7 @@
       "sourceOrder": 228,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 218
+      "scheduleDisplayOrder": 213
     },
     {
       "employeeId": "B4399",
@@ -2201,7 +2151,7 @@
       "sourceOrder": 229,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 219
+      "scheduleDisplayOrder": 214
     },
     {
       "employeeId": "B4479",
@@ -2211,7 +2161,7 @@
       "sourceOrder": 230,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 220
+      "scheduleDisplayOrder": 215
     },
     {
       "employeeId": "B4983",
@@ -2221,7 +2171,7 @@
       "sourceOrder": 231,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 221
+      "scheduleDisplayOrder": 216
     },
     {
       "employeeId": "B5997",
@@ -2231,7 +2181,7 @@
       "sourceOrder": 233,
       "section": "G2區",
       "category": "area",
-      "scheduleDisplayOrder": 222
+      "scheduleDisplayOrder": 217
     },
     {
       "employeeId": "B2152",
@@ -2241,7 +2191,7 @@
       "sourceOrder": 234,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 223
+      "scheduleDisplayOrder": 218
     },
     {
       "employeeId": "B0340",
@@ -2251,7 +2201,7 @@
       "sourceOrder": 235,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 224
+      "scheduleDisplayOrder": 219
     },
     {
       "employeeId": "B5164",
@@ -2261,7 +2211,7 @@
       "sourceOrder": 236,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 225
+      "scheduleDisplayOrder": 220
     },
     {
       "employeeId": "B3126",
@@ -2271,7 +2221,7 @@
       "sourceOrder": 237,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 226
+      "scheduleDisplayOrder": 221
     },
     {
       "employeeId": "B4393",
@@ -2281,7 +2231,7 @@
       "sourceOrder": 238,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 227
+      "scheduleDisplayOrder": 222
     },
     {
       "employeeId": "B6093",
@@ -2291,7 +2241,7 @@
       "sourceOrder": 239,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 228
+      "scheduleDisplayOrder": 223
     },
     {
       "employeeId": "B2537",
@@ -2301,7 +2251,7 @@
       "sourceOrder": 240,
       "section": "P2區",
       "category": "area",
-      "scheduleDisplayOrder": 229
+      "scheduleDisplayOrder": 224
     },
     {
       "employeeId": "B2708",
@@ -2311,7 +2261,7 @@
       "sourceOrder": 241,
       "section": "P2區",
       "category": "area",
-      "scheduleDisplayOrder": 230
+      "scheduleDisplayOrder": 225
     },
     {
       "employeeId": "B3844",
@@ -2321,7 +2271,7 @@
       "sourceOrder": 242,
       "section": "P2區",
       "category": "area",
-      "scheduleDisplayOrder": 231
+      "scheduleDisplayOrder": 226
     },
     {
       "employeeId": "98324",
@@ -2331,7 +2281,7 @@
       "sourceOrder": 243,
       "section": "P2區",
       "category": "area",
-      "scheduleDisplayOrder": 232
+      "scheduleDisplayOrder": 227
     },
     {
       "employeeId": "B3361",
@@ -2341,7 +2291,7 @@
       "sourceOrder": 245,
       "section": "P2區",
       "category": "area",
-      "scheduleDisplayOrder": 233
+      "scheduleDisplayOrder": 228
     },
     {
       "employeeId": "B3485",
@@ -2351,7 +2301,7 @@
       "sourceOrder": 246,
       "section": "P2區",
       "category": "area",
-      "scheduleDisplayOrder": 234
+      "scheduleDisplayOrder": 229
     },
     {
       "employeeId": "B5796",
@@ -2361,7 +2311,7 @@
       "sourceOrder": 247,
       "section": "P2區",
       "category": "area",
-      "scheduleDisplayOrder": 235
+      "scheduleDisplayOrder": 230
     },
     {
       "employeeId": "B6100",
@@ -2371,7 +2321,7 @@
       "sourceOrder": 249,
       "section": "P2區",
       "category": "area",
-      "scheduleDisplayOrder": 236
+      "scheduleDisplayOrder": 231
     },
     {
       "employeeId": "93924",
@@ -2381,7 +2331,7 @@
       "sourceOrder": 251,
       "section": "H區",
       "category": "area",
-      "scheduleDisplayOrder": 237
+      "scheduleDisplayOrder": 232
     },
     {
       "employeeId": "95418",
@@ -2391,7 +2341,7 @@
       "sourceOrder": 252,
       "section": "H區",
       "category": "area",
-      "scheduleDisplayOrder": 238
+      "scheduleDisplayOrder": 233
     },
     {
       "employeeId": "B2101",
@@ -2401,7 +2351,7 @@
       "sourceOrder": 253,
       "section": "H區",
       "category": "area",
-      "scheduleDisplayOrder": 239
+      "scheduleDisplayOrder": 234
     },
     {
       "employeeId": "B4294",
@@ -2411,7 +2361,7 @@
       "sourceOrder": 254,
       "section": "H區",
       "category": "area",
-      "scheduleDisplayOrder": 240
+      "scheduleDisplayOrder": 235
     },
     {
       "employeeId": "B5169",
@@ -2421,7 +2371,7 @@
       "sourceOrder": 255,
       "section": "H區",
       "category": "area",
-      "scheduleDisplayOrder": 241
+      "scheduleDisplayOrder": 236
     },
     {
       "employeeId": "B5801",
@@ -2431,7 +2381,7 @@
       "sourceOrder": 256,
       "section": "H區",
       "category": "area",
-      "scheduleDisplayOrder": 242
+      "scheduleDisplayOrder": 237
     },
     {
       "employeeId": "B6201",
@@ -2441,7 +2391,7 @@
       "sourceOrder": 257,
       "section": "H區",
       "category": "area",
-      "scheduleDisplayOrder": 243
+      "scheduleDisplayOrder": 238
     },
     {
       "employeeId": "93893",
@@ -2451,7 +2401,7 @@
       "sourceOrder": 258,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 244
+      "scheduleDisplayOrder": 239
     },
     {
       "employeeId": "94288",
@@ -2461,7 +2411,7 @@
       "sourceOrder": 259,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 245
+      "scheduleDisplayOrder": 240
     },
     {
       "employeeId": "95191",
@@ -2471,7 +2421,7 @@
       "sourceOrder": 260,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 246
+      "scheduleDisplayOrder": 241
     },
     {
       "employeeId": "B0469",
@@ -2481,7 +2431,7 @@
       "sourceOrder": 261,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 247
+      "scheduleDisplayOrder": 242
     },
     {
       "employeeId": "B1277",
@@ -2491,7 +2441,7 @@
       "sourceOrder": 262,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 248
+      "scheduleDisplayOrder": 243
     },
     {
       "employeeId": "B3883",
@@ -2501,7 +2451,7 @@
       "sourceOrder": 263,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 249
+      "scheduleDisplayOrder": 244
     },
     {
       "employeeId": "B4135",
@@ -2511,7 +2461,7 @@
       "sourceOrder": 264,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 250
+      "scheduleDisplayOrder": 245
     },
     {
       "employeeId": "B5040",
@@ -2521,7 +2471,7 @@
       "sourceOrder": 265,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 251
+      "scheduleDisplayOrder": 246
     },
     {
       "employeeId": "B5061",
@@ -2531,7 +2481,7 @@
       "sourceOrder": 266,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 252
+      "scheduleDisplayOrder": 247
     },
     {
       "employeeId": "B5346",
@@ -2541,7 +2491,7 @@
       "sourceOrder": 267,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 253
+      "scheduleDisplayOrder": 248
     },
     {
       "employeeId": "B2045",
@@ -2551,7 +2501,7 @@
       "sourceOrder": 268,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 254
+      "scheduleDisplayOrder": 249
     },
     {
       "employeeId": "B2778",
@@ -2561,7 +2511,7 @@
       "sourceOrder": 269,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 255
+      "scheduleDisplayOrder": 250
     },
     {
       "employeeId": "B3608",
@@ -2571,7 +2521,7 @@
       "sourceOrder": 270,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 256
+      "scheduleDisplayOrder": 251
     },
     {
       "employeeId": "B3754",
@@ -2581,7 +2531,7 @@
       "sourceOrder": 271,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 257
+      "scheduleDisplayOrder": 252
     },
     {
       "employeeId": "B4474",
@@ -2591,7 +2541,7 @@
       "sourceOrder": 272,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 258
+      "scheduleDisplayOrder": 253
     },
     {
       "employeeId": "B6236",
@@ -2601,7 +2551,7 @@
       "sourceOrder": 273,
       "section": "H2區",
       "category": "area",
-      "scheduleDisplayOrder": 259
+      "scheduleDisplayOrder": 254
     },
     {
       "employeeId": "B1156",
@@ -2611,7 +2561,7 @@
       "sourceOrder": 274,
       "section": "I1區",
       "category": "area",
-      "scheduleDisplayOrder": 260
+      "scheduleDisplayOrder": 255
     },
     {
       "employeeId": "B1191",
@@ -2621,7 +2571,7 @@
       "sourceOrder": 275,
       "section": "I1區",
       "category": "area",
-      "scheduleDisplayOrder": 261
+      "scheduleDisplayOrder": 256
     },
     {
       "employeeId": "B4373",
@@ -2631,7 +2581,7 @@
       "sourceOrder": 276,
       "section": "I1區",
       "category": "area",
-      "scheduleDisplayOrder": 262
+      "scheduleDisplayOrder": 257
     },
     {
       "employeeId": "95930",
@@ -2641,7 +2591,7 @@
       "sourceOrder": 277,
       "section": "I1區",
       "category": "area",
-      "scheduleDisplayOrder": 263
+      "scheduleDisplayOrder": 258
     },
     {
       "employeeId": "B1064",
@@ -2651,7 +2601,7 @@
       "sourceOrder": 278,
       "section": "I1區",
       "category": "area",
-      "scheduleDisplayOrder": 264
+      "scheduleDisplayOrder": 259
     },
     {
       "employeeId": "B5470",
@@ -2661,7 +2611,7 @@
       "sourceOrder": 279,
       "section": "I1區",
       "category": "area",
-      "scheduleDisplayOrder": 265
+      "scheduleDisplayOrder": 260
     },
     {
       "employeeId": "B0613",
@@ -2671,7 +2621,7 @@
       "sourceOrder": 282,
       "section": "I1區",
       "category": "area",
-      "scheduleDisplayOrder": 266
+      "scheduleDisplayOrder": 261
     },
     {
       "employeeId": "B5524",
@@ -2681,7 +2631,7 @@
       "sourceOrder": 283,
       "section": "I1區",
       "category": "area",
-      "scheduleDisplayOrder": 267
+      "scheduleDisplayOrder": 262
     },
     {
       "employeeId": "97131",
@@ -2691,7 +2641,7 @@
       "sourceOrder": 284,
       "section": "I2區",
       "category": "area",
-      "scheduleDisplayOrder": 268
+      "scheduleDisplayOrder": 263
     },
     {
       "employeeId": "96429",
@@ -2701,7 +2651,7 @@
       "sourceOrder": 285,
       "section": "I2區",
       "category": "area",
-      "scheduleDisplayOrder": 269
+      "scheduleDisplayOrder": 264
     },
     {
       "employeeId": "B3716",
@@ -2711,7 +2661,7 @@
       "sourceOrder": 286,
       "section": "I2區",
       "category": "area",
-      "scheduleDisplayOrder": 270
+      "scheduleDisplayOrder": 265
     },
     {
       "employeeId": "96653",
@@ -2721,7 +2671,7 @@
       "sourceOrder": 287,
       "section": "I2區",
       "category": "area",
-      "scheduleDisplayOrder": 271
+      "scheduleDisplayOrder": 266
     },
     {
       "employeeId": "B2359",
@@ -2731,7 +2681,7 @@
       "sourceOrder": 288,
       "section": "I2區",
       "category": "area",
-      "scheduleDisplayOrder": 272
+      "scheduleDisplayOrder": 267
     },
     {
       "employeeId": "B5666",
@@ -2741,7 +2691,7 @@
       "sourceOrder": 289,
       "section": "I2區",
       "category": "area",
-      "scheduleDisplayOrder": 273
+      "scheduleDisplayOrder": 268
     },
     {
       "employeeId": "B4632",
@@ -2751,7 +2701,7 @@
       "sourceOrder": 291,
       "section": "I2區",
       "category": "area",
-      "scheduleDisplayOrder": 274
+      "scheduleDisplayOrder": 269
     },
     {
       "employeeId": "95630",
@@ -2761,7 +2711,7 @@
       "sourceOrder": 293,
       "section": "I3區",
       "category": "area",
-      "scheduleDisplayOrder": 275
+      "scheduleDisplayOrder": 270
     },
     {
       "employeeId": "B4905",
@@ -2771,7 +2721,7 @@
       "sourceOrder": 294,
       "section": "I3區",
       "category": "area",
-      "scheduleDisplayOrder": 276
+      "scheduleDisplayOrder": 271
     },
     {
       "employeeId": "B6038",
@@ -2781,7 +2731,7 @@
       "sourceOrder": 295,
       "section": "I3區",
       "category": "area",
-      "scheduleDisplayOrder": 277
+      "scheduleDisplayOrder": 272
     },
     {
       "employeeId": "97562",
@@ -2791,7 +2741,7 @@
       "sourceOrder": 296,
       "section": "I3區",
       "category": "area",
-      "scheduleDisplayOrder": 278
+      "scheduleDisplayOrder": 273
     },
     {
       "employeeId": "B1050",
@@ -2801,7 +2751,7 @@
       "sourceOrder": 297,
       "section": "I3區",
       "category": "area",
-      "scheduleDisplayOrder": 279
+      "scheduleDisplayOrder": 274
     },
     {
       "employeeId": "B4200",
@@ -2811,7 +2761,7 @@
       "sourceOrder": 298,
       "section": "I3區",
       "category": "area",
-      "scheduleDisplayOrder": 280
+      "scheduleDisplayOrder": 275
     },
     {
       "employeeId": "B0581",
@@ -2821,7 +2771,7 @@
       "sourceOrder": 301,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 281
+      "scheduleDisplayOrder": 276
     },
     {
       "employeeId": "97246",
@@ -2831,7 +2781,7 @@
       "sourceOrder": 302,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 282
+      "scheduleDisplayOrder": 277
     },
     {
       "employeeId": "B2367",
@@ -2841,7 +2791,7 @@
       "sourceOrder": 303,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 283
+      "scheduleDisplayOrder": 278
     },
     {
       "employeeId": "B5931",
@@ -2851,7 +2801,7 @@
       "sourceOrder": 304,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 284
+      "scheduleDisplayOrder": 279
     },
     {
       "employeeId": "B0106",
@@ -2861,7 +2811,7 @@
       "sourceOrder": 305,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 285
+      "scheduleDisplayOrder": 280
     },
     {
       "employeeId": "B0112",
@@ -2871,7 +2821,7 @@
       "sourceOrder": 306,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 286
+      "scheduleDisplayOrder": 281
     },
     {
       "employeeId": "B2954",
@@ -2881,7 +2831,7 @@
       "sourceOrder": 307,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 287
+      "scheduleDisplayOrder": 282
     },
     {
       "employeeId": "B5691",
@@ -2891,7 +2841,7 @@
       "sourceOrder": 308,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 288
+      "scheduleDisplayOrder": 283
     },
     {
       "employeeId": "B2358",
@@ -2901,7 +2851,7 @@
       "sourceOrder": 309,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 289
+      "scheduleDisplayOrder": 284
     },
     {
       "employeeId": "98250",
@@ -2911,7 +2861,7 @@
       "sourceOrder": 310,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 290
+      "scheduleDisplayOrder": 285
     },
     {
       "employeeId": "B2524",
@@ -2921,7 +2871,7 @@
       "sourceOrder": 313,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 291
+      "scheduleDisplayOrder": 286
     },
     {
       "employeeId": "B2576",
@@ -2931,7 +2881,7 @@
       "sourceOrder": 314,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 292
+      "scheduleDisplayOrder": 287
     },
     {
       "employeeId": "B4408",
@@ -2941,7 +2891,7 @@
       "sourceOrder": 315,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 293
+      "scheduleDisplayOrder": 288
     },
     {
       "employeeId": "B5760",
@@ -2951,7 +2901,7 @@
       "sourceOrder": 316,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 294
+      "scheduleDisplayOrder": 289
     },
     {
       "employeeId": "B3451",
@@ -2961,7 +2911,7 @@
       "sourceOrder": 317,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 295
+      "scheduleDisplayOrder": 290
     },
     {
       "employeeId": "B0837",
@@ -2971,7 +2921,7 @@
       "sourceOrder": 318,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 296
+      "scheduleDisplayOrder": 291
     },
     {
       "employeeId": "95858",
@@ -2981,7 +2931,7 @@
       "sourceOrder": 319,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 297
+      "scheduleDisplayOrder": 292
     },
     {
       "employeeId": "B5671",
@@ -2991,7 +2941,7 @@
       "sourceOrder": 320,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 298
+      "scheduleDisplayOrder": 293
     },
     {
       "employeeId": "97243",
@@ -3001,7 +2951,7 @@
       "sourceOrder": 321,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 299
+      "scheduleDisplayOrder": 294
     },
     {
       "employeeId": "97430",
@@ -3011,7 +2961,7 @@
       "sourceOrder": 322,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 300
+      "scheduleDisplayOrder": 295
     },
     {
       "employeeId": "B0971",
@@ -3021,7 +2971,7 @@
       "sourceOrder": 323,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 301
+      "scheduleDisplayOrder": 296
     },
     {
       "employeeId": "B2651",
@@ -3031,7 +2981,7 @@
       "sourceOrder": 324,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 302
+      "scheduleDisplayOrder": 297
     },
     {
       "employeeId": "B3888",
@@ -3041,7 +2991,7 @@
       "sourceOrder": 325,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 303
+      "scheduleDisplayOrder": 298
     },
     {
       "employeeId": "B5883",
@@ -3051,7 +3001,7 @@
       "sourceOrder": 326,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 304
+      "scheduleDisplayOrder": 299
     },
     {
       "employeeId": "B6011",
@@ -3061,7 +3011,7 @@
       "sourceOrder": 327,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 305
+      "scheduleDisplayOrder": 300
     },
     {
       "employeeId": "97143",
@@ -3071,7 +3021,7 @@
       "sourceOrder": 328,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 306
+      "scheduleDisplayOrder": 301
     },
     {
       "employeeId": "98213",
@@ -3081,7 +3031,7 @@
       "sourceOrder": 330,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 307
+      "scheduleDisplayOrder": 302
     },
     {
       "employeeId": "B0411",
@@ -3091,7 +3041,7 @@
       "sourceOrder": 331,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 308
+      "scheduleDisplayOrder": 303
     },
     {
       "employeeId": "B0684",
@@ -3101,7 +3051,7 @@
       "sourceOrder": 335,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 309
+      "scheduleDisplayOrder": 304
     },
     {
       "employeeId": "95003",
@@ -3111,7 +3061,7 @@
       "sourceOrder": 336,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 310
+      "scheduleDisplayOrder": 305
     },
     {
       "employeeId": "B5291",
@@ -3121,7 +3071,7 @@
       "sourceOrder": 337,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 311
+      "scheduleDisplayOrder": 306
     },
     {
       "employeeId": "B2023",
@@ -3131,7 +3081,7 @@
       "sourceOrder": 338,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 312
+      "scheduleDisplayOrder": 307
     },
     {
       "employeeId": "96818",
@@ -3141,7 +3091,7 @@
       "sourceOrder": 339,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 313
+      "scheduleDisplayOrder": 308
     },
     {
       "employeeId": "B0047",
@@ -3151,7 +3101,7 @@
       "sourceOrder": 340,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 314
+      "scheduleDisplayOrder": 309
     },
     {
       "employeeId": "B2764",
@@ -3161,7 +3111,7 @@
       "sourceOrder": 341,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 315
+      "scheduleDisplayOrder": 310
     },
     {
       "employeeId": "B2916",
@@ -3171,7 +3121,7 @@
       "sourceOrder": 342,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 316
+      "scheduleDisplayOrder": 311
     },
     {
       "employeeId": "B4724",
@@ -3181,7 +3131,7 @@
       "sourceOrder": 343,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 317
+      "scheduleDisplayOrder": 312
     },
     {
       "employeeId": "B3799",
@@ -3191,7 +3141,7 @@
       "sourceOrder": 346,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 318
+      "scheduleDisplayOrder": 313
     },
     {
       "employeeId": "B4847",
@@ -3201,7 +3151,7 @@
       "sourceOrder": 348,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 319
+      "scheduleDisplayOrder": 314
     },
     {
       "employeeId": "B5874",
@@ -3211,7 +3161,7 @@
       "sourceOrder": 349,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 320
+      "scheduleDisplayOrder": 315
     },
     {
       "employeeId": "B2371",
@@ -3221,7 +3171,7 @@
       "sourceOrder": 350,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 321
+      "scheduleDisplayOrder": 316
     },
     {
       "employeeId": "B4749",
@@ -3231,7 +3181,7 @@
       "sourceOrder": 351,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 322
+      "scheduleDisplayOrder": 317
     },
     {
       "employeeId": "B5920",
@@ -3241,7 +3191,7 @@
       "sourceOrder": 352,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 323
+      "scheduleDisplayOrder": 318
     },
     {
       "employeeId": "B6092",
@@ -3251,7 +3201,7 @@
       "sourceOrder": 353,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 324
+      "scheduleDisplayOrder": 319
     },
     {
       "employeeId": "B0094",
@@ -3261,7 +3211,7 @@
       "sourceOrder": 354,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 325
+      "scheduleDisplayOrder": 320
     },
     {
       "employeeId": "B0164",
@@ -3271,7 +3221,7 @@
       "sourceOrder": 355,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 326
+      "scheduleDisplayOrder": 321
     },
     {
       "employeeId": "B0941",
@@ -3281,7 +3231,7 @@
       "sourceOrder": 356,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 327
+      "scheduleDisplayOrder": 322
     },
     {
       "employeeId": "B1788",
@@ -3291,7 +3241,7 @@
       "sourceOrder": 357,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 328
+      "scheduleDisplayOrder": 323
     },
     {
       "employeeId": "B5797",
@@ -3301,7 +3251,7 @@
       "sourceOrder": 358,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 329
+      "scheduleDisplayOrder": 324
     },
     {
       "employeeId": "B5859",
@@ -3311,7 +3261,7 @@
       "sourceOrder": 359,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 330
+      "scheduleDisplayOrder": 325
     },
     {
       "employeeId": "B5645",
@@ -3321,7 +3271,7 @@
       "sourceOrder": 360,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 331
+      "scheduleDisplayOrder": 326
     },
     {
       "employeeId": "B0590",
@@ -3331,7 +3281,7 @@
       "sourceOrder": 362,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 332
+      "scheduleDisplayOrder": 327
     },
     {
       "employeeId": "B2340",
@@ -3341,7 +3291,7 @@
       "sourceOrder": 363,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 333
+      "scheduleDisplayOrder": 328
     },
     {
       "employeeId": "B4530",
@@ -3351,7 +3301,7 @@
       "sourceOrder": 364,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 334
+      "scheduleDisplayOrder": 329
     },
     {
       "employeeId": "B5109",
@@ -3361,7 +3311,7 @@
       "sourceOrder": 365,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 335
+      "scheduleDisplayOrder": 330
     },
     {
       "employeeId": "B5102",
@@ -3371,7 +3321,7 @@
       "sourceOrder": 366,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 336
+      "scheduleDisplayOrder": 331
     },
     {
       "employeeId": "97551",
@@ -3381,7 +3331,7 @@
       "sourceOrder": 368,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 337
+      "scheduleDisplayOrder": 332
     },
     {
       "employeeId": "96556",
@@ -3391,7 +3341,7 @@
       "sourceOrder": 369,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 338
+      "scheduleDisplayOrder": 333
     },
     {
       "employeeId": "B0637",
@@ -3401,7 +3351,7 @@
       "sourceOrder": 370,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 339
+      "scheduleDisplayOrder": 334
     },
     {
       "employeeId": "B5325",
@@ -3411,7 +3361,7 @@
       "sourceOrder": 371,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 340
+      "scheduleDisplayOrder": 335
     },
     {
       "employeeId": "B2142",
@@ -3421,7 +3371,7 @@
       "sourceOrder": 372,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 341
+      "scheduleDisplayOrder": 336
     },
     {
       "employeeId": "B1061",
@@ -3431,7 +3381,7 @@
       "sourceOrder": 373,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 342
+      "scheduleDisplayOrder": 337
     },
     {
       "employeeId": "B2520",
@@ -3441,7 +3391,7 @@
       "sourceOrder": 374,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 343
+      "scheduleDisplayOrder": 338
     },
     {
       "employeeId": "B5103",
@@ -3451,7 +3401,7 @@
       "sourceOrder": 375,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 344
+      "scheduleDisplayOrder": 339
     },
     {
       "employeeId": "97842",
@@ -3461,7 +3411,7 @@
       "sourceOrder": 377,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 345
+      "scheduleDisplayOrder": 340
     },
     {
       "employeeId": "B1978",
@@ -3471,7 +3421,7 @@
       "sourceOrder": 378,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 346
+      "scheduleDisplayOrder": 341
     },
     {
       "employeeId": "B3650",
@@ -3481,7 +3431,7 @@
       "sourceOrder": 379,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 347
+      "scheduleDisplayOrder": 342
     },
     {
       "employeeId": "B4729",
@@ -3491,7 +3441,7 @@
       "sourceOrder": 380,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 348
+      "scheduleDisplayOrder": 343
     },
     {
       "employeeId": "B0578",
@@ -3501,7 +3451,7 @@
       "sourceOrder": 381,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 349
+      "scheduleDisplayOrder": 344
     },
     {
       "employeeId": "B3662",
@@ -3511,7 +3461,7 @@
       "sourceOrder": 382,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 350
+      "scheduleDisplayOrder": 345
     },
     {
       "employeeId": "B4449",
@@ -3521,7 +3471,7 @@
       "sourceOrder": 383,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 351
+      "scheduleDisplayOrder": 346
     },
     {
       "employeeId": "B4636",
@@ -3531,7 +3481,7 @@
       "sourceOrder": 384,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 352
+      "scheduleDisplayOrder": 347
     },
     {
       "employeeId": "B3103",
@@ -3541,7 +3491,7 @@
       "sourceOrder": 385,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 353
+      "scheduleDisplayOrder": 348
     },
     {
       "employeeId": "B2798",
@@ -3551,7 +3501,7 @@
       "sourceOrder": 386,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 354
+      "scheduleDisplayOrder": 349
     },
     {
       "employeeId": "B3786",
@@ -3561,7 +3511,7 @@
       "sourceOrder": 387,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 355
+      "scheduleDisplayOrder": 350
     },
     {
       "employeeId": "B5236",
@@ -3571,7 +3521,7 @@
       "sourceOrder": 388,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 356
+      "scheduleDisplayOrder": 351
     },
     {
       "employeeId": "B3453",
@@ -3581,7 +3531,7 @@
       "sourceOrder": 390,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 357
+      "scheduleDisplayOrder": 352
     },
     {
       "employeeId": "B3818",
@@ -3591,7 +3541,7 @@
       "sourceOrder": 391,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 358
+      "scheduleDisplayOrder": 353
     },
     {
       "employeeId": "B4984",
@@ -3601,7 +3551,7 @@
       "sourceOrder": 392,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 359
+      "scheduleDisplayOrder": 354
     },
     {
       "employeeId": "96473",
@@ -3611,7 +3561,7 @@
       "sourceOrder": 394,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 360
+      "scheduleDisplayOrder": 355
     },
     {
       "employeeId": "95591",
@@ -3621,7 +3571,7 @@
       "sourceOrder": 395,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 361
+      "scheduleDisplayOrder": 356
     },
     {
       "employeeId": "B4965",
@@ -3631,7 +3581,7 @@
       "sourceOrder": 396,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 362
+      "scheduleDisplayOrder": 357
     },
     {
       "employeeId": "B5937",
@@ -3641,7 +3591,7 @@
       "sourceOrder": 397,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 363
+      "scheduleDisplayOrder": 358
     },
     {
       "employeeId": "96670",
@@ -3651,7 +3601,7 @@
       "sourceOrder": 398,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 364
+      "scheduleDisplayOrder": 359
     },
     {
       "employeeId": "B0807",
@@ -3661,7 +3611,7 @@
       "sourceOrder": 399,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 365
+      "scheduleDisplayOrder": 360
     },
     {
       "employeeId": "B5059",
@@ -3671,7 +3621,7 @@
       "sourceOrder": 400,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 366
+      "scheduleDisplayOrder": 361
     },
     {
       "employeeId": "B0927",
@@ -3681,7 +3631,7 @@
       "sourceOrder": 401,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 367
+      "scheduleDisplayOrder": 362
     },
     {
       "employeeId": "B2711",
@@ -3691,7 +3641,7 @@
       "sourceOrder": 402,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 368
+      "scheduleDisplayOrder": 363
     },
     {
       "employeeId": "B3951",
@@ -3701,7 +3651,7 @@
       "sourceOrder": 403,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 369
+      "scheduleDisplayOrder": 364
     },
     {
       "employeeId": "B4723",
@@ -3711,7 +3661,7 @@
       "sourceOrder": 404,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 370
+      "scheduleDisplayOrder": 365
     },
     {
       "employeeId": "98284",
@@ -3721,7 +3671,7 @@
       "sourceOrder": 406,
       "section": "L4區",
       "category": "area",
-      "scheduleDisplayOrder": 371
+      "scheduleDisplayOrder": 366
     },
     {
       "employeeId": "B2235",
@@ -3731,7 +3681,7 @@
       "sourceOrder": 407,
       "section": "L4區",
       "category": "area",
-      "scheduleDisplayOrder": 372
+      "scheduleDisplayOrder": 367
     },
     {
       "employeeId": "B4136",
@@ -3741,7 +3691,7 @@
       "sourceOrder": 408,
       "section": "L4區",
       "category": "area",
-      "scheduleDisplayOrder": 373
+      "scheduleDisplayOrder": 368
     },
     {
       "employeeId": "B5060",
@@ -3751,7 +3701,7 @@
       "sourceOrder": 409,
       "section": "L4區",
       "category": "area",
-      "scheduleDisplayOrder": 374
+      "scheduleDisplayOrder": 369
     },
     {
       "employeeId": "B5165",
@@ -3761,7 +3711,7 @@
       "sourceOrder": 410,
       "section": "L4區",
       "category": "area",
-      "scheduleDisplayOrder": 375
+      "scheduleDisplayOrder": 370
     },
     {
       "employeeId": "B5641",
@@ -3771,7 +3721,7 @@
       "sourceOrder": 411,
       "section": "L4區",
       "category": "area",
-      "scheduleDisplayOrder": 376
+      "scheduleDisplayOrder": 371
     },
     {
       "employeeId": "B6033",
@@ -3781,7 +3731,7 @@
       "sourceOrder": 412,
       "section": "L4區",
       "category": "area",
-      "scheduleDisplayOrder": 377
+      "scheduleDisplayOrder": 372
     },
     {
       "employeeId": "B1176",
@@ -3791,7 +3741,7 @@
       "sourceOrder": 413,
       "section": "L4區",
       "category": "area",
-      "scheduleDisplayOrder": 378
+      "scheduleDisplayOrder": 373
     },
     {
       "employeeId": "B2926",
@@ -3801,7 +3751,7 @@
       "sourceOrder": 414,
       "section": "L4區",
       "category": "area",
-      "scheduleDisplayOrder": 379
+      "scheduleDisplayOrder": 374
     },
     {
       "employeeId": "B3678",
@@ -3811,7 +3761,7 @@
       "sourceOrder": 415,
       "section": "L4區",
       "category": "area",
-      "scheduleDisplayOrder": 380
+      "scheduleDisplayOrder": 375
     },
     {
       "employeeId": "B3709",
@@ -3821,7 +3771,7 @@
       "sourceOrder": 416,
       "section": "L4區",
       "category": "area",
-      "scheduleDisplayOrder": 381
+      "scheduleDisplayOrder": 376
     },
     {
       "employeeId": "B4567",
@@ -3831,7 +3781,7 @@
       "sourceOrder": 417,
       "section": "L4區",
       "category": "area",
-      "scheduleDisplayOrder": 382
+      "scheduleDisplayOrder": 377
     },
     {
       "employeeId": "96688",
@@ -3841,7 +3791,7 @@
       "sourceOrder": 418,
       "section": "M區",
       "category": "area",
-      "scheduleDisplayOrder": 383
+      "scheduleDisplayOrder": 378
     },
     {
       "employeeId": "B0799",
@@ -3851,7 +3801,7 @@
       "sourceOrder": 419,
       "section": "M區",
       "category": "area",
-      "scheduleDisplayOrder": 384
+      "scheduleDisplayOrder": 379
     },
     {
       "employeeId": "B0426",
@@ -3861,7 +3811,7 @@
       "sourceOrder": 420,
       "section": "M區",
       "category": "area",
-      "scheduleDisplayOrder": 385
+      "scheduleDisplayOrder": 380
     },
     {
       "employeeId": "B5533",
@@ -3871,7 +3821,7 @@
       "sourceOrder": 421,
       "section": "M區",
       "category": "area",
-      "scheduleDisplayOrder": 386
+      "scheduleDisplayOrder": 381
     },
     {
       "employeeId": "B0687",
@@ -3881,7 +3831,7 @@
       "sourceOrder": 422,
       "section": "M區",
       "category": "area",
-      "scheduleDisplayOrder": 387
+      "scheduleDisplayOrder": 382
     },
     {
       "employeeId": "B2707",
@@ -3891,7 +3841,7 @@
       "sourceOrder": 423,
       "section": "M區",
       "category": "area",
-      "scheduleDisplayOrder": 388
+      "scheduleDisplayOrder": 383
     },
     {
       "employeeId": "B4570",
@@ -3901,7 +3851,7 @@
       "sourceOrder": 424,
       "section": "M區",
       "category": "area",
-      "scheduleDisplayOrder": 389
+      "scheduleDisplayOrder": 384
     },
     {
       "employeeId": "B5948",
@@ -3911,7 +3861,7 @@
       "sourceOrder": 425,
       "section": "M區",
       "category": "area",
-      "scheduleDisplayOrder": 390
+      "scheduleDisplayOrder": 385
     },
     {
       "employeeId": "B6078",
@@ -3921,7 +3871,7 @@
       "sourceOrder": 426,
       "section": "M區",
       "category": "area",
-      "scheduleDisplayOrder": 391
+      "scheduleDisplayOrder": 386
     },
     {
       "employeeId": "B3697",
@@ -3931,7 +3881,7 @@
       "sourceOrder": 428,
       "section": "M區",
       "category": "area",
-      "scheduleDisplayOrder": 392
+      "scheduleDisplayOrder": 387
     },
     {
       "employeeId": "B5337",
@@ -3941,7 +3891,7 @@
       "sourceOrder": 429,
       "section": "M區",
       "category": "area",
-      "scheduleDisplayOrder": 393
+      "scheduleDisplayOrder": 388
     },
     {
       "employeeId": "B5759",
@@ -3951,7 +3901,7 @@
       "sourceOrder": 430,
       "section": "M區",
       "category": "area",
-      "scheduleDisplayOrder": 394
+      "scheduleDisplayOrder": 389
     },
     {
       "employeeId": "B0172",
@@ -3961,7 +3911,7 @@
       "sourceOrder": 432,
       "section": "W1區",
       "category": "area",
-      "scheduleDisplayOrder": 395
+      "scheduleDisplayOrder": 390
     },
     {
       "employeeId": "B2578",
@@ -3971,7 +3921,7 @@
       "sourceOrder": 433,
       "section": "W1區",
       "category": "area",
-      "scheduleDisplayOrder": 396
+      "scheduleDisplayOrder": 391
     },
     {
       "employeeId": "B5312",
@@ -3981,7 +3931,7 @@
       "sourceOrder": 434,
       "section": "W1區",
       "category": "area",
-      "scheduleDisplayOrder": 397
+      "scheduleDisplayOrder": 392
     },
     {
       "employeeId": "B5758",
@@ -3991,7 +3941,7 @@
       "sourceOrder": 435,
       "section": "W1區",
       "category": "area",
-      "scheduleDisplayOrder": 398
+      "scheduleDisplayOrder": 393
     },
     {
       "employeeId": "B6169",
@@ -4001,7 +3951,7 @@
       "sourceOrder": 436,
       "section": "W1區",
       "category": "area",
-      "scheduleDisplayOrder": 399
+      "scheduleDisplayOrder": 394
     },
     {
       "employeeId": "B3864",
@@ -4011,7 +3961,7 @@
       "sourceOrder": 437,
       "section": "W2區",
       "category": "area",
-      "scheduleDisplayOrder": 400
+      "scheduleDisplayOrder": 395
     },
     {
       "employeeId": "B3814",
@@ -4021,7 +3971,7 @@
       "sourceOrder": 438,
       "section": "W2區",
       "category": "area",
-      "scheduleDisplayOrder": 401
+      "scheduleDisplayOrder": 396
     },
     {
       "employeeId": "B5891",
@@ -4031,7 +3981,7 @@
       "sourceOrder": 439,
       "section": "W2區",
       "category": "area",
-      "scheduleDisplayOrder": 402
+      "scheduleDisplayOrder": 397
     },
     {
       "employeeId": "B1854",
@@ -4041,7 +3991,7 @@
       "sourceOrder": 441,
       "section": "W2區",
       "category": "area",
-      "scheduleDisplayOrder": 403
+      "scheduleDisplayOrder": 398
     },
     {
       "employeeId": "B5054",
@@ -4051,7 +4001,7 @@
       "sourceOrder": 442,
       "section": "W2區",
       "category": "area",
-      "scheduleDisplayOrder": 404
+      "scheduleDisplayOrder": 399
     },
     {
       "employeeId": "B6153",
@@ -4061,7 +4011,7 @@
       "sourceOrder": 443,
       "section": "W2區",
       "category": "area",
-      "scheduleDisplayOrder": 405
+      "scheduleDisplayOrder": 400
     },
     {
       "employeeId": "97133",
@@ -4071,7 +4021,7 @@
       "sourceOrder": 444,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 406
+      "scheduleDisplayOrder": 401
     },
     {
       "employeeId": "98229",
@@ -4081,7 +4031,7 @@
       "sourceOrder": 445,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 407
+      "scheduleDisplayOrder": 402
     },
     {
       "employeeId": "B1035",
@@ -4091,7 +4041,7 @@
       "sourceOrder": 446,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 408
+      "scheduleDisplayOrder": 403
     },
     {
       "employeeId": "B0868",
@@ -4101,7 +4051,7 @@
       "sourceOrder": 447,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 409
+      "scheduleDisplayOrder": 404
     },
     {
       "employeeId": "B2958",
@@ -4111,7 +4061,7 @@
       "sourceOrder": 448,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 410
+      "scheduleDisplayOrder": 405
     },
     {
       "employeeId": "B3666",
@@ -4121,7 +4071,7 @@
       "sourceOrder": 449,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 411
+      "scheduleDisplayOrder": 406
     },
     {
       "employeeId": "B3843",
@@ -4131,7 +4081,7 @@
       "sourceOrder": 450,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 412
+      "scheduleDisplayOrder": 407
     },
     {
       "employeeId": "B4595",
@@ -4141,7 +4091,7 @@
       "sourceOrder": 451,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 413
+      "scheduleDisplayOrder": 408
     },
     {
       "employeeId": "B5220",
@@ -4151,7 +4101,7 @@
       "sourceOrder": 452,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 414
+      "scheduleDisplayOrder": 409
     },
     {
       "employeeId": "B5513",
@@ -4161,7 +4111,7 @@
       "sourceOrder": 453,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 415
+      "scheduleDisplayOrder": 410
     },
     {
       "employeeId": "B1706",
@@ -4171,7 +4121,7 @@
       "sourceOrder": 456,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 416
+      "scheduleDisplayOrder": 411
     },
     {
       "employeeId": "B2872",
@@ -4181,7 +4131,7 @@
       "sourceOrder": 458,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 417
+      "scheduleDisplayOrder": 412
     },
     {
       "employeeId": "B4464",
@@ -4191,7 +4141,7 @@
       "sourceOrder": 460,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 418
+      "scheduleDisplayOrder": 413
     },
     {
       "employeeId": "B5399",
@@ -4201,7 +4151,7 @@
       "sourceOrder": 461,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 419
+      "scheduleDisplayOrder": 414
     },
     {
       "employeeId": "B5479",
@@ -4211,7 +4161,7 @@
       "sourceOrder": 462,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 420
+      "scheduleDisplayOrder": 415
     },
     {
       "employeeId": "95873",
@@ -4221,7 +4171,7 @@
       "sourceOrder": 463,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 421
+      "scheduleDisplayOrder": 416
     },
     {
       "employeeId": "B2057",
@@ -4231,7 +4181,7 @@
       "sourceOrder": 464,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 422
+      "scheduleDisplayOrder": 417
     },
     {
       "employeeId": "98334",
@@ -4241,7 +4191,7 @@
       "sourceOrder": 465,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 423
+      "scheduleDisplayOrder": 418
     },
     {
       "employeeId": "B4258",
@@ -4251,7 +4201,7 @@
       "sourceOrder": 466,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 424
+      "scheduleDisplayOrder": 419
     },
     {
       "employeeId": "B4259",
@@ -4261,7 +4211,7 @@
       "sourceOrder": 467,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 425
+      "scheduleDisplayOrder": 420
     },
     {
       "employeeId": "B5208",
@@ -4271,7 +4221,7 @@
       "sourceOrder": 468,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 426
+      "scheduleDisplayOrder": 421
     },
     {
       "employeeId": "B0602",
@@ -4281,7 +4231,7 @@
       "sourceOrder": 469,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 427
+      "scheduleDisplayOrder": 422
     },
     {
       "employeeId": "B1825",
@@ -4291,7 +4241,7 @@
       "sourceOrder": 470,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 428
+      "scheduleDisplayOrder": 423
     },
     {
       "employeeId": "B3425",
@@ -4301,7 +4251,7 @@
       "sourceOrder": 471,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 429
+      "scheduleDisplayOrder": 424
     },
     {
       "employeeId": "B3447",
@@ -4311,7 +4261,7 @@
       "sourceOrder": 472,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 430
+      "scheduleDisplayOrder": 425
     },
     {
       "employeeId": "B3836",
@@ -4321,7 +4271,7 @@
       "sourceOrder": 473,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 431
+      "scheduleDisplayOrder": 426
     },
     {
       "employeeId": "B4426",
@@ -4331,7 +4281,7 @@
       "sourceOrder": 474,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 432
+      "scheduleDisplayOrder": 427
     },
     {
       "employeeId": "B4992",
@@ -4341,7 +4291,7 @@
       "sourceOrder": 475,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 433
+      "scheduleDisplayOrder": 428
     },
     {
       "employeeId": "B6058",
@@ -4351,7 +4301,7 @@
       "sourceOrder": 476,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 434
+      "scheduleDisplayOrder": 429
     },
     {
       "employeeId": "96410",
@@ -4361,7 +4311,7 @@
       "sourceOrder": 477,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 435
+      "scheduleDisplayOrder": 430
     },
     {
       "employeeId": "B0603",
@@ -4371,7 +4321,7 @@
       "sourceOrder": 478,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 436
+      "scheduleDisplayOrder": 431
     },
     {
       "employeeId": "B3231",
@@ -4381,7 +4331,7 @@
       "sourceOrder": 479,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 437
+      "scheduleDisplayOrder": 432
     },
     {
       "employeeId": "B3251",
@@ -4391,7 +4341,7 @@
       "sourceOrder": 480,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 438
+      "scheduleDisplayOrder": 433
     },
     {
       "employeeId": "B3823",
@@ -4401,7 +4351,7 @@
       "sourceOrder": 481,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 439
+      "scheduleDisplayOrder": 434
     },
     {
       "employeeId": "B4594",
@@ -4411,7 +4361,7 @@
       "sourceOrder": 482,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 440
+      "scheduleDisplayOrder": 435
     },
     {
       "employeeId": "B5168",
@@ -4421,7 +4371,7 @@
       "sourceOrder": 483,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 441
+      "scheduleDisplayOrder": 436
     },
     {
       "employeeId": "B5702",
@@ -4431,7 +4381,7 @@
       "sourceOrder": 484,
       "section": "N區",
       "category": "area",
-      "scheduleDisplayOrder": 442
+      "scheduleDisplayOrder": 437
     },
     {
       "employeeId": "B1190",
@@ -4441,7 +4391,7 @@
       "sourceOrder": 485,
       "section": "〇1區",
       "category": "area",
-      "scheduleDisplayOrder": 443
+      "scheduleDisplayOrder": 438
     },
     {
       "employeeId": "B2863",
@@ -4451,7 +4401,7 @@
       "sourceOrder": 486,
       "section": "〇1區",
       "category": "area",
-      "scheduleDisplayOrder": 444
+      "scheduleDisplayOrder": 439
     },
     {
       "employeeId": "B4866",
@@ -4461,7 +4411,7 @@
       "sourceOrder": 487,
       "section": "〇1區",
       "category": "area",
-      "scheduleDisplayOrder": 445
+      "scheduleDisplayOrder": 440
     },
     {
       "employeeId": "B5134",
@@ -4471,7 +4421,7 @@
       "sourceOrder": 488,
       "section": "〇1區",
       "category": "area",
-      "scheduleDisplayOrder": 446
+      "scheduleDisplayOrder": 441
     },
     {
       "employeeId": "B5471",
@@ -4481,7 +4431,7 @@
       "sourceOrder": 489,
       "section": "〇1區",
       "category": "area",
-      "scheduleDisplayOrder": 447
+      "scheduleDisplayOrder": 442
     },
     {
       "employeeId": "B3367",
@@ -4491,7 +4441,7 @@
       "sourceOrder": 490,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 448
+      "scheduleDisplayOrder": 443
     },
     {
       "employeeId": "B4022",
@@ -4501,7 +4451,7 @@
       "sourceOrder": 491,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 449
+      "scheduleDisplayOrder": 444
     },
     {
       "employeeId": "B5101",
@@ -4511,7 +4461,7 @@
       "sourceOrder": 492,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 450
+      "scheduleDisplayOrder": 445
     },
     {
       "employeeId": "B5405",
@@ -4521,7 +4471,7 @@
       "sourceOrder": 493,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 451
+      "scheduleDisplayOrder": 446
     },
     {
       "employeeId": "B5692",
@@ -4531,7 +4481,7 @@
       "sourceOrder": 494,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 452
+      "scheduleDisplayOrder": 447
     },
     {
       "employeeId": "B5823",
@@ -4541,7 +4491,7 @@
       "sourceOrder": 495,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 453
+      "scheduleDisplayOrder": 448
     },
     {
       "employeeId": "B3788",
@@ -4551,7 +4501,7 @@
       "sourceOrder": 497,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 454
+      "scheduleDisplayOrder": 449
     },
     {
       "employeeId": "B5728",
@@ -4561,7 +4511,7 @@
       "sourceOrder": 500,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 455
+      "scheduleDisplayOrder": 450
     },
     {
       "employeeId": "B5829",
@@ -4571,7 +4521,7 @@
       "sourceOrder": 501,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 456
+      "scheduleDisplayOrder": 451
     },
     {
       "employeeId": "94996",
@@ -4581,7 +4531,7 @@
       "sourceOrder": 502,
       "section": "O2區",
       "category": "area",
-      "scheduleDisplayOrder": 457
+      "scheduleDisplayOrder": 452
     },
     {
       "employeeId": "B1579",
@@ -4591,7 +4541,7 @@
       "sourceOrder": 503,
       "section": "O2區",
       "category": "area",
-      "scheduleDisplayOrder": 458
+      "scheduleDisplayOrder": 453
     },
     {
       "employeeId": "B3482",
@@ -4601,7 +4551,7 @@
       "sourceOrder": 504,
       "section": "O2區",
       "category": "area",
-      "scheduleDisplayOrder": 459
+      "scheduleDisplayOrder": 454
     },
     {
       "employeeId": "B6094",
@@ -4611,7 +4561,7 @@
       "sourceOrder": 505,
       "section": "O2區",
       "category": "area",
-      "scheduleDisplayOrder": 460
+      "scheduleDisplayOrder": 455
     },
     {
       "employeeId": "95945",
@@ -4621,7 +4571,7 @@
       "sourceOrder": 507,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 461
+      "scheduleDisplayOrder": 456
     },
     {
       "employeeId": "B3784",
@@ -4631,7 +4581,7 @@
       "sourceOrder": 508,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 462
+      "scheduleDisplayOrder": 457
     },
     {
       "employeeId": "B0542",
@@ -4641,7 +4591,7 @@
       "sourceOrder": 509,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 463
+      "scheduleDisplayOrder": 458
     },
     {
       "employeeId": "B1004",
@@ -4651,7 +4601,7 @@
       "sourceOrder": 510,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 464
+      "scheduleDisplayOrder": 459
     },
     {
       "employeeId": "B0897",
@@ -4661,7 +4611,7 @@
       "sourceOrder": 511,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 465
+      "scheduleDisplayOrder": 460
     },
     {
       "employeeId": "B2734",
@@ -4671,7 +4621,7 @@
       "sourceOrder": 512,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 466
+      "scheduleDisplayOrder": 461
     },
     {
       "employeeId": "B2788",
@@ -4681,7 +4631,7 @@
       "sourceOrder": 513,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 467
+      "scheduleDisplayOrder": 462
     },
     {
       "employeeId": "B2310",
@@ -4691,7 +4641,7 @@
       "sourceOrder": 514,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 468
+      "scheduleDisplayOrder": 463
     },
     {
       "employeeId": "B3081",
@@ -4701,7 +4651,7 @@
       "sourceOrder": 515,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 469
+      "scheduleDisplayOrder": 464
     },
     {
       "employeeId": "B3696",
@@ -4711,7 +4661,7 @@
       "sourceOrder": 516,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 470
+      "scheduleDisplayOrder": 465
     },
     {
       "employeeId": "B3941",
@@ -4721,7 +4671,7 @@
       "sourceOrder": 517,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 471
+      "scheduleDisplayOrder": 466
     },
     {
       "employeeId": "B3965",
@@ -4731,7 +4681,7 @@
       "sourceOrder": 518,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 472
+      "scheduleDisplayOrder": 467
     },
     {
       "employeeId": "96792",
@@ -4741,7 +4691,7 @@
       "sourceOrder": 519,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 473
+      "scheduleDisplayOrder": 468
     },
     {
       "employeeId": "97351",
@@ -4751,7 +4701,7 @@
       "sourceOrder": 520,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 474
+      "scheduleDisplayOrder": 469
     },
     {
       "employeeId": "97182",
@@ -4761,7 +4711,7 @@
       "sourceOrder": 521,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 475
+      "scheduleDisplayOrder": 470
     },
     {
       "employeeId": "B3653",
@@ -4771,7 +4721,7 @@
       "sourceOrder": 525,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 476
+      "scheduleDisplayOrder": 471
     },
     {
       "employeeId": "B3978",
@@ -4781,7 +4731,7 @@
       "sourceOrder": 526,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 477
+      "scheduleDisplayOrder": 472
     },
     {
       "employeeId": "B4095",
@@ -4791,7 +4741,7 @@
       "sourceOrder": 527,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 478
+      "scheduleDisplayOrder": 473
     },
     {
       "employeeId": "B5001",
@@ -4801,7 +4751,7 @@
       "sourceOrder": 529,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 479
+      "scheduleDisplayOrder": 474
     },
     {
       "employeeId": "96471",
@@ -4811,7 +4761,7 @@
       "sourceOrder": 530,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 480
+      "scheduleDisplayOrder": 475
     },
     {
       "employeeId": "B0685",
@@ -4821,7 +4771,7 @@
       "sourceOrder": 531,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 481
+      "scheduleDisplayOrder": 476
     },
     {
       "employeeId": "B1906",
@@ -4831,7 +4781,7 @@
       "sourceOrder": 532,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 482
+      "scheduleDisplayOrder": 477
     },
     {
       "employeeId": "B4056",
@@ -4841,7 +4791,7 @@
       "sourceOrder": 533,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 483
+      "scheduleDisplayOrder": 478
     },
     {
       "employeeId": "98189",
@@ -4851,7 +4801,7 @@
       "sourceOrder": 534,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 484
+      "scheduleDisplayOrder": 479
     },
     {
       "employeeId": "B0612",
@@ -4861,7 +4811,7 @@
       "sourceOrder": 535,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 485
+      "scheduleDisplayOrder": 480
     },
     {
       "employeeId": "B2277",
@@ -4871,7 +4821,7 @@
       "sourceOrder": 536,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 486
+      "scheduleDisplayOrder": 481
     },
     {
       "employeeId": "B3817",
@@ -4881,7 +4831,7 @@
       "sourceOrder": 537,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 487
+      "scheduleDisplayOrder": 482
     },
     {
       "employeeId": "B3942",
@@ -4891,7 +4841,7 @@
       "sourceOrder": 538,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 488
+      "scheduleDisplayOrder": 483
     },
     {
       "employeeId": "B4807",
@@ -4901,7 +4851,7 @@
       "sourceOrder": 539,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 489
+      "scheduleDisplayOrder": 484
     },
     {
       "employeeId": "97330",
@@ -4911,7 +4861,7 @@
       "sourceOrder": 542,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 490
+      "scheduleDisplayOrder": 485
     },
     {
       "employeeId": "B3362",
@@ -4921,7 +4871,7 @@
       "sourceOrder": 544,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 491
+      "scheduleDisplayOrder": 486
     },
     {
       "employeeId": "B4418",
@@ -4931,7 +4881,7 @@
       "sourceOrder": 545,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 492
+      "scheduleDisplayOrder": 487
     },
     {
       "employeeId": "B0093",
@@ -4941,7 +4891,7 @@
       "sourceOrder": 547,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 493
+      "scheduleDisplayOrder": 488
     },
     {
       "employeeId": "B0893",
@@ -4951,7 +4901,7 @@
       "sourceOrder": 548,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 494
+      "scheduleDisplayOrder": 489
     },
     {
       "employeeId": "B3511",
@@ -4961,7 +4911,7 @@
       "sourceOrder": 549,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 495
+      "scheduleDisplayOrder": 490
     },
     {
       "employeeId": "B3987",
@@ -4971,7 +4921,7 @@
       "sourceOrder": 550,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 496
+      "scheduleDisplayOrder": 491
     },
     {
       "employeeId": "B3012",
@@ -4981,7 +4931,7 @@
       "sourceOrder": 551,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 497
+      "scheduleDisplayOrder": 492
     },
     {
       "employeeId": "B5306",
@@ -4991,7 +4941,7 @@
       "sourceOrder": 552,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 498
+      "scheduleDisplayOrder": 493
     },
     {
       "employeeId": "B5324",
@@ -5001,7 +4951,7 @@
       "sourceOrder": 553,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 499
+      "scheduleDisplayOrder": 494
     },
     {
       "employeeId": "B6154",
@@ -5011,7 +4961,7 @@
       "sourceOrder": 554,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 500
+      "scheduleDisplayOrder": 495
     },
     {
       "employeeId": "97108",
@@ -5021,7 +4971,7 @@
       "sourceOrder": 555,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 501
+      "scheduleDisplayOrder": 496
     },
     {
       "employeeId": "B3663",
@@ -5031,7 +4981,7 @@
       "sourceOrder": 556,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 502
+      "scheduleDisplayOrder": 497
     },
     {
       "employeeId": "B3821",
@@ -5041,7 +4991,7 @@
       "sourceOrder": 557,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 503
+      "scheduleDisplayOrder": 498
     },
     {
       "employeeId": "B4625",
@@ -5051,7 +5001,7 @@
       "sourceOrder": 558,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 504
+      "scheduleDisplayOrder": 499
     },
     {
       "employeeId": "B5299",
@@ -5061,7 +5011,7 @@
       "sourceOrder": 559,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 505
+      "scheduleDisplayOrder": 500
     },
     {
       "employeeId": "B5406",
@@ -5071,7 +5021,7 @@
       "sourceOrder": 560,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 506
+      "scheduleDisplayOrder": 501
     },
     {
       "employeeId": "B5577",
@@ -5081,7 +5031,7 @@
       "sourceOrder": 561,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 507
+      "scheduleDisplayOrder": 502
     },
     {
       "employeeId": "B5822",
@@ -5091,7 +5041,7 @@
       "sourceOrder": 562,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 508
+      "scheduleDisplayOrder": 503
     },
     {
       "employeeId": "B0974",
@@ -5101,7 +5051,7 @@
       "sourceOrder": 563,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 509
+      "scheduleDisplayOrder": 504
     },
     {
       "employeeId": "B3649",
@@ -5111,7 +5061,7 @@
       "sourceOrder": 564,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 510
+      "scheduleDisplayOrder": 505
     },
     {
       "employeeId": "B4987",
@@ -5121,7 +5071,7 @@
       "sourceOrder": 565,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 511
+      "scheduleDisplayOrder": 506
     },
     {
       "employeeId": "94467",
@@ -5131,7 +5081,7 @@
       "sourceOrder": 569,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 512
+      "scheduleDisplayOrder": 507
     },
     {
       "employeeId": "95599",
@@ -5141,7 +5091,7 @@
       "sourceOrder": 570,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 513
+      "scheduleDisplayOrder": 508
     },
     {
       "employeeId": "B1052",
@@ -5151,7 +5101,7 @@
       "sourceOrder": 571,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 514
+      "scheduleDisplayOrder": 509
     },
     {
       "employeeId": "B3541",
@@ -5161,7 +5111,7 @@
       "sourceOrder": 572,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 515
+      "scheduleDisplayOrder": 510
     },
     {
       "employeeId": "B3597",
@@ -5171,7 +5121,7 @@
       "sourceOrder": 573,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 516
+      "scheduleDisplayOrder": 511
     },
     {
       "employeeId": "B3811",
@@ -5181,7 +5131,7 @@
       "sourceOrder": 574,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 517
+      "scheduleDisplayOrder": 512
     },
     {
       "employeeId": "B4317",
@@ -5191,7 +5141,7 @@
       "sourceOrder": 575,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 518
+      "scheduleDisplayOrder": 513
     },
     {
       "employeeId": "B4450",
@@ -5201,7 +5151,7 @@
       "sourceOrder": 576,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 519
+      "scheduleDisplayOrder": 514
     },
     {
       "employeeId": "B4635",
@@ -5211,7 +5161,7 @@
       "sourceOrder": 577,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 520
+      "scheduleDisplayOrder": 515
     },
     {
       "employeeId": "B4678",
@@ -5221,7 +5171,7 @@
       "sourceOrder": 578,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 521
+      "scheduleDisplayOrder": 516
     },
     {
       "employeeId": "B4972",
@@ -5231,7 +5181,7 @@
       "sourceOrder": 579,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 522
+      "scheduleDisplayOrder": 517
     },
     {
       "employeeId": "95629",
@@ -5241,7 +5191,7 @@
       "sourceOrder": 580,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 523
+      "scheduleDisplayOrder": 518
     },
     {
       "employeeId": "94445",
@@ -5251,7 +5201,7 @@
       "sourceOrder": 581,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 524
+      "scheduleDisplayOrder": 519
     },
     {
       "employeeId": "98209",
@@ -5261,7 +5211,7 @@
       "sourceOrder": 582,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 525
+      "scheduleDisplayOrder": 520
     },
     {
       "employeeId": "B6229",
@@ -5271,7 +5221,7 @@
       "sourceOrder": 583,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 526
+      "scheduleDisplayOrder": 521
     },
     {
       "employeeId": "97323",
@@ -5281,7 +5231,7 @@
       "sourceOrder": 584,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 527
+      "scheduleDisplayOrder": 522
     },
     {
       "employeeId": "97332",
@@ -5291,7 +5241,7 @@
       "sourceOrder": 585,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 528
+      "scheduleDisplayOrder": 523
     },
     {
       "employeeId": "B1109",
@@ -5301,7 +5251,7 @@
       "sourceOrder": 586,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 529
+      "scheduleDisplayOrder": 524
     },
     {
       "employeeId": "B4958",
@@ -5311,7 +5261,7 @@
       "sourceOrder": 587,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 530
+      "scheduleDisplayOrder": 525
     },
     {
       "employeeId": "95958",
@@ -5321,7 +5271,7 @@
       "sourceOrder": 588,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 531
+      "scheduleDisplayOrder": 526
     },
     {
       "employeeId": "B0126",
@@ -5331,7 +5281,7 @@
       "sourceOrder": 590,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 532
+      "scheduleDisplayOrder": 527
     },
     {
       "employeeId": "98283",
@@ -5341,7 +5291,7 @@
       "sourceOrder": 591,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 533
+      "scheduleDisplayOrder": 528
     },
     {
       "employeeId": "B3938",
@@ -5351,7 +5301,7 @@
       "sourceOrder": 592,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 534
+      "scheduleDisplayOrder": 529
     },
     {
       "employeeId": "96171",
@@ -5361,7 +5311,7 @@
       "sourceOrder": 593,
       "section": "T1區",
       "category": "area",
-      "scheduleDisplayOrder": 535
+      "scheduleDisplayOrder": 530
     },
     {
       "employeeId": "B3071",
@@ -5371,7 +5321,7 @@
       "sourceOrder": 594,
       "section": "T1區",
       "category": "area",
-      "scheduleDisplayOrder": 536
+      "scheduleDisplayOrder": 531
     },
     {
       "employeeId": "B5331",
@@ -5381,7 +5331,7 @@
       "sourceOrder": 595,
       "section": "T1區",
       "category": "area",
-      "scheduleDisplayOrder": 537
+      "scheduleDisplayOrder": 532
     },
     {
       "employeeId": "B3765",
@@ -5391,7 +5341,7 @@
       "sourceOrder": 596,
       "section": "T1區",
       "category": "area",
-      "scheduleDisplayOrder": 538
+      "scheduleDisplayOrder": 533
     },
     {
       "employeeId": "B4448",
@@ -5401,7 +5351,7 @@
       "sourceOrder": 597,
       "section": "T1區",
       "category": "area",
-      "scheduleDisplayOrder": 539
+      "scheduleDisplayOrder": 534
     },
     {
       "employeeId": "B5515",
@@ -5411,7 +5361,7 @@
       "sourceOrder": 598,
       "section": "T1區",
       "category": "area",
-      "scheduleDisplayOrder": 540
+      "scheduleDisplayOrder": 535
     },
     {
       "employeeId": "B5851",
@@ -5421,7 +5371,7 @@
       "sourceOrder": 599,
       "section": "T1區",
       "category": "area",
-      "scheduleDisplayOrder": 541
+      "scheduleDisplayOrder": 536
     },
     {
       "employeeId": "B3104",
@@ -5431,7 +5381,7 @@
       "sourceOrder": 600,
       "section": "T1區",
       "category": "area",
-      "scheduleDisplayOrder": 542
+      "scheduleDisplayOrder": 537
     },
     {
       "employeeId": "B5000",
@@ -5441,7 +5391,7 @@
       "sourceOrder": 601,
       "section": "T1區",
       "category": "area",
-      "scheduleDisplayOrder": 543
+      "scheduleDisplayOrder": 538
     },
     {
       "employeeId": "B5069",
@@ -5451,7 +5401,7 @@
       "sourceOrder": 602,
       "section": "T1區",
       "category": "area",
-      "scheduleDisplayOrder": 544
+      "scheduleDisplayOrder": 539
     },
     {
       "employeeId": "B6073",
@@ -5461,7 +5411,7 @@
       "sourceOrder": 604,
       "section": "T1區",
       "category": "area",
-      "scheduleDisplayOrder": 545
+      "scheduleDisplayOrder": 540
     },
     {
       "employeeId": "96827",
@@ -5471,7 +5421,7 @@
       "sourceOrder": 605,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 546
+      "scheduleDisplayOrder": 541
     },
     {
       "employeeId": "B2706",
@@ -5481,7 +5431,7 @@
       "sourceOrder": 606,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 547
+      "scheduleDisplayOrder": 542
     },
     {
       "employeeId": "B4470",
@@ -5491,7 +5441,7 @@
       "sourceOrder": 607,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 548
+      "scheduleDisplayOrder": 543
     },
     {
       "employeeId": "B6037",
@@ -5501,7 +5451,7 @@
       "sourceOrder": 608,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 549
+      "scheduleDisplayOrder": 544
     },
     {
       "employeeId": "B6170",
@@ -5511,7 +5461,7 @@
       "sourceOrder": 609,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 550
+      "scheduleDisplayOrder": 545
     },
     {
       "employeeId": "B6155",
@@ -5521,7 +5471,7 @@
       "sourceOrder": 610,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 551
+      "scheduleDisplayOrder": 546
     },
     {
       "employeeId": "96724",
@@ -5531,7 +5481,7 @@
       "sourceOrder": 611,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 552
+      "scheduleDisplayOrder": 547
     },
     {
       "employeeId": "B4918",
@@ -5541,7 +5491,7 @@
       "sourceOrder": 612,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 553
+      "scheduleDisplayOrder": 548
     },
     {
       "employeeId": "B5132",
@@ -5551,7 +5501,7 @@
       "sourceOrder": 613,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 554
+      "scheduleDisplayOrder": 549
     },
     {
       "employeeId": "B6032",
@@ -5561,7 +5511,7 @@
       "sourceOrder": 614,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 555
+      "scheduleDisplayOrder": 550
     },
     {
       "employeeId": "B4356",
@@ -5571,7 +5521,7 @@
       "sourceOrder": 615,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 556
+      "scheduleDisplayOrder": 551
     },
     {
       "employeeId": "B5286",
@@ -5581,7 +5531,7 @@
       "sourceOrder": 616,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 557
+      "scheduleDisplayOrder": 552
     },
     {
       "employeeId": "B5761",
@@ -5591,7 +5541,7 @@
       "sourceOrder": 617,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 558
+      "scheduleDisplayOrder": 553
     },
     {
       "employeeId": "B6044",
@@ -5601,7 +5551,7 @@
       "sourceOrder": 618,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 559
+      "scheduleDisplayOrder": 554
     },
     {
       "employeeId": "B6070",
@@ -5611,7 +5561,7 @@
       "sourceOrder": 619,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 560
+      "scheduleDisplayOrder": 555
     },
     {
       "employeeId": "B6182",
@@ -5621,7 +5571,7 @@
       "sourceOrder": 620,
       "section": "T2區",
       "category": "area",
-      "scheduleDisplayOrder": 561
+      "scheduleDisplayOrder": 556
     },
     {
       "employeeId": "95161",
@@ -5631,7 +5581,7 @@
       "sourceOrder": 621,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 562
+      "scheduleDisplayOrder": 557
     },
     {
       "employeeId": "95575",
@@ -5641,7 +5591,7 @@
       "sourceOrder": 622,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 563
+      "scheduleDisplayOrder": 558
     },
     {
       "employeeId": "97248",
@@ -5651,7 +5601,7 @@
       "sourceOrder": 623,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 564
+      "scheduleDisplayOrder": 559
     },
     {
       "employeeId": "B4473",
@@ -5661,7 +5611,7 @@
       "sourceOrder": 624,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 565
+      "scheduleDisplayOrder": 560
     },
     {
       "employeeId": "B5407",
@@ -5671,7 +5621,7 @@
       "sourceOrder": 625,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 566
+      "scheduleDisplayOrder": 561
     },
     {
       "employeeId": "B5553",
@@ -5681,7 +5631,7 @@
       "sourceOrder": 626,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 567
+      "scheduleDisplayOrder": 562
     },
     {
       "employeeId": "B6259",
@@ -5691,7 +5641,7 @@
       "sourceOrder": 627,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 568
+      "scheduleDisplayOrder": 563
     },
     {
       "employeeId": "96806",
@@ -5701,7 +5651,7 @@
       "sourceOrder": 628,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 569
+      "scheduleDisplayOrder": 564
     },
     {
       "employeeId": "B1758",
@@ -5711,7 +5661,7 @@
       "sourceOrder": 629,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 570
+      "scheduleDisplayOrder": 565
     },
     {
       "employeeId": "B4120",
@@ -5721,7 +5671,7 @@
       "sourceOrder": 631,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 571
+      "scheduleDisplayOrder": 566
     },
     {
       "employeeId": "97485",
@@ -5731,7 +5681,7 @@
       "sourceOrder": 634,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 572
+      "scheduleDisplayOrder": 567
     },
     {
       "employeeId": "B1371",
@@ -5741,7 +5691,7 @@
       "sourceOrder": 636,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 573
+      "scheduleDisplayOrder": 568
     },
     {
       "employeeId": "B5634",
@@ -5751,7 +5701,7 @@
       "sourceOrder": 638,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 574
+      "scheduleDisplayOrder": 569
     },
     {
       "employeeId": "B6235",
@@ -5761,7 +5711,7 @@
       "sourceOrder": 639,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 575
+      "scheduleDisplayOrder": 570
     },
     {
       "employeeId": "95875",
@@ -5771,7 +5721,7 @@
       "sourceOrder": 640,
       "section": "X1區",
       "category": "area",
-      "scheduleDisplayOrder": 576
+      "scheduleDisplayOrder": 571
     },
     {
       "employeeId": "B0508",
@@ -5781,7 +5731,7 @@
       "sourceOrder": 641,
       "section": "X1區",
       "category": "area",
-      "scheduleDisplayOrder": 577
+      "scheduleDisplayOrder": 572
     },
     {
       "employeeId": "B4209",
@@ -5791,7 +5741,7 @@
       "sourceOrder": 642,
       "section": "X1區",
       "category": "area",
-      "scheduleDisplayOrder": 578
+      "scheduleDisplayOrder": 573
     },
     {
       "employeeId": "B4440",
@@ -5801,7 +5751,7 @@
       "sourceOrder": 643,
       "section": "X1區",
       "category": "area",
-      "scheduleDisplayOrder": 579
+      "scheduleDisplayOrder": 574
     },
     {
       "employeeId": "B5960",
@@ -5811,7 +5761,7 @@
       "sourceOrder": 644,
       "section": "X1區",
       "category": "area",
-      "scheduleDisplayOrder": 580
+      "scheduleDisplayOrder": 575
     },
     {
       "employeeId": "B0503",
@@ -5821,7 +5771,7 @@
       "sourceOrder": 645,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 581
+      "scheduleDisplayOrder": 576
     },
     {
       "employeeId": "B0224",
@@ -5831,7 +5781,7 @@
       "sourceOrder": 646,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 582
+      "scheduleDisplayOrder": 577
     },
     {
       "employeeId": "B2762",
@@ -5841,7 +5791,7 @@
       "sourceOrder": 647,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 583
+      "scheduleDisplayOrder": 578
     },
     {
       "employeeId": "B5955",
@@ -5851,7 +5801,7 @@
       "sourceOrder": 648,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 584
+      "scheduleDisplayOrder": 579
     },
     {
       "employeeId": "98757",
@@ -5861,7 +5811,7 @@
       "sourceOrder": 649,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 585
+      "scheduleDisplayOrder": 580
     },
     {
       "employeeId": "B2240",
@@ -5871,7 +5821,7 @@
       "sourceOrder": 650,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 586
+      "scheduleDisplayOrder": 581
     },
     {
       "employeeId": "B3098",
@@ -5881,7 +5831,7 @@
       "sourceOrder": 651,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 587
+      "scheduleDisplayOrder": 582
     },
     {
       "employeeId": "B4653",
@@ -5891,7 +5841,7 @@
       "sourceOrder": 652,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 588
+      "scheduleDisplayOrder": 583
     },
     {
       "employeeId": "B5886",
@@ -5901,7 +5851,7 @@
       "sourceOrder": 653,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 589
+      "scheduleDisplayOrder": 584
     },
     {
       "employeeId": "B5950",
@@ -5911,7 +5861,7 @@
       "sourceOrder": 654,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 590
+      "scheduleDisplayOrder": 585
     },
     {
       "employeeId": "B1720",
@@ -5921,7 +5871,7 @@
       "sourceOrder": 656,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 591
+      "scheduleDisplayOrder": 586
     },
     {
       "employeeId": "B2153",
@@ -5931,7 +5881,7 @@
       "sourceOrder": 657,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 592
+      "scheduleDisplayOrder": 587
     },
     {
       "employeeId": "B3130",
@@ -5941,7 +5891,7 @@
       "sourceOrder": 658,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 593
+      "scheduleDisplayOrder": 588
     },
     {
       "employeeId": "B4634",
@@ -5951,7 +5901,7 @@
       "sourceOrder": 659,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 594
+      "scheduleDisplayOrder": 589
     },
     {
       "employeeId": "B4933",
@@ -5961,7 +5911,7 @@
       "sourceOrder": 660,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 595
+      "scheduleDisplayOrder": 590
     },
     {
       "employeeId": "B6012",
@@ -5971,7 +5921,7 @@
       "sourceOrder": 662,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 596
+      "scheduleDisplayOrder": 591
     },
     {
       "employeeId": "每日 日班",
@@ -5981,7 +5931,57 @@
       "sourceOrder": 663,
       "section": "X2區",
       "category": "area",
-      "scheduleDisplayOrder": 597
+      "scheduleDisplayOrder": 592
+    },
+    {
+      "employeeId": "95964",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 9,
+      "sourceOrder": 3,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 0
+    },
+    {
+      "employeeId": "96409",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 10,
+      "sourceOrder": 4,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 1
+    },
+    {
+      "employeeId": "B0957",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 11,
+      "sourceOrder": 5,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 2
+    },
+    {
+      "employeeId": "B1460",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 12,
+      "sourceOrder": 6,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 3
+    },
+    {
+      "employeeId": "96746",
+      "group": "night",
+      "sourceSheet": "9月夜班",
+      "sourceRow": 13,
+      "sourceOrder": 7,
+      "section": "調度監控",
+      "category": "monitor",
+      "scheduleDisplayOrder": 4
     },
     {
       "employeeId": "94402",
@@ -5991,7 +5991,7 @@
       "sourceOrder": 8,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 0
+      "scheduleDisplayOrder": 5
     },
     {
       "employeeId": "98251",
@@ -6001,7 +6001,7 @@
       "sourceOrder": 9,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 1
+      "scheduleDisplayOrder": 6
     },
     {
       "employeeId": "97237",
@@ -6011,7 +6011,7 @@
       "sourceOrder": 10,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 2
+      "scheduleDisplayOrder": 7
     },
     {
       "employeeId": "B2030",
@@ -6021,7 +6021,7 @@
       "sourceOrder": 11,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 3
+      "scheduleDisplayOrder": 8
     },
     {
       "employeeId": "B3810",
@@ -6031,7 +6031,7 @@
       "sourceOrder": 12,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 4
+      "scheduleDisplayOrder": 9
     },
     {
       "employeeId": "B4996",
@@ -6041,7 +6041,7 @@
       "sourceOrder": 13,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 5
+      "scheduleDisplayOrder": 10
     },
     {
       "employeeId": "B5408",
@@ -6051,7 +6051,7 @@
       "sourceOrder": 14,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 6
+      "scheduleDisplayOrder": 11
     },
     {
       "employeeId": "B5569",
@@ -6061,7 +6061,7 @@
       "sourceOrder": 15,
       "section": "A1區",
       "category": "area",
-      "scheduleDisplayOrder": 7
+      "scheduleDisplayOrder": 12
     },
     {
       "employeeId": "97561",
@@ -6071,7 +6071,7 @@
       "sourceOrder": 16,
       "section": "A2區",
       "category": "area",
-      "scheduleDisplayOrder": 8
+      "scheduleDisplayOrder": 13
     },
     {
       "employeeId": "B5956",
@@ -6081,7 +6081,7 @@
       "sourceOrder": 17,
       "section": "A2區",
       "category": "area",
-      "scheduleDisplayOrder": 9
+      "scheduleDisplayOrder": 14
     },
     {
       "employeeId": "B6105",
@@ -6091,7 +6091,7 @@
       "sourceOrder": 18,
       "section": "A2區",
       "category": "area",
-      "scheduleDisplayOrder": 10
+      "scheduleDisplayOrder": 15
     },
     {
       "employeeId": "B6206",
@@ -6101,7 +6101,7 @@
       "sourceOrder": 19,
       "section": "A2區",
       "category": "area",
-      "scheduleDisplayOrder": 11
+      "scheduleDisplayOrder": 16
     },
     {
       "employeeId": "B6241",
@@ -6111,7 +6111,7 @@
       "sourceOrder": 20,
       "section": "A2區",
       "category": "area",
-      "scheduleDisplayOrder": 12
+      "scheduleDisplayOrder": 17
     },
     {
       "employeeId": "B4261",
@@ -6121,7 +6121,7 @@
       "sourceOrder": 21,
       "section": "J區",
       "category": "area",
-      "scheduleDisplayOrder": 13
+      "scheduleDisplayOrder": 18
     },
     {
       "employeeId": "B4431",
@@ -6131,7 +6131,7 @@
       "sourceOrder": 22,
       "section": "J區",
       "category": "area",
-      "scheduleDisplayOrder": 14
+      "scheduleDisplayOrder": 19
     },
     {
       "employeeId": "B4969",
@@ -6141,7 +6141,7 @@
       "sourceOrder": 23,
       "section": "J區",
       "category": "area",
-      "scheduleDisplayOrder": 15
+      "scheduleDisplayOrder": 20
     },
     {
       "employeeId": "B5888",
@@ -6151,7 +6151,7 @@
       "sourceOrder": 24,
       "section": "J區",
       "category": "area",
-      "scheduleDisplayOrder": 16
+      "scheduleDisplayOrder": 21
     },
     {
       "employeeId": "96781",
@@ -6161,7 +6161,7 @@
       "sourceOrder": 25,
       "section": "C區",
       "category": "area",
-      "scheduleDisplayOrder": 17
+      "scheduleDisplayOrder": 22
     },
     {
       "employeeId": "98335",
@@ -6171,7 +6171,7 @@
       "sourceOrder": 26,
       "section": "C區",
       "category": "area",
-      "scheduleDisplayOrder": 18
+      "scheduleDisplayOrder": 23
     },
     {
       "employeeId": "B4218",
@@ -6181,7 +6181,7 @@
       "sourceOrder": 27,
       "section": "C區",
       "category": "area",
-      "scheduleDisplayOrder": 19
+      "scheduleDisplayOrder": 24
     },
     {
       "employeeId": "B1670",
@@ -6191,7 +6191,7 @@
       "sourceOrder": 28,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 20
+      "scheduleDisplayOrder": 25
     },
     {
       "employeeId": "B1829",
@@ -6201,7 +6201,7 @@
       "sourceOrder": 29,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 21
+      "scheduleDisplayOrder": 26
     },
     {
       "employeeId": "B5639",
@@ -6211,7 +6211,7 @@
       "sourceOrder": 30,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 22
+      "scheduleDisplayOrder": 27
     },
     {
       "employeeId": "B1159",
@@ -6221,7 +6221,7 @@
       "sourceOrder": 31,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 23
+      "scheduleDisplayOrder": 28
     },
     {
       "employeeId": "B2615",
@@ -6231,7 +6231,7 @@
       "sourceOrder": 32,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 24
+      "scheduleDisplayOrder": 29
     },
     {
       "employeeId": "B4032",
@@ -6241,7 +6241,7 @@
       "sourceOrder": 33,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 25
+      "scheduleDisplayOrder": 30
     },
     {
       "employeeId": "96736",
@@ -6251,7 +6251,7 @@
       "sourceOrder": 34,
       "section": "ZN區",
       "category": "area",
-      "scheduleDisplayOrder": 26
+      "scheduleDisplayOrder": 31
     },
     {
       "employeeId": "B3655",
@@ -6261,7 +6261,7 @@
       "sourceOrder": 35,
       "section": "ZN區",
       "category": "area",
-      "scheduleDisplayOrder": 27
+      "scheduleDisplayOrder": 32
     },
     {
       "employeeId": "B4441",
@@ -6271,7 +6271,7 @@
       "sourceOrder": 36,
       "section": "ZN區",
       "category": "area",
-      "scheduleDisplayOrder": 28
+      "scheduleDisplayOrder": 33
     },
     {
       "employeeId": "B6183",
@@ -6281,7 +6281,7 @@
       "sourceOrder": 37,
       "section": "ZN區",
       "category": "area",
-      "scheduleDisplayOrder": 29
+      "scheduleDisplayOrder": 34
     },
     {
       "employeeId": "B0989",
@@ -6291,7 +6291,7 @@
       "sourceOrder": 38,
       "section": "ZN區",
       "category": "area",
-      "scheduleDisplayOrder": 30
+      "scheduleDisplayOrder": 35
     },
     {
       "employeeId": "B2179",
@@ -6301,7 +6301,7 @@
       "sourceOrder": 39,
       "section": "ZN區",
       "category": "area",
-      "scheduleDisplayOrder": 31
+      "scheduleDisplayOrder": 36
     },
     {
       "employeeId": "B5281",
@@ -6311,7 +6311,7 @@
       "sourceOrder": 40,
       "section": "ZN區",
       "category": "area",
-      "scheduleDisplayOrder": 32
+      "scheduleDisplayOrder": 37
     },
     {
       "employeeId": "97968",
@@ -6321,7 +6321,7 @@
       "sourceOrder": 41,
       "section": "ZB區",
       "category": "area",
-      "scheduleDisplayOrder": 33
+      "scheduleDisplayOrder": 38
     },
     {
       "employeeId": "B0920",
@@ -6331,7 +6331,7 @@
       "sourceOrder": 42,
       "section": "ZB區",
       "category": "area",
-      "scheduleDisplayOrder": 34
+      "scheduleDisplayOrder": 39
     },
     {
       "employeeId": "B4558",
@@ -6341,7 +6341,7 @@
       "sourceOrder": 43,
       "section": "ZB區",
       "category": "area",
-      "scheduleDisplayOrder": 35
+      "scheduleDisplayOrder": 40
     },
     {
       "employeeId": "B3569",
@@ -6351,7 +6351,7 @@
       "sourceOrder": 44,
       "section": "ZB區",
       "category": "area",
-      "scheduleDisplayOrder": 36
+      "scheduleDisplayOrder": 41
     },
     {
       "employeeId": "B5638",
@@ -6361,7 +6361,7 @@
       "sourceOrder": 45,
       "section": "ZB區",
       "category": "area",
-      "scheduleDisplayOrder": 37
+      "scheduleDisplayOrder": 42
     },
     {
       "employeeId": "B5016",
@@ -6371,7 +6371,7 @@
       "sourceOrder": 46,
       "section": "ZB區",
       "category": "area",
-      "scheduleDisplayOrder": 38
+      "scheduleDisplayOrder": 43
     },
     {
       "employeeId": "B5401",
@@ -6381,7 +6381,7 @@
       "sourceOrder": 47,
       "section": "ZB區",
       "category": "area",
-      "scheduleDisplayOrder": 39
+      "scheduleDisplayOrder": 44
     },
     {
       "employeeId": "B5492",
@@ -6391,7 +6391,7 @@
       "sourceOrder": 48,
       "section": "ZB區",
       "category": "area",
-      "scheduleDisplayOrder": 40
+      "scheduleDisplayOrder": 45
     },
     {
       "employeeId": "B5739",
@@ -6401,7 +6401,7 @@
       "sourceOrder": 49,
       "section": "ZB區",
       "category": "area",
-      "scheduleDisplayOrder": 41
+      "scheduleDisplayOrder": 46
     },
     {
       "employeeId": "B5762",
@@ -6411,7 +6411,7 @@
       "sourceOrder": 50,
       "section": "ZB區",
       "category": "area",
-      "scheduleDisplayOrder": 42
+      "scheduleDisplayOrder": 47
     },
     {
       "employeeId": "B6082",
@@ -6421,7 +6421,7 @@
       "sourceOrder": 51,
       "section": "ZB區",
       "category": "area",
-      "scheduleDisplayOrder": 43
+      "scheduleDisplayOrder": 48
     },
     {
       "employeeId": "94232",
@@ -6431,7 +6431,7 @@
       "sourceOrder": 52,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 44
+      "scheduleDisplayOrder": 49
     },
     {
       "employeeId": "96145",
@@ -6441,7 +6441,7 @@
       "sourceOrder": 53,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 45
+      "scheduleDisplayOrder": 50
     },
     {
       "employeeId": "B3002",
@@ -6451,7 +6451,7 @@
       "sourceOrder": 54,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 46
+      "scheduleDisplayOrder": 51
     },
     {
       "employeeId": "95183",
@@ -6461,7 +6461,7 @@
       "sourceOrder": 55,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 47
+      "scheduleDisplayOrder": 52
     },
     {
       "employeeId": "95644",
@@ -6471,7 +6471,7 @@
       "sourceOrder": 56,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 48
+      "scheduleDisplayOrder": 53
     },
     {
       "employeeId": "B4896",
@@ -6481,7 +6481,7 @@
       "sourceOrder": 57,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 49
+      "scheduleDisplayOrder": 54
     },
     {
       "employeeId": "B5637",
@@ -6491,7 +6491,7 @@
       "sourceOrder": 58,
       "section": "P區",
       "category": "area",
-      "scheduleDisplayOrder": 50
+      "scheduleDisplayOrder": 55
     },
     {
       "employeeId": "98729",
@@ -6501,7 +6501,7 @@
       "sourceOrder": 59,
       "section": "G區",
       "category": "area",
-      "scheduleDisplayOrder": 51
+      "scheduleDisplayOrder": 56
     },
     {
       "employeeId": "B3238",
@@ -6511,7 +6511,7 @@
       "sourceOrder": 60,
       "section": "G區",
       "category": "area",
-      "scheduleDisplayOrder": 52
+      "scheduleDisplayOrder": 57
     },
     {
       "employeeId": "B6138",
@@ -6521,7 +6521,7 @@
       "sourceOrder": 61,
       "section": "G區",
       "category": "area",
-      "scheduleDisplayOrder": 53
+      "scheduleDisplayOrder": 58
     },
     {
       "employeeId": "B2712",
@@ -6531,7 +6531,7 @@
       "sourceOrder": 62,
       "section": "G區",
       "category": "area",
-      "scheduleDisplayOrder": 54
+      "scheduleDisplayOrder": 59
     },
     {
       "employeeId": "94253",
@@ -6541,7 +6541,7 @@
       "sourceOrder": 63,
       "section": "D區",
       "category": "area",
-      "scheduleDisplayOrder": 55
+      "scheduleDisplayOrder": 60
     },
     {
       "employeeId": "95424",
@@ -6551,7 +6551,7 @@
       "sourceOrder": 64,
       "section": "D區",
       "category": "area",
-      "scheduleDisplayOrder": 56
+      "scheduleDisplayOrder": 61
     },
     {
       "employeeId": "94986",
@@ -6561,7 +6561,7 @@
       "sourceOrder": 65,
       "section": "D區",
       "category": "area",
-      "scheduleDisplayOrder": 57
+      "scheduleDisplayOrder": 62
     },
     {
       "employeeId": "97900",
@@ -6571,7 +6571,7 @@
       "sourceOrder": 66,
       "section": "D區",
       "category": "area",
-      "scheduleDisplayOrder": 58
+      "scheduleDisplayOrder": 63
     },
     {
       "employeeId": "B2268",
@@ -6581,7 +6581,7 @@
       "sourceOrder": 67,
       "section": "D區",
       "category": "area",
-      "scheduleDisplayOrder": 59
+      "scheduleDisplayOrder": 64
     },
     {
       "employeeId": "98214",
@@ -6591,7 +6591,7 @@
       "sourceOrder": 68,
       "section": "D區",
       "category": "area",
-      "scheduleDisplayOrder": 60
+      "scheduleDisplayOrder": 65
     },
     {
       "employeeId": "B3824",
@@ -6601,7 +6601,7 @@
       "sourceOrder": 69,
       "section": "D區",
       "category": "area",
-      "scheduleDisplayOrder": 61
+      "scheduleDisplayOrder": 66
     },
     {
       "employeeId": "B5041",
@@ -6611,7 +6611,7 @@
       "sourceOrder": 70,
       "section": "D區",
       "category": "area",
-      "scheduleDisplayOrder": 62
+      "scheduleDisplayOrder": 67
     },
     {
       "employeeId": "94488",
@@ -6621,7 +6621,7 @@
       "sourceOrder": 71,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 63
+      "scheduleDisplayOrder": 68
     },
     {
       "employeeId": "95991",
@@ -6631,7 +6631,7 @@
       "sourceOrder": 72,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 64
+      "scheduleDisplayOrder": 69
     },
     {
       "employeeId": "B6045",
@@ -6641,7 +6641,7 @@
       "sourceOrder": 73,
       "section": "E區",
       "category": "area",
-      "scheduleDisplayOrder": 65
+      "scheduleDisplayOrder": 70
     },
     {
       "employeeId": "96165",
@@ -6651,7 +6651,7 @@
       "sourceOrder": 74,
       "section": "F1區",
       "category": "area",
-      "scheduleDisplayOrder": 66
+      "scheduleDisplayOrder": 71
     },
     {
       "employeeId": "96697",
@@ -6661,7 +6661,7 @@
       "sourceOrder": 75,
       "section": "F1區",
       "category": "area",
-      "scheduleDisplayOrder": 67
+      "scheduleDisplayOrder": 72
     },
     {
       "employeeId": "B4696",
@@ -6671,7 +6671,7 @@
       "sourceOrder": 76,
       "section": "F1區",
       "category": "area",
-      "scheduleDisplayOrder": 68
+      "scheduleDisplayOrder": 73
     },
     {
       "employeeId": "95205",
@@ -6681,7 +6681,7 @@
       "sourceOrder": 77,
       "section": "ZH2區",
       "category": "area",
-      "scheduleDisplayOrder": 69
+      "scheduleDisplayOrder": 74
     },
     {
       "employeeId": "B1944",
@@ -6691,7 +6691,7 @@
       "sourceOrder": 78,
       "section": "ZH2區",
       "category": "area",
-      "scheduleDisplayOrder": 70
+      "scheduleDisplayOrder": 75
     },
     {
       "employeeId": "B2207",
@@ -6701,7 +6701,7 @@
       "sourceOrder": 79,
       "section": "ZH2區",
       "category": "area",
-      "scheduleDisplayOrder": 71
+      "scheduleDisplayOrder": 76
     },
     {
       "employeeId": "B3733",
@@ -6711,7 +6711,7 @@
       "sourceOrder": 80,
       "section": "ZH2區",
       "category": "area",
-      "scheduleDisplayOrder": 72
+      "scheduleDisplayOrder": 77
     },
     {
       "employeeId": "B5336",
@@ -6721,7 +6721,7 @@
       "sourceOrder": 81,
       "section": "ZH2區",
       "category": "area",
-      "scheduleDisplayOrder": 73
+      "scheduleDisplayOrder": 78
     },
     {
       "employeeId": "B0048",
@@ -6731,7 +6731,7 @@
       "sourceOrder": 82,
       "section": "ZH2區",
       "category": "area",
-      "scheduleDisplayOrder": 74
+      "scheduleDisplayOrder": 79
     },
     {
       "employeeId": "B0831",
@@ -6741,7 +6741,7 @@
       "sourceOrder": 83,
       "section": "ZH2區",
       "category": "area",
-      "scheduleDisplayOrder": 75
+      "scheduleDisplayOrder": 80
     },
     {
       "employeeId": "B1598",
@@ -6751,7 +6751,7 @@
       "sourceOrder": 84,
       "section": "ZH2區",
       "category": "area",
-      "scheduleDisplayOrder": 76
+      "scheduleDisplayOrder": 81
     },
     {
       "employeeId": "B4419",
@@ -6761,7 +6761,7 @@
       "sourceOrder": 85,
       "section": "ZH2區",
       "category": "area",
-      "scheduleDisplayOrder": 77
+      "scheduleDisplayOrder": 82
     },
     {
       "employeeId": "95181",
@@ -6771,7 +6771,7 @@
       "sourceOrder": 86,
       "section": "I2區",
       "category": "area",
-      "scheduleDisplayOrder": 78
+      "scheduleDisplayOrder": 83
     },
     {
       "employeeId": "B1065",
@@ -6781,7 +6781,7 @@
       "sourceOrder": 87,
       "section": "I2區",
       "category": "area",
-      "scheduleDisplayOrder": 79
+      "scheduleDisplayOrder": 84
     },
     {
       "employeeId": "B2858",
@@ -6791,7 +6791,7 @@
       "sourceOrder": 88,
       "section": "I2區",
       "category": "area",
-      "scheduleDisplayOrder": 80
+      "scheduleDisplayOrder": 85
     },
     {
       "employeeId": "B5326",
@@ -6801,7 +6801,7 @@
       "sourceOrder": 89,
       "section": "I2區",
       "category": "area",
-      "scheduleDisplayOrder": 81
+      "scheduleDisplayOrder": 86
     },
     {
       "employeeId": "B5636",
@@ -6811,7 +6811,7 @@
       "sourceOrder": 90,
       "section": "I2區",
       "category": "area",
-      "scheduleDisplayOrder": 82
+      "scheduleDisplayOrder": 87
     },
     {
       "employeeId": "95207",
@@ -6821,7 +6821,7 @@
       "sourceOrder": 91,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 83
+      "scheduleDisplayOrder": 88
     },
     {
       "employeeId": "97520",
@@ -6831,7 +6831,7 @@
       "sourceOrder": 92,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 84
+      "scheduleDisplayOrder": 89
     },
     {
       "employeeId": "B0773",
@@ -6841,7 +6841,7 @@
       "sourceOrder": 93,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 85
+      "scheduleDisplayOrder": 90
     },
     {
       "employeeId": "B0895",
@@ -6851,7 +6851,7 @@
       "sourceOrder": 94,
       "section": "K1區",
       "category": "area",
-      "scheduleDisplayOrder": 86
+      "scheduleDisplayOrder": 91
     },
     {
       "employeeId": "95641",
@@ -6861,7 +6861,7 @@
       "sourceOrder": 95,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 87
+      "scheduleDisplayOrder": 92
     },
     {
       "employeeId": "96708",
@@ -6871,7 +6871,7 @@
       "sourceOrder": 96,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 88
+      "scheduleDisplayOrder": 93
     },
     {
       "employeeId": "B1006",
@@ -6881,7 +6881,7 @@
       "sourceOrder": 97,
       "section": "K2區",
       "category": "area",
-      "scheduleDisplayOrder": 89
+      "scheduleDisplayOrder": 94
     },
     {
       "employeeId": "94466",
@@ -6891,7 +6891,7 @@
       "sourceOrder": 98,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 90
+      "scheduleDisplayOrder": 95
     },
     {
       "employeeId": "B0211",
@@ -6901,7 +6901,7 @@
       "sourceOrder": 99,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 91
+      "scheduleDisplayOrder": 96
     },
     {
       "employeeId": "B4362",
@@ -6911,7 +6911,7 @@
       "sourceOrder": 100,
       "section": "K3區",
       "category": "area",
-      "scheduleDisplayOrder": 92
+      "scheduleDisplayOrder": 97
     },
     {
       "employeeId": "96484",
@@ -6921,7 +6921,7 @@
       "sourceOrder": 101,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 93
+      "scheduleDisplayOrder": 98
     },
     {
       "employeeId": "B0919",
@@ -6931,7 +6931,7 @@
       "sourceOrder": 102,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 94
+      "scheduleDisplayOrder": 99
     },
     {
       "employeeId": "B4593",
@@ -6941,7 +6941,7 @@
       "sourceOrder": 103,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 95
+      "scheduleDisplayOrder": 100
     },
     {
       "employeeId": "98309",
@@ -6951,7 +6951,7 @@
       "sourceOrder": 104,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 96
+      "scheduleDisplayOrder": 101
     },
     {
       "employeeId": "B2083",
@@ -6961,7 +6961,7 @@
       "sourceOrder": 105,
       "section": "K4區",
       "category": "area",
-      "scheduleDisplayOrder": 97
+      "scheduleDisplayOrder": 102
     },
     {
       "employeeId": "B1192",
@@ -6971,7 +6971,7 @@
       "sourceOrder": 106,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 98
+      "scheduleDisplayOrder": 103
     },
     {
       "employeeId": "B2517",
@@ -6981,7 +6981,7 @@
       "sourceOrder": 107,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 99
+      "scheduleDisplayOrder": 104
     },
     {
       "employeeId": "96477",
@@ -6991,7 +6991,7 @@
       "sourceOrder": 108,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 100
+      "scheduleDisplayOrder": 105
     },
     {
       "employeeId": "B0414",
@@ -7001,7 +7001,7 @@
       "sourceOrder": 109,
       "section": "L1區",
       "category": "area",
-      "scheduleDisplayOrder": 101
+      "scheduleDisplayOrder": 106
     },
     {
       "employeeId": "95392",
@@ -7011,7 +7011,7 @@
       "sourceOrder": 110,
       "section": "L區",
       "category": "area",
-      "scheduleDisplayOrder": 102
+      "scheduleDisplayOrder": 107
     },
     {
       "employeeId": "B5272",
@@ -7021,7 +7021,7 @@
       "sourceOrder": 111,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 103
+      "scheduleDisplayOrder": 108
     },
     {
       "employeeId": "B5482",
@@ -7031,7 +7031,7 @@
       "sourceOrder": 112,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 104
+      "scheduleDisplayOrder": 109
     },
     {
       "employeeId": "B5653",
@@ -7041,7 +7041,7 @@
       "sourceOrder": 113,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 105
+      "scheduleDisplayOrder": 110
     },
     {
       "employeeId": "98746",
@@ -7051,7 +7051,7 @@
       "sourceOrder": 114,
       "section": "L2區",
       "category": "area",
-      "scheduleDisplayOrder": 106
+      "scheduleDisplayOrder": 111
     },
     {
       "employeeId": "B3217",
@@ -7061,7 +7061,7 @@
       "sourceOrder": 115,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 107
+      "scheduleDisplayOrder": 112
     },
     {
       "employeeId": "B1994",
@@ -7071,7 +7071,7 @@
       "sourceOrder": 116,
       "section": "L3區",
       "category": "area",
-      "scheduleDisplayOrder": 108
+      "scheduleDisplayOrder": 113
     },
     {
       "employeeId": "97435",
@@ -7081,7 +7081,7 @@
       "sourceOrder": 117,
       "section": "M2區",
       "category": "area",
-      "scheduleDisplayOrder": 109
+      "scheduleDisplayOrder": 114
     },
     {
       "employeeId": "97436",
@@ -7091,7 +7091,7 @@
       "sourceOrder": 118,
       "section": "M2區",
       "category": "area",
-      "scheduleDisplayOrder": 110
+      "scheduleDisplayOrder": 115
     },
     {
       "employeeId": "B5379",
@@ -7101,7 +7101,7 @@
       "sourceOrder": 119,
       "section": "M2區",
       "category": "area",
-      "scheduleDisplayOrder": 111
+      "scheduleDisplayOrder": 116
     },
     {
       "employeeId": "B0832",
@@ -7111,7 +7111,7 @@
       "sourceOrder": 120,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 112
+      "scheduleDisplayOrder": 117
     },
     {
       "employeeId": "B1811",
@@ -7121,7 +7121,7 @@
       "sourceOrder": 121,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 113
+      "scheduleDisplayOrder": 118
     },
     {
       "employeeId": "B6013",
@@ -7131,7 +7131,7 @@
       "sourceOrder": 122,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 114
+      "scheduleDisplayOrder": 119
     },
     {
       "employeeId": "B2146",
@@ -7141,7 +7141,7 @@
       "sourceOrder": 123,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 115
+      "scheduleDisplayOrder": 120
     },
     {
       "employeeId": "B2386",
@@ -7151,7 +7151,7 @@
       "sourceOrder": 124,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 116
+      "scheduleDisplayOrder": 121
     },
     {
       "employeeId": "B3581",
@@ -7161,7 +7161,7 @@
       "sourceOrder": 125,
       "section": "W3區",
       "category": "area",
-      "scheduleDisplayOrder": 117
+      "scheduleDisplayOrder": 122
     },
     {
       "employeeId": "95848",
@@ -7171,7 +7171,7 @@
       "sourceOrder": 126,
       "section": "W2區",
       "category": "area",
-      "scheduleDisplayOrder": 118
+      "scheduleDisplayOrder": 123
     },
     {
       "employeeId": "B0429",
@@ -7181,7 +7181,7 @@
       "sourceOrder": 127,
       "section": "W2區",
       "category": "area",
-      "scheduleDisplayOrder": 119
+      "scheduleDisplayOrder": 124
     },
     {
       "employeeId": "B4509",
@@ -7191,7 +7191,7 @@
       "sourceOrder": 128,
       "section": "W2區",
       "category": "area",
-      "scheduleDisplayOrder": 120
+      "scheduleDisplayOrder": 125
     },
     {
       "employeeId": "96504",
@@ -7201,7 +7201,7 @@
       "sourceOrder": 129,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 121
+      "scheduleDisplayOrder": 126
     },
     {
       "employeeId": "B3175",
@@ -7211,7 +7211,7 @@
       "sourceOrder": 130,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 122
+      "scheduleDisplayOrder": 127
     },
     {
       "employeeId": "B5784",
@@ -7221,7 +7221,7 @@
       "sourceOrder": 131,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 123
+      "scheduleDisplayOrder": 128
     },
     {
       "employeeId": "B0410",
@@ -7231,7 +7231,7 @@
       "sourceOrder": 132,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 124
+      "scheduleDisplayOrder": 129
     },
     {
       "employeeId": "B5167",
@@ -7241,7 +7241,7 @@
       "sourceOrder": 133,
       "section": "O1區",
       "category": "area",
-      "scheduleDisplayOrder": 125
+      "scheduleDisplayOrder": 130
     },
     {
       "employeeId": "95415",
@@ -7251,7 +7251,7 @@
       "sourceOrder": 134,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 126
+      "scheduleDisplayOrder": 131
     },
     {
       "employeeId": "B2109",
@@ -7261,7 +7261,7 @@
       "sourceOrder": 135,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 127
+      "scheduleDisplayOrder": 132
     },
     {
       "employeeId": "B2461",
@@ -7271,7 +7271,7 @@
       "sourceOrder": 136,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 128
+      "scheduleDisplayOrder": 133
     },
     {
       "employeeId": "B1025",
@@ -7281,7 +7281,7 @@
       "sourceOrder": 137,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 129
+      "scheduleDisplayOrder": 134
     },
     {
       "employeeId": "B1875",
@@ -7291,7 +7291,7 @@
       "sourceOrder": 138,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 130
+      "scheduleDisplayOrder": 135
     },
     {
       "employeeId": "95897",
@@ -7301,7 +7301,7 @@
       "sourceOrder": 139,
       "section": "O4區",
       "category": "area",
-      "scheduleDisplayOrder": 131
+      "scheduleDisplayOrder": 136
     },
     {
       "employeeId": "B1000",
@@ -7311,7 +7311,7 @@
       "sourceOrder": 140,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 132
+      "scheduleDisplayOrder": 137
     },
     {
       "employeeId": "B2955",
@@ -7321,7 +7321,7 @@
       "sourceOrder": 141,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 133
+      "scheduleDisplayOrder": 138
     },
     {
       "employeeId": "96400",
@@ -7331,7 +7331,7 @@
       "sourceOrder": 142,
       "section": "O3區",
       "category": "area",
-      "scheduleDisplayOrder": 134
+      "scheduleDisplayOrder": 139
     },
     {
       "employeeId": "96463",
@@ -7341,7 +7341,7 @@
       "sourceOrder": 143,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 135
+      "scheduleDisplayOrder": 140
     },
     {
       "employeeId": "B0947",
@@ -7351,7 +7351,7 @@
       "sourceOrder": 144,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 136
+      "scheduleDisplayOrder": 141
     },
     {
       "employeeId": "B4802",
@@ -7361,7 +7361,7 @@
       "sourceOrder": 145,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 137
+      "scheduleDisplayOrder": 142
     },
     {
       "employeeId": "B4913",
@@ -7371,7 +7371,7 @@
       "sourceOrder": 146,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 138
+      "scheduleDisplayOrder": 143
     },
     {
       "employeeId": "95656",
@@ -7381,7 +7381,7 @@
       "sourceOrder": 147,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 139
+      "scheduleDisplayOrder": 144
     },
     {
       "employeeId": "B4366",
@@ -7391,7 +7391,7 @@
       "sourceOrder": 148,
       "section": "R區",
       "category": "area",
-      "scheduleDisplayOrder": 140
+      "scheduleDisplayOrder": 145
     },
     {
       "employeeId": "95857",
@@ -7401,7 +7401,7 @@
       "sourceOrder": 149,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 141
+      "scheduleDisplayOrder": 146
     },
     {
       "employeeId": "96716",
@@ -7411,7 +7411,7 @@
       "sourceOrder": 150,
       "section": "S區",
       "category": "area",
-      "scheduleDisplayOrder": 142
+      "scheduleDisplayOrder": 147
     },
     {
       "employeeId": "94980",
@@ -7421,7 +7421,7 @@
       "sourceOrder": 151,
       "section": "T區",
       "category": "area",
-      "scheduleDisplayOrder": 143
+      "scheduleDisplayOrder": 148
     },
     {
       "employeeId": "B3348",
@@ -7431,7 +7431,7 @@
       "sourceOrder": 152,
       "section": "T區",
       "category": "area",
-      "scheduleDisplayOrder": 144
+      "scheduleDisplayOrder": 149
     },
     {
       "employeeId": "B4684",
@@ -7441,7 +7441,7 @@
       "sourceOrder": 153,
       "section": "T區",
       "category": "area",
-      "scheduleDisplayOrder": 145
+      "scheduleDisplayOrder": 150
     },
     {
       "employeeId": "95850",
@@ -7451,7 +7451,7 @@
       "sourceOrder": 154,
       "section": "T區",
       "category": "area",
-      "scheduleDisplayOrder": 146
+      "scheduleDisplayOrder": 151
     },
     {
       "employeeId": "96172",
@@ -7461,7 +7461,7 @@
       "sourceOrder": 155,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 147
+      "scheduleDisplayOrder": 152
     },
     {
       "employeeId": "94622",
@@ -7471,7 +7471,7 @@
       "sourceOrder": 156,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 148
+      "scheduleDisplayOrder": 153
     },
     {
       "employeeId": "B4132",
@@ -7481,7 +7481,7 @@
       "sourceOrder": 157,
       "section": "V區",
       "category": "area",
-      "scheduleDisplayOrder": 149
+      "scheduleDisplayOrder": 154
     },
     {
       "employeeId": "B0976",
@@ -7491,7 +7491,7 @@
       "sourceOrder": 158,
       "section": "X區",
       "category": "area",
-      "scheduleDisplayOrder": 150
+      "scheduleDisplayOrder": 155
     },
     {
       "employeeId": "B2697",
@@ -7501,7 +7501,7 @@
       "sourceOrder": 159,
       "section": "X區",
       "category": "area",
-      "scheduleDisplayOrder": 151
+      "scheduleDisplayOrder": 156
     },
     {
       "employeeId": "B2147",
@@ -7511,7 +7511,7 @@
       "sourceOrder": 160,
       "section": "X區",
       "category": "area",
-      "scheduleDisplayOrder": 152
+      "scheduleDisplayOrder": 157
     }
   ]
 }

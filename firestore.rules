@@ -98,6 +98,17 @@ service cloud.firestore {
       allow update, delete: if false;
     }
 
+    match /systemSettings/features {
+      allow get: if isActiveEmployee();
+      allow create, update: if isAdmin()
+        && request.resource.data.keys().hasOnly(['attendanceEnabled','broadcastsEnabled','dispatchEnabled','updatedBy','updatedAt'])
+        && request.resource.data.attendanceEnabled is bool
+        && request.resource.data.broadcastsEnabled is bool
+        && request.resource.data.dispatchEnabled is bool
+        && request.resource.data.updatedBy == request.auth.token.employeeId
+        && request.resource.data.updatedAt == request.time;
+      allow delete: if false;
+    }
     match /scheduleSettings/{monthId} {
       allow read: if isDuty();
       allow create, update, delete: if isAdmin();

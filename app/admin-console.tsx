@@ -3,6 +3,10 @@
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { scheduleSections } from '../functions/pre-schedule-order.mjs';
 import { AreaJumpDropdown, scheduleSectionId } from './area-jump-dropdown';
+import { SystemFeatureSettings } from './system-feature-settings';
+import { ScheduleCellEditor } from './schedule-cell-editor';
+import { buildScheduleEditCatalog } from '../lib/schedule-edit-catalog';
+import { updateFormalScheduleCell } from '../lib/schedule-firestore';
 import { PreScheduleAdmin } from './pre-schedule-admin';
 import {
   addDoc,
@@ -270,7 +274,7 @@ export function AdminConsole({
             <PreScheduleSettings employeeId={employeeId} />
           )}
           {page === 'pre-management' && <PreScheduleAdmin admin={admin} />}
-          {page === 'system' && admin && <SystemSettings />}
+          {page === 'system' && admin && <SystemSettings employeeId={employeeId} />}
           {page === 'leave' && (
             <Placeholder
               title="假勤管理"
@@ -1142,59 +1146,10 @@ function ScheduleManager({
     ...row.employee, employeeId: row.id, shiftType: row.employee?.shiftType || row.items[0]?.shiftType,
   })), [rows, group]);
   const areas = useMemo(() => sections.filter(section => section.areaCode), [sections]);
-  const edit = async (
-    record: ScheduleRecord | undefined,
-    person: EmployeeRecord | undefined,
-    day: number,
-  ) => {
-    if (!admin || !record || !person) return;
-    const next = window.prompt(
-      `${person.employeeId} ${person.name}\n${month}-${String(day).padStart(2, '0')} 班別`,
-      record.scheduleCode,
-    );
-    if (next === null || next.trim() === record.scheduleCode) return;
-    const code = next.trim();
-    if (
-      !code ||
-      !window.confirm(
-        `確認將 ${person.name} ${month}/${day} 從「${record.scheduleCode}」改為「${code}」？`,
-      )
-    )
-      return;
-    try {
-      const batch = writeBatch(db);
-      const auditRef = doc(collection(db, 'scheduleAuditLogs'));
-      batch.update(doc(db, 'scheduleRecords', record.id), {
-        scheduleCode: code,
-        scheduleLabel: code,
-        leaveType: isLeave(code) ? code : '',
-        modifiedBy: employeeId,
-        modifiedAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
-      batch.set(auditRef, {
-        recordId: record.id,
-        employeeId: record.employeeId,
-        date: record.date,
-        before: {
-          scheduleCode: record.scheduleCode,
-          scheduleLabel: record.scheduleLabel,
-          leaveType: record.leaveType,
-        },
-        after: {
-          scheduleCode: code,
-          scheduleLabel: code,
-          leaveType: isLeave(code) ? code : '',
-        },
-        modifiedBy: employeeId,
-        modifiedAt: serverTimestamp(),
-      });
-      await batch.commit();
-      await load();
-    } catch (cause) {
-      console.error('[scheduleManager] update failed', cause);
-      setError('班表修改失敗');
-    }
+  const [editing, setEditing] = useState<{record:ScheduleRecord; person:EmployeeRecord} | null>(null);
+  const catalog = useMemo(()=>buildScheduleEditCatalog(records,group),[records,group]);
+  const edit = (record:ScheduleRecord | undefined, person:EmployeeRecord | undefined) => {
+    if(admin && record && person) setEditing({record,person});
   };
   return (
     <section className="admin-schedule-page">
@@ -1272,7 +1227,7 @@ function ScheduleManager({
                       <button
                         disabled={!admin || !record}
                         onClick={() =>
-                          void edit(record, row.employee, index + 1)
+                          edit(record, row.employee)
                         }
                       >
                         {record?.scheduleCode || '—'}
@@ -1285,6 +1240,7 @@ function ScheduleManager({
           </tbody>
         </table>
       </div>
+      {editing && <ScheduleCellEditor employeeId={editing.person.employeeId} name={editing.person.name} date={editing.record.date} currentCode={editing.record.scheduleCode} catalog={catalog} onClose={()=>setEditing(null)} onSave={async code=>{if(!catalog.leaves.includes(code) && !catalog.special.includes(code) && !catalog.areas.some(area=>area.codes.includes(code))) throw new Error('請選擇既有正式班碼');await updateFormalScheduleCell(editing.record,code,employeeId);await load();}} />}
     </section>
   );
 }
@@ -1365,7 +1321,7 @@ function AnnouncementManager({ employeeId }: { employeeId: string }) {
               onChange={(event) => setFile(event.target.files?.[0] || null)}
             />
           </label>
-          <small>支援一般圖片格式，單檔上限 12 百萬位元組；系統會自動等比例縮圖，前台不裁切內容。</small>
+          <small>支援一般圖片格式，單檔上限 12 MB；系統會自動等比例縮圖，前台不裁切內容。</small>
           <div className="settings-actions">
             <button
               className="admin-primary"
@@ -2058,6 +2014,7 @@ function PreScheduleSettings({ employeeId }: { employeeId: string }) {
   const [status, setStatus] = useState<'scheduled' | 'open' | 'closed'>(
     'scheduled',
   );
+  const [saving,setSaving]=useState(false), [savedAt,setSavedAt]=useState(''), [saveMessage,setSaveMessage]=useState('');
   const load = async () => {
     const snapshot = await getDoc(doc(db, 'scheduleSettings', month));
     if (snapshot.exists()) {
@@ -2065,16 +2022,20 @@ function PreScheduleSettings({ employeeId }: { employeeId: string }) {
       setStartAt(datetimeValue(data.startAt));
       setEndAt(datetimeValue(data.endAt));
       setStatus(data.status || 'scheduled');
+      setSavedAt(data.updatedAt?.toDate?.().toLocaleString('zh-TW',{timeZone:'Asia/Taipei'}) || '');
     } else {
+      setSavedAt('');
       setStartAt('');
       setEndAt('');
       setStatus('scheduled');
     }
   };
   useEffect(() => {
-    void load();
+    void load().catch(error=>{console.error('[scheduleSettings] load failed',error);setSaveMessage('設定載入失敗');});
   }, [month]);
   const save = async (nextStatus = status) => {
+    setSaving(true);setSaveMessage('儲存中…');
+    try {
     await setDoc(
       doc(db, 'scheduleSettings', month),
       {
@@ -2088,6 +2049,8 @@ function PreScheduleSettings({ employeeId }: { employeeId: string }) {
       { merge: true },
     );
     setStatus(nextStatus);
+    await load();setSaveMessage('已儲存');
+    } catch(error) {console.error('[scheduleSettings] save failed',error);setSaveMessage('儲存失敗，請稍後再試');} finally {setSaving(false);}
   };
   const extendOneDay = () => {
     const base = endAt ? new Date(endAt) : new Date();
@@ -2134,14 +2097,15 @@ function PreScheduleSettings({ employeeId }: { employeeId: string }) {
             onChange={(event) => setEndAt(event.target.value)}
           />
         </label>
-        <div className="settings-actions">
-          <button className="admin-primary" onClick={() => void save()}>
+        <div className="settings-actions" aria-busy={saving}>
+          <button disabled={saving} className="admin-primary" onClick={() => void save()}>
             儲存時間
           </button>
-          <button onClick={() => void save('open')}>立即開放／重新開放</button>
-          <button onClick={() => void save('closed')}>立即關閉</button>
-          <button onClick={extendOneDay}>延長 1 天</button>
+          <button disabled={saving} onClick={() => void save('open')}>立即開放／重新開放</button>
+          <button disabled={saving} onClick={() => void save('closed')}>立即關閉</button>
+          <button disabled={saving} onClick={extendOneDay}>延長 1 天</button>
         </div>
+        <p className="settings-save-status" role="status">{saveMessage}{savedAt && ` · 最後儲存時間：${savedAt}`}</p>
         <p>
           開放期間由管理員設定，不寫死每月 10～20 日；按「延長 1
           天」後再儲存即可生效。
@@ -2151,42 +2115,7 @@ function PreScheduleSettings({ employeeId }: { employeeId: string }) {
   );
 }
 
-function SystemSettings() {
-  return (
-    <div className="settings-grid">
-      <section className="admin-panel settings-panel">
-        <header>
-          <h2>系統設定</h2>
-        </header>
-        <div className="setting-row">
-          <span>
-            <b>打卡備案</b>
-            <small>一般員工前台功能</small>
-          </span>
-          <strong className="setting-off">已停用</strong>
-        </div>
-        <div className="setting-row">
-          <span>
-            <b>廣播功能</b>
-            <small>廣播與已讀紀錄</small>
-          </span>
-          <strong>啟用</strong>
-        </div>
-        <div className="setting-row">
-          <span>
-            <b>正式派工</b>
-            <small>班表自動派工與人工調整</small>
-          </span>
-          <strong>啟用</strong>
-        </div>
-        <p>
-          第一版提供設定入口與目前功能開關
-          狀態；涉及正式環境的開關仍由程式設定及後端權限控制。
-        </p>
-      </section>
-    </div>
-  );
-}
+function SystemSettings({employeeId}:{employeeId:string}) { return <SystemFeatureSettings employeeId={employeeId} />; }
 
 function Placeholder({ title, text }: { title: string; text: string }) {
   return (

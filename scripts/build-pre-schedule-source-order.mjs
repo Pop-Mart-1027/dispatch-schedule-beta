@@ -19,7 +19,7 @@ for (const [key, group, sheet] of [
         : 'area';
     const item = {
       employeeId: row.employeeId,
-      group: category === 'area' ? group : 'day',
+      group,
       sourceSheet: sheet,
       sourceRow: Number(row.rowId.split('-').at(-1)),
       sourceOrder: index,
@@ -37,13 +37,12 @@ for (const [key, group, sheet] of [
       category,
     };
     const old = people.get(row.employeeId);
-    // First appearance within each source is authoritative. Shared leaders use day;
-    // shared night/PT-evening-night staff keep the night vehicle-team placement.
+    // Source sheet decides membership, never title or daily code. Shared unsectioned
+    // header staff retain the first source; a named night team retains its placement.
     if (
       !old ||
       (old.sourceSheet !== sheet &&
-        old.category === 'area' &&
-        category === 'area' &&
+        !!row.group.trim() &&
         group === 'night')
     )
       people.set(row.employeeId, item);

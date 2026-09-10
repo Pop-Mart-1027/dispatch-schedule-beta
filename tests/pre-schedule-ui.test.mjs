@@ -79,6 +79,7 @@ const virtual = {
     window.employee();`,
 };
 const server = await createServer({
+  resolve: {alias:{'@':process.cwd()}},
   configFile: false,
   logLevel: 'error',
   esbuild: { jsx: 'automatic' },
@@ -478,7 +479,7 @@ test('September matrix exposes day/night tabs, leadership heading and exact O1 t
   await page.waitForFunction(
     () =>
       document.querySelectorAll('.pre-month-table tr[data-employee-id]')
-        .length === 597,
+        .length === 592,
   );
   await page
     .getByRole('tab', { name: '日班', exact: true })
@@ -509,7 +510,7 @@ test('September matrix exposes day/night tabs, leadership heading and exact O1 t
   await page.waitForFunction(
     () =>
       document.querySelectorAll('.pre-month-table tr[data-employee-id]')
-        .length === 153,
+        .length === 158,
   );
   const ids = await personRows.evaluateAll((rows) =>
     rows.map((r) => r.getAttribute('data-employee-id')),
@@ -517,15 +518,15 @@ test('September matrix exposes day/night tabs, leadership heading and exact O1 t
   assert.deepEqual(ids, scheduleSections(master, 'night').flatMap(section => section.people.map(person => person.employeeId)));
   const nightAreas = await page.locator('.pre-source-heading[data-area-code]').evaluateAll(rows => rows.map(row => row.dataset.areaCode));
   assert.equal(nightAreas.length, new Set(nightAreas).size);
-  assert.equal(ids.indexOf('96504') + 1, 122);
-  assert.deepEqual(ids.slice(121, 126), [
+  assert.equal(ids.indexOf('96504') + 1, 127);
+  assert.deepEqual(ids.slice(126, 131), [
     '96504',
     'B3175',
     'B5784',
     'B0410',
     'B5167',
   ]);
-  assert.ok(ids.every((id) => preScheduleSource(id).category === 'area'));
+  assert.ok(ids.every((id) => preScheduleSource(id).sourceSheet === '9月夜班'));
   const sourceHeading = await page
     .locator('tr[data-employee-id="96504"]')
     .evaluate((el) => el.previousElementSibling.textContent);
@@ -536,7 +537,7 @@ test('September matrix exposes day/night tabs, leadership heading and exact O1 t
   await page.waitForFunction(
     () =>
       document.querySelectorAll('.pre-month-table tr[data-employee-id]')
-        .length === 597,
+        .length === 592,
   );
   assert.equal(await page.getByLabel('搜尋預排員工').inputValue(), '');
   assert.equal(

@@ -12,6 +12,7 @@
   min-width: 60px;
   max-width: 60px;
 }
+.app-shell .schedule-matrix :is(th,td,th *,td *) { cursor:default; caret-color:transparent; }
 .app-shell .schedule-matrix tr > :nth-child(n+4) {
   padding: 8px 4px;
   white-space: normal;

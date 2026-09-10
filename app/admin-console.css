@@ -784,3 +784,13 @@
 .schedule-group-switch button[aria-pressed='true'] { background:#ed7e1c; color:white; }
 .admin-schedule .admin-source-heading > td { position:static; width:auto; max-width:none; padding:8px 10px; text-align:left; background:#fff0dc; color:#754720; font-weight:700; }
 .admin-source-heading span { position:sticky; left:10px; }
+.admin-schedule-page .admin-page-toolbar .area-jump-dropdown { margin:0; }
+.admin-schedule-page .admin-page-toolbar :is(.area-jump-dropdown summary,.schedule-group-switch button,input) { box-sizing:border-box; height:38px; min-height:38px; border:1px solid #d9e1e5; border-radius:7px; padding:8px 10px; font-size:14px; line-height:20px; }
+.admin-schedule-page .schedule-group-switch { gap:4px; }
+.settings-actions button { color:#334954; }
+.settings-actions button.admin-primary { background:#e8731a; color:#fff; }
+.settings-save-status { color:#536772; opacity:1; min-height:22px; margin-top:12px; }
+.settings-actions button:disabled { opacity:.7; }
+.admin-schedule td button:enabled { cursor:pointer; }
+.admin-schedule td button:enabled:hover { background:#fff0dc; outline:1px solid #ef9b53; }
+.admin-schedule td button:disabled { cursor:default; }

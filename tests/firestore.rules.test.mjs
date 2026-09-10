@@ -1,6 +1,7 @@
 import fs from 'node:fs/promises';
 import test, { after, before } from 'node:test';
 import assert from 'node:assert/strict';
+import { createServer } from 'vite';
 import {
   initializeTestEnvironment,
   assertFails,
@@ -17,6 +18,7 @@ import {
 } from 'firebase/firestore';
 
 let environment;
+let moduleServer;
 
 before(async () => {
   environment = await initializeTestEnvironment({
@@ -106,7 +108,7 @@ before(async () => {
   });
 });
 
-after(async () => environment?.cleanup());
+after(async () => {await moduleServer?.close();await environment?.cleanup();});
 
 const asRole = (employeeId, role) =>
   environment
@@ -116,6 +118,38 @@ const asRole = (employeeId, role) =>
       mustChangePassword: false,
     })
     .firestore();
+
+test('feature settings persist through the real service; only active admin may change boolean flags', async()=>{
+  moduleServer=await createServer({configFile:false,logLevel:'error',resolve:{alias:{'@':process.cwd()}},server:{middlewareMode:true},optimizeDeps:{noDiscovery:true}});
+  const {saveSystemFeature}=await moduleServer.ssrLoadModule('/lib/system-features.ts');
+  const admin=asRole('A001','admin'), employee=asRole('E001','employee'), monitor=asRole('D001','duty');
+  await assertSucceeds(saveSystemFeature('dispatchEnabled',false,'A001',admin));
+  let data=(await assertSucceeds(getDoc(doc(employee,'systemSettings','features')))).data();
+  assert.equal(data.dispatchEnabled,false);assert.equal(data.broadcastsEnabled,true);assert.equal(data.attendanceEnabled,false);
+  await assertFails(saveSystemFeature('dispatchEnabled',true,'E001',employee));
+  await assertFails(saveSystemFeature('dispatchEnabled',true,'D001',monitor));
+  await assertFails(saveSystemFeature('dispatchEnabled',true,'A002',asRole('A002','admin')));
+  await assertFails(updateDoc(doc(admin,'systemSettings','features'),{dispatchEnabled:'yes',updatedBy:'A001',updatedAt:serverTimestamp()}));
+  await assertFails(updateDoc(doc(admin,'systemSettings','features'),{dispatchEnabled:true,updatedBy:'someone-else',updatedAt:serverTimestamp()}));
+  await Promise.all([saveSystemFeature('attendanceEnabled',true,'A001',admin),saveSystemFeature('broadcastsEnabled',false,'A001',admin)]);
+  data=(await getDoc(doc(monitor,'systemSettings','features'))).data();
+  assert.equal(data.attendanceEnabled,true);assert.equal(data.broadcastsEnabled,false);assert.equal(data.dispatchEnabled,false);
+});
+
+test('formal cell service atomically writes selected record and audit; denies monitor and stale edits', async()=>{
+  const {updateFormalScheduleCell}=await moduleServer.ssrLoadModule('/lib/schedule-firestore.ts');
+  const admin=asRole('A001','admin'), monitor=asRole('D001','duty');
+  const record={id:'E001_2026-09-10_editor',employeeId:'E001',employeeName:'一般員工',date:'2026-09-10',scheduleCode:'夜O1',scheduleLabel:'夜O1',leaveType:''};
+  await assertSucceeds(setDoc(doc(admin,'scheduleRecords',record.id),record));
+  await assertFails(updateFormalScheduleCell(record,'慰','D001',monitor));
+  await assertSucceeds(updateFormalScheduleCell(record,'夜O4','A001',admin));
+  const audits=()=>getDocs(collection(admin,'scheduleAuditLogs'));
+  let items=(await audits()).docs.filter(doc=>doc.data().recordId===record.id);
+  assert.equal(items.length,1);assert.equal(items[0].data().before.scheduleCode,'夜O1');assert.equal(items[0].data().after.scheduleCode,'夜O4');
+  assert.equal((await getDoc(doc(admin,'scheduleRecords',record.id))).data().scheduleCode,'夜O4');
+  await assert.rejects(updateFormalScheduleCell(record,'病','A001',admin),/已被其他人修改/);
+  items=(await audits()).docs.filter(doc=>doc.data().recordId===record.id);assert.equal(items.length,1);
+});
 
 test('anonymous and inactive accounts cannot enter protected backend data', async () => {
   await assertFails(

@@ -27,6 +27,7 @@ import { getBroadcastRead, listActiveBroadcasts, recordBroadcastShown, type Broa
 import { getCurrentAnnouncement } from '../lib/announcements'
 import sourceSchedule from '../public/september-schedules.json'
 import { AdminConsole } from './admin-console'
+import { useSystemFeatures } from '../lib/system-features'
 import { EmployeePreSchedule } from './pre-schedule-employee'
 
 type ScheduleRow = { rowId: string; employeeId: string; name: string; title: string; group: string; area: string; shifts: string[] }
@@ -35,7 +36,6 @@ type Employee = { employeeId: string; name: string; title: string; role: 'employ
 type EmployeeProfile = { employeeId: string; name: string; title?: string; group?: string; area?: string }
 type PunchRecord = AttendanceRecord
 type Checkpoint = AttendanceLocation
-const attendanceEnabled = false
 const weekdays = ['二', '三', '四', '五', '六', '日', '一']
 const publicAssetUrl = (file: string) => `${import.meta.env.BASE_URL}${file.replace(/^\//, '')}`
 
@@ -44,6 +44,8 @@ export default function Home() {
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
   const [currentUser, setCurrentUser] = useState<Employee | null>(null)
+  const {features, loading:featuresLoading} = useSystemFeatures(Boolean(currentUser && !currentUser.mustChangePassword))
+  const attendanceEnabled = features.attendanceEnabled
   const [page, setPage] = useState('home')
   const [scheduleTab, setScheduleTab] = useState('mine')
   const [menuOpen, setMenuOpen] = useState(false)
@@ -100,9 +102,11 @@ export default function Home() {
   }, [currentUser?.employeeId])
 
   useEffect(() => {
-    if (!currentUser) return
-    void showEligibleBroadcast(currentUser).then(item => { if (item) setBroadcastPopup(item) })
-  }, [currentUser?.employeeId])
+    let cancelled = false
+    if (!currentUser || featuresLoading || !features.broadcastsEnabled) {setBroadcastPopup(null);return}
+    void showEligibleBroadcast(currentUser,()=>!cancelled).then(item => { if (item && !cancelled) setBroadcastPopup(item) })
+    return ()=>{cancelled=true}
+  }, [currentUser?.employeeId, featuresLoading, features.broadcastsEnabled])
 
   if (!authReady) return <main className="login-page"><p className="loading">正在確認登入狀態…</p></main>
   if (!currentUser) return <main className="login-page"><section className="login-card"><div className="login-bike"><BikeArtwork /></div><p className="eyebrow">員工登入</p><h1 className="login-brand"><span className="smile-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><circle cx="10" cy="11" r="2" fill="currentColor" /><circle cx="22" cy="11" r="2" fill="currentColor" /><path d="M8 19C10 27 22 27 24 19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" /></svg></span>微笑Bike</h1><label>員工編號<input autoComplete="username" placeholder="請使用本人員工編號登入" value={account} onChange={e => setAccount(e.target.value.toUpperCase())} /></label><label>密碼<input type="password" autoComplete="current-password" placeholder="首次登入密碼為編號" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && void signIn()} /></label><button className="primary full" disabled={signingIn} onClick={() => void signIn()}>{signingIn ? '登入中…' : '登入工作台'} <ChevronRight size={18} /></button>{notice && <p className="error">{notice}</p>}</section></main>
@@ -113,7 +117,7 @@ export default function Home() {
 
   const titles: Record<string, string> = { home: '工作總覽', notice: '公告', broadcasts: '廣播事項', 'dispatch-admin': '派工管理', 'broadcast-admin': '廣播管理', attendance: '打卡', checkpoints: '打卡點管理', geofence: '電子圍籬測試', schedule: '我的班表', dispatch: '派工單', pre: '預排班', leave: '假勤／特休', profile: '個人資料', employees: '員工管理', integrations: '尚未串接' }
   const go = (target: string) => { setPage(target); setMenuOpen(false) }
-  return <div className="app-shell" data-page={page}>{menuOpen && <button className="mobile-backdrop" aria-label="關閉選單" onClick={() => setMenuOpen(false)} />}<aside className={menuOpen ? 'sidebar open' : 'sidebar'}><div className="logo"><span>調</span><div><strong>調度工作台</strong></div><button className="drawer-close" aria-label="關閉選單" onClick={() => setMenuOpen(false)}><X size={20} /></button></div><nav><Nav label="工作總覽" active={page === 'home'} icon={<Coffee size={18} />} onClick={() => go('home')} />{attendanceEnabled && <Nav label="打卡" active={page === 'attendance'} icon={<CheckCircle2 size={18} />} onClick={() => go('attendance')} />}<Nav label="公告" active={page === 'notice'} icon={<Megaphone size={18} />} onClick={() => go('notice')} /><Nav label="廣播事項" active={page === 'broadcasts'} icon={<Megaphone size={18} />} onClick={() => go('broadcasts')} /><Nav label="我的班表" active={page === 'schedule'} icon={<CalendarDays size={18} />} onClick={() => go('schedule')} /><Nav label="派工單" active={page === 'dispatch'} icon={<ClipboardList size={18} />} onClick={() => go('dispatch')} /><Nav label="預排班" active={page === 'pre'} icon={<Clock3 size={18} />} onClick={() => go('pre')} /><Nav label="假勤／特休" active={page === 'leave'} icon={<ClipboardPlus size={18} />} onClick={() => go('leave')} /><Nav label="個人資料" active={page === 'profile'} icon={<UserRound size={18} />} onClick={() => go('profile')} />{(currentUser.role === 'admin' || currentUser.role === 'duty') && <Nav label={currentUser.role === 'admin' ? '管理後台' : '監控後台'} active={false} icon={<ShieldCheck size={18} />} onClick={() => go('admin-console')} />}<Nav label="尚未串接" active={page === 'integrations'} icon={<Clock3 size={18} />} onClick={() => go('integrations')} /></nav><button className="logout" onClick={() => void signOut(auth)}><LogOut size={17} />登出</button></aside><main className="workspace"><header className="topbar"><button className="menu-button" aria-label="開啟選單" onClick={() => setMenuOpen(true)}><Menu size={22} /></button><div><p className="eyebrow">2026 年 9 月</p><h2>{titles[page]}</h2></div><div className="profile-chip"><span>{currentUser.name}<small>{account} · {currentUser.role === 'admin' ? '管理員' : '調度專員'}</small></span></div></header><section className="content">{page === 'home' && <HomeView onAction={notify} name={currentUser.name} onGo={go} />}{page === 'notice' && <EmptyNotice />}{page === 'broadcasts' && <BroadcastList employeeId={account} />}{page === 'attendance' && attendanceEnabled && <AttendanceView employeeId={account} employeeName={currentUser.name} scheduleData={scheduleData} />}{page === 'checkpoints' && currentUser.role === 'admin' && <CheckpointAdmin />}{page === 'geofence' && currentUser.role === 'admin' && <GeofenceTest />}{page === 'integrations' && <IntegrationsView />}{page === 'schedule' && <ScheduleView tab={scheduleTab} setTab={setScheduleTab} data={scheduleData} employeeId={account} />}{page === 'dispatch' && <FirestoreDispatchView employeeId={account} isDuty={currentUser.role === 'admin' || currentUser.role === 'duty'} />}{page === 'pre' && <PreSchedule onSave={() => notify('預排班已儲存為草稿')} />}{page === 'leave' && <LeaveView onAction={notify} />}{page === 'profile' && <ProfileView employee={currentUser} />}</section></main>{notice && <div className="toast">✓ {notice}</div>}{broadcastPopup && <BroadcastModal item={broadcastPopup} onClose={() => setBroadcastPopup(null)} />}</div>
+  return <div className="app-shell" data-page={page}>{menuOpen && <button className="mobile-backdrop" aria-label="關閉選單" onClick={() => setMenuOpen(false)} />}<aside className={menuOpen ? 'sidebar open' : 'sidebar'}><div className="logo"><span>調</span><div><strong>調度工作台</strong></div><button className="drawer-close" aria-label="關閉選單" onClick={() => setMenuOpen(false)}><X size={20} /></button></div><nav><Nav label="工作總覽" active={page === 'home'} icon={<Coffee size={18} />} onClick={() => go('home')} />{attendanceEnabled && <Nav label="打卡" active={page === 'attendance'} icon={<CheckCircle2 size={18} />} onClick={() => go('attendance')} />}<Nav label="公告" active={page === 'notice'} icon={<Megaphone size={18} />} onClick={() => go('notice')} />{features.broadcastsEnabled && <Nav label="廣播事項" active={page === 'broadcasts'} icon={<Megaphone size={18} />} onClick={() => go('broadcasts')} />}<Nav label="我的班表" active={page === 'schedule'} icon={<CalendarDays size={18} />} onClick={() => go('schedule')} />{features.dispatchEnabled && <Nav label="派工單" active={page === 'dispatch'} icon={<ClipboardList size={18} />} onClick={() => go('dispatch')} />}<Nav label="預排班" active={page === 'pre'} icon={<Clock3 size={18} />} onClick={() => go('pre')} /><Nav label="假勤／特休" active={page === 'leave'} icon={<ClipboardPlus size={18} />} onClick={() => go('leave')} /><Nav label="個人資料" active={page === 'profile'} icon={<UserRound size={18} />} onClick={() => go('profile')} />{(currentUser.role === 'admin' || currentUser.role === 'duty') && <Nav label={currentUser.role === 'admin' ? '管理後台' : '監控後台'} active={false} icon={<ShieldCheck size={18} />} onClick={() => go('admin-console')} />}<Nav label="尚未串接" active={page === 'integrations'} icon={<Clock3 size={18} />} onClick={() => go('integrations')} /></nav><button className="logout" onClick={() => void signOut(auth)}><LogOut size={17} />登出</button></aside><main className="workspace"><header className="topbar"><button className="menu-button" aria-label="開啟選單" onClick={() => setMenuOpen(true)}><Menu size={22} /></button><div><p className="eyebrow">2026 年 9 月</p><h2>{titles[page]}</h2></div><div className="profile-chip"><span>{currentUser.name}<small>{account} · {currentUser.role === 'admin' ? '管理員' : '調度專員'}</small></span></div></header><section className="content">{page === 'home' && <HomeView onAction={notify} name={currentUser.name} onGo={go} dispatchEnabled={features.dispatchEnabled} />}{((page==='dispatch'&&!features.dispatchEnabled)||(page==='broadcasts'&&!features.broadcastsEnabled)||(page==='attendance'&&!attendanceEnabled))&&<p className="loading">此功能尚未開放</p>}{page === 'notice' && <EmptyNotice />}{page === 'broadcasts' && features.broadcastsEnabled && <BroadcastList employeeId={account} />}{page === 'attendance' && attendanceEnabled && <AttendanceView employeeId={account} employeeName={currentUser.name} scheduleData={scheduleData} />}{page === 'checkpoints' && currentUser.role === 'admin' && <CheckpointAdmin />}{page === 'geofence' && currentUser.role === 'admin' && <GeofenceTest />}{page === 'integrations' && <IntegrationsView />}{page === 'schedule' && <ScheduleView tab={scheduleTab} setTab={setScheduleTab} data={scheduleData} employeeId={account} />}{page === 'dispatch' && features.dispatchEnabled && <FirestoreDispatchView employeeId={account} isDuty={currentUser.role === 'admin' || currentUser.role === 'duty'} />}{page === 'pre' && <PreSchedule onSave={() => notify('預排班已儲存為草稿')} />}{page === 'leave' && <LeaveView onAction={notify} />}{page === 'profile' && <ProfileView employee={currentUser} />}</section></main>{notice && <div className="toast">✓ {notice}</div>}{features.broadcastsEnabled && broadcastPopup && <BroadcastModal item={broadcastPopup} onClose={() => setBroadcastPopup(null)} />}</div>
 }
 
 function Nav({ label, icon, active, onClick }: { label: string; icon: React.ReactNode; active: boolean; onClick: () => void }) { return <button className={active ? 'nav-item active' : 'nav-item'} onClick={onClick}>{icon}<span>{label}</span></button> }
@@ -141,7 +145,7 @@ function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProf
   return { month: '2026-09', days, morning: rowsFor('morning'), night: rowsFor('night') }
 }
 
-async function showEligibleBroadcast(user: Employee): Promise<Broadcast | undefined> {
+async function showEligibleBroadcast(user: Employee, isCurrent = () => true): Promise<Broadcast | undefined> {
   try {
     const [broadcasts, monthSchedule] = await Promise.all([listActiveBroadcasts(), listMonthScheduleRecords(taipeiToday().slice(0, 7), user.employeeId)])
     const shiftGroups = new Set(monthSchedule.map(record => record.shiftType === 'morning' ? '早班' : '夜班'))
@@ -166,6 +170,7 @@ async function showEligibleBroadcast(user: Employee): Promise<Broadcast | undefi
     const last = read?.lastShownAt && typeof read.lastShownAt === 'object' && 'toDate' in read.lastShownAt ? taipeiDate((read.lastShownAt as { toDate: () => Date }).toDate()) : ''
     if (match.popupMode === 'once' && read) return
     if (match.popupMode === 'daily' && last === today) return
+    if (!isCurrent()) return
     await recordBroadcastShown({ broadcastId: match.id, employeeId: user.employeeId, shownCount: read?.shownCount ?? 0 })
     return match
   } catch { /* Broadcast availability must not block app startup. */ return undefined }
@@ -206,11 +211,11 @@ function BroadcastAdmin({ employeeId }: { employeeId: string }) {
 
 function BikeArtwork() { return <div className="bike-art"><img src={publicAssetUrl('youbike-cutout.png')} alt="橘白色腳踏車" /></div> }
 
-function HomeView({ onAction, onGo }: { onAction: (text: string) => void; name: string; onGo: (page: string) => void }) {
+function HomeView({ onAction, onGo, dispatchEnabled = true }: { onAction: (text: string) => void; name: string; onGo: (page: string) => void; dispatchEnabled?: boolean }) {
   const [today, setToday] = useState(taipeiToday)
   useEffect(() => { const timer = window.setInterval(() => setToday(taipeiToday()), 30000); return () => window.clearInterval(timer) }, [])
   const [year, month, day] = today.split('-').map(Number)
-  return <section className="home-overview"><header><p className="home-date">{year}年{month}月{day}日</p><h1>工作總覽</h1></header><div className="home-actions"><button onClick={() => onGo('schedule')}><CalendarDays size={25} /><strong>我的班表</strong><small>查看本月班表</small></button><button onClick={() => onGo('dispatch')}><ClipboardList size={25} /><strong>派工單</strong><small>查看今日派工</small></button><button onClick={() => onAction('請假申請尚未串接後端')}><ClipboardPlus size={25} /><strong>請假申請</strong><small>病假、事假、特休申請</small></button></div></section>
+  return <section className="home-overview"><header><p className="home-date">{year}年{month}月{day}日</p><h1>工作總覽</h1></header><div className="home-actions"><button onClick={() => onGo('schedule')}><CalendarDays size={25} /><strong>我的班表</strong><small>查看本月班表</small></button>{dispatchEnabled && <button onClick={() => onGo('dispatch')}><ClipboardList size={25} /><strong>派工單</strong><small>查看今日派工</small></button>}<button onClick={() => onAction('請假申請尚未串接後端')}><ClipboardPlus size={25} /><strong>請假申請</strong><small>病假、事假、特休申請</small></button></div></section>
 }
 
 function todayWorkContext(data: ScheduleData | null, employeeId: string) {
@@ -358,6 +363,7 @@ function dispatchBlockFrontOrder(left: DispatchBlock, right: DispatchBlock) {
 
 function FirestoreDispatchView({ isDuty }: { employeeId: string; isDuty: boolean }) {
   const [date, setDate] = useState(taipeiToday)
+  const dispatchRef=useRef<HTMLDivElement>(null)
   const [shift, setShift] = useState<'night' | 'day'>('night')
   const [blocks, setBlocks] = useState<DispatchBlock[]>([])
   const [schedules, setSchedules] = useState<ScheduleRecord[]>([])
@@ -408,10 +414,11 @@ function FirestoreDispatchView({ isDuty }: { employeeId: string; isDuty: boolean
       shift,
     }).blocks
   }, [blocks, isPreview, schedules, profiles, shift, date, dutyLoading, dutyError])
-  const visible = displayBlocks.filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0)).sort(dispatchBlockFrontOrder)
+  const visible = useMemo(()=>displayBlocks.filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0)).sort(dispatchBlockFrontOrder),[displayBlocks,shift,isDuty])
+  const jumpAreas=useMemo(()=>{const areas=new Map();for(const block of visible){if(block.areaCode&&!areas.has(block.areaCode))areas.set(block.areaCode,{key:block.id,areaCode:block.areaCode,label:block.areaName || `${block.areaCode}區`});}return [...areas.values()]},[visible])
   const dispatchLoading = blocksLoading || (dutyLoading && !displayBlocks.length)
   const dispatchError = blocksError || (dutyError ? '班表或員工資料載入失敗，無法產生自動派工' : '')
-  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div></div>{dutyLoading ? <div className="duty-staff-status">值班資訊載入中…</div> : dutyError ? <div className="result-card result-warning">{dutyError}</div> : <DutyStaffPanel staff={dutyStaff} shift={shift} />}{dispatchError && <div className="result-card result-warning">{dispatchError}</div>}{dispatchLoading ? <p className="loading">派工資料載入中…</p> : !dispatchError && !visible.length ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid">{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id}><header><span>{block.areaName || block.areaCode || '特殊派工'}</span></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} /><b>駐點</b><DispatchBlockPeople people={block.stations} /><b>工作重點</b><span>{block.workFocus || '—'}</span></div></article>)}</div>}</>
+  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div><AreaJumpDropdown areas={jumpAreas} group={`${date}-${shift}`} scope="front-dispatch" scrollTarget={dispatchRef} scrollMode="page" /></div>{dutyLoading ? <div className="duty-staff-status">值班資訊載入中…</div> : dutyError ? <div className="result-card result-warning">{dutyError}</div> : <DutyStaffPanel staff={dutyStaff} shift={shift} />}{dispatchError && <div className="result-card result-warning">{dispatchError}</div>}{dispatchLoading ? <p className="loading">派工資料載入中…</p> : !dispatchError && !visible.length ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid" ref={dispatchRef}>{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id} id={scheduleSectionId('front-dispatch',`${date}-${shift}`,block.id)} data-area-code={block.areaCode || undefined}><header><span>{block.areaName || block.areaCode || '特殊派工'}</span></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} /><b>駐點</b><DispatchBlockPeople people={block.stations} /><b>工作重點</b><span>{block.workFocus || '—'}</span></div></article>)}</div>}</>
 }
 
 const formatBlockPeople = (people: DispatchBlockPerson[]) => people.map(person => `${person.employeeId} ${person.employeeName}`.trim()).join('\n')

@@ -57,6 +57,8 @@
 .area-jump-panel p {
   margin: 8px;
 }
+.dispatch-toolbar .area-jump-dropdown { margin:0; align-self:end; }
+.dispatch-card[id] { scroll-margin-top:80px; }
 @media (max-width: 760px) {
   .app-shell[data-page='schedule'] .area-jump-dropdown + .matrix-wrap {
     max-height: calc(100dvh - 184px);

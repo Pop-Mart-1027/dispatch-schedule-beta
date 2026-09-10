@@ -30,7 +30,29 @@ fixture.monthSchedules = Array.from({ length: 30 }, (_, index) => employees.map(
 })).flat()
 const virtual = {
   'test:firestore': `export * from 'firebase/firestore';
+    export function onSnapshot(ref,next) {
+      if(ref.path === 'systemSettings/features') {
+        window.featureListeners ||= new Set(); window.featureListeners.add(next);
+        queueMicrotask(()=>next({exists:()=>!!window.features,data:()=>window.features}));
+        return ()=>window.featureListeners.delete(next);
+      }
+      queueMicrotask(()=>next({exists:()=>true,data:()=>({active:true})}));return ()=>{};
+    }
+    export async function runTransaction(_db,handler) {
+      if(window.failSettings)throw Error('test denied');
+      let value;
+      await handler({get:async()=>({exists:()=>!!window.features,data:()=>window.features}),
+        update:(_ref,data)=>{value={...window.features,...data}},set:(_ref,data)=>{value=data}});
+      window.features=value; window.settingsWrites=(window.settingsWrites||0)+1;
+      window.featureListeners?.forEach(next=>next({exists:()=>true,data:()=>window.features}));
+    }
+    export async function getDoc() {return {exists:()=>!!window.scheduleSetting,data:()=>window.scheduleSetting};}
+    export async function setDoc(_ref,data) {window.scheduleSetting={...data,updatedAt:{toDate:()=>new Date()}};}
     export async function getDocs() { return { docs: window.fixture.employees.map(employee => ({ id: employee.employeeId, data: () => employee })) } }`,
+  'test:auth': `export * from 'firebase/auth'; export function onAuthStateChanged(_auth,callback) {queueMicrotask(()=>callback({uid:'96504'}));return ()=>{};}`,
+  'test:broadcasts': `export * from '/lib/broadcasts.ts';
+    export async function listActiveBroadcasts(){window.broadcastLoads=(window.broadcastLoads||0)+1;return window.testBroadcasts||[];}
+    export async function getBroadcastRead(){return null;} export async function recordBroadcastShown(){}`,
   'test:blocks': `export * from '/lib/dispatch-blocks-firestore.ts';
     const denyWrite = () => { window.writeAttempts++; throw new Error('Front preview must remain read-only') };
     export const updateDispatchBlock = denyWrite, writeDispatchBlockAudit = denyWrite, saveDispatchPreviewAsFormal = denyWrite;
@@ -40,6 +62,12 @@ const virtual = {
     }
     export async function listDispatchBlockTemplate() { window.templateReads++; return { sourceDate: '2026-09-09', blocks: window.fixture.template } }`,
   'test:schedules': `export * from '/lib/schedule-firestore.ts';
+    export async function updateFormalScheduleCell(record,code,modifiedBy) {
+      window.scheduleEdits ||= [];
+      window.scheduleEdits.push({recordId:record.id,employeeId:record.employeeId,date:record.date,before:record.scheduleCode,after:code,modifiedBy});
+      const target=window.fixture.monthSchedules.find(item=>item.employeeId===record.employeeId&&item.date===record.date);
+      target.scheduleCode=code;
+    }
     export async function listMonthScheduleRecords() { return window.fixture.monthSchedules }
     export async function listScheduleRecords(date) {
       await new Promise(resolve => setTimeout(resolve, window.delays?.[date] || 0));
@@ -47,16 +75,21 @@ const virtual = {
     }`,
   'test:functions': `export * from 'firebase/functions';
     export const httpsCallable = (_service, name) => async data => {
+      if (name === 'getMyProfile') return {data:{employeeId:'96504',name:'涂佑葦',role:'employee',active:true,mustChangePassword:false}};
       if (name !== 'syncDispatchBlocks') throw new Error('Unexpected callable');
       window.importCalls.push(data);
       window.formalByDate = { ...window.formalByDate, [data.date]: window.fixture.template.map(block => ({...block, date: data.date, modifiedBy: 'manual-import'})) };
       return {data: {date: data.date, dayBlocks: 89, nightBlocks: 94, conflicts: 0}};
     };`,
   'test:entry': `import React from 'react'; import { createRoot } from 'react-dom/client';
-    import { FirestoreDispatchView, ScheduleMatrix, ScheduleView, scheduleRecordsToData, DutyStaffPanel, HomeView } from '/app/page.tsx';
-    import { ScheduleManager, DutyColumn, DispatchManager, Dashboard } from '/app/admin-console.tsx';
+    import Home, { FirestoreDispatchView, ScheduleMatrix, ScheduleView, scheduleRecordsToData, DutyStaffPanel, HomeView } from '/app/page.tsx';
+    import { ScheduleManager, DutyColumn, DispatchManager, Dashboard, PreScheduleSettings } from '/app/admin-console.tsx';
+    import {SystemFeatureSettings} from '/app/system-feature-settings.tsx';
     import '/app/globals.css';
     const root = createRoot(document.getElementById('root'));
+    window.showFullApp = ()=>root.render(React.createElement(Home));
+    window.showSettings = ()=>root.render(React.createElement('div',{className:'admin-console'},React.createElement('aside',{className:'admin-sidebar'},'調度工作台'),React.createElement('main',{className:'admin-main'},React.createElement(SystemFeatureSettings,{employeeId:'A001'}))));
+    window.showPreSettings = ()=>root.render(React.createElement('div',{className:'admin-console'},React.createElement(PreScheduleSettings,{employeeId:'A001'})));
     function ScheduleShell({children}) {
       return React.createElement('div', {className:'app-shell', 'data-page':'schedule'},
         React.createElement('aside', {className:'sidebar'}),
@@ -64,7 +97,7 @@ const virtual = {
           React.createElement('header', {className:'topbar'}, '班表'),
           React.createElement('section', {className:'content'}, children)));
     }
-    window.showDispatch = () => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(FirestoreDispatchView, {employeeId: 'test', isDuty: false})));
+    window.showDispatch = () => root.render(React.createElement('div', {className: 'app-shell','data-page':'dispatch'},React.createElement('main',{className:'workspace'},React.createElement('section',{className:'content'}, React.createElement(FirestoreDispatchView, {employeeId: 'test', isDuty: false})))));
     window.showHome = () => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(HomeView, {name: '登入人員', onAction: () => {}, onGo: () => {}})));
     window.showFrontDuty = (shift, staff) => root.render(React.createElement(DutyStaffPanel, {shift, staff}));
     window.showManager = () => root.render(React.createElement('div', {className: 'admin-console'}, React.createElement(DispatchManager, {employeeId: 'test'})));
@@ -88,19 +121,23 @@ const virtual = {
     window.showDispatch();`,
 }
 const server = await createServer({
+  resolve: {alias:{'@':process.cwd()}},
   configFile: false, logLevel: 'error', esbuild: { jsx: 'automatic' },
   plugins: [{
     name: 'front-readonly-fixture', enforce: 'pre',
     resolveId(id) { if (id in virtual) return '\0' + id + '.tsx' },
     load(id) { if (id.startsWith('\0test:')) return virtual[id.slice(1, -4)] },
     transform(code, id) {
+      if(id.replaceAll('\\', '/').endsWith('/lib/system-features.ts')) return code.replace("from 'firebase/firestore'", "from 'test:firestore'");
       const admin = id.replaceAll('\\', '/').endsWith('/app/admin-console.tsx')
       if (!admin && !id.replaceAll('\\', '/').endsWith('/app/page.tsx')) return
       return code.replace("from 'firebase/firestore'", "from 'test:firestore'")
+        .replace("from 'firebase/auth'", "from 'test:auth'")
+        .replace("from '../lib/broadcasts'", "from 'test:broadcasts'")
         .replace("from 'firebase/functions'", "from 'test:functions'")
         .replace("from '../lib/dispatch-blocks-firestore'", "from 'test:blocks'")
-        .replace("from '../lib/schedule-firestore'", "from 'test:schedules'")
-        + (admin ? '\nexport { ScheduleManager, DutyColumn, DispatchManager, Dashboard };' : '\nexport { FirestoreDispatchView, ScheduleMatrix, ScheduleView, scheduleRecordsToData, DutyStaffPanel, HomeView };')
+        .replaceAll("from '../lib/schedule-firestore'", "from 'test:schedules'")
+        + (admin ? '\nexport { ScheduleManager, DutyColumn, DispatchManager, Dashboard, PreScheduleSettings };' : '\nexport { FirestoreDispatchView, ScheduleMatrix, ScheduleView, scheduleRecordsToData, DutyStaffPanel, HomeView };')
     },
     configureServer(server) {
       server.middlewares.use('/preview-test', async (_req, res) => {
@@ -197,12 +234,15 @@ test('long schedule code occupies at most two lines without break-all', async ()
   })
   assert.ok(layout.lines <= 2)
   assert.notEqual(layout.wordBreak, 'break-all')
+  assert.equal(await cell.evaluate(el=>getComputedStyle(el).cursor),'default');
+  assert.equal(await cell.evaluate(el=>getComputedStyle(el).caretColor),'rgba(0, 0, 0, 0)');
+  assert.equal(await page.locator('.schedule-matrix input,.schedule-matrix textarea,.schedule-matrix [contenteditable]').count(),0);
   console.log('府夜21-01 rendered lines', layout.lines)
 })
 
 test('admin source-group table scrolls within the viewport and retains pinned header/columns', async () => {
   await page.evaluate(() => window.showAdminSchedule())
-  await page.waitForFunction(() => document.querySelectorAll('.admin-schedule tbody tr[data-employee-id]').length === 597)
+  await page.waitForFunction(() => document.querySelectorAll('.admin-schedule tbody tr[data-employee-id]').length === 592)
   const measure = () => page.locator('.admin-schedule-wrap').evaluate(wrap => {
     const table = wrap.querySelector('table')
     return {
@@ -220,6 +260,8 @@ test('admin source-group table scrolls within the viewport and retains pinned he
   assert.equal(before.overflowX, 'scroll')
   assert.deepEqual(before.widths.slice(0, 3), [130, 75, 90])
   assert.ok(before.widths.slice(3).every(width => width === 60))
+  const sizes=await page.locator('.admin-schedule-page .admin-page-toolbar').evaluate(el=>[...el.querySelectorAll('.area-jump-dropdown summary,.schedule-group-switch button,input')].map(e=>({height:e.getBoundingClientRect().height,radius:getComputedStyle(e).borderRadius,font:getComputedStyle(e).fontSize,padding:getComputedStyle(e).padding,border:getComputedStyle(e).borderWidth,bottom:e.getBoundingClientRect().bottom})));
+  assert.ok(sizes.every(size=>JSON.stringify(size)===JSON.stringify(sizes[0])),JSON.stringify(sizes));
   await page.locator('.admin-schedule-wrap').evaluate(wrap => { wrap.scrollTop = 1000; wrap.scrollLeft = wrap.scrollWidth })
   const after = await measure()
   assert.ok(Math.abs(after.headTop - before.headTop) <= 1)
@@ -283,7 +325,7 @@ test('front source sections are unique; bounded area dropdown scrolls without fi
 
 test('formal admin matrix shares source sections; navigation preserves search, month, and readonly cells', async () => {
   await page.evaluate(() => window.showAdminSchedule());
-  await page.waitForFunction(() => document.querySelectorAll('.admin-schedule tr[data-employee-id]').length === 597);
+  await page.waitForFunction(() => document.querySelectorAll('.admin-schedule tr[data-employee-id]').length === 592);
   await assertScheduleNavigation('.admin-schedule', '.admin-schedule-wrap', 'day');
   await page.getByRole('button', {name:'大小夜班',exact:true}).click();
   await assertScheduleNavigation('.admin-schedule', '.admin-schedule-wrap', 'night');
@@ -295,23 +337,34 @@ test('formal admin matrix shares source sections; navigation preserves search, m
   await page.locator('.area-jump-dropdown summary').click();
   assert.deepEqual(await page.locator('.area-jump-panel button').allTextContents(), ['O1區']);
   await page.getByPlaceholder('員編或姓名').fill('');
-  assert.equal(await page.locator('.admin-schedule tr[data-employee-id]').count(), 153);
+  assert.equal(await page.locator('.admin-schedule tr[data-employee-id]').count(), 158);
   assert.equal(await page.evaluate(() => window.writeAttempts), 0);
   assert.deepEqual(errors, []);
 });
 
-test('admin editing still targets the selected employee/date after area navigation; cancel makes no write', async () => {
-  await page.evaluate(() => window.showAdminSchedule(true));
+test('admin cell editor selects existing leave/area codes, confirms saves and cancels without browser prompt', async () => {
+  await page.evaluate(() => {window.scheduleEdits=[];window.showAdminSchedule(true)});
   await page.getByPlaceholder('員編或姓名').fill('96504');
-  const button = page.locator('.admin-schedule tr[data-employee-id="96504"] td[data-date-column] button').nth(8);
-  assert.equal(await button.isEnabled(), true);
-  const prompt = page.waitForEvent('dialog');
-  const click = button.click();
-  const dialog = await prompt;
-  assert.equal(dialog.type(), 'prompt');
-  assert.match(dialog.message(), /96504 涂佑葦\n2026-09-09 班別/);
-  await dialog.dismiss(); await click;
-  assert.equal(await page.evaluate(() => window.writeAttempts), 0);
+  const button=page.locator('.admin-schedule tr[data-employee-id="96504"] td[data-date-column] button').nth(8);
+  await button.click();
+  const editor=page.getByRole('dialog');
+  await editor.waitFor();
+  assert.equal(await editor.locator('input,textarea,[contenteditable]').count(),0);
+  await editor.getByRole('button',{name:'慰',exact:true}).click();
+  await editor.getByRole('button',{name:'取消',exact:true}).click();
+  assert.equal(await page.evaluate(()=>window.scheduleEdits.length),0);
+  await button.click();
+  await editor.getByRole('tab',{name:'區域',exact:true}).click();
+  await editor.getByRole('button',{name:'O4',exact:true}).click();
+  await editor.getByRole('button',{name:'夜O4',exact:true}).click();
+  await page.screenshot({path:'output/schedule-cell-editor-1920.png'});
+  await editor.getByRole('button',{name:'儲存修改',exact:true}).click();
+  assert.equal(await page.evaluate(()=>window.scheduleEdits.length),0);
+  await editor.getByRole('button',{name:'確認儲存',exact:true}).click();
+  await editor.waitFor({state:'hidden'});
+  assert.equal(await button.textContent(),'夜O4');
+  assert.deepEqual(await page.evaluate(()=>window.scheduleEdits.map(({employeeId,date,after})=>({employeeId,date,after}))),[{employeeId:'96504',date:'2026-09-09',after:'夜O4'}]);
+  assert.equal(await page.evaluate(()=>window.writeAttempts),0);
 });
 
 test('monitor display uses one person per populated row without empty city placeholders', async () => {
@@ -423,3 +476,81 @@ test('pending assignments stay collapsed, open a bounded list, and hide when zer
   assert.equal(await page.evaluate(() => window.writeAttempts), 0)
   assert.deepEqual(await page.evaluate(() => window.importCalls), [])
 })
+
+test('dispatch shares bounded area navigation without filtering or reordering cards',async()=>{
+  await page.reload();await page.evaluate(()=>window.showDispatch());
+  await page.waitForSelector('.dispatch-card .person');
+  for(const shift of ['夜班','早班']) {
+    await page.getByRole('button',{name:shift,exact:true}).click();
+    const cards=await page.locator('.dispatch-card').evaluateAll(elements=>elements.map(el=>el.id));
+    const codes=await page.locator('.dispatch-card[data-area-code]').evaluateAll(elements=>[...new Set(elements.map(el=>el.dataset.areaCode))]);
+    await page.locator('.area-jump-dropdown summary').click();
+    assert.equal(await page.locator('.area-jump-panel button').count(),codes.length);
+    const firstTarget=await page.locator('.dispatch-card[data-area-code="O1"]').first().getAttribute('id');
+    await page.locator('.area-jump-panel button').filter({hasText:/O1/}).first().click();
+    assert.equal(await page.locator('.area-jump-dropdown').getAttribute('open'),null);
+    assert.ok(await page.locator(`[id="${firstTarget}"]`).evaluate(el=>Math.abs(el.getBoundingClientRect().top-80)<3));
+    assert.deepEqual(await page.locator('.dispatch-card').evaluateAll(elements=>elements.map(el=>el.id)),cards);
+  }
+  assert.equal(await page.evaluate(()=>window.writeAttempts),0);
+});
+
+test('system switches animate, persist, require dispatch confirmation and retain state on failure',async()=>{
+  await page.evaluate(()=>{window.features=undefined;window.settingsWrites=0;window.showSettings()});
+  const attendance=page.getByRole('switch',{name:'打卡備案',exact:true});
+  await attendance.waitFor();
+  await page.waitForFunction(()=>!document.querySelector('[role=switch]').hasAttribute('disabled'));
+  assert.equal(await attendance.getAttribute('aria-checked'),'false');
+  const off=await attendance.evaluate(el=>({color:getComputedStyle(el).backgroundColor,transform:getComputedStyle(el.firstElementChild).transform,transition:getComputedStyle(el.firstElementChild).transitionDuration}));
+  assert.equal(off.color,'rgb(199, 51, 59)');assert.equal(off.transition,'0.22s');
+  await attendance.click();await page.getByText('打卡備案已儲存',{exact:true}).waitFor();
+  await page.waitForFunction(()=>getComputedStyle(document.querySelector('[role=switch]')).backgroundColor==='rgb(33, 132, 72)');
+  assert.notEqual(await attendance.evaluate(el=>getComputedStyle(el.firstElementChild).transform),off.transform);
+  await page.getByRole('switch',{name:'廣播功能',exact:true}).click();await page.getByText('廣播功能已儲存',{exact:true}).waitFor();
+  await page.getByRole('switch',{name:'正式派工',exact:true}).click();
+  await page.getByRole('dialog').getByRole('button',{name:'取消',exact:true}).click();
+  assert.equal(await page.evaluate(()=>window.features.dispatchEnabled),true);
+  await page.getByRole('switch',{name:'正式派工',exact:true}).click();
+  await page.getByRole('dialog').getByRole('button',{name:'確認變更',exact:true}).click();
+  await page.getByText('正式派工已儲存',{exact:true}).waitFor();
+  await page.evaluate(()=>{window.failSettings=true});
+  await page.getByRole('switch',{name:'廣播功能',exact:true}).click();
+  await page.getByText('設定儲存失敗，請確認管理員權限或網路。',{exact:true}).waitFor();
+  assert.equal(await page.getByRole('switch',{name:'廣播功能',exact:true}).getAttribute('aria-checked'),'false');
+  await page.evaluate(()=>{window.failSettings=false;window.showHome()});await page.evaluate(()=>window.showSettings());
+  await page.waitForFunction(()=>document.querySelector('[aria-label="正式派工"]').getAttribute('aria-checked')==='false');
+  await page.waitForFunction(()=>getComputedStyle(document.querySelector('[aria-label="打卡備案"]')).backgroundColor==='rgb(33, 132, 72)');
+  await page.screenshot({path:'output/system-feature-switches-1920.png'});
+});
+
+test('persisted flags control real employee navigation, open pages and broadcast popups',async()=>{
+  await page.evaluate(()=>{window.broadcastLoads=0;window.testBroadcasts=[{id:'flag-test',title:'測試即時廣播',content:'測試',type:'general',targetType:'all',targetValues:[],active:true,popupMode:'always'}];window.showFullApp()});
+  await page.waitForSelector('.home-overview');
+  assert.equal(await page.locator('.sidebar').getByRole('button',{name:'打卡',exact:true}).count(),1);
+  assert.equal(await page.locator('.sidebar').getByRole('button',{name:'廣播事項',exact:true}).count(),0);
+  assert.equal(await page.locator('.sidebar').getByRole('button',{name:'派工單',exact:true}).count(),0);
+  assert.equal(await page.locator('.home-actions').getByText('派工單',{exact:true}).count(),0);
+  assert.equal(await page.evaluate(()=>window.broadcastLoads),0);
+  await page.evaluate(()=>{window.features={...window.features,attendanceEnabled:false,broadcastsEnabled:true,dispatchEnabled:true};window.featureListeners.forEach(next=>next({data:()=>window.features}));});
+  await page.getByText('測試即時廣播',{exact:true}).waitFor();
+  await page.evaluate(()=>{window.features={...window.features,broadcastsEnabled:false};window.featureListeners.forEach(next=>next({data:()=>window.features}));});
+  await page.getByText('測試即時廣播',{exact:true}).waitFor({state:'hidden'});
+  assert.equal(await page.locator('.sidebar').getByRole('button',{name:'打卡',exact:true}).count(),0);
+  await page.locator('.sidebar').getByRole('button',{name:'派工單',exact:true}).click();
+  await page.waitForSelector('.dispatch-card');
+  await page.evaluate(()=>{window.features={...window.features,dispatchEnabled:false};window.featureListeners.forEach(next=>next({data:()=>window.features}));});
+  await page.getByText('此功能尚未開放',{exact:true}).waitFor();
+  assert.equal(await page.locator('.dispatch-card').count(),0);
+});
+
+test('pre-schedule save text is readable and announcement uses 12 MB without changing its limit',async()=>{
+  await page.evaluate(()=>window.showPreSettings());
+  const button=page.getByRole('button',{name:'儲存時間',exact:true});
+  const style=await button.evaluate(el=>({color:getComputedStyle(el).color,background:getComputedStyle(el).backgroundColor,opacity:getComputedStyle(el).opacity}));
+  assert.notEqual(style.color,style.background);assert.equal(style.opacity,'1');
+  await button.click();await page.getByRole('status').filter({hasText:'已儲存'}).waitFor();
+  assert.match(await page.getByRole('status').textContent(),/最後儲存時間/);
+  assert.notEqual(await page.getByRole('status').evaluate(el=>getComputedStyle(el).color),'rgba(0, 0, 0, 0)');
+  assert.match(readFileSync('app/admin-console.tsx','utf8'),/支援一般圖片格式，單檔上限 12 MB；系統會自動等比例縮圖，前台不裁切內容。/);
+  assert.match(readFileSync('lib/announcements.ts','utf8'),/12 \* 1024 \* 1024/);
+});
