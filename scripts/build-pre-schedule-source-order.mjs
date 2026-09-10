@@ -10,11 +10,22 @@ for (const [key, group, sheet] of [
   ['morning', 'day', '9月日班'],
   ['night', 'night', '9月夜班'],
 ]) {
+  let headerSection = '';
   for (const [index, row] of source[key].entries()) {
     if (!row.employeeId) continue;
-    const category = /調度主任|調度副主任|調度領班/.test(row.title)
+    const isDirector = ['調度主任', '調度副主任'].includes(row.title.trim());
+    // The original leading header block has no group text on each employee row.
+    // Keep its source context; a named region always wins over any foreman title.
+    if (isDirector) headerSection = '單位主官';
+    else if (!row.group && !row.area && row.title === '調度監控')
+      headerSection = '調度監控';
+    const section = isDirector
+      ? '單位主官'
+      : row.group || (row.area ? `${row.area}區` : headerSection || '其他人員');
+    if (row.group || row.area) headerSection = '';
+    const category = isDirector
       ? 'supervisor'
-      : /監控/.test(row.group) || /調度監控|實習領班/.test(row.title)
+      : /監控/.test(section)
         ? 'monitor'
         : 'area';
     const item = {
@@ -23,17 +34,7 @@ for (const [key, group, sheet] of [
       sourceSheet: sheet,
       sourceRow: Number(row.rowId.split('-').at(-1)),
       sourceOrder: index,
-      section:
-        category === 'supervisor'
-          ? '單位主官'
-          : category === 'monitor'
-            ? '調度監控'
-            : row.group ||
-              (row.area
-                ? `${row.area}區`
-                : row.title.includes('PT')
-                  ? '支援人力'
-                  : '其他人員'),
+      section,
       category,
     };
     const old = people.get(row.employeeId);
@@ -41,9 +42,7 @@ for (const [key, group, sheet] of [
     // header staff retain the first source; a named night team retains its placement.
     if (
       !old ||
-      (old.sourceSheet !== sheet &&
-        !!row.group.trim() &&
-        group === 'night')
+      (old.sourceSheet !== sheet && !!row.group.trim() && group === 'night')
     )
       people.set(row.employeeId, item);
   }

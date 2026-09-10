@@ -1145,7 +1145,7 @@ function ScheduleManager({
   const sections = useMemo(() => scheduleSections(rows, group, row => ({
     ...row.employee, employeeId: row.id, shiftType: row.employee?.shiftType || row.items[0]?.shiftType,
   })), [rows, group]);
-  const areas = useMemo(() => sections.filter(section => section.areaCode), [sections]);
+  const areas = sections;
   const [editing, setEditing] = useState<{record:ScheduleRecord; person:EmployeeRecord} | null>(null);
   const catalog = useMemo(()=>buildScheduleEditCatalog(records,group),[records,group]);
   const edit = (record:ScheduleRecord | undefined, person:EmployeeRecord | undefined) => {

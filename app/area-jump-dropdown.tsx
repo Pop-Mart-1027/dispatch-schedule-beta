@@ -1,5 +1,6 @@
 'use client';
-import { useEffect, useRef, type RefObject } from 'react';
+import { useEffect, useMemo, useRef, type RefObject } from 'react';
+import { getAreaJumpOptions } from '../functions/schedule-display.mjs';
 import './area-jump-dropdown.css';
 
 export type JumpArea = { key: string; label: string; areaCode: string | null };
@@ -20,6 +21,7 @@ export function AreaJumpDropdown({
   scrollMode?: 'container' | 'page';
 }) {
   const ref = useRef<HTMLDetailsElement>(null);
+  const options = useMemo(() => getAreaJumpOptions(areas), [areas]);
   useEffect(() => {
     if (ref.current) ref.current.open = false;
   }, [group, areas]);
@@ -75,8 +77,8 @@ export function AreaJumpDropdown({
         跳到區域 <span aria-hidden="true">▼</span>
       </summary>
       <div className="area-jump-panel" aria-label="區域跳轉選單">
-        {areas.length ? (
-          areas.map((area) => (
+        {options.length ? (
+          options.map((area) => (
             <button key={area.key} type="button" onClick={() => jump(area.key)}>
               {area.label}
             </button>

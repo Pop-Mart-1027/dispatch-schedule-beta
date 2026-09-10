@@ -280,7 +280,7 @@ function PersonalSchedule({ row, month }: { row: ScheduleRow | undefined; month:
 function ScheduleMatrix({ rows, days, group = 'day' }: { rows: ScheduleRow[]; days: string[]; group?: string }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const groups = useMemo(() => scheduleSections(rows, group), [rows, group])
-  const areas = useMemo(() => groups.filter(section => section.areaCode), [groups])
+  const areas = groups
   return <><AreaJumpDropdown areas={areas} group={group} scope="front-schedule" scrollTarget={scrollRef} />
     <div className="matrix-wrap" ref={scrollRef}><table className="schedule-matrix"><colgroup><col className="col-title" /><col className="col-id" /><col className="col-name" />{days.map(day => <col className="col-day" key={day} />)}</colgroup><thead><tr><th>職務</th><th>員編</th><th>姓名</th>{days.map((day, index) => <th className={weekdayHeaderStyle(index)} key={day}><span>9月{day}日</span><small>{weekdayAt(index)}</small></th>)}</tr></thead><tbody>{groups.map(section => <Fragment key={section.key}><tr className="area-heading" id={scheduleSectionId('front-schedule',group,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days.length + 3}><span className="area-label">{section.label}</span></td></tr>{section.people.map((row: ScheduleRow) => <tr key={row.rowId} data-employee-id={row.employeeId}><td>{row.title || '—'}</td><td>{row.employeeId}</td><td><strong>{row.name}</strong><small className="pinned-role">{row.title}</small></td>{row.shifts.map((shift, dayIndex) => <td className={scheduleCellStyle(shift)} key={dayIndex}>{shift || '—'}</td>)}</tr>)}</Fragment>)}</tbody></table></div></>
 }

@@ -5,6 +5,7 @@ import { createServer } from 'vite'
 import react from '@vitejs/plugin-react'
 import { chromium } from 'playwright'
 import { scheduleSections } from '../functions/pre-schedule-order.mjs'
+import { getAreaJumpOptions } from '../functions/schedule-display.mjs'
 
 const source = JSON.parse(readFileSync('public/september-schedules.json', 'utf8'))
 const employees = JSON.parse(readFileSync('output/employee-master.json', 'utf8'))
@@ -275,12 +276,16 @@ async function assertScheduleNavigation(tableSelector, wrapSelector, group) {
   const expected = scheduleSections(employees, group);
   const ids = await table.locator('tr[data-employee-id]').evaluateAll(rows => rows.map(row => row.dataset.employeeId));
   assert.deepEqual(ids, expected.flatMap(section => section.people.map(person => person.employeeId)));
+  assert.deepEqual(await table.locator('.area-heading .area-label,.admin-source-heading span').allTextContents(),expected.map(section=>section.label));
+  const wLabels=await table.locator('tr[data-area-code^="W"] .area-label,tr[data-area-code^="W"] span').allTextContents();
+  assert.deepEqual(wLabels,group==='day'?['W1區','W2區','W3區']:['W1區','W2區']);
+  assert.equal(await table.locator('.area-heading,.admin-source-heading').filter({hasText:/晚PT數字|BBK-0278|J2區/}).count(),0);
   const codes = await table.locator('tr[data-area-code]').evaluateAll(rows => rows.map(row => row.dataset.areaCode));
   assert.equal(codes.length, new Set(codes).size);
   assert.equal(codes.filter(code => code === 'O1').length, 1);
   await page.locator('.area-jump-dropdown summary').click();
   const panel = page.locator('.area-jump-panel');
-  assert.deepEqual(await panel.locator('button').allTextContents(), expected.filter(section => section.areaCode).map(section => section.label));
+  assert.deepEqual(await panel.locator('button').allTextContents(), getAreaJumpOptions(expected).map(section => section.label));
   const geometry = await panel.evaluate(el => ({height:el.clientHeight, scroll:el.scrollHeight, overflow:getComputedStyle(el).overflowY}));
   assert.ok(geometry.height <= 290 && geometry.scroll > geometry.height);
   assert.equal(geometry.overflow, 'auto');
@@ -289,7 +294,7 @@ async function assertScheduleNavigation(tableSelector, wrapSelector, group) {
   await page.waitForFunction(() => document.querySelector('.area-jump-panel').scrollTop > 0);
   await wrap.evaluate(el => {el.scrollLeft = 100});
   const horizontal = await wrap.evaluate(el => el.scrollLeft);
-  await panel.getByRole('button', {name:'O1區', exact:true}).click();
+  await panel.getByRole('button', {name:'O', exact:true}).click();
   assert.equal(await page.locator('.area-jump-dropdown').getAttribute('open'), null);
   const position = await wrap.evaluate(el => ({
     left:el.scrollLeft,
@@ -335,7 +340,7 @@ test('formal admin matrix shares source sections; navigation preserves search, m
   await page.getByPlaceholder('員編或姓名').fill('96504');
   assert.equal(await page.locator('.admin-schedule tr[data-employee-id]').count(), 1);
   await page.locator('.area-jump-dropdown summary').click();
-  assert.deepEqual(await page.locator('.area-jump-panel button').allTextContents(), ['O1區']);
+  assert.deepEqual(await page.locator('.area-jump-panel button').allTextContents(), ['O']);
   await page.getByPlaceholder('員編或姓名').fill('');
   assert.equal(await page.locator('.admin-schedule tr[data-employee-id]').count(), 158);
   assert.equal(await page.evaluate(() => window.writeAttempts), 0);
@@ -485,9 +490,9 @@ test('dispatch shares bounded area navigation without filtering or reordering ca
     const cards=await page.locator('.dispatch-card').evaluateAll(elements=>elements.map(el=>el.id));
     const codes=await page.locator('.dispatch-card[data-area-code]').evaluateAll(elements=>[...new Set(elements.map(el=>el.dataset.areaCode))]);
     await page.locator('.area-jump-dropdown summary').click();
-    assert.equal(await page.locator('.area-jump-panel button').count(),codes.length);
+    assert.equal(await page.locator('.area-jump-panel button').count(),getAreaJumpOptions(codes.map(code=>({areaCode:code,label:code,key:code}))).length);
     const firstTarget=await page.locator('.dispatch-card[data-area-code="O1"]').first().getAttribute('id');
-    await page.locator('.area-jump-panel button').filter({hasText:/O1/}).first().click();
+    await page.locator('.area-jump-panel').getByRole('button',{name:'O',exact:true}).click();
     assert.equal(await page.locator('.area-jump-dropdown').getAttribute('open'),null);
     assert.ok(await page.locator(`[id="${firstTarget}"]`).evaluate(el=>Math.abs(el.getBoundingClientRect().top-80)<3));
     assert.deepEqual(await page.locator('.dispatch-card').evaluateAll(elements=>elements.map(el=>el.id)),cards);

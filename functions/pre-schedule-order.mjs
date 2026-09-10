@@ -37,6 +37,7 @@ export function scheduleSections(rows, group, personOf = (row) => row) {
     const identity = scheduleSectionIdentity(
       section,
       person.areaCode || person.area || '',
+      source?.group || scheduleDisplayGroup(person, group),
     );
     if (!sections.has(identity.key))
       sections.set(identity.key, { ...identity, people: [] });

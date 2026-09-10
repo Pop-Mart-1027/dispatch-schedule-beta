@@ -503,6 +503,12 @@ test('September matrix exposes day/night tabs, leadership heading and exact O1 t
   );
   assert.deepEqual(await personRows.evaluateAll(rows => rows.map(row => row.dataset.employeeId)),
     scheduleSections(master, 'day').flatMap(section => section.people.map(person => person.employeeId)));
+  const headings=await page.locator('.pre-source-heading').allTextContents();
+  assert.equal(headings.filter(label=>label==='W1區').length,1);
+  assert.ok(headings.includes('W3區') && headings.includes('I2區'));
+  assert.deepEqual(headings,scheduleSections(master,'day').map(section=>section.label));
+  assert.ok(headings.includes('工兵小隊') && headings.includes('府前PT'));
+  assert.ok(!headings.some(label=>/晚PT數字|BBK-0278|J2區/.test(label)));
   const dayAreas = await page.locator('.pre-source-heading[data-area-code]').evaluateAll(rows => rows.map(row => row.dataset.areaCode));
   assert.equal(dayAreas.length, new Set(dayAreas).size);
   assert.equal(dayAreas.filter(code => code === 'O1').length, 1);
