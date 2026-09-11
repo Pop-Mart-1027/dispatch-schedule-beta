@@ -1,6 +1,8 @@
 'use client'
 import { dispatchAreaCodes, dispatchAreaDisplay, dispatchBlockFrontOrder } from '../lib/dispatch-area'
 
+import { loadFrontDispatchProfiles, readFrontDispatchCache, saveFrontDispatchCache, clearFrontDispatchCache, markFrontDispatch } from '../lib/front-dispatch-data'
+
 import './matrix.css'
 import './area-fix.css'
 import './dispatch.css'
@@ -9,7 +11,7 @@ import './mobile-nav.css'
 import './mobile-layout.css'
 import './admin-console.css'
 import './front-readonly.css'
-import { Fragment, useEffect, useMemo, useRef, useState } from 'react'
+import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { scheduleSections, scheduleDisplayGroup, preScheduleSource } from '../functions/pre-schedule-order.mjs'
 import { monthSections } from '../functions/month-schedule-layout.mjs'
 import { getMonthLayout, type MonthLayout } from '../lib/month-schedule-layout'
@@ -75,19 +77,25 @@ export default function Home() {
     }
   }
 
+  const scheduleLoadOwner = useRef('')
   useEffect(() => {
-    if (!currentUser) return
-    void Promise.all([listMonthScheduleRecords('2026-09'), getDocs(collection(db, 'employees')), getMonthLayout('2026-09')]).then(([records, employees, layout]) => { const profiles = employees.docs.map(item => ({ employeeId: item.id, ...(item.data() as Omit<EmployeeProfile, 'employeeId'>) })); console.info('[scheduleRecords] loaded', { employeeId: 'all', count: records.length }); setScheduleData(scheduleRecordsToData(records, profiles, layout)); if (!records.length) notify('班表資料尚未匯入') }).catch(error => { console.error('[scheduleRecords] load failed', error); setScheduleData(scheduleRecordsToData([])); notify(error?.code === 'permission-denied' ? '班表讀取權限不足' : '班表資料載入失敗') })
-  }, [currentUser?.employeeId])
+    if (!currentUser) { scheduleLoadOwner.current = ''; return }
+    if (currentUser.role === 'employee' && window.matchMedia('(max-width: 760px)').matches && !['schedule', 'attendance'].includes(page)) return
+    if (scheduleLoadOwner.current === currentUser.employeeId) return
+    const owner = currentUser.employeeId
+    scheduleLoadOwner.current = owner
+    void Promise.all([listMonthScheduleRecords('2026-09'), getDocs(collection(db, 'employees')), getMonthLayout('2026-09')]).then(([records, employees, layout]) => { if (scheduleLoadOwner.current !== owner) return; const profiles = employees.docs.map(item => ({ employeeId: item.id, ...(item.data() as Omit<EmployeeProfile, 'employeeId'>) })); console.info('[scheduleRecords] loaded', { employeeId: 'all', count: records.length }); setScheduleData(scheduleRecordsToData(records, profiles, layout)); if (!records.length) notify('班表資料尚未匯入') }).catch(error => { if (scheduleLoadOwner.current !== owner) return; scheduleLoadOwner.current = ''; console.error('[scheduleRecords] load failed', error); setScheduleData(scheduleRecordsToData([])); notify(error?.code === 'permission-denied' ? '班表讀取權限不足' : '班表資料載入失敗') })
+  }, [currentUser?.employeeId, page])
 
   useEffect(() => onAuthStateChanged(auth, async user => {
-    if (!user) { setCurrentUser(null); setAuthReady(true); return }
+    if (!user) { clearFrontDispatchCache(); setCurrentUser(null); setAuthReady(true); return }
     try {
       const getMyProfile = httpsCallable<undefined, Employee>(functions, 'getMyProfile')
       const result = await getMyProfile()
       if (!result.data.active) throw new Error('inactive')
       setAccount(result.data.employeeId)
       setCurrentUser(result.data)
+      markFrontDispatch('login-profile-ready')
     } catch {
       await signOut(auth)
       notify('帳號已停用或員工主檔不存在')
@@ -376,6 +384,9 @@ function DispatchBackToTop() {
 
 function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isDuty: boolean }) {
   const [date, setDate] = useState(taipeiToday)
+  const [personalFirst] = useState(() => !isDuty && typeof window !== 'undefined' && window.matchMedia('(max-width: 760px)').matches)
+  const [fullListReady, setFullListReady] = useState(!personalFirst)
+  const cached = useMemo(() => personalFirst ? readFrontDispatchCache(employeeId, date) : null, [employeeId, date, personalFirst])
   const dispatchRef=useRef<HTMLDivElement>(null)
   const [shift, setShift] = useState<'night' | 'day'>('night')
   const [blocks, setBlocks] = useState<DispatchBlock[]>([])
@@ -390,12 +401,14 @@ function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isD
   const [peopleLoadedDate, setPeopleLoadedDate] = useState('')
   useEffect(() => {
     let cancelled = false
+    markFrontDispatch('enter'); setFullListReady(!personalFirst)
+    if (cached) { setBlocks(cached.blocks); setIsPreview(cached.isPreview); setBlocksLoadedDate(date); setBlocksLoading(false); setBlocksError(''); markFrontDispatch('cache-hit'); return }
     setBlocksLoading(true); setBlocks([]); setBlocksError(''); setIsPreview(false)
     void listDispatchBlocks(date).then(async items => {
       const preview = items.length === 0
       const loaded = preview ? buildDispatchPreviewBlocks((await listDispatchBlockTemplate(date)).blocks, date) : items
       if (cancelled) return
-      setBlocks(loaded); setIsPreview(preview); setBlocksLoadedDate(date)
+      setBlocks(loaded); setIsPreview(preview); setBlocksLoadedDate(date); markFrontDispatch('blocks-ready')
       console.info('[dispatchBlocks] query success', { date, count: items.length, people: items.reduce((sum, block) => sum + block.drivers.length + block.stations.length + block.assistants.length, 0) })
     }).catch(reason => {
       if (cancelled) return
@@ -403,14 +416,22 @@ function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isD
       setBlocks([]); setBlocksError('派工區塊載入失敗')
     }).finally(() => { if (!cancelled) setBlocksLoading(false) })
     return () => { cancelled = true }
-  }, [date])
+  }, [date, cached, personalFirst])
   useEffect(() => {
     let cancelled = false
+    if (cached) { setSchedules(cached.schedules); setProfiles(cached.profiles); setPeopleLoadedDate(date); setDutyLoading(false); setDutyError(''); return }
     setDutyLoading(true); setSchedules([]); setProfiles([]); setDutyError('')
-    void Promise.all([listScheduleRecords(date), getDocs(collection(db, 'employees'))]).then(([records, employees]) => {
+    const loadPeople = personalFirst
+      ? listScheduleRecords(date).then(async records => {
+          markFrontDispatch('schedules-ready')
+          const profiles = await loadFrontDispatchProfiles(records)
+          return [records, { docs: profiles.map(profile => ({ id: profile.employeeId, data: () => profile })) }] as const
+        })
+      : Promise.all([listScheduleRecords(date), getDocs(collection(db, 'employees'))])
+    void loadPeople.then(([records, employees]) => {
       if (cancelled) return
       const loadedProfiles = employees.docs.map(item => ({ employeeId: item.id, ...(item.data() as Omit<EmployeeProfile, 'employeeId'>) }))
-      setSchedules(records); setProfiles(loadedProfiles); setDutyError(''); setPeopleLoadedDate(date)
+      setSchedules(records); setProfiles(loadedProfiles); setDutyError(''); setPeopleLoadedDate(date); markFrontDispatch('profiles-ready')
       console.info('[dutyStaff] query success', { date, scheduleRecords: records.length, employees: loadedProfiles.length })
     }).catch(reason => {
       if (cancelled) return
@@ -418,22 +439,48 @@ function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isD
       setSchedules([]); setProfiles([]); setDutyError('值班資訊載入失敗')
     }).finally(() => { if (!cancelled) setDutyLoading(false) })
     return () => { cancelled = true }
-  }, [date])
-  const dutyStaff = deriveDutyStaff(schedules, profiles, shift)
+  }, [date, cached, personalFirst])
+  const dutyStaff = useMemo(() => deriveDutyStaff(schedules, profiles, shift), [schedules, profiles, shift])
   const allDisplayBlocks = useMemo(() => {
     if (dutyLoading || dutyError) return blocks.filter(block => block.modifiedBy?.trim())
-    return (['day', 'night'] as const).flatMap(targetShift => assignSchedulesToDispatchBlocks({
+    markFrontDispatch('assignment-start')
+    const assigned = (['day', 'night'] as const).flatMap(targetShift => assignSchedulesToDispatchBlocks({
       blocks, schedules: schedules.filter(record => record.date === date),
       employees: profiles.map(profile => ({ ...profile, title: profile.title || '' })), shift: targetShift,
     }).blocks.filter(block => block.shiftType === targetShift))
+    markFrontDispatch('assignment-end')
+    return assigned
   }, [blocks, schedules, profiles, date, dutyLoading, dutyError])
   const displayBlocks = allDisplayBlocks
   const validDispatchAreas = useMemo(() => dispatchAreaCodes(blocks), [blocks])
-  const visible = useMemo(()=>displayBlocks.map(block => dispatchAreaDisplay(block, validDispatchAreas)).filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0)).sort(dispatchBlockFrontOrder),[displayBlocks,validDispatchAreas,shift,isDuty])
+  const allVisible = useMemo(() => {
+    markFrontDispatch('group-sort-start')
+    const result = displayBlocks.map(block => dispatchAreaDisplay(block, validDispatchAreas)).filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0)).sort(dispatchBlockFrontOrder)
+    markFrontDispatch('group-sort-end')
+    return result
+  }, [displayBlocks, validDispatchAreas, shift, isDuty])
   const ownBlocks = useMemo(() => isDuty ? [] : allDisplayBlocks
     .filter(block => block.date === date && [...block.drivers, ...block.stations, ...block.assistants].some(person => person.employeeId === employeeId))
     .map(block => dispatchAreaDisplay(block, dispatchAreaCodes(blocks)))
     .sort((a, b) => (a.shiftType === b.shiftType ? 0 : a.shiftType === 'day' ? -1 : 1) || dispatchBlockFrontOrder(a, b)), [allDisplayBlocks, blocks, employeeId, isDuty, date])
+  const visible = useMemo(() => !personalFirst || fullListReady ? allVisible : allVisible.filter(block => [...block.drivers, ...block.stations, ...block.assistants].some(person => person.employeeId === employeeId)), [allVisible, personalFirst, fullListReady, employeeId])
+  useEffect(() => {
+    if (!personalFirst || blocksLoading || dutyLoading || blocksError || dutyError || blocksLoadedDate !== date || peopleLoadedDate !== date) return
+    if (!cached) saveFrontDispatchCache(employeeId, date, { blocks, schedules, profiles, isPreview })
+    let timer: ReturnType<typeof setTimeout>
+    const frame = requestAnimationFrame(() => { timer = setTimeout(() => setFullListReady(true), 100) })
+    return () => { cancelAnimationFrame(frame); clearTimeout(timer) }
+  }, [personalFirst, employeeId, date, blocksLoading, dutyLoading, blocksError, dutyError, blocksLoadedDate, peopleLoadedDate, blocks, schedules, profiles, isPreview, cached])
+  useEffect(() => {
+    if (!personalFirst || !visible.some(block => [...block.drivers, ...block.stations, ...block.assistants].some(person => person.employeeId === employeeId))) return
+    const frame = requestAnimationFrame(() => markFrontDispatch('personal-painted'))
+    return () => cancelAnimationFrame(frame)
+  }, [personalFirst, visible, employeeId])
+  useEffect(() => {
+    if (!personalFirst || !fullListReady || blocksLoading || dutyLoading) return
+    const frame = requestAnimationFrame(() => markFrontDispatch('full-painted'))
+    return () => cancelAnimationFrame(frame)
+  }, [personalFirst, fullListReady, blocksLoading, dutyLoading, date])
   const [ownIndex, setOwnIndex] = useState(0)
   const [scrollTarget, setScrollTarget] = useState<DispatchBlock | null>(null)
   const locatedDate = useRef('')
@@ -454,14 +501,21 @@ function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isD
     if (!scrollTarget || scrollTarget.date !== date || shift !== scrollTarget.shiftType || blocksLoading || dutyLoading) return
     const frame = requestAnimationFrame(() => {
       const card = document.getElementById(scheduleSectionId('front-dispatch', date + '-' + shift, scrollTarget.id))
-      if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); setScrollTarget(null) }
+      if (card) { card.scrollIntoView({ behavior: 'smooth', block: 'center' }); markFrontDispatch('located'); setScrollTarget(null) }
     })
     return () => cancelAnimationFrame(frame)
   }, [scrollTarget, date, shift, visible, blocksLoading, dutyLoading])
+  useLayoutEffect(() => {
+    const own = ownBlocks[ownIndex]
+    if (!personalFirst || !fullListReady || locatedDate.current !== date + ':' + employeeId || !own) return
+    // Cards inserted above the personal card must not push it out of view.
+    const card = document.getElementById(scheduleSectionId('front-dispatch', date + '-' + shift, own.id))
+    if (card) { card.scrollIntoView({ behavior: 'instant', block: 'center' }); setScrollTarget(null); markFrontDispatch('located') }
+  }, [personalFirst, fullListReady, date])
   const jumpAreas=useMemo(()=>{const areas=new Map();for(const block of visible){if(block.areaCode&&!areas.has(block.areaCode))areas.set(block.areaCode,{key:block.id,areaCode:block.areaCode,label:block.areaName || `${block.areaCode}區`});}return [...areas.values()]},[visible])
-  const dispatchLoading = blocksLoading || (dutyLoading && !displayBlocks.length)
+  const dispatchLoading = blocksLoading || (dutyLoading && (personalFirst ? !visible.length : !displayBlocks.length))
   const dispatchError = blocksError || (dutyError ? '班表或員工資料載入失敗，無法產生自動派工' : '')
-  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div><AreaJumpDropdown areas={jumpAreas} group={`${date}-${shift}`} scope="front-dispatch" scrollTarget={dispatchRef} scrollMode="page" /></div>{!isDuty && !blocksLoading && !dutyLoading && ownBlocks.length > 0 && <div className="dispatch-self-navigation" aria-label="我的派工定位"><span>你{date === taipeiToday() ? '今天' : '在此日'}有 {ownBlocks.length} 筆派工</span>{ownBlocks.length > 1 && <><button disabled={ownIndex === 0} onClick={() => selectOwn(ownIndex - 1)}>上一筆</button><span>{ownIndex + 1} / {ownBlocks.length}</span><button disabled={ownIndex === ownBlocks.length - 1} onClick={() => selectOwn(ownIndex + 1)}>下一筆</button></>}</div>}{dutyLoading ? <div className="duty-staff-status">值班資訊載入中…</div> : dutyError ? <div className="result-card result-warning">{dutyError}</div> : <DutyStaffPanel staff={dutyStaff} shift={shift} />}{dispatchError && <div className="result-card result-warning">{dispatchError}</div>}{dispatchLoading ? <p className="loading">派工資料載入中…</p> : !dispatchError && !visible.length ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid" ref={dispatchRef}>{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id} id={scheduleSectionId('front-dispatch',`${date}-${shift}`,block.id)} data-area-code={block.areaCode || undefined}><header><span>{block.areaName || block.areaCode || '特殊派工'}</span></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} employeeId={isDuty ? undefined : employeeId} /><b>駐點</b><DispatchBlockPeople people={block.stations} employeeId={isDuty ? undefined : employeeId} />{block.assistants.length > 0 && <><b>隨車</b><DispatchBlockPeople people={block.assistants} employeeId={isDuty ? undefined : employeeId} /></>}<b>工作重點</b><WorkFocus text={block.workFocus} /></div></article>)}</div>}<DispatchBackToTop /></>
+  return <><div className="dispatch-toolbar"><label>日期<input type="date" value={date} onChange={event => event.target.value && setDate(event.target.value)} /></label><div className="tabs"><button className={shift === 'night' ? 'tab active' : 'tab'} onClick={() => setShift('night')}>夜班</button><button className={shift === 'day' ? 'tab active' : 'tab'} onClick={() => setShift('day')}>早班</button></div><AreaJumpDropdown areas={jumpAreas} group={`${date}-${shift}`} scope="front-dispatch" scrollTarget={dispatchRef} scrollMode="page" /></div>{!isDuty && !blocksLoading && !dutyLoading && ownBlocks.length > 0 && <div className="dispatch-self-navigation" aria-label="我的派工定位"><span>你{date === taipeiToday() ? '今天' : '在此日'}有 {ownBlocks.length} 筆派工</span>{ownBlocks.length > 1 && <><button disabled={ownIndex === 0} onClick={() => selectOwn(ownIndex - 1)}>上一筆</button><span>{ownIndex + 1} / {ownBlocks.length}</span><button disabled={ownIndex === ownBlocks.length - 1} onClick={() => selectOwn(ownIndex + 1)}>下一筆</button></>}</div>}{dutyLoading ? <div className="duty-staff-status">值班資訊載入中…</div> : dutyError ? <div className="result-card result-warning">{dutyError}</div> : <DutyStaffPanel staff={dutyStaff} shift={shift} />}{dispatchError && <div className="result-card result-warning">{dispatchError}</div>}{dispatchLoading ? <p className="loading">{personalFirst ? '正在載入你的派工…' : '派工資料載入中…'}</p> : !dispatchError && !visible.length && (!personalFirst || fullListReady) ? <p className="loading">此日期尚無{shift === 'night' ? '大夜' : '白天'}派工區塊。</p> : <div className="dispatch-grid" ref={dispatchRef}>{visible.map(block => <article className={`dispatch-card${block.areaCode ? '' : ' command-card'}`} key={block.id} id={scheduleSectionId('front-dispatch',`${date}-${shift}`,block.id)} data-area-code={block.areaCode || undefined}><header><span>{block.areaName || block.areaCode || '特殊派工'}</span></header><div className="dispatch-fields"><b>車號</b><span>{block.vehicleNo || '—'}</span><b>駕駛</b><DispatchBlockPeople people={block.drivers} employeeId={isDuty ? undefined : employeeId} /><b>駐點</b><DispatchBlockPeople people={block.stations} employeeId={isDuty ? undefined : employeeId} />{block.assistants.length > 0 && <><b>隨車</b><DispatchBlockPeople people={block.assistants} employeeId={isDuty ? undefined : employeeId} /></>}<b>工作重點</b><WorkFocus text={block.workFocus} /></div></article>)}</div>}{personalFirst && !fullListReady && !dispatchError && !blocksLoading && <p className="dispatch-loading-rest" role="status">{visible.length ? '正在載入其餘派工…' : dutyLoading ? '正在載入你的派工…' : '正在載入完整派工單…'}</p>}<DispatchBackToTop /></>
 }
 
 const formatBlockPeople = (people: DispatchBlockPerson[]) => people.map(person => `${person.employeeId} ${person.employeeName}`.trim()).join('\n')

@@ -390,3 +390,9 @@ test('employee month query excludes other months with the existing query shape',
   const rows=await listMonthScheduleRecords('2026-09','E001',asRole('A001','admin'));
   assert.ok(rows.length>0);assert.ok(rows.every(r=>r.employeeId==='E001'&&r.date.startsWith('2026-09-')));
 });
+
+test('ordinary employee can read dispatch profile batches under unchanged Rules',async()=>{
+  const {loadFrontDispatchProfiles}=await moduleServer.ssrLoadModule('/lib/front-dispatch-data.ts');
+  const rows=await loadFrontDispatchProfiles([{employeeId:'E001',scheduleCode:'早A1'},{employeeId:'D001',scheduleCode:'監'},{employeeId:'A001',scheduleCode:'休'}],asRole('E001','employee'));
+  assert.deepEqual(rows.map(r=>r.employeeId).sort(),['D001','E001']);
+});

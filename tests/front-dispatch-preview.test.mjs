@@ -74,7 +74,14 @@ const virtual = {
     export async function getDoc() {return {exists:()=>!!window.scheduleSetting,data:()=>window.scheduleSetting};}
     export async function addDoc(ref,data) { if(ref.path!=='dispatchAuditLogs'||!window.manualPickerTest)throw Error('Unexpected audit write');window.manualAudits.push(data);return {id:'audit'}; }
     export async function setDoc(_ref,data) {if(_ref.path.startsWith('dispatchBlocks/')){if(!window.manualPickerTest)throw Error('Unexpected dispatch write');const rows=window.formalByDate['2026-09-09'];const block=rows.find(b=>b.id===_ref.id);Object.assign(block,data);return;}window.scheduleSetting={...data,updatedAt:{toDate:()=>new Date()}};}
-    export async function getDocs() { return { docs: window.fixture.employees.map(employee => ({ id: employee.employeeId, data: () => employee })) } }`,
+    export async function getDocs(ref) {
+      const filter=ref?._query?.filters?.find(f=>f.op==='in');
+      const ids=filter?.value?.arrayValue?.values?.map(v=>(v.referenceValue||v.stringValue).split('/').pop());
+      const people=window.fixture.employees.filter(p=>!ids||ids.includes(p.employeeId));
+      (window.frontReadLog ||= []).push({kind:'profiles',count:people.length});
+      if(window.profileDelayMs)await new Promise(r=>setTimeout(r,window.profileDelayMs));
+      return {docs:people.map(employee=>({id:employee.employeeId,data:()=>employee}))};
+    }`,
   'test:auth': `export * from 'firebase/auth'; export function onAuthStateChanged(_auth,callback) {queueMicrotask(()=>callback({uid:'96504'}));return ()=>{};}`,
   'test:broadcasts': `export * from '/lib/broadcasts.ts';
     export async function listActiveBroadcasts(){window.broadcastLoads=(window.broadcastLoads||0)+1;return window.testBroadcasts||[];}
@@ -85,7 +92,7 @@ const virtual = {
     const denyWrite = () => { window.writeAttempts++; throw new Error('Front preview must remain read-only') };
     export const updateDispatchBlock = (...args)=>window.manualPickerTest?realUpdate(...args):denyWrite(), writeDispatchBlockAudit = (...args)=>window.manualPickerTest?realAudit(...args):denyWrite(), saveDispatchPreviewAsFormal = denyWrite;
     export async function getDispatchBlock(id,date){return eligibleMonthBlocks(window.formalByDate?.[date]||[],window.monthLayouts?.[date.slice(0,7)]).find(b=>b.id===id)}
-    export async function listDispatchBlocks(date) {
+    export async function listDispatchBlocks(date) { (window.frontReadLog ||= []).push({kind:'blocks',date});
       await new Promise(resolve => setTimeout(resolve, window.delays?.[date] || 0));
       return eligibleMonthBlocks(window.formalByDate?.[date] || (date === '2026-09-09' ? window.fixture.template : []),window.monthLayouts?.[date.slice(0,7)]);
     }
@@ -99,8 +106,8 @@ const virtual = {
       const target=window.fixture.monthSchedules.find(item=>item.employeeId===record.employeeId&&item.date===record.date);
       target.scheduleCode=code;
     }
-    export async function listMonthScheduleRecords(month='2026-09',employeeId) { return eligibleMonthSchedules(window.fixture.monthSchedules.filter(r=>r.date.startsWith(month)&&(!employeeId||r.employeeId===employeeId)),window.monthLayouts?.[month]); }
-    export async function listScheduleRecords(date) {
+    export async function listMonthScheduleRecords(month='2026-09',employeeId) { (window.frontReadLog ||= []).push({kind:'month',employeeId:employeeId||'all'}); return eligibleMonthSchedules(window.fixture.monthSchedules.filter(r=>r.date.startsWith(month)&&(!employeeId||r.employeeId===employeeId)),window.monthLayouts?.[month]); }
+    export async function listScheduleRecords(date) { (window.frontReadLog ||= []).push({kind:'schedules',date});
       await new Promise(resolve => setTimeout(resolve, window.delays?.[date] || 0));
       return eligibleMonthSchedules(window.fixture.schedules[date] || [],window.monthLayouts?.[date.slice(0,7)]);
     }`,
@@ -130,6 +137,7 @@ const virtual = {
           React.createElement('header', {className:'topbar'}, '班表'),
           React.createElement('section', {className:'content'}, children)));
     }
+    window.clearFrontCache = () => import('/lib/front-dispatch-data.ts').then(m=>m.clearFrontDispatchCache());
     window.showDispatch = (employeeId = 'test', isDuty = false) => root.render(React.createElement('div', {className: 'app-shell','data-page':'dispatch'},React.createElement('main',{className:'workspace'},React.createElement('section',{className:'content'}, React.createElement(FirestoreDispatchView, {employeeId, isDuty, key: employeeId + ':' + isDuty})))));
     window.showHome = () => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(HomeView, {name: '登入人員', onAction: () => {}, onGo: () => {}})));
     window.showFrontDuty = (shift, staff) => root.render(React.createElement(DutyStaffPanel, {shift, staff}));
@@ -162,7 +170,7 @@ const server = await createServer({
     load(id) { if (id.startsWith('\0test:')) return virtual[id.slice(1, -4)] },
     transform(code, id) {
       if(['/app/month-row-manager.tsx','/app/month-section-manager.tsx'].some(path=>id.replaceAll('\\', '/').endsWith(path))) return code.replace("from '../lib/month-schedule-layout'", "from 'test:month-layout'");
-      if(['/lib/system-features.ts','/lib/dispatch-blocks-firestore.ts','/lib/dispatch-configuration.ts'].some(path=>id.replaceAll('\\', '/').endsWith(path))) return code.replace("from 'firebase/firestore'", "from 'test:firestore'");
+      if(['/lib/front-dispatch-data.ts','/lib/system-features.ts','/lib/dispatch-blocks-firestore.ts','/lib/dispatch-configuration.ts'].some(path=>id.replaceAll('\\', '/').endsWith(path))) return code.replace("from 'firebase/firestore'", "from 'test:firestore'");
       const admin = id.replaceAll('\\', '/').endsWith('/app/admin-console.tsx')
       if (!admin && !id.replaceAll('\\', '/').endsWith('/app/page.tsx')) return
       return code.replace("from 'firebase/firestore'", "from 'test:firestore'")
@@ -1005,4 +1013,48 @@ test('mobile dispatch back-to-top appears after scrolling and smoothly returns a
   assert.equal(await page.getByRole('button',{name:'回到頂部',exact:true}).count(),0);
   console.log('back-to-top phone measurements',JSON.stringify(measurements));
   await page.setViewportSize({width:1920,height:1080});await page.reload();
+});
+
+test('mobile personal cards paint before delayed profiles; automatic results and day cache retain the complete page',async()=>{
+  await page.setViewportSize({width:390,height:844});await page.reload();
+  await page.evaluate(async()=>{await window.clearFrontCache();window.showHome()});
+  await page.getByText('工作總覽',{exact:true}).first().waitFor();
+  await page.evaluate(()=>{
+    window.profileDelayMs=800;window.frontReadLog=[];
+    window.formalByDate={'2026-09-09':window.fixture.template.map(b=>({...b,modifiedBy:'admin',drivers:[{employeeId:b.areaCode==='O1'?'B0410':'OTHER',employeeName:'人工'}],stations:[],assistants:[]}))};
+    window.showDispatch('B0410');
+  });
+  await page.locator('.dispatch-card .dispatch-self-person').first().waitFor();
+  assert.equal(await page.locator('.dispatch-card .person:not(.dispatch-self-person)').count(),0);
+  assert.ok(await page.getByText('正在載入其餘派工…',{exact:true}).count());
+  await page.waitForFunction(()=>performance.getEntriesByName('smilebike:dispatch:full-painted').length>0);
+  assert.ok(await page.locator('.dispatch-card').count()>3);
+  const timings=await page.evaluate(()=>Object.fromEntries(performance.getEntriesByType('mark').map(m=>[m.name,m.startTime])));
+  assert.ok(timings['smilebike:dispatch:personal-painted']<timings['smilebike:dispatch:profiles-ready']);
+  assert.ok(timings['smilebike:dispatch:personal-painted']<timings['smilebike:dispatch:full-painted']);
+  const reads=await page.evaluate(()=>window.frontReadLog);
+  const expected=await page.evaluate(()=>new Set(window.fixture.schedules['2026-09-09'].filter(r=>!['例','休','慰','病','病假','事','事假','特休','假'].includes(r.scheduleCode)).map(r=>r.employeeId)).size);
+  assert.equal(reads.filter(r=>r.kind==='profiles').reduce((n,r)=>n+r.count,0),expected);
+  assert.ok(expected<750);
+  await page.evaluate(()=>window.showHome());await page.getByText('工作總覽',{exact:true}).first().waitFor();
+  await page.evaluate(()=>{window.frontReadLog=[];window.showDispatch('B0410')});
+  await page.locator('.dispatch-self-person').first().waitFor();
+  assert.deepEqual(await page.evaluate(()=>window.frontReadLog),[]);
+  await page.getByRole('button',{name:'下一筆',exact:true}).click();
+  await page.waitForFunction(()=>document.querySelector('.dispatch-self-person'));
+  await page.setViewportSize({width:1920,height:1080});await page.reload();
+});
+
+
+test('mobile login and dispatch avoid the unrelated whole-month preload; schedule still loads on demand',async()=>{
+ await page.setViewportSize({width:390,height:844});await page.reload();
+ await page.evaluate(()=>{window.frontReadLog=[];window.showFullApp()});
+ await page.locator('.home-actions button').nth(1).waitFor();
+ await page.locator('.home-actions button').nth(1).click();
+ await page.waitForFunction(()=>performance.getEntriesByName('smilebike:dispatch:full-painted').length);
+ assert.equal(await page.evaluate(()=>window.frontReadLog.filter(r=>r.kind==='month'&&r.employeeId==='all').length),0);
+ assert.ok(await page.locator('.dispatch-card').count()>0);
+ await page.evaluate(()=>{document.querySelectorAll('.sidebar button').forEach(b=>{if(b.textContent.includes('我的班表'))b.click()})});
+ await page.waitForFunction(()=>window.frontReadLog.some(r=>r.kind==='month'&&r.employeeId==='all'));
+ await page.setViewportSize({width:1920,height:1080});await page.reload();
 });
