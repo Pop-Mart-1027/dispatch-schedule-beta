@@ -3,14 +3,14 @@
 const { initializeApp } = require('firebase-admin/app')
 const { getAuth } = require('firebase-admin/auth')
 const { FieldValue, getFirestore } = require('firebase-admin/firestore')
-const { HttpsError, onCall } = require('firebase-functions/v2/https')
+const { HttpsError, onCall, onRequest } = require('firebase-functions/v2/https')
 const { setGlobalOptions } = require('firebase-functions/v2/options')
 const { onSchedule } = require('firebase-functions/v2/scheduler')
 const bcrypt = require('bcryptjs')
 const { importGoogleDispatch } = require('./dispatch-google-import')
 
 initializeApp()
-setGlobalOptions({ region: 'asia-east1', maxInstances: 10 })
+setGlobalOptions({ region: 'asia-east1', maxInstances: 10, serviceAccount: 'smilebike-runtime@meimei-breakfast-order.iam.gserviceaccount.com' })
 
 const db = getFirestore()
 const auth = getAuth()
@@ -109,7 +109,7 @@ exports.getMyProfile = onCall(async request => {
   return publicEmployee(snapshot)
 })
 
-exports.changeOwnPassword = onCall(async request => {
+exports.changeOwnPassword = onCall({ serviceAccount: 'smilebike-auth-runtime@meimei-breakfast-order.iam.gserviceaccount.com' }, async request => {
   const { employeeId, snapshot } = await requireUser(request)
   const newPassword = String(request.data?.newPassword || '')
   if (newPassword.length < 8 || newPassword.length > 128) throw new HttpsError('invalid-argument', '新密碼至少需要 8 個字元')
@@ -128,7 +128,7 @@ exports.adminListEmployees = onCall(async request => {
   return { employees: snapshot.docs.map(publicEmployee) }
 })
 
-exports.adminSaveEmployee = onCall(async request => {
+exports.adminSaveEmployee = onCall({ serviceAccount: 'smilebike-auth-runtime@meimei-breakfast-order.iam.gserviceaccount.com' }, async request => {
   const actor = await requireAdmin(request)
   const input = request.data || {}
   const employeeId = cleanId(input.employeeId)
@@ -161,7 +161,7 @@ exports.adminSaveEmployee = onCall(async request => {
   return { employeeId }
 })
 
-exports.adminSetActive = onCall(async request => {
+exports.adminSetActive = onCall({ serviceAccount: 'smilebike-auth-runtime@meimei-breakfast-order.iam.gserviceaccount.com' }, async request => {
   const actor = await requireAdmin(request)
   const employeeId = cleanId(request.data?.employeeId)
   const active = request.data?.active === true
@@ -177,7 +177,7 @@ exports.adminSetActive = onCall(async request => {
   return { success: true }
 })
 
-exports.adminResetPassword = onCall(async request => {
+exports.adminResetPassword = onCall({ serviceAccount: 'smilebike-auth-runtime@meimei-breakfast-order.iam.gserviceaccount.com' }, async request => {
   const actor = await requireAdmin(request)
   const employeeId = cleanId(request.data?.employeeId)
   const ref = db.collection('employees').doc(employeeId)
@@ -194,7 +194,7 @@ exports.adminResetPassword = onCall(async request => {
   return { success: true }
 })
 
-exports.adminSyncEmployees = onCall({ timeoutSeconds: 300, memory: '512MiB' }, async request => {
+exports.adminSyncEmployees = onCall({ serviceAccount: 'smilebike-auth-runtime@meimei-breakfast-order.iam.gserviceaccount.com', timeoutSeconds: 300, memory: '512MiB' }, async request => {
   const actor = await requireAdmin(request)
   const rows = Array.isArray(request.data?.employees) ? request.data.employees : []
   if (!rows.length || rows.length > 1000) throw new HttpsError('invalid-argument', '員工批次資料筆數不正確')
@@ -272,7 +272,8 @@ exports.syncDispatchBlocks = onCall({ timeoutSeconds: 120, memory: '512MiB' }, a
 })
 
 // Retain the deployed scheduler endpoint, but it must never read or overwrite dispatch data.
-exports.syncCurrentDispatchBlocks = onSchedule({ schedule: 'every 15 minutes', timeZone: 'Asia/Taipei' }, async () => ({ disabled: true }))
+// Migration: retain a private no-op endpoint WITHOUT provisioning any Scheduler job.
+exports.syncCurrentDispatchBlocks = onRequest({ invoker: 'private' }, (_request, response) => response.status(200).json({ disabled: true }))
 
 exports._test = { cleanId, employeeEmail }
 
@@ -288,4 +289,8 @@ async function preScheduleService() {
   return createPreScheduleService({db, FieldValue, Timestamp, HttpsError})
 }
 exports.preSchedule = onCall({timeoutSeconds:120,memory:'512MiB'}, async request => (await preScheduleService()).handle(request))
-exports.closePreScheduleMonths = onSchedule({schedule:'every 5 minutes',timeZone:'Asia/Taipei'}, async () => (await preScheduleService()).closeExpired())
+exports.closePreScheduleMonths = onSchedule({schedule:'every 5 minutes',timeZone:'Asia/Taipei'}, async () => {
+  // Migration D: explicit activation is required even if a newly created job runs before pause.
+  if (process.env.CLOSE_PRE_SCHEDULE_ENABLED !== 'true') return { disabled: true }
+  return (await preScheduleService()).closeExpired()
+})

@@ -19,43 +19,6 @@ service cloud.firestore {
         && get(employeePath()).data.role in ['duty', 'admin'];
     }
 
-    // Existing breakfast-order rules are preserved.
-    match /orders/{orderId} {
-      allow read: if true;
-      allow create: if request.resource.data.status == "new"
-        && request.resource.data.paid == false
-        && request.resource.data.total > 0
-        && request.resource.data.paymentMethod in ["cash", "linepay"]
-        && request.resource.data.paymentStatus in ["unpaid", "initiating"];
-      allow update: if
-        (resource.data.status == "new" && request.resource.data.status == "done"
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["status"]))
-        || (resource.data.paymentMethod == "cash" && resource.data.paymentStatus == "unpaid"
-          && request.resource.data.paymentStatus == "paid" && request.resource.data.cashReceived >= resource.data.total
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["paymentStatus","paidAt","cashReceived","cashChange"]))
-        || (resource.data.paymentMethod == "linepay" && request.resource.data.paymentStatus == "payment_error"
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["paymentStatus"]))
-        || (resource.data.paymentMethod == "cash" && resource.data.paymentStatus == "unpaid"
-          && request.resource.data.total > 0
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["items","total","counterEditedAt"]))
-        || (resource.data.paymentMethod == "cash" && resource.data.paymentStatus == "unpaid"
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["orderNote","counterEditedAt"]))
-        || (resource.data.paymentMethod == "cash" && resource.data.paymentStatus == "unpaid"
-          && request.resource.data.paymentStatus == "cancelled" && request.resource.data.status == "cancelled"
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["paymentStatus","status","cancelledAt","cancelReason"]))
-        || (resource.data.paymentStatus == "paid" && request.resource.data.refundRecorded == true
-          && request.resource.data.refundMethod == "cash" && request.resource.data.refundAmount > 0
-          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(["refundRecorded","refundMethod","refundAmount","refundNote","refundRecordedAt"]));
-      allow delete: if false;
-    }
-
-    match /counters/{dateKey} {
-      allow read: if true;
-      allow create: if request.resource.data.lastNo == 1;
-      allow update: if request.resource.data.lastNo == resource.data.lastNo + 1;
-      allow delete: if false;
-    }
-
     match /employees/{employeeId} {
       // Own record remains readable after disable so the client can immediately sign out.
       allow get: if signedIn() && (request.auth.token.employeeId == employeeId || isActiveEmployee());

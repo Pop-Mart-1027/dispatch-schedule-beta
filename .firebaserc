@@ -1,5 +1,6 @@
 {
   "projects": {
-    "default": "breakfast-order-system-83890"
+    "default": "meimei-breakfast-order",
+    "target": "meimei-breakfast-order"
   }
 }

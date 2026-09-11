@@ -4,12 +4,12 @@ import { getFirestore } from 'firebase/firestore'
 import { getFunctions } from 'firebase/functions'
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyDKvg52sZCYoGs8jJjf5Qlt5rgtoT3Zbw0',
-  authDomain: 'breakfast-order-system-83890.firebaseapp.com',
-  projectId: 'breakfast-order-system-83890',
-  storageBucket: 'breakfast-order-system-83890.firebasestorage.app',
-  messagingSenderId: '667405351082',
-  appId: '1:667405351082:web:748291dd532143c8d5f8d3',
+  "apiKey": "AIzaSyA5eEPxHg6n2MxyrX0ZHHE8DKx8yh-r4ws",
+  "authDomain": "meimei-breakfast-order.firebaseapp.com",
+  "projectId": "meimei-breakfast-order",
+  "storageBucket": "meimei-breakfast-order.firebasestorage.app",
+  "messagingSenderId": "1086953376984",
+  "appId": "1:1086953376984:web:70b05d0b41c86df8145bad"
 }
 
 export const firebaseApp = getApps().length ? getApp() : initializeApp(firebaseConfig)

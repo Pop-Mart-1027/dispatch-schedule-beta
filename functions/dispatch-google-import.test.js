@@ -70,25 +70,33 @@ test('missing night sheet cannot silently import the day sheet into night dispat
   assert.equal(saved.size, 3)
 })
 
-function handlers(profileRole = 'duty') {
+function handlers(profileRole = 'duty', env = {}) {
   const exports = {}; let imports = 0; let reads = 0
   const snapshot = { exists: true, data: () => ({ active: true, role: profileRole }) }
   const db = { collection: () => ({ doc: () => ({ get: async () => { reads++; return snapshot } }) }) }
   const fakeRequire = name => ({
     'firebase-admin/app': { initializeApp() {} }, 'firebase-admin/auth': { getAuth: () => ({}) },
     'firebase-admin/firestore': { FieldValue: {}, getFirestore: () => db },
-    'firebase-functions/v2/https': { HttpsError, onCall: (...args) => args.at(-1) },
+    'firebase-functions/v2/https': { HttpsError, onRequest: (...args) => args.at(-1), onCall: (...args) => args.at(-1) },
     'firebase-functions/v2/options': { setGlobalOptions() {} },
     'firebase-functions/v2/scheduler': { onSchedule: (_options, callback) => callback },
     bcryptjs: {}, './dispatch-google-import': { importGoogleDispatch: async options => { imports++; return { date: options.date } } },
   })[name]
-  vm.runInNewContext(fs.readFileSync(require.resolve('./index.js'), 'utf8'), { require: fakeRequire, exports, Buffer, fetch: () => { throw Error('unexpected fetch') } })
+  vm.runInNewContext(fs.readFileSync(require.resolve('./index.js'), 'utf8'), { require: fakeRequire, exports, Buffer, process: { env }, fetch: () => { throw Error('unexpected fetch') } })
   return { exports, counts: () => ({ imports, reads }) }
 }
 test('scheduler performs no Google read or dispatch write', async () => {
   const { exports, counts } = handlers()
-  assert.equal((await exports.syncCurrentDispatchBlocks()).disabled, true)
+  assert.equal((await exports.syncCurrentDispatchBlocks({}, { status: () => ({ json: value => value }) })).disabled, true)
   assert.deepEqual(counts(), { imports: 0, reads: 0 })
+})
+
+test('migration close scheduler cannot touch data before explicit activation', async () => {
+  for (const env of [{}, { CLOSE_PRE_SCHEDULE_ENABLED: 'false' }]) {
+    const { exports, counts } = handlers('admin', env)
+    assert.equal((await exports.closePreScheduleMonths()).disabled, true)
+    assert.deepEqual(counts(), { imports: 0, reads: 0 })
+  }
 })
 test('employee cannot import even when forging a confirmation', async () => {
   const { exports, counts } = handlers('employee')

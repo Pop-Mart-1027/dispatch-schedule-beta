@@ -317,9 +317,9 @@ test('admin has schedule, dispatch, broadcast and scheduling-setting management 
   );
 });
 
-test('existing breakfast order create rule remains valid', async () => {
+test('breakfast order collections are excluded from the independent project', async () => {
   const db = environment.unauthenticatedContext().firestore();
-  await assertSucceeds(
+  await assertFails(
     setDoc(doc(db, 'orders', 'regression'), {
       status: 'new',
       paid: false,
