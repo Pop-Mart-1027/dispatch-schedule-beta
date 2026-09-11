@@ -39,15 +39,30 @@ export function resolveDispatchConfiguration(date: string, persisted: DispatchBl
 }
 
 export async function readDispatchConfigurationBase(database=db) {
-  const snapshot=await getDoc(doc(database,'dispatchConfiguration','base'))
-  return snapshot.exists()?snapshot.data() as DispatchConfigurationBase:null
+  try {
+    const snapshot=await getDoc(doc(database,'dispatchConfiguration','base'))
+    return snapshot.exists()?snapshot.data() as DispatchConfigurationBase:null
+  } catch (error) {
+    console.error('[dispatchConfiguration] base read failed; using raw dispatchBlocks', error)
+    return null
+  }
 }
 export async function configuredDispatchBlocks(date: string, persisted: DispatchBlock[], database=db, baseSnapshot?: DispatchConfigurationBase | null) {
-  const base=baseSnapshot === undefined ? await readDispatchConfigurationBase(database) : baseSnapshot
-  if(!base)return persisted
-  if(date<base.activeFrom)return persisted
-  const versions=await getDocs(query(collection(database,'dispatchConfigurationVersions'),where('effectiveFrom','<=',date)))
-  return resolveDispatchConfiguration(date,persisted,base,versions.docs.map(d=>({id:d.id,...d.data()} as DispatchConfigurationVersion)))
+  try {
+    const base=baseSnapshot === undefined ? await readDispatchConfigurationBase(database) : baseSnapshot
+    if(!base)return persisted
+    if(date<base.activeFrom)return persisted
+    const versions=await getDocs(query(collection(database,'dispatchConfigurationVersions'),where('effectiveFrom','<=',date)))
+    try {
+      return resolveDispatchConfiguration(date,persisted,base,versions.docs.map(d=>({id:d.id,...d.data()} as DispatchConfigurationVersion)))
+    } catch (error) {
+      console.error('[dispatchConfiguration] merge failed; using raw dispatchBlocks', error)
+      return persisted
+    }
+  } catch (error) {
+    console.error('[dispatchConfiguration] versions read failed; using raw dispatchBlocks', error)
+    return persisted
+  }
 }
 
 export async function saveDispatchConfiguration(input: {block:DispatchBlock; values:DispatchBlockEditable; blocks:DispatchBlock[]; mode:'day'|'version'; employeeId:string},database=db) {

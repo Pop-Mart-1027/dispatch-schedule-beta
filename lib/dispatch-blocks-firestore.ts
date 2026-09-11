@@ -61,11 +61,6 @@ export async function listDispatchBlocks(date: string, database = db) {
 }
 
 export async function listDispatchBlockTemplate(date: string, database = db) {
-  const base = await readDispatchConfigurationBase(database)
-  // An absent historical day stays absent; never synthesize history from a new
-  // daily override or a future configuration version.
-  if (base && date < base.activeFrom) return { sourceDate: '', blocks: [] as DispatchBlock[] }
-  if (base) return { sourceDate: base.activeFrom, blocks: await configuredDispatchBlocks(date, [], database, base) }
   const snapshot = await getDocs(query(collection(database, 'dispatchBlocks'), orderBy('date', 'desc'), limit(500)))
   const byDate = new Map<string, DispatchBlock[]>()
   snapshot.docs
@@ -80,7 +75,13 @@ export async function listDispatchBlockTemplate(date: string, database = db) {
       || Number(rightTime <= selectedTime) - Number(leftTime <= selectedTime)
       || right.localeCompare(left)
   })[0]
-  return { sourceDate: sourceDate || '', blocks: sourceDate ? byDate.get(sourceDate) || [] : [] }
+  const fallbackBlocks = sourceDate ? byDate.get(sourceDate) || [] : []
+  const base = await readDispatchConfigurationBase(database)
+  // An absent historical day stays absent; never synthesize history from a new
+  // daily override or a future configuration version.
+  if (base && date < base.activeFrom) return { sourceDate: '', blocks: [] as DispatchBlock[] }
+  if (base) return { sourceDate: base.activeFrom, blocks: await configuredDispatchBlocks(date, fallbackBlocks, database, base) }
+  return { sourceDate: sourceDate || '', blocks: fallbackBlocks }
 }
 
 export function buildDispatchPreviewBlocks(template: DispatchBlock[], date: string) {
