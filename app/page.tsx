@@ -31,6 +31,7 @@ import { assignSchedulesToDispatchBlocks } from '../lib/dispatch-schedule-assign
 import { monitorDisplayRows } from '../lib/monitor-display'
 import { popupModeLabels, targetTypeLabels } from '../lib/ui-labels'
 import { getBroadcastRead, listActiveBroadcasts, recordBroadcastShown, type Broadcast } from '../lib/broadcasts'
+import { PushNotifications } from './push-notifications'
 import { getCurrentAnnouncement } from '../lib/announcements'
 import sourceSchedule from '../public/september-schedules.json'
 import { AdminConsole } from './admin-console'
@@ -211,7 +212,7 @@ function taipeiDate(value: Date) {
 function BroadcastList({ employeeId }: { employeeId: string }) {
   const [items, setItems] = useState<Broadcast[]>([])
   useEffect(() => { void getDocs(query(collection(db, 'broadcasts'), orderBy('createdAt', 'desc'))).then(snapshot => setItems(snapshot.docs.map(item => ({ id: item.id, ...item.data() } as Broadcast)))).catch(() => setItems([])) }, [employeeId])
-  return <section className="form-card"><p className="eyebrow">廣播事項</p><h1>廣播事項</h1><div className="table-card">{items.length ? items.map(item => <article className={`notice-card notice-${item.type}`} key={item.id}><h3>{item.title} {!item.active && <small>（已停用）</small>}</h3><p>{item.content}</p>{item.imageUrl && <img src={item.imageUrl} alt="廣播圖片" />}</article>) : <p className="muted">目前沒有廣播。</p>}</div></section>
+  return <section className="form-card"><p className="eyebrow">廣播事項</p><h1>廣播事項</h1><PushNotifications employeeId={employeeId} /><div className="table-card">{items.length ? items.map(item => <article className={`notice-card notice-${item.type}`} key={item.id}><h3>{item.title} {!item.active && <small>（已停用）</small>}</h3><p>{item.content}</p>{item.imageUrl && <img src={item.imageUrl} alt="廣播圖片" />}</article>) : <p className="muted">目前沒有廣播。</p>}</div></section>
 }
 
 function BroadcastAdmin({ employeeId }: { employeeId: string }) {
