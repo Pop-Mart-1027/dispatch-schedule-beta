@@ -1438,6 +1438,14 @@ function BroadcastManager({
   employeeId: string;
   admin: boolean;
 }) {
+  type PushDiagnostic = {
+    tokenCount: number | null;
+    deliveryCount: number | null;
+    successCount: number | null;
+    failureCount: number | null;
+    tokenReadDenied: boolean;
+    deliveryReadDenied: boolean;
+  };
   type Draft = {
     title: string;
     content: string;
@@ -1464,21 +1472,44 @@ function BroadcastManager({
   };
   const [items, setItems] = useState<Broadcast[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
+  const [pushDiagnostics, setPushDiagnostics] = useState<Map<string, PushDiagnostic>>(new Map());
   const [personSearch, setPersonSearch] = useState('');
   const [editing, setEditing] = useState<Broadcast | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
   const [actionError, setActionError] = useState('');
   const load = async () => {
     const snapshot = await getDocs(collection(db, 'broadcasts'));
-    setItems(
-      snapshot.docs
+    const nextItems = snapshot.docs
         .map((item) => ({ id: item.id, ...item.data() }) as Broadcast)
         .sort(
           (a, b) =>
             (timestampDate(b.createdAt)?.getTime() ?? 0) -
             (timestampDate(a.createdAt)?.getTime() ?? 0),
-        ),
-    );
+        );
+    setItems(nextItems);
+    const diagnostics = await Promise.all(nextItems.map(async (item) => {
+      let tokenCount: number | null = null;
+      let deliveryCount: number | null = null;
+      let successCount: number | null = null;
+      let failureCount: number | null = null;
+      let tokenReadDenied = false;
+      let deliveryReadDenied = false;
+      try {
+        tokenCount = (await getDocs(collection(db, 'pushTokens'))).size;
+      } catch {
+        tokenReadDenied = true;
+      }
+      try {
+        const deliveries = await getDocs(collection(db, 'broadcasts', item.id, 'pushDeliveries'));
+        deliveryCount = deliveries.size;
+        successCount = deliveries.docs.filter((delivery) => ['accepted', 'success'].includes(String(delivery.data().status))).length;
+        failureCount = deliveries.docs.filter((delivery) => ['failed', 'failure'].includes(String(delivery.data().status))).length;
+      } catch {
+        deliveryReadDenied = true;
+      }
+      return [item.id, { tokenCount, deliveryCount, successCount, failureCount, tokenReadDenied, deliveryReadDenied } satisfies PushDiagnostic] as const;
+    }));
+    setPushDiagnostics(new Map(diagnostics));
   };
   useEffect(() => {
     void load();
@@ -1638,6 +1669,24 @@ function BroadcastManager({
                       {item.active ? '停用' : '啟用'}
                     </button>
                     <button onClick={() => void remove(item)}>刪除</button>
+                    <details>
+                      <summary>Push 診斷</summary>
+                      {(() => {
+                        const diagnostic = pushDiagnostics.get(item.id);
+                        const push = item.push as (Broadcast['push'] & { sentAt?: unknown }) | undefined;
+                        return <div className="muted">
+                          <small>broadcastId：{item.id}</small>
+                          <small>active：{String(item.active)} · openAppPopup：{String(item.openAppPopup ?? item.popupMode !== 'none')}</small>
+                          <small>開始：{displayBroadcastTime(item.startAt)} · 結束：{displayBroadcastTime(item.endAt)}</small>
+                          <small>push.status：{push?.status || '尚未建立 Push 狀態'}</small>
+                          <small>push.sendAt：{displayBroadcastTime(push?.sendAt)}</small>
+                          <small>push.sentAt：{displayBroadcastTime(push?.sentAt)}</small>
+                          <small>target token count：{diagnostic?.tokenReadDenied ? 'Rules 限制' : diagnostic?.tokenCount ?? '讀取中'}</small>
+                          <small>delivery count：{diagnostic?.deliveryReadDenied ? 'Rules 限制' : diagnostic?.deliveryCount ?? '讀取中'}</small>
+                          <small>success count：{diagnostic?.deliveryReadDenied ? 'Rules 限制' : diagnostic?.successCount ?? '讀取中'} · failure count：{diagnostic?.deliveryReadDenied ? 'Rules 限制' : diagnostic?.failureCount ?? '讀取中'}</small>
+                        </div>;
+                      })()}
+                    </details>
                   </td>
                 )}
               </tr>
