@@ -42,8 +42,8 @@ export async function readDispatchConfigurationBase(database=db) {
   const snapshot=await getDoc(doc(database,'dispatchConfiguration','base'))
   return snapshot.exists()?snapshot.data() as DispatchConfigurationBase:null
 }
-export async function configuredDispatchBlocks(date: string, persisted: DispatchBlock[], database=db) {
-  const base=await readDispatchConfigurationBase(database)
+export async function configuredDispatchBlocks(date: string, persisted: DispatchBlock[], database=db, baseSnapshot?: DispatchConfigurationBase | null) {
+  const base=baseSnapshot === undefined ? await readDispatchConfigurationBase(database) : baseSnapshot
   if(!base)return persisted
   if(date<base.activeFrom)return persisted
   const versions=await getDocs(query(collection(database,'dispatchConfigurationVersions'),where('effectiveFrom','<=',date)))

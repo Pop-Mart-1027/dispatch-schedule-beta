@@ -2,6 +2,7 @@ import {
   collection,
   doc,
   getDocs,
+  getDoc,
   query,
   where,
   runTransaction,
@@ -31,6 +32,12 @@ export type ScheduleRecord = {
   modifiedBy: string;
 };
 
+export async function getScheduleRecord(id: string, database = db) {
+  const snapshot = await getDoc(doc(database, 'scheduleRecords', id));
+  if (!snapshot.exists()) throw new Error('班表已儲存，但重新讀取失敗，請重新載入。');
+  return { id: snapshot.id, ...snapshot.data() } as ScheduleRecord;
+}
+
 export async function listScheduleRecords(date: string, employeeId?: string, database = db) {
   const constraints = employeeId
     ? [where('employeeId', '==', employeeId)]
@@ -49,7 +56,7 @@ export async function listMonthScheduleRecords(
   database = db,
 ) {
   const constraints = employeeId
-    ? [where('employeeId', '==', employeeId)]
+    ? [where('employeeId', '==', employeeId), where('date', '>=', `${month}-01`), where('date', '<=', `${month}-31`)]
     : [where('date', '>=', `${month}-01`), where('date', '<=', `${month}-31`)];
   const [snapshot, layout] = await Promise.all([getDocs(
     query(collection(database, 'scheduleRecords'), ...constraints),

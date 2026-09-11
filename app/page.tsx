@@ -428,7 +428,8 @@ function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isD
     }).blocks.filter(block => block.shiftType === targetShift))
   }, [blocks, schedules, profiles, date, dutyLoading, dutyError])
   const displayBlocks = allDisplayBlocks
-  const visible = useMemo(()=>displayBlocks.map(block => dispatchAreaDisplay(block, dispatchAreaCodes(blocks))).filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0)).sort(dispatchBlockFrontOrder),[displayBlocks,blocks,shift,isDuty])
+  const validDispatchAreas = useMemo(() => dispatchAreaCodes(blocks), [blocks])
+  const visible = useMemo(()=>displayBlocks.map(block => dispatchAreaDisplay(block, validDispatchAreas)).filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0)).sort(dispatchBlockFrontOrder),[displayBlocks,validDispatchAreas,shift,isDuty])
   const ownBlocks = useMemo(() => isDuty ? [] : allDisplayBlocks
     .filter(block => block.date === date && [...block.drivers, ...block.stations, ...block.assistants].some(person => person.employeeId === employeeId))
     .map(block => dispatchAreaDisplay(block, dispatchAreaCodes(blocks)))

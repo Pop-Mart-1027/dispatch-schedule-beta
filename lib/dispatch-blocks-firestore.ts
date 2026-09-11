@@ -1,5 +1,5 @@
 import { configuredDispatchBlocks, readDispatchConfigurationBase } from './dispatch-configuration'
-import { addDoc, collection, doc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, where, writeBatch } from 'firebase/firestore'
+import { addDoc, collection, doc, getDoc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, where, writeBatch } from 'firebase/firestore'
 import { db } from './firebase'
 import { getMonthLayout } from './month-schedule-layout'
 import { eligibleMonthBlocks } from '../functions/month-schedule-policy.mjs'
@@ -41,6 +41,12 @@ export type DispatchBlock = {
 
 export type DispatchBlockEditable = Pick<DispatchBlock, 'areaName' | 'vehicleNo' | 'drivers' | 'stations' | 'assistants' | 'workFocus' | 'balanceArea' | 'note'>
 
+export async function getDispatchBlock(id: string, date: string, database = db) {
+  const [snapshot, layout] = await Promise.all([getDoc(doc(database, 'dispatchBlocks', id)), getMonthLayout(date.slice(0, 7), database)]);
+  if (!snapshot.exists()) throw new Error('派工已儲存，但重新讀取失敗，請重新載入。');
+  return eligibleMonthBlocks([{ id: snapshot.id, ...snapshot.data() }], layout)[0] as DispatchBlock;
+}
+
 export async function listDispatchBlocks(date: string, database = db) {
   const [snapshot, layout] = await Promise.all([getDocs(query(collection(database, 'dispatchBlocks'), where('date', '==', date))), getMonthLayout(date.slice(0,7), database)])
   return (eligibleMonthBlocks(await configuredDispatchBlocks(date, snapshot.docs.map(item => ({ id: item.id, ...item.data() } as DispatchBlock)), database), layout) as DispatchBlock[])
@@ -53,7 +59,7 @@ export async function listDispatchBlockTemplate(date: string, database = db) {
   // An absent historical day stays absent; never synthesize history from a new
   // daily override or a future configuration version.
   if (base && date < base.activeFrom) return { sourceDate: '', blocks: [] as DispatchBlock[] }
-  if (base) return { sourceDate: base.activeFrom, blocks: await configuredDispatchBlocks(date, [], database) }
+  if (base) return { sourceDate: base.activeFrom, blocks: await configuredDispatchBlocks(date, [], database, base) }
   const snapshot = await getDocs(query(collection(database, 'dispatchBlocks'), orderBy('date', 'desc'), limit(500)))
   const byDate = new Map<string, DispatchBlock[]>()
   snapshot.docs

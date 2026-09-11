@@ -25,7 +25,7 @@ export function MonthRowManager({
   present: string[];
   selected?: string;
   onClose: () => void;
-  onSaved: () => Promise<void>;
+  onSaved: (changed?: { employeeId: string; action: string }) => Promise<void>;
 }) {
   const [action, setAction] = useState(selected ? '' : 'add'),
     [personId, setPersonId] = useState(selected || ''),
@@ -64,7 +64,7 @@ export function MonthRowManager({
             }
           : {}),
       });
-      await onSaved();
+      await onSaved({ employeeId: personId, action });
       onClose();
     } catch (e) {
       setError(e instanceof Error ? e.message : '儲存失敗');

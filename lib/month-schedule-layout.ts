@@ -24,9 +24,18 @@ export type MonthLayout = {
   excludedEmployeeIds?: string[];
   assignmentResetAt?: Record<string, Record<string, unknown>>;
 };
-export async function getMonthLayout(monthKey: string, database = db) {
-  const snap = await getDoc(doc(database, 'scheduleMonthLayouts', monthKey));
-  return snap.exists() ? (snap.data() as MonthLayout) : null;
+// Share concurrent reads only. Never reuse settled data across edits or dates.
+const pendingLayouts = new WeakMap<object, Map<string, Promise<MonthLayout | null>>>();
+export function getMonthLayout(monthKey: string, database = db) {
+  let pending = pendingLayouts.get(database);
+  if (!pending) { pending = new Map(); pendingLayouts.set(database, pending); }
+  const existing = pending.get(monthKey);
+  if (existing) return existing;
+  const request = getDoc(doc(database, 'scheduleMonthLayouts', monthKey))
+    .then(snap => snap.exists() ? snap.data() as MonthLayout : null)
+    .finally(() => { if (pending!.get(monthKey) === request) pending!.delete(monthKey); });
+  pending.set(monthKey, request);
+  return request;
 }
 export async function manageMonthRow(input: Record<string, unknown>) {
   return (await httpsCallable(functions, 'manageScheduleMonthRow')(input)).data;

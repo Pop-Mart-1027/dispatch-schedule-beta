@@ -368,3 +368,25 @@ test('dispatch day/version saves are atomic, future-only, immutable and admin-co
   // Stale editor must not overwrite a newer manual save or leave a stray audit/version.
   await assert.rejects(saveDispatchConfiguration({block,values,blocks:[block],mode:'day',employeeId:'A001'},admin),/其他人修改/);
 })
+
+test('targeted readers retrieve committed documents under existing Rules',async()=>{
+  const admin=asRole('A001','admin');
+  const {getDispatchBlock}=await moduleServer.ssrLoadModule('/lib/dispatch-blocks-firestore.ts');
+  const {getScheduleRecord}=await moduleServer.ssrLoadModule('/lib/schedule-firestore.ts');
+  const schedule=await getScheduleRecord('E001_2026-09-09',admin);
+  assert.deepEqual(schedule,{id:'E001_2026-09-09',...(await getDoc(doc(admin,'scheduleRecords','E001_2026-09-09'))).data()});
+  const block=await getDispatchBlock('2026-09-09_day_A1','2026-09-09',admin);
+  const raw=(await getDoc(doc(admin,'dispatchBlocks','2026-09-09_day_A1'))).data();
+  for(const key of ['id','blockId','vehicleNo','modifiedBy'])assert.equal(block[key],key==='id'?'2026-09-09_day_A1':raw[key]);
+  await assert.rejects(getScheduleRecord('missing',admin),/重新載入/);
+});
+
+test('employee month query excludes other months with the existing query shape',async()=>{
+  await environment.withSecurityRulesDisabled(async context=>{
+    const database=context.firestore();
+    await setDoc(doc(database,'scheduleRecords','E001_2026-10-01'),{employeeId:'E001',employeeName:'一般員工',date:'2026-10-01',scheduleCode:'早A1'});
+  });
+  const {listMonthScheduleRecords}=await moduleServer.ssrLoadModule('/lib/schedule-firestore.ts');
+  const rows=await listMonthScheduleRecords('2026-09','E001',asRole('A001','admin'));
+  assert.ok(rows.length>0);assert.ok(rows.every(r=>r.employeeId==='E001'&&r.date.startsWith('2026-09-')));
+});

@@ -28,7 +28,7 @@ fixture.monthSchedules = Array.from({ length: 30 }, (_, index) => employees.map(
   return { employeeId: employee.employeeId, employeeName: employee.name, title: employee.title,
     date: `2026-09-${String(index + 1).padStart(2, '0')}`, shiftType: rows[0].shift,
     scheduleCode: [...new Set(rows.map(({ row }) => row.shifts[index]).filter(Boolean))].join('／') }
-})).flat()
+})).flat().map(record=>({...record,id:record.employeeId+'_'+record.date}))
 const virtual = {
   'test:month-layout': `import {initialMonthRows,changeMonthRows,monthSectionCatalog,changeMonthSections} from '/functions/month-schedule-layout.mjs';
     import {moveWorkArea} from '/functions/month-schedule-policy.mjs';
@@ -84,6 +84,7 @@ const virtual = {
     import {updateDispatchBlock as realUpdate,writeDispatchBlockAudit as realAudit} from '/lib/dispatch-blocks-firestore.ts';
     const denyWrite = () => { window.writeAttempts++; throw new Error('Front preview must remain read-only') };
     export const updateDispatchBlock = (...args)=>window.manualPickerTest?realUpdate(...args):denyWrite(), writeDispatchBlockAudit = (...args)=>window.manualPickerTest?realAudit(...args):denyWrite(), saveDispatchPreviewAsFormal = denyWrite;
+    export async function getDispatchBlock(id,date){return eligibleMonthBlocks(window.formalByDate?.[date]||[],window.monthLayouts?.[date.slice(0,7)]).find(b=>b.id===id)}
     export async function listDispatchBlocks(date) {
       await new Promise(resolve => setTimeout(resolve, window.delays?.[date] || 0));
       return eligibleMonthBlocks(window.formalByDate?.[date] || (date === '2026-09-09' ? window.fixture.template : []),window.monthLayouts?.[date.slice(0,7)]);
@@ -91,13 +92,14 @@ const virtual = {
     export async function listDispatchBlockTemplate() { window.templateReads++; return { sourceDate: '2026-09-09', blocks: window.fixture.template } }`,
   'test:schedules': `export * from '/lib/schedule-firestore.ts';
     import {eligibleMonthSchedules} from '/functions/month-schedule-policy.mjs';
+    export async function getScheduleRecord(id){return {...window.fixture.monthSchedules.find(r=>(r.id || r.employeeId+'_'+r.date)===id)}}
     export async function updateFormalScheduleCell(record,code,modifiedBy) {
       window.scheduleEdits ||= [];
       window.scheduleEdits.push({recordId:record.id,employeeId:record.employeeId,date:record.date,before:record.scheduleCode,after:code,modifiedBy});
       const target=window.fixture.monthSchedules.find(item=>item.employeeId===record.employeeId&&item.date===record.date);
       target.scheduleCode=code;
     }
-    export async function listMonthScheduleRecords(month='2026-09') { return eligibleMonthSchedules(window.fixture.monthSchedules.filter(r=>r.date.startsWith(month)),window.monthLayouts?.[month]); }
+    export async function listMonthScheduleRecords(month='2026-09',employeeId) { return eligibleMonthSchedules(window.fixture.monthSchedules.filter(r=>r.date.startsWith(month)&&(!employeeId||r.employeeId===employeeId)),window.monthLayouts?.[month]); }
     export async function listScheduleRecords(date) {
       await new Promise(resolve => setTimeout(resolve, window.delays?.[date] || 0));
       return eligibleMonthSchedules(window.fixture.schedules[date] || [],window.monthLayouts?.[date.slice(0,7)]);
