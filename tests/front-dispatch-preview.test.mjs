@@ -1040,7 +1040,8 @@ test('mobile personal cards paint before delayed profiles; automatic results and
   await page.evaluate(()=>{window.frontReadLog=[];window.showDispatch('B0410')});
   await page.locator('.dispatch-self-person').first().waitFor();
   assert.deepEqual(await page.evaluate(()=>window.frontReadLog),[]);
-  await page.getByRole('button',{name:'下一筆',exact:true}).click();
+  assert.equal(await page.locator('.dispatch-self-navigation').count(),0);
+  await page.locator('.dispatch-toolbar .tabs button').first().click();
   await page.waitForFunction(()=>document.querySelector('.dispatch-self-person'));
   await page.setViewportSize({width:1920,height:1080});await page.reload();
 });
@@ -1056,5 +1057,33 @@ test('mobile login and dispatch avoid the unrelated whole-month preload; schedul
  assert.ok(await page.locator('.dispatch-card').count()>0);
  await page.evaluate(()=>{document.querySelectorAll('.sidebar button').forEach(b=>{if(b.textContent.includes('我的班表'))b.click()})});
  await page.waitForFunction(()=>window.frontReadLog.some(r=>r.kind==='month'&&r.employeeId==='all'));
+ await page.setViewportSize({width:1920,height:1080});await page.reload();
+});
+
+
+test('mobile employee locates one area without assignment counts, retains both shifts, and only reports confirmed empty days',async()=>{
+ for(const width of [360,390,430]) {
+  await page.setViewportSize({width,height:844});await page.reload();
+  await page.evaluate(async()=>{await window.clearFrontCache();window.formalByDate={'2026-09-09':window.fixture.template.map(b=>({...b,modifiedBy:'admin',drivers:[{employeeId:b.areaCode==='O1'?'B0410':'OTHER',employeeName:b.areaCode==='O1'?'陳均瑜':'其他'}],stations:[],assistants:[]}))};window.showDispatch('B0410')});
+  await page.waitForFunction(()=>performance.getEntriesByName('smilebike:dispatch:full-painted').length);
+  assert.equal(await page.locator('.dispatch-self-navigation').count(),0);
+  assert.equal(await page.getByRole('button',{name:/上一筆|下一筆/}).count(),0);
+  assert.equal(await page.getByText('今日尚無派工',{exact:true}).count(),0);
+  await page.waitForFunction(()=>[...document.querySelectorAll('.dispatch-self-person')].some(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&e.closest('[data-area-code="O1"]')}));
+  await page.locator('.dispatch-toolbar .tabs button').first().click();
+  await page.locator('.dispatch-self-person').first().waitFor();
+  assert.ok(await page.locator('.dispatch-card').count()>3);
+  if(width===390)await page.screenshot({path:'output/mobile-area-location-390.png'});
+  await page.evaluate(()=>{window.showHome();window.profileDelayMs=300});
+  await page.getByText('工作總覽',{exact:true}).first().waitFor();
+  await page.evaluate(()=>window.showDispatch('NO-ASSIGNMENT'));
+  assert.equal(await page.getByText('今日尚無派工',{exact:true}).count(),0);
+  await page.getByText('今日尚無派工',{exact:true}).waitFor();
+  await page.waitForFunction(()=>performance.getEntriesByName('smilebike:dispatch:full-painted').length);
+  assert.ok(await page.locator('.dispatch-card').count()>3);
+  await page.evaluate(()=>{window.profileDelayMs=0;window.showDispatch('B0410',true)});
+  await page.locator('.dispatch-card').first().waitFor();
+  assert.equal(await page.locator('.dispatch-self-person,.dispatch-self-empty,.dispatch-self-navigation').count(),0);
+ }
  await page.setViewportSize({width:1920,height:1080});await page.reload();
 });
