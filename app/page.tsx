@@ -61,6 +61,7 @@ export default function Home() {
   const [notice, setNotice] = useState('')
   const [broadcastPopupQueue, setBroadcastPopupQueue] = useState<Broadcast[]>([])
   const popupSessionChecked = useRef(false)
+  const popupSessionChecking = useRef(false)
   const [scheduleData, setScheduleData] = useState<ScheduleData | null>(null)
   const notify = (text: string) => { setNotice(text); window.setTimeout(() => setNotice(''), 2500) }
   const [signingIn, setSigningIn] = useState(false)
@@ -91,7 +92,7 @@ export default function Home() {
   }, [currentUser?.employeeId, page])
 
   useEffect(() => onAuthStateChanged(auth, async user => {
-    if (!user) { clearFrontDispatchCache(); popupSessionChecked.current = false; setCurrentUser(null); setBroadcastPopupQueue([]); setAuthReady(true); return }
+    if (!user) { clearFrontDispatchCache(); popupSessionChecked.current = false; popupSessionChecking.current = false; setCurrentUser(null); setBroadcastPopupQueue([]); setAuthReady(true); return }
     try {
       const getMyProfile = httpsCallable<undefined, Employee>(functions, 'getMyProfile')
       const result = await getMyProfile()
@@ -120,9 +121,16 @@ export default function Home() {
   useEffect(() => {
     let cancelled = false
     if (!currentUser || featuresLoading || !features.broadcastsEnabled) { setBroadcastPopupQueue([]); return }
-    if (popupSessionChecked.current) return
-    popupSessionChecked.current = true
-    void showEligibleBroadcasts(currentUser,()=>!cancelled).then(items => { if (items.length && !cancelled) setBroadcastPopupQueue(items) })
+    if (popupSessionChecked.current || popupSessionChecking.current) return
+    popupSessionChecking.current = true
+    void showEligibleBroadcasts(currentUser,()=>!cancelled)
+      .then(items => {
+        if (cancelled) return
+        setBroadcastPopupQueue(items)
+        popupSessionChecked.current = true
+      })
+      .catch(error => console.error('[broadcasts] popup check failed', error))
+      .finally(() => { popupSessionChecking.current = false })
     return ()=>{cancelled=true}
   }, [currentUser?.employeeId, featuresLoading, features.broadcastsEnabled])
 
@@ -174,7 +182,13 @@ function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProf
 
 async function showEligibleBroadcasts(user: Employee, isCurrent = () => true): Promise<Broadcast[]> {
   try {
-    const [broadcasts, monthSchedule] = await Promise.all([listActiveBroadcasts(), listMonthScheduleRecords(taipeiToday().slice(0, 7), user.employeeId)])
+    const broadcasts = await listActiveBroadcasts()
+    let monthSchedule: ScheduleRecord[] = []
+    try {
+      monthSchedule = await listMonthScheduleRecords(taipeiToday().slice(0, 7), user.employeeId)
+    } catch (error) {
+      console.error('[broadcasts] optional audience schedule read failed', error)
+    }
     const shiftGroups = new Set(monthSchedule.map(record => record.shiftType === 'morning' ? '早班' : '夜班'))
     const targetMatches = (item: Broadcast) => {
       const values = (item.targetValues || []).map(value => value.toLowerCase())
@@ -204,7 +218,10 @@ async function showEligibleBroadcasts(user: Employee, isCurrent = () => true): P
       result.push(item)
     }
     return result
-  } catch { /* Broadcast availability must not block app startup. */ return [] }
+  } catch (error) {
+    console.error('[broadcasts] active broadcast read failed', error)
+    throw error
+  }
 }
 
 function BroadcastModal({ item, onClose }: { item: Broadcast; onClose: () => void }) {

@@ -1,12 +1,18 @@
-import { collection, doc, getDoc, getDocs, orderBy, query, runTransaction, serverTimestamp, where } from 'firebase/firestore'
+import { collection, doc, getDoc, getDocs, query, runTransaction, serverTimestamp, where } from 'firebase/firestore'
 import { db } from './firebase'
 
 export type Broadcast = { push?: { status: string; sendAt?: unknown; accepted?: number; failed?: number }; openAppPopup?: boolean; id: string; title: string; content: string; type: '公告' | '雙北派工' | '客服案件' | '派工異動' | '其他通知' | '一般' | '提醒' | '重要'; targetType: 'all' | 'morning' | 'night' | 'area' | 'employee'; targetValues: string[]; startAt: unknown; endAt: unknown; popupMode: 'once' | 'daily' | 'always' | 'none'; active: boolean; imageUrl?: string; linkUrl?: string; createdBy: string; createdAt?: unknown; updatedAt?: unknown }
 export type BroadcastRead = { broadcastId: string; employeeId: string; firstShownAt?: unknown; lastShownAt?: unknown; readAt?: unknown; shownCount: number }
 
 export async function listActiveBroadcasts() {
-  const snapshot = await getDocs(query(collection(db, 'broadcasts'), where('active', '==', true), orderBy('startAt', 'desc')))
-  return snapshot.docs.map(item => ({ id: item.id, ...item.data() } as Broadcast))
+  const snapshot = await getDocs(query(collection(db, 'broadcasts'), where('active', '==', true)))
+  const millis = (value: unknown) => {
+    if (value && typeof value === 'object' && 'toMillis' in value && typeof value.toMillis === 'function') return value.toMillis()
+    return value ? new Date(value as string).getTime() : 0
+  }
+  return snapshot.docs
+    .map(item => ({ id: item.id, ...item.data() } as Broadcast))
+    .sort((a, b) => millis(b.startAt) - millis(a.startAt))
 }
 export async function listBroadcastReads(employeeId: string) {
   const snapshot = await getDocs(query(collection(db, 'broadcastReads'), where('employeeId', '==', employeeId)))
