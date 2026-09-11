@@ -59,7 +59,8 @@ export default function Home() {
   const [scheduleTab, setScheduleTab] = useState('mine')
   const [menuOpen, setMenuOpen] = useState(false)
   const [notice, setNotice] = useState('')
-  const [broadcastPopup, setBroadcastPopup] = useState<Broadcast | null>(null)
+  const [broadcastPopupQueue, setBroadcastPopupQueue] = useState<Broadcast[]>([])
+  const popupSessionChecked = useRef(false)
   const [scheduleData, setScheduleData] = useState<ScheduleData | null>(null)
   const notify = (text: string) => { setNotice(text); window.setTimeout(() => setNotice(''), 2500) }
   const [signingIn, setSigningIn] = useState(false)
@@ -90,7 +91,7 @@ export default function Home() {
   }, [currentUser?.employeeId, page])
 
   useEffect(() => onAuthStateChanged(auth, async user => {
-    if (!user) { clearFrontDispatchCache(); setCurrentUser(null); setAuthReady(true); return }
+    if (!user) { clearFrontDispatchCache(); popupSessionChecked.current = false; setCurrentUser(null); setBroadcastPopupQueue([]); setAuthReady(true); return }
     try {
       const getMyProfile = httpsCallable<undefined, Employee>(functions, 'getMyProfile')
       const result = await getMyProfile()
@@ -118,8 +119,10 @@ export default function Home() {
 
   useEffect(() => {
     let cancelled = false
-    if (!currentUser || featuresLoading || !features.broadcastsEnabled) {setBroadcastPopup(null);return}
-    void showEligibleBroadcast(currentUser,()=>!cancelled).then(item => { if (item && !cancelled) setBroadcastPopup(item) })
+    if (!currentUser || featuresLoading || !features.broadcastsEnabled) { setBroadcastPopupQueue([]); return }
+    if (popupSessionChecked.current) return
+    popupSessionChecked.current = true
+    void showEligibleBroadcasts(currentUser,()=>!cancelled).then(items => { if (items.length && !cancelled) setBroadcastPopupQueue(items) })
     return ()=>{cancelled=true}
   }, [currentUser?.employeeId, featuresLoading, features.broadcastsEnabled])
 
@@ -132,7 +135,7 @@ export default function Home() {
 
   const titles: Record<string, string> = { home: '工作總覽', notice: '公告', broadcasts: '廣播事項', 'dispatch-admin': '派工管理', 'broadcast-admin': '廣播管理', attendance: '打卡', checkpoints: '打卡點管理', geofence: '電子圍籬測試', schedule: '我的班表', dispatch: '派工單', pre: '預排班', leave: '假勤／特休', profile: '個人資料', employees: '員工管理', integrations: '尚未串接' }
   const go = (target: string) => { setPage(target); setMenuOpen(false) }
-  return <div className="app-shell" data-page={page}>{menuOpen && <button className="mobile-backdrop" aria-label="關閉選單" onClick={() => setMenuOpen(false)} />}<aside className={menuOpen ? 'sidebar open' : 'sidebar'}><div className="logo"><span>調</span><div><strong>調度工作台</strong></div><button className="drawer-close" aria-label="關閉選單" onClick={() => setMenuOpen(false)}><X size={20} /></button></div><nav><Nav label="工作總覽" active={page === 'home'} icon={<Coffee size={18} />} onClick={() => go('home')} />{attendanceEnabled && <Nav label="打卡" active={page === 'attendance'} icon={<CheckCircle2 size={18} />} onClick={() => go('attendance')} />}<Nav label="公告" active={page === 'notice'} icon={<Megaphone size={18} />} onClick={() => go('notice')} />{features.broadcastsEnabled && <Nav label="廣播事項" active={page === 'broadcasts'} icon={<Megaphone size={18} />} onClick={() => go('broadcasts')} />}<Nav label="我的班表" active={page === 'schedule'} icon={<CalendarDays size={18} />} onClick={() => go('schedule')} />{features.dispatchEnabled && <Nav label="派工單" active={page === 'dispatch'} icon={<ClipboardList size={18} />} onClick={() => go('dispatch')} />}<Nav label="預排班" active={page === 'pre'} icon={<Clock3 size={18} />} onClick={() => go('pre')} /><Nav label="假勤／特休" active={page === 'leave'} icon={<ClipboardPlus size={18} />} onClick={() => go('leave')} /><Nav label="個人資料" active={page === 'profile'} icon={<UserRound size={18} />} onClick={() => go('profile')} />{(currentUser.role === 'admin' || currentUser.role === 'duty') && <Nav label={currentUser.role === 'admin' ? '管理後台' : '監控後台'} active={false} icon={<ShieldCheck size={18} />} onClick={() => go('admin-console')} />}<Nav label="尚未串接" active={page === 'integrations'} icon={<Clock3 size={18} />} onClick={() => go('integrations')} /></nav><button className="logout" onClick={() => void signOut(auth)}><LogOut size={17} />登出</button></aside><main className="workspace"><header className="topbar"><button className="menu-button" aria-label="開啟選單" onClick={() => setMenuOpen(true)}><Menu size={22} /></button><div><p className="eyebrow">2026 年 9 月</p><h2>{titles[page]}</h2></div><div className="profile-chip"><span>{currentUser.name}<small>{account} · {currentUser.role === 'admin' ? '管理員' : '調度專員'}</small></span></div></header><section className="content">{page === 'home' && <HomeView onAction={notify} name={currentUser.name} onGo={go} dispatchEnabled={features.dispatchEnabled} />}{((page==='dispatch'&&!features.dispatchEnabled)||(page==='broadcasts'&&!features.broadcastsEnabled)||(page==='attendance'&&!attendanceEnabled))&&<p className="loading">此功能尚未開放</p>}{page === 'notice' && <EmptyNotice />}{page === 'broadcasts' && features.broadcastsEnabled && <BroadcastList employeeId={account} />}{page === 'attendance' && attendanceEnabled && <AttendanceView employeeId={account} employeeName={currentUser.name} scheduleData={scheduleData} />}{page === 'checkpoints' && currentUser.role === 'admin' && <CheckpointAdmin />}{page === 'geofence' && currentUser.role === 'admin' && <GeofenceTest />}{page === 'integrations' && <IntegrationsView />}{page === 'schedule' && <ScheduleView tab={scheduleTab} setTab={setScheduleTab} data={scheduleData} employeeId={account} />}{page === 'dispatch' && features.dispatchEnabled && <FirestoreDispatchView employeeId={account} isDuty={currentUser.role === 'admin' || currentUser.role === 'duty'} />}{page === 'pre' && <PreSchedule onSave={() => notify('預排班已儲存為草稿')} />}{page === 'leave' && <LeaveView onAction={notify} />}{page === 'profile' && <ProfileView employee={currentUser} />}</section></main>{notice && <div className="toast">✓ {notice}</div>}{features.broadcastsEnabled && broadcastPopup && <BroadcastModal item={broadcastPopup} onClose={() => setBroadcastPopup(null)} />}</div>
+  return <div className="app-shell" data-page={page}>{menuOpen && <button className="mobile-backdrop" aria-label="關閉選單" onClick={() => setMenuOpen(false)} />}<aside className={menuOpen ? 'sidebar open' : 'sidebar'}><div className="logo"><span>調</span><div><strong>調度工作台</strong></div><button className="drawer-close" aria-label="關閉選單" onClick={() => setMenuOpen(false)}><X size={20} /></button></div><nav><Nav label="工作總覽" active={page === 'home'} icon={<Coffee size={18} />} onClick={() => go('home')} />{attendanceEnabled && <Nav label="打卡" active={page === 'attendance'} icon={<CheckCircle2 size={18} />} onClick={() => go('attendance')} />}<Nav label="公告" active={page === 'notice'} icon={<Megaphone size={18} />} onClick={() => go('notice')} />{features.broadcastsEnabled && <Nav label="廣播事項" active={page === 'broadcasts'} icon={<Megaphone size={18} />} onClick={() => go('broadcasts')} />}<Nav label="我的班表" active={page === 'schedule'} icon={<CalendarDays size={18} />} onClick={() => go('schedule')} />{features.dispatchEnabled && <Nav label="派工單" active={page === 'dispatch'} icon={<ClipboardList size={18} />} onClick={() => go('dispatch')} />}<Nav label="預排班" active={page === 'pre'} icon={<Clock3 size={18} />} onClick={() => go('pre')} /><Nav label="假勤／特休" active={page === 'leave'} icon={<ClipboardPlus size={18} />} onClick={() => go('leave')} /><Nav label="個人資料" active={page === 'profile'} icon={<UserRound size={18} />} onClick={() => go('profile')} />{(currentUser.role === 'admin' || currentUser.role === 'duty') && <Nav label={currentUser.role === 'admin' ? '管理後台' : '監控後台'} active={false} icon={<ShieldCheck size={18} />} onClick={() => go('admin-console')} />}<Nav label="尚未串接" active={page === 'integrations'} icon={<Clock3 size={18} />} onClick={() => go('integrations')} /></nav><button className="logout" onClick={() => void signOut(auth)}><LogOut size={17} />登出</button></aside><main className="workspace"><header className="topbar"><button className="menu-button" aria-label="開啟選單" onClick={() => setMenuOpen(true)}><Menu size={22} /></button><div><p className="eyebrow">2026 年 9 月</p><h2>{titles[page]}</h2></div><div className="profile-chip"><span>{currentUser.name}<small>{account} · {currentUser.role === 'admin' ? '管理員' : '調度專員'}</small></span></div></header><section className="content">{page === 'home' && <HomeView onAction={notify} name={currentUser.name} onGo={go} dispatchEnabled={features.dispatchEnabled} />}{((page==='dispatch'&&!features.dispatchEnabled)||(page==='broadcasts'&&!features.broadcastsEnabled)||(page==='attendance'&&!attendanceEnabled))&&<p className="loading">此功能尚未開放</p>}{page === 'notice' && <EmptyNotice />}{page === 'broadcasts' && features.broadcastsEnabled && <BroadcastList employeeId={account} />}{page === 'attendance' && attendanceEnabled && <AttendanceView employeeId={account} employeeName={currentUser.name} scheduleData={scheduleData} />}{page === 'checkpoints' && currentUser.role === 'admin' && <CheckpointAdmin />}{page === 'geofence' && currentUser.role === 'admin' && <GeofenceTest />}{page === 'integrations' && <IntegrationsView />}{page === 'schedule' && <ScheduleView tab={scheduleTab} setTab={setScheduleTab} data={scheduleData} employeeId={account} />}{page === 'dispatch' && features.dispatchEnabled && <FirestoreDispatchView employeeId={account} isDuty={currentUser.role === 'admin' || currentUser.role === 'duty'} />}{page === 'pre' && <PreSchedule onSave={() => notify('預排班已儲存為草稿')} />}{page === 'leave' && <LeaveView onAction={notify} />}{page === 'profile' && <ProfileView employee={currentUser} />}</section></main>{notice && <div className="toast">✓ {notice}</div>}{features.broadcastsEnabled && broadcastPopupQueue[0] && <BroadcastModal item={broadcastPopupQueue[0]} onClose={() => setBroadcastPopupQueue(queue => queue.slice(1))} />}</div>
 }
 
 function Nav({ label, icon, active, onClick }: { label: string; icon: React.ReactNode; active: boolean; onClick: () => void }) { return <button className={active ? 'nav-item active' : 'nav-item'} onClick={onClick}>{icon}<span>{label}</span></button> }
@@ -169,7 +172,7 @@ function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProf
   return { month: '2026-09', days, morning: rowsFor('morning'), night: rowsFor('night'),layout }
 }
 
-async function showEligibleBroadcast(user: Employee, isCurrent = () => true): Promise<Broadcast | undefined> {
+async function showEligibleBroadcasts(user: Employee, isCurrent = () => true): Promise<Broadcast[]> {
   try {
     const [broadcasts, monthSchedule] = await Promise.all([listActiveBroadcasts(), listMonthScheduleRecords(taipeiToday().slice(0, 7), user.employeeId)])
     const shiftGroups = new Set(monthSchedule.map(record => record.shiftType === 'morning' ? '早班' : '夜班'))
@@ -181,26 +184,27 @@ async function showEligibleBroadcast(user: Employee, isCurrent = () => true): Pr
       if (item.targetType === 'area') return monthSchedule.some(record => values.includes(record.scheduleCode.toLowerCase()))
       return item.targetType === 'all'
     }
-    const now = Date.now()
-    const match = broadcasts.find(item => {
-      const start = item.startAt && typeof item.startAt === 'object' && 'toDate' in item.startAt ? (item.startAt as { toDate: () => Date }).toDate().getTime() : 0
-      const end = item.endAt && typeof item.endAt === 'object' && 'toDate' in item.endAt ? (item.endAt as { toDate: () => Date }).toDate().getTime() : Number.MAX_SAFE_INTEGER
-      if (!broadcastIsActive(start === 0 ? null : new Date(start), end === Number.MAX_SAFE_INTEGER ? null : new Date(end), new Date(now)) || !item.active) return false
-      return targetMatches(item)
+    const now = new Date()
+    const eligible = broadcasts.filter(item => {
+      const start = item.startAt && typeof item.startAt === 'object' && 'toDate' in item.startAt ? (item.startAt as { toDate: () => Date }).toDate() : null
+      const end = item.endAt && typeof item.endAt === 'object' && 'toDate' in item.endAt ? (item.endAt as { toDate: () => Date }).toDate() : null
+      return item.active && broadcastIsActive(start, end, now) && targetMatches(item) && (item.openAppPopup === true || (item.openAppPopup === undefined && item.popupMode !== 'none'))
     })
-    if (!match || (match.openAppPopup !== true && match.openAppPopup !== false && match.popupMode === 'none')) return
-    if (match.openAppPopup === false) return
-    const read = await getBroadcastRead(match.id, user.employeeId)
-    const today = taipeiToday()
-    const last = read?.lastShownAt && typeof read.lastShownAt === 'object' && 'toDate' in read.lastShownAt ? taipeiDate((read.lastShownAt as { toDate: () => Date }).toDate()) : ''
-    if (match.openAppPopup !== true) {
-      if (match.popupMode === 'once' && read) return
-      if (match.popupMode === 'daily' && last === today) return
+    const result: Broadcast[] = []
+    for (const item of eligible) {
+      const read = await getBroadcastRead(item.id, user.employeeId)
+      const today = taipeiToday()
+      const last = read?.lastShownAt && typeof read.lastShownAt === 'object' && 'toDate' in read.lastShownAt ? taipeiDate((read.lastShownAt as { toDate: () => Date }).toDate()) : ''
+      if (item.openAppPopup !== true) {
+        if (item.popupMode === 'once' && read) continue
+        if (item.popupMode === 'daily' && last === today) continue
+      }
+      if (!isCurrent()) return []
+      await recordBroadcastShown({ broadcastId: item.id, employeeId: user.employeeId, shownCount: read?.shownCount ?? 0 })
+      result.push(item)
     }
-    if (!isCurrent()) return
-    await recordBroadcastShown({ broadcastId: match.id, employeeId: user.employeeId, shownCount: read?.shownCount ?? 0 })
-    return match
-  } catch { /* Broadcast availability must not block app startup. */ return undefined }
+    return result
+  } catch { /* Broadcast availability must not block app startup. */ return [] }
 }
 
 function BroadcastModal({ item, onClose }: { item: Broadcast; onClose: () => void }) {

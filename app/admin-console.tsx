@@ -63,7 +63,6 @@ import {
   type ScheduleRecord,
 } from '../lib/schedule-firestore';
 import type { Broadcast } from '../lib/broadcasts';
-import { BroadcastPushControls } from './broadcast-push-controls';
 import {
   ADMIN_TITLE_OPTIONS,
   employeeAdminOrder,
@@ -1468,6 +1467,7 @@ function BroadcastManager({
   const [personSearch, setPersonSearch] = useState('');
   const [editing, setEditing] = useState<Broadcast | null>(null);
   const [draft, setDraft] = useState<Draft | null>(null);
+  const [actionError, setActionError] = useState('');
   const load = async () => {
     const snapshot = await getDocs(collection(db, 'broadcasts'));
     setItems(
@@ -1545,8 +1545,14 @@ function BroadcastManager({
   };
   const remove = async (item: Broadcast) => {
     if (window.confirm('確定要刪除此廣播嗎？刪除後將不再顯示，但歷史投遞紀錄仍會保留。')) {
-      await deleteDoc(doc(db, 'broadcasts', item.id));
-      await load();
+      setActionError('');
+      try {
+        await deleteDoc(doc(db, 'broadcasts', item.id));
+        setItems((current) => current.filter((entry) => entry.id !== item.id));
+        await load();
+      } catch (error) {
+        setActionError(error instanceof Error ? error.message : '刪除廣播失敗，請稍後再試');
+      }
     }
   };
   const selectedIds =
@@ -1582,6 +1588,7 @@ function BroadcastManager({
         )}
       </div>
       <div className="admin-table-wrap">
+        {actionError && <p className="error" role="alert">{actionError}</p>}
         <table className="admin-data-table">
           <thead>
             <tr>
@@ -1631,7 +1638,6 @@ function BroadcastManager({
                       {item.active ? '停用' : '啟用'}
                     </button>
                     <button onClick={() => void remove(item)}>刪除</button>
-                    <BroadcastPushControls item={item} reload={load} />
                   </td>
                 )}
               </tr>
