@@ -974,3 +974,33 @@ test('saving region X1 immediately reorders raw admin rows and front cards ident
   assert.equal(await page.locator('.dispatch-card[data-area-code="X1"]').filter({hasText:'RFW-7651'}).count(),1);
   await page.reload();
 });
+
+test('mobile dispatch back-to-top appears after scrolling and smoothly returns at three phone sizes; desktop stays hidden',async()=>{
+  const measurements=[];
+  for(const [width,height] of [[360,800],[390,844],[430,932]]){
+    await page.setViewportSize({width,height});await page.reload();
+    await page.locator('.dispatch-card').first().waitFor();
+    await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));
+    const button=page.getByRole('button',{name:'回到頂部',exact:true});
+    assert.equal(await button.count(),0);
+    await page.evaluate(()=>window.scrollTo({top:250,behavior:'instant'}));
+    await page.waitForFunction(()=>window.scrollY===250);assert.equal(await button.count(),0);
+    await page.evaluate(()=>window.scrollTo({top:1000,behavior:'instant'}));await button.waitFor();
+    const box=await button.boundingBox();assert.equal(box.width,44);assert.equal(box.height,44);
+    assert.ok(width-box.x-box.width>=12);assert.ok(height-box.y-box.height>=16);
+    assert.match(await button.evaluate(b=>getComputedStyle(b).backgroundColor),/0\.65\)/);
+    measurements.push({width,height,button:box});
+    await page.screenshot({path:`output/dispatch-back-top-${width}.png`});
+    await page.evaluate(()=>{const original=window.scrollTo.bind(window);window.scrollTo=(options)=>{window.lastScrollOptions=options;original(options)}});
+    await button.click();await page.waitForFunction(()=>window.scrollY===0);
+    assert.equal(await button.count(),0);assert.equal(await page.evaluate(()=>window.lastScrollOptions.behavior),'smooth');
+  }
+  await page.setViewportSize({width:1440,height:900});await page.reload();await page.locator('.dispatch-card').first().waitFor();
+  await page.evaluate(()=>window.scrollTo({top:1000,behavior:'instant'}));await page.waitForFunction(()=>window.scrollY===1000);
+  assert.equal(await page.getByRole('button',{name:'回到頂部',exact:true}).count(),0);
+  await page.setViewportSize({width:390,height:844});await page.getByRole('button',{name:'回到頂部',exact:true}).waitFor();
+  await page.evaluate(()=>window.showHome());await page.getByText('工作總覽',{exact:true}).first().waitFor();
+  assert.equal(await page.getByRole('button',{name:'回到頂部',exact:true}).count(),0);
+  console.log('back-to-top phone measurements',JSON.stringify(measurements));
+  await page.setViewportSize({width:1920,height:1080});await page.reload();
+});

@@ -39,3 +39,9 @@
 .dispatch-self-navigation button { padding:8px 12px; border:1px solid #ea741a; background:white; border-radius:6px; color:#9a4509; }
 .dispatch-self-navigation button:disabled { opacity:.4; }
 .dispatch-card { scroll-margin-top:100px; }
+
+.dispatch-back-to-top { display:none; }
+@media (max-width:760px) {
+  .dispatch-back-to-top { display:flex; position:fixed; right:calc(12px + env(safe-area-inset-right, 0px)); bottom:calc(16px + env(safe-area-inset-bottom, 0px)); z-index:20; align-items:center; justify-content:center; width:44px; height:44px; padding:0; border:1px solid #ffffff90; border-radius:50%; background:rgba(48, 66, 74, .65); color:#fff; font-size:26px; line-height:1; box-shadow:0 2px 8px #0002; cursor:pointer; }
+  .dispatch-back-to-top:focus-visible { outline:2px solid #ea741a; outline-offset:3px; }
+}
