@@ -68,7 +68,8 @@ const virtual = {
       window.featureListeners?.forEach(next=>next({exists:()=>true,data:()=>window.features}));
     }
     export async function getDoc() {return {exists:()=>!!window.scheduleSetting,data:()=>window.scheduleSetting};}
-    export async function setDoc(_ref,data) {window.scheduleSetting={...data,updatedAt:{toDate:()=>new Date()}};}
+    export async function addDoc(ref,data) { if(ref.path!=='dispatchAuditLogs'||!window.manualPickerTest)throw Error('Unexpected audit write');window.manualAudits.push(data);return {id:'audit'}; }
+    export async function setDoc(_ref,data) {if(_ref.path.startsWith('dispatchBlocks/')){if(!window.manualPickerTest)throw Error('Unexpected dispatch write');const rows=window.formalByDate['2026-09-09'];const block=rows.find(b=>b.id===_ref.id);Object.assign(block,data);return;}window.scheduleSetting={...data,updatedAt:{toDate:()=>new Date()}};}
     export async function getDocs() { return { docs: window.fixture.employees.map(employee => ({ id: employee.employeeId, data: () => employee })) } }`,
   'test:auth': `export * from 'firebase/auth'; export function onAuthStateChanged(_auth,callback) {queueMicrotask(()=>callback({uid:'96504'}));return ()=>{};}`,
   'test:broadcasts': `export * from '/lib/broadcasts.ts';
@@ -76,8 +77,9 @@ const virtual = {
     export async function getBroadcastRead(){return null;} export async function recordBroadcastShown(){}`,
   'test:blocks': `export * from '/lib/dispatch-blocks-firestore.ts';
     import {eligibleMonthBlocks} from '/functions/month-schedule-policy.mjs';
+    import {updateDispatchBlock as realUpdate,writeDispatchBlockAudit as realAudit} from '/lib/dispatch-blocks-firestore.ts';
     const denyWrite = () => { window.writeAttempts++; throw new Error('Front preview must remain read-only') };
-    export const updateDispatchBlock = denyWrite, writeDispatchBlockAudit = denyWrite, saveDispatchPreviewAsFormal = denyWrite;
+    export const updateDispatchBlock = (...args)=>window.manualPickerTest?realUpdate(...args):denyWrite(), writeDispatchBlockAudit = (...args)=>window.manualPickerTest?realAudit(...args):denyWrite(), saveDispatchPreviewAsFormal = denyWrite;
     export async function listDispatchBlocks(date) {
       await new Promise(resolve => setTimeout(resolve, window.delays?.[date] || 0));
       return eligibleMonthBlocks(window.formalByDate?.[date] || (date === '2026-09-09' ? window.fixture.template : []),window.monthLayouts?.[date.slice(0,7)]);
@@ -154,7 +156,7 @@ const server = await createServer({
     load(id) { if (id.startsWith('\0test:')) return virtual[id.slice(1, -4)] },
     transform(code, id) {
       if(['/app/month-row-manager.tsx','/app/month-section-manager.tsx'].some(path=>id.replaceAll('\\', '/').endsWith(path))) return code.replace("from '../lib/month-schedule-layout'", "from 'test:month-layout'");
-      if(id.replaceAll('\\', '/').endsWith('/lib/system-features.ts')) return code.replace("from 'firebase/firestore'", "from 'test:firestore'");
+      if(['/lib/system-features.ts','/lib/dispatch-blocks-firestore.ts'].some(path=>id.replaceAll('\\', '/').endsWith(path))) return code.replace("from 'firebase/firestore'", "from 'test:firestore'");
       const admin = id.replaceAll('\\', '/').endsWith('/app/admin-console.tsx')
       if (!admin && !id.replaceAll('\\', '/').endsWith('/app/page.tsx')) return
       return code.replace("from 'firebase/firestore'", "from 'test:firestore'")
@@ -192,6 +194,48 @@ await page.addInitScript(data => {
 }, fixture)
 await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort())
 await page.goto(`http://127.0.0.1:${server.httpServer.address().port}/preview-test`)
+
+test('manual dispatch searches active employees without roster or shift restrictions and audits saves', async () => {
+  await page.reload()
+  await page.evaluate(() => {
+    window.manualPickerTest=true;window.manualAudits=[];
+    window.formalByDate={'2026-09-09':structuredClone(window.fixture.template)};
+    window.fixture.employees.find(p=>p.employeeId==='B0410').active=true;
+    window.fixture.employees.push({employeeId:'TEST0001',name:'未排班測試員工',title:'PT-支援',active:true},
+      {employeeId:'INACTIVE0001',name:'離職測試員工',title:'PT',active:false});
+    window.showManager();
+  })
+  const picker=page.locator('.dispatch-person-picker');
+  for(const shift of ['day','night']) {
+    await page.locator('select').first().selectOption(shift);
+    const row=page.locator('.dispatch-table tbody tr').filter({hasText:'藝文 O1'}).first();
+    await row.getByRole('button',{name:'修改',exact:true}).click();
+    for(const search of ['B0410','0410','陳均瑜']) {
+      await picker.locator('input').fill(search);
+      assert.equal(await picker.locator('article').count(),1);
+      assert.match(await picker.textContent(),/陳均瑜/);
+    }
+    await picker.getByRole('button',{name:'駐點',exact:true}).click();
+    await picker.getByRole('button',{name:'駐點',exact:true}).click();
+    await picker.locator('input').fill('未排班測試員工');
+    await picker.getByRole('button',{name:'駐點',exact:true}).click();
+    await picker.locator('input').fill('INACTIVE0001');
+    assert.equal(await picker.locator('article').count(),0);
+    await page.getByRole('button',{name:'儲存修改',exact:true}).click();
+    await picker.waitFor({state:'hidden'});
+  }
+  const saved=await page.evaluate(()=>({blocks:window.formalByDate['2026-09-09'],audits:window.manualAudits}));
+  assert.equal(saved.audits.length,2);
+  for(const shift of ['day','night']) {
+    const manual=saved.blocks.filter(b=>b.shiftType===shift&&b.modifiedBy==='test');
+    assert.equal(manual.length,1);
+    for(const id of ['B0410','TEST0001'])assert.equal(manual[0].stations.filter(p=>p.employeeId===id).length,1);
+    const audit=saved.audits.find(a=>a.blockId===manual[0].blockId);
+    assert.equal(audit.modifiedBy,'test');assert.equal(audit.date,'2026-09-09');
+    assert.ok(audit.createdAt);assert.ok(audit.before);assert.ok(audit.after.stations.some(p=>p.employeeId==='TEST0001'));
+  }
+  await page.reload();
+})
 
 test('9/9 ordinary saved blocks use schedule people rather than automatic Google people', async () => {
   await page.waitForSelector('.dispatch-card .person')

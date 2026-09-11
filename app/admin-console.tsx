@@ -678,40 +678,11 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
               .includes(employeeSearch.toLowerCase()),
         )),
   );
-  const employeeById = new Map(
-    employees.map((employee) => [employee.employeeId, employee]),
-  );
-  const pickerPeople = [
-    ...new Map(
-      schedules
-        .filter(
-          (record) =>
-            record.shiftType === (shift === 'day' ? 'morning' : 'night') &&
-            parseScheduleAssignment(
-              record.scheduleCode,
-              assignedBlocks.map((block) => block.areaCode || ''),
-            ).kind !== 'off',
-        )
-        .map((record) => {
-          const profile = employeeById.get(record.employeeId);
-          return [
-            record.employeeId,
-            {
-              employeeId: record.employeeId,
-              name: profile?.name || record.employeeName,
-              title: profile?.title || record.title || '',
-            },
-          ] as const;
-        }),
-    ).values(),
-  ]
-    .filter(
-      (person) =>
-        !pickerSearch ||
-        `${person.employeeId} ${person.name} ${person.title}`.includes(
-          pickerSearch,
-        ),
-    )
+  // Manual dispatch is independent of roster eligibility.
+  const pickerPeople = employees
+    .filter(person => person.active === true)
+    .filter(person => !pickerSearch.trim() ||
+      `${person.employeeId} ${person.name} ${person.title}`.toLowerCase().includes(pickerSearch.trim().toLowerCase()))
     .sort(employeeAdminOrder)
     .slice(0, 60);
   const open = (block: AssignedDispatchBlock) => {
@@ -1016,11 +987,11 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
           <section className="dispatch-person-picker">
             <header>
               <div>
-                <b>依當日班表選擇人員</b>
-                <small>排序依職階，再依員編；加入時會從其他欄位移除同一人。</small>
+                <b>選擇在職員工</b>
+                <small>不受當日班表限制；加入時只會移除本派工區塊其他欄位的同一人。</small>
               </div>
               <input
-                placeholder="員編、姓名或職稱"
+                placeholder="完整員編、後四碼、姓名或職稱"
                 value={pickerSearch}
                 onChange={(event) => setPickerSearch(event.target.value)}
               />
