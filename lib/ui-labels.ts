@@ -1,6 +1,7 @@
 export const popupModeLabels: Record<string, string> = {
   once: '只顯示一次', daily: '每天一次', always: '每次開啟', none: '僅在列表顯示',
 }
+export const broadcastTypeLabels = ['公告', '雙北派工', '客服案件', '派工異動', '其他通知'] as const
 export const variantLabels: Record<string, string> = {
   standard: '一般派工', 'small-night': '小夜派工', Z: '支援派工',
 }

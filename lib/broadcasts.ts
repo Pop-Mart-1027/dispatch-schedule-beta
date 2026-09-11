@@ -1,7 +1,7 @@
 import { collection, doc, getDoc, getDocs, orderBy, query, runTransaction, serverTimestamp, where } from 'firebase/firestore'
 import { db } from './firebase'
 
-export type Broadcast = { push?: { status: string; sendAt?: unknown; accepted?: number; failed?: number }; id: string; title: string; content: string; type: '一般' | '提醒' | '重要'; targetType: 'all' | 'morning' | 'night' | 'area' | 'employee'; targetValues: string[]; startAt: unknown; endAt: unknown; popupMode: 'once' | 'daily' | 'always' | 'none'; active: boolean; imageUrl: string; linkUrl: string; createdBy: string; createdAt?: unknown; updatedAt?: unknown }
+export type Broadcast = { push?: { status: string; sendAt?: unknown; accepted?: number; failed?: number }; openAppPopup?: boolean; id: string; title: string; content: string; type: '公告' | '雙北派工' | '客服案件' | '派工異動' | '其他通知' | '一般' | '提醒' | '重要'; targetType: 'all' | 'morning' | 'night' | 'area' | 'employee'; targetValues: string[]; startAt: unknown; endAt: unknown; popupMode: 'once' | 'daily' | 'always' | 'none'; active: boolean; imageUrl?: string; linkUrl?: string; createdBy: string; createdAt?: unknown; updatedAt?: unknown }
 export type BroadcastRead = { broadcastId: string; employeeId: string; firstShownAt?: unknown; lastShownAt?: unknown; readAt?: unknown; shownCount: number }
 
 export async function listActiveBroadcasts() {

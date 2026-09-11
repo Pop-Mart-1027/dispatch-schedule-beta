@@ -30,6 +30,7 @@ import { buildDispatchPreviewBlocks, listDispatchBlockTemplate, listDispatchBloc
 import { assignSchedulesToDispatchBlocks } from '../lib/dispatch-schedule-assignment'
 import { monitorDisplayRows } from '../lib/monitor-display'
 import { popupModeLabels, targetTypeLabels } from '../lib/ui-labels'
+import { broadcastIsActive } from '../lib/broadcast-time.mjs'
 import { getBroadcastRead, listActiveBroadcasts, recordBroadcastShown, type Broadcast } from '../lib/broadcasts'
 import { PushNotifications } from './push-notifications'
 import { getCurrentAnnouncement } from '../lib/announcements'
@@ -184,15 +185,18 @@ async function showEligibleBroadcast(user: Employee, isCurrent = () => true): Pr
     const match = broadcasts.find(item => {
       const start = item.startAt && typeof item.startAt === 'object' && 'toDate' in item.startAt ? (item.startAt as { toDate: () => Date }).toDate().getTime() : 0
       const end = item.endAt && typeof item.endAt === 'object' && 'toDate' in item.endAt ? (item.endAt as { toDate: () => Date }).toDate().getTime() : Number.MAX_SAFE_INTEGER
-      if (start > now || end < now || !item.active) return false
+      if (!broadcastIsActive(start === 0 ? null : new Date(start), end === Number.MAX_SAFE_INTEGER ? null : new Date(end), new Date(now)) || !item.active) return false
       return targetMatches(item)
     })
-    if (!match || match.popupMode === 'none') return
+    if (!match || (match.openAppPopup !== true && match.openAppPopup !== false && match.popupMode === 'none')) return
+    if (match.openAppPopup === false) return
     const read = await getBroadcastRead(match.id, user.employeeId)
     const today = taipeiToday()
     const last = read?.lastShownAt && typeof read.lastShownAt === 'object' && 'toDate' in read.lastShownAt ? taipeiDate((read.lastShownAt as { toDate: () => Date }).toDate()) : ''
-    if (match.popupMode === 'once' && read) return
-    if (match.popupMode === 'daily' && last === today) return
+    if (match.openAppPopup !== true) {
+      if (match.popupMode === 'once' && read) return
+      if (match.popupMode === 'daily' && last === today) return
+    }
     if (!isCurrent()) return
     await recordBroadcastShown({ broadcastId: match.id, employeeId: user.employeeId, shownCount: read?.shownCount ?? 0 })
     return match

@@ -46,7 +46,8 @@ import {
 } from 'lucide-react';
 import { db, functions } from '../lib/firebase';
 import { monitorDisplayRows } from '../lib/monitor-display';
-import { popupModeLabels, targetTypeLabels, variantLabels, readableAudit } from '../lib/ui-labels';
+import { broadcastTypeLabels, targetTypeLabels, variantLabels, readableAudit } from '../lib/ui-labels';
+import { parseBroadcastDateTime } from '../lib/broadcast-time.mjs';
 import {
   buildDispatchPreviewBlocks,
   listDispatchBlocks,
@@ -129,6 +130,15 @@ const timestampDate = (value: unknown) =>
     : null;
 const datetimeValue = (value: unknown) =>
   timestampDate(value)?.toISOString().slice(0, 16) ?? '';
+const monthDayTimeValue = (value: unknown) => {
+  const date = timestampDate(value);
+  return date ? new Intl.DateTimeFormat('en-GB', { timeZone: 'Asia/Taipei', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date).replace(',', '') : '';
+};
+const parseMonthDayTime = (value: string) => { const parsed = parseBroadcastDateTime(value); return parsed ? Timestamp.fromDate(parsed) : null; };
+const displayBroadcastTime = (value: unknown) => {
+  const date = timestampDate(value);
+  return date ? new Intl.DateTimeFormat('zh-TW', { timeZone: 'Asia/Taipei', month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date) : '—';
+};
 const displayTime = (value: unknown) =>
   timestampDate(value)?.toLocaleString('zh-TW', { timeZone: 'Asia/Taipei' }) ??
   '—';
@@ -1438,22 +1448,20 @@ function BroadcastManager({
     startAt: string;
     endAt: string;
     popupMode: Broadcast['popupMode'];
+    openAppPopup: boolean;
     active: boolean;
-    imageUrl: string;
-    linkUrl: string;
   };
   const empty: Draft = {
     title: '',
     content: '',
-    type: '一般',
+    type: '公告',
     targetType: 'all',
     targetValues: '',
     startAt: '',
     endAt: '',
-    popupMode: 'daily',
+    popupMode: 'none',
+    openAppPopup: true,
     active: true,
-    imageUrl: '',
-    linkUrl: '',
   };
   const [items, setItems] = useState<Broadcast[]>([]);
   const [people, setPeople] = useState<Person[]>([]);
@@ -1494,12 +1502,11 @@ function BroadcastManager({
             type: item.type,
             targetType: item.targetType,
             targetValues: (item.targetValues || []).join(','),
-            startAt: datetimeValue(item.startAt),
-            endAt: datetimeValue(item.endAt),
+            startAt: monthDayTimeValue(item.startAt),
+            endAt: monthDayTimeValue(item.endAt),
             popupMode: item.popupMode,
+            openAppPopup: item.openAppPopup ?? item.popupMode !== 'none',
             active: item.active,
-            imageUrl: item.imageUrl || '',
-            linkUrl: item.linkUrl || '',
           }
         : { ...empty },
     );
@@ -1512,10 +1519,9 @@ function BroadcastManager({
         .split(',')
         .map((value) => value.trim())
         .filter(Boolean),
-      startAt: draft.startAt
-        ? Timestamp.fromDate(new Date(draft.startAt))
-        : null,
-      endAt: draft.endAt ? Timestamp.fromDate(new Date(draft.endAt)) : null,
+      startAt: parseMonthDayTime(draft.startAt),
+      endAt: parseMonthDayTime(draft.endAt),
+      openAppPopup: draft.openAppPopup,
       updatedAt: serverTimestamp(),
     };
     if (editing?.id)
@@ -1548,10 +1554,9 @@ function BroadcastManager({
       .split(',')
       .map((value) => value.trim())
       .filter(Boolean) || [];
+  const selectedPeople = people.filter((person) => selectedIds.includes(person.employeeId)).sort(employeeAdminOrder);
   const candidates = people
-    .filter((person) =>
-      `${person.employeeId} ${person.name} ${person.title}`.includes(personSearch),
-    )
+    .filter((person) => !selectedIds.includes(person.employeeId) && `${person.employeeId} ${person.name} ${person.title}`.includes(personSearch))
     .sort(employeeAdminOrder)
     .slice(0, 30);
   const togglePerson = (id: string) => {
@@ -1583,7 +1588,7 @@ function BroadcastManager({
               <th>標題</th>
               <th>類型</th>
               <th>對象</th>
-              <th>顯示</th>
+              <th>開啟 APP 時彈窗</th>
               <th>期間</th>
               <th>狀態</th>
               {admin && <th>操作</th>}
@@ -1601,10 +1606,10 @@ function BroadcastManager({
                   {targetTypeLabels[item.targetType] || '指定對象'}
                   <small>{item.targetValues?.join('、')}</small>
                 </td>
-                <td>{popupModeLabels[item.popupMode] || '僅在列表顯示'}</td>
+                <td>{item.openAppPopup ?? item.popupMode !== 'none' ? '是' : '否'}</td>
                 <td>
-                  {displayTime(item.startAt)}
-                  <small>至 {displayTime(item.endAt)}</small>
+                  {displayBroadcastTime(item.startAt)}
+                  <small>至 {displayBroadcastTime(item.endAt)}</small>
                 </td>
                 <td>{item.active ? '啟用' : '停用'}</td>
                 {admin && (
@@ -1666,12 +1671,11 @@ function BroadcastManager({
                   setDraft({
                     ...draft,
                     type: event.target.value as Broadcast['type'],
+                    openAppPopup: ['公告', '雙北派工'].includes(event.target.value),
                   })
                 }
               >
-                <option>一般</option>
-                <option>提醒</option>
-                <option>重要</option>
+                {broadcastTypeLabels.map((type) => <option key={type}>{type}</option>)}
               </select>
             </label>
             <label>
@@ -1703,7 +1707,13 @@ function BroadcastManager({
                     placeholder="員編或姓名"
                   />
                 </label>
+                <small>已選 {selectedPeople.length} 人</small>
                 <div>
+                  {selectedPeople.map((person) => (
+                    <button className="selected" key={person.employeeId} onClick={() => togglePerson(person.employeeId)}>
+                      {person.employeeId} · {person.name}
+                    </button>
+                  ))}
                   {candidates.map((person) => (
                     <button
                       className={
@@ -1718,7 +1728,6 @@ function BroadcastManager({
                     </button>
                   ))}
                 </div>
-                <small>已選 {selectedIds.length} 人</small>
               </div>
             ) : draft.targetType === 'area' ? (
               <label>
@@ -1736,7 +1745,8 @@ function BroadcastManager({
             <label>
               開始時間
               <input
-                type="datetime-local"
+                type="text"
+                placeholder="MM/DD HH:mm"
                 value={draft.startAt}
                 onChange={(event) =>
                   setDraft({ ...draft, startAt: event.target.value })
@@ -1746,64 +1756,29 @@ function BroadcastManager({
             <label>
               結束時間
               <input
-                type="datetime-local"
+                type="text"
+                placeholder="MM/DD HH:mm"
                 value={draft.endAt}
                 onChange={(event) =>
                   setDraft({ ...draft, endAt: event.target.value })
                 }
               />
             </label>
-            <label>
-              顯示模式
-              <select
-                value={draft.popupMode}
-                onChange={(event) =>
-                  setDraft({
-                    ...draft,
-                    popupMode: event.target.value as Broadcast['popupMode'],
-                  })
-                }
-              >
-                <option value="once">只顯示一次</option>
-                <option value="daily">每天一次</option>
-                <option value="always">每次開啟</option>
-                <option value="none">僅在列表顯示</option>
-              </select>
-            </label>
-            <label>
-              圖片網址
-              <input
-                value={draft.imageUrl}
-                onChange={(event) =>
-                  setDraft({ ...draft, imageUrl: event.target.value })
-                }
-              />
-            </label>
-            <label>
-              連結網址
-              <input
-                value={draft.linkUrl}
-                onChange={(event) =>
-                  setDraft({ ...draft, linkUrl: event.target.value })
-                }
-              />
-            </label>
             <label className="check">
               <input
                 type="checkbox"
-                checked={draft.active}
+                checked={draft.openAppPopup}
                 onChange={(event) =>
-                  setDraft({ ...draft, active: event.target.checked })
+                  setDraft({ ...draft, openAppPopup: event.target.checked })
                 }
               />
-              啟用
+              開啟 APP 時彈窗
             </label>
           </div>
           <article className={`broadcast-preview preview-${draft.type}`}>
             <small>預覽</small>
             <h3>{draft.title || '廣播標題'}</h3>
             <p>{draft.content || '廣播內容'}</p>
-            {draft.imageUrl && <img src={draft.imageUrl} alt="廣播預覽" />}
           </article>
           <button className="admin-primary" onClick={() => void save()}>
             儲存
