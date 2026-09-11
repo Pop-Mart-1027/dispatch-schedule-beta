@@ -62,6 +62,7 @@ import {
   type ScheduleRecord,
 } from '../lib/schedule-firestore';
 import type { Broadcast } from '../lib/broadcasts';
+import { BroadcastPushControls } from './broadcast-push-controls';
 import {
   ADMIN_TITLE_OPTIONS,
   employeeAdminOrder,
@@ -310,31 +311,35 @@ function Dashboard({
   );
   const [error, setError] = useState('');
   useEffect(() => {
-    void Promise.all([
+    void Promise.allSettled([
       listScheduleRecords(date),
       listDispatchBlocks(date),
       getDocs(collection(db, 'employees')),
       getDocs(collection(db, 'broadcasts')),
     ])
-      .then(([scheduleRows, dispatchRows, employeeRows, broadcastRows]) => {
-        setSchedules(scheduleRows);
-        setBlocks(dispatchRows);
-        setEmployees(
-          employeeRows.docs.map(
+      .then(([scheduleResult, dispatchResult, employeeResult, broadcastResult]) => {
+        const failures: unknown[] = [];
+        if (scheduleResult.status === 'fulfilled') setSchedules(scheduleResult.value);
+        else failures.push(scheduleResult.reason);
+        if (dispatchResult.status === 'fulfilled') setBlocks(dispatchResult.value);
+        else failures.push(dispatchResult.reason);
+        if (employeeResult.status === 'fulfilled') setEmployees(
+          employeeResult.value.docs.map(
             (item) =>
               ({ employeeId: item.id, ...item.data() }) as EmployeeRecord,
           ),
         );
-        setBroadcasts(
-          broadcastRows.docs.map(
+        else failures.push(employeeResult.reason);
+        if (broadcastResult.status === 'fulfilled') setBroadcasts(
+          broadcastResult.value.docs.map(
             (item) => ({ id: item.id, ...item.data() }) as Broadcast,
           ),
         );
-        setError('');
-      })
-      .catch((cause) => {
-        console.error('[adminDashboard] load failed', cause);
-        setError('總覽資料載入失敗');
+        else failures.push(broadcastResult.reason);
+        if (failures.length) {
+          console.error('[adminDashboard] partial load failed', failures);
+          setError('部分總覽資料載入失敗，已顯示可取得資料');
+        } else setError('');
       });
   }, [date]);
   const employeeProfiles = new Map(
@@ -1620,7 +1625,8 @@ function BroadcastManager({
                     <button onClick={() => void toggle(item)}>
                       {item.active ? '停用' : '啟用'}
                     </button>
-                    <button onClick={() => void remove(item)}>刪除</button>
+                    <button disabled={Boolean(item.push && item.push.status !== "cancelled")} title="已排程或已發送的廣播須保留推播紀錄" onClick={() => void remove(item)}>刪除</button>
+                    <BroadcastPushControls item={item} reload={load} />
                   </td>
                 )}
               </tr>
@@ -1681,8 +1687,8 @@ function BroadcastManager({
                 }
               >
                 <option value="all">全體</option>
-                <option value="morning">早班</option>
-                <option value="night">夜班</option>
+                <option value="morning">日班</option>
+                <option value="night">大小夜班</option>
                 <option value="employee">指定員工</option>
                 <option value="area">指定區域</option>
               </select>

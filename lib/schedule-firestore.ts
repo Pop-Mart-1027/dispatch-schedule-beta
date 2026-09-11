@@ -9,7 +9,7 @@ import {
   serverTimestamp,
 } from 'firebase/firestore';
 import { db } from './firebase';
-import { getMonthLayout } from './month-schedule-layout';
+import { getMonthLayout, type MonthLayout } from './month-schedule-layout';
 import { eligibleMonthSchedules, monthParticipation } from '../functions/month-schedule-policy.mjs';
 
 export type ScheduleRecord = {
@@ -42,9 +42,13 @@ export async function listScheduleRecords(date: string, employeeId?: string, dat
   const constraints = employeeId
     ? [where('employeeId', '==', employeeId)]
     : [where('date', '==', date)];
-  const [snapshot, layout] = await Promise.all([getDocs(
-    query(collection(database, 'scheduleRecords'), ...constraints),
-  ), getMonthLayout(date.slice(0, 7), database)]);
+  const snapshot = await getDocs(query(collection(database, 'scheduleRecords'), ...constraints));
+  let layout: MonthLayout | null = null;
+  try {
+    layout = await getMonthLayout(date.slice(0, 7), database);
+  } catch (error) {
+    console.error('[scheduleMonthLayouts] read failed; using raw scheduleRecords', error);
+  }
   return eligibleMonthSchedules(snapshot.docs
     .map((doc) => ({ id: doc.id, ...doc.data() }) as ScheduleRecord)
     .filter((record) => !employeeId || record.date === date), layout) as ScheduleRecord[];
@@ -58,9 +62,13 @@ export async function listMonthScheduleRecords(
   const constraints = employeeId
     ? [where('employeeId', '==', employeeId), where('date', '>=', `${month}-01`), where('date', '<=', `${month}-31`)]
     : [where('date', '>=', `${month}-01`), where('date', '<=', `${month}-31`)];
-  const [snapshot, layout] = await Promise.all([getDocs(
-    query(collection(database, 'scheduleRecords'), ...constraints),
-  ), getMonthLayout(month, database)]);
+  const snapshot = await getDocs(query(collection(database, 'scheduleRecords'), ...constraints));
+  let layout: MonthLayout | null = null;
+  try {
+    layout = await getMonthLayout(month, database);
+  } catch (error) {
+    console.error('[scheduleMonthLayouts] read failed; using raw scheduleRecords', error);
+  }
   return eligibleMonthSchedules(snapshot.docs
     .map((doc) => ({ id: doc.id, ...doc.data() }) as ScheduleRecord)
     .filter((record) => record.date.startsWith(`${month}-`)), layout) as ScheduleRecord[];

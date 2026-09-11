@@ -1,7 +1,7 @@
 import { configuredDispatchBlocks, readDispatchConfigurationBase } from './dispatch-configuration'
 import { addDoc, collection, doc, getDoc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, where, writeBatch } from 'firebase/firestore'
 import { db } from './firebase'
-import { getMonthLayout } from './month-schedule-layout'
+import { getMonthLayout, type MonthLayout } from './month-schedule-layout'
 import { eligibleMonthBlocks } from '../functions/month-schedule-policy.mjs'
 
 export type DispatchBlockPerson = {
@@ -48,7 +48,13 @@ export async function getDispatchBlock(id: string, date: string, database = db) 
 }
 
 export async function listDispatchBlocks(date: string, database = db) {
-  const [snapshot, layout] = await Promise.all([getDocs(query(collection(database, 'dispatchBlocks'), where('date', '==', date))), getMonthLayout(date.slice(0,7), database)])
+  const snapshot = await getDocs(query(collection(database, 'dispatchBlocks'), where('date', '==', date)))
+  let layout: MonthLayout | null = null
+  try {
+    layout = await getMonthLayout(date.slice(0,7), database)
+  } catch (error) {
+    console.error('[scheduleMonthLayouts] read failed; using raw dispatchBlocks', error)
+  }
   return (eligibleMonthBlocks(await configuredDispatchBlocks(date, snapshot.docs.map(item => ({ id: item.id, ...item.data() } as DispatchBlock)), database), layout) as DispatchBlock[])
     .filter(item => item.status !== 'deleted')
     .sort((left, right) => left.shiftType.localeCompare(right.shiftType) || left.sourceRow - right.sourceRow || left.blockId.localeCompare(right.blockId))
