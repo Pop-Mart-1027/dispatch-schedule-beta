@@ -7,7 +7,7 @@ const server = await createServer({ configFile: false, server: { middlewareMode:
 after(async () => server.close())
 
 const { employeeAdminOrder, titleAdminOrder } = await server.ssrLoadModule('/lib/admin-employee-order.ts')
-const { assignSchedulesToDispatchBlocks, parseScheduleAssignment, summarizeDispatchAssignment } = await server.ssrLoadModule('/lib/dispatch-schedule-assignment.ts')
+const { assignSchedulesToDispatchBlocks, parseScheduleAssignment, parseScheduleAssignments, summarizeDispatchAssignment } = await server.ssrLoadModule('/lib/dispatch-schedule-assignment.ts')
 const { buildDispatchPreviewBlocks } = await server.ssrLoadModule('/lib/dispatch-blocks-firestore.ts')
 
 const block = (blockId, areaCode, vehicleNo, variantCode = 'standard') => ({
@@ -94,6 +94,64 @@ test('one merged schedule cell can direct the same PT employee to two different 
   })
   assert.deepEqual(result.blocks.map(item => item.stations.map(person => person.employeeId)), [['PT1'], ['PT1']])
   assert.equal(result.unmatched.length, 0)
+})
+
+test('陳均瑜 O1晚夜17-01 produces one evening and one night assignment from the morning roster', () => {
+  const source = JSON.parse(readFileSync('public/september-schedules.json', 'utf8'))
+  const row = source.morning.find(row => row.employeeId === 'B0410')
+  assert.equal(row.name, '陳均瑜')
+  assert.equal(row.shifts[8], 'O1晚夜17-01')
+  const employee = { employeeId: row.employeeId, name: row.name, title: row.title }
+  const blocks = [
+    { ...block('evening', 'O1', 'DAY'), shiftType: 'day' },
+    block('night', 'O1', 'NIGHT'),
+    block('small-night', 'O1', 'SMALL', 'small-night'),
+  ]
+  const schedules = [{ ...schedule(employee.employeeId, row.shifts[8]), shiftType: 'morning' }]
+  const before = structuredClone({ blocks, schedules })
+  for (const shift of ['day', 'night']) {
+    const result = assignSchedulesToDispatchBlocks({ blocks, schedules: [...schedules, ...schedules], employees: [employee], shift })
+    assert.equal(result.blocks.flatMap(block => block.stations).filter(p => p.employeeId === 'B0410').length, 1)
+    assert.equal(result.blocks.find(block => block.blockId === (shift === 'day' ? 'evening' : 'night')).stations[0].employeeId, 'B0410')
+    assert.deepEqual(result.unmatched, [])
+  }
+  assert.deepEqual({ blocks, schedules }, before)
+})
+
+test('compound parser consumes every period and area token and deduplicates identical slots', () => {
+  for (const code of ['O1晚夜17-01', 'O1晚班＋夜班', '晚O1／夜O1', '晚O1+夜O1+夜O1']) {
+    assert.deepEqual(parseScheduleAssignments(code, ['O1'], 'day').map(p => [p.areaCode, p.shift, p.variant]),
+      [['O1', 'day', 'standard'], ['O1', 'night', 'standard']])
+  }
+  assert.deepEqual(parseScheduleAssignments('晚O1夜O2', ['O1', 'O2'], 'day').map(p => [p.areaCode, p.shift]),
+    [['O1', 'day'], ['O2', 'night']])
+  assert.deepEqual(parseScheduleAssignments('夜O1＋夜O2', ['O1', 'O2'], 'night').map(p => p.areaCode), ['O1', 'O2'])
+  assert.deepEqual(parseScheduleAssignments('晚O1夜O2', ['O1'], 'day').map(p => [p.areaCode, p.shift]), [['O1', 'day']])
+  assert.deepEqual(parseScheduleAssignments('例／休／夜監', ['O1'], 'night'), [])
+})
+
+test('manual small-night slot cannot swallow the same employee standard night slot', () => {
+  const employee = { employeeId: 'B0410', name: '陳均瑜', title: 'PT-晚夜' }
+  const manual = { ...block('small', 'O1', 'SMALL', 'small-night'), modifiedBy: 'admin', stations: [{ employeeId: employee.employeeId, employeeName: employee.name }] }
+  const result = assignSchedulesToDispatchBlocks({ blocks: [manual, block('night', 'O1', 'NIGHT')],
+    schedules: [schedule(employee.employeeId, '小夜O1／夜O1／夜O1')], employees: [employee], shift: 'night' })
+  assert.deepEqual(result.blocks.map(b => b.stations.map(p => p.employeeId)), [['B0410'], ['B0410']])
+  assert.deepEqual(result.unmatched, [])
+})
+
+test('manual relocation in the same variant still suppresses an automatic duplicate', () => {
+  const employee = { employeeId: 'B0410', name: '陳均瑜', title: 'PT-晚夜' }
+  const manual = { ...block('relocated', 'O2', 'MANUAL'), modifiedBy: 'admin', stations: [{ employeeId: employee.employeeId, employeeName: employee.name }] }
+  const result = assignSchedulesToDispatchBlocks({ blocks: [manual, block('original', 'O1', 'AUTO')],
+    schedules: [schedule(employee.employeeId, '夜O1')], employees: [employee], shift: 'night' })
+  assert.deepEqual(result.blocks.map(b => b.stations.length), [1, 0])
+})
+
+test('small-night fallback never duplicates a person already in the same physical block', () => {
+  const employee = { employeeId: 'B0410', name: '陳均瑜', title: 'PT-晚夜' }
+  const result = assignSchedulesToDispatchBlocks({ blocks: [block('night', 'O1', 'NIGHT')],
+    schedules: [schedule(employee.employeeId, '小夜O1／夜O1')], employees: [employee], shift: 'night' })
+  assert.deepEqual(result.blocks[0].stations.map(p => p.employeeId), ['B0410'])
 })
 
 test('regular staff use vehicles and PT staff use stations, including small-night variant', () => {

@@ -195,7 +195,14 @@ await page.goto(`http://127.0.0.1:${server.httpServer.address().port}/preview-te
 
 test('9/9 ordinary saved blocks use schedule people rather than automatic Google people', async () => {
   await page.waitForSelector('.dispatch-card .person')
-  assert.equal(await page.locator('.dispatch-card .person').count(), 101)
+  // Seven formerly omitted 晚夜 slots, across six people, now reach night blocks.
+  assert.equal(await page.locator('.dispatch-card .person').count(), 108)
+  assert.equal(await page.locator('.dispatch-card .person').filter({ hasText: '陳均瑜' }).count(), 1)
+  await page.getByRole('button', { name: '早班', exact: true }).click()
+  await page.waitForFunction(() => document.querySelector('.tab.active')?.textContent === '早班')
+  assert.equal(await page.locator('.dispatch-card .person').filter({ hasText: '陳均瑜' }).count(), 1)
+  await page.getByRole('button', { name: '夜班', exact: true }).click()
+  await page.waitForFunction(() => document.querySelector('.tab.active')?.textContent === '夜班')
   assert.equal(await page.evaluate(() => window.templateReads), 0)
   assert.equal(await page.getByRole('button', {name: '＋ 帶入當日派工單（Google）'}).count(), 0)
   assert.deepEqual(errors, [])
@@ -438,12 +445,12 @@ test('only daytime front monitors group three per row; directors and night remai
   }
 })
 
-test('Dashboard uses the seven operational labels without changing assignment totals', async () => {
+test('Dashboard keeps unique-person counts distinct from compound assignment positions', async () => {
   await page.evaluate(() => window.showDashboard())
   await page.waitForFunction(() => document.querySelector('.dispatch-summary .admin-stat strong')?.textContent === '369')
   const labels = await page.locator('.dispatch-summary .admin-stat > span').allTextContents()
   assert.deepEqual(labels, ['日班出勤人數', '夜班出勤人數', '日班出車數', '夜班出車數', '多人共車數', '閒置車輛', '待人工調整人數'])
-  assert.deepEqual(await page.locator('.dispatch-summary .admin-stat > strong').allTextContents(), ['369', '101', '89', '94', '58', '53', '0'])
+  assert.deepEqual(await page.locator('.dispatch-summary .admin-stat > strong').allTextContents(), ['369', '107', '89', '94', '58', '53', '0'])
   assert.doesNotMatch(await page.locator('.dispatch-summary').textContent(), /blocks|原始派工位置|原始識別人數/)
 })
 

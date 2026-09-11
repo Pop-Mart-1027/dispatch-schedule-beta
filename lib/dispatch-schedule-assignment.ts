@@ -67,6 +67,50 @@ export function parseScheduleAssignment(scheduleCode: string, availableAreaCodes
   }
 }
 
+// A persisted row's shiftType describes its source roster, not every time slot
+// encoded in its cell (for example O1晚夜17-01 is stored on the morning roster).
+export function parseScheduleAssignments(
+  scheduleCode: string,
+  availableAreaCodes: string[],
+  defaultShift: 'day' | 'night',
+): Array<ParsedScheduleAssignment & { shift: 'day' | 'night' }> {
+  const result: Array<ParsedScheduleAssignment & { shift: 'day' | 'night' }> = []
+  const periodsInCell = [...normalizedCode(scheduleCode).matchAll(/小夜|晚班|夜班|早班|日班|晚|夜|早|日/g)]
+  const spansShifts = periodsInCell.some(period => period[0].includes('夜'))
+    && periodsInCell.some(period => !period[0].includes('夜'))
+  let inheritedArea = ''
+  for (const part of normalizedCode(scheduleCode).split(/[／/＋+、，,；;＆&]/).filter(Boolean)) {
+    if (parseScheduleAssignment(part, availableAreaCodes).kind === 'off' || /監|主官|主任/.test(part)) continue
+    // Keep unknown tokens as boundaries too: 夜O2 must never inherit O1 merely
+    // because this block list has no O2.
+    const areas = [...part.matchAll(/[A-Z]+\d*/g)]
+    const periods = [...part.matchAll(/小夜|晚班|夜班|早班|日班|晚|夜|早|日/g)]
+    const usedAreas = new Set<number>()
+    const add = (areaCode: string, period?: string) => {
+      if (!areaCode) return
+      const parsed = parseScheduleAssignment(`${period || ''}${areaCode}`, availableAreaCodes)
+      // Preserve existing single-roster routing; only a cell explicitly spanning
+      // both periods overrides its persisted source shift.
+      const shift = spansShifts && period ? (period.includes('夜') ? 'night' : 'day') : defaultShift
+      if (parsed.kind === 'area' && !result.some(row => row.areaCode === parsed.areaCode && row.variant === parsed.variant && row.shift === shift)) {
+        result.push({ ...parsed, shift })
+      }
+    }
+    periods.forEach((period, index) => {
+      const nextPeriod = periods[index + 1]?.index ?? part.length
+      const area = areas.find(area => area.index! >= period.index! + period[0].length && area.index! < nextPeriod)
+        || areas.filter(area => area.index! < period.index!).at(-1)
+      if (area) usedAreas.add(area.index!)
+      add(area?.[0] || inheritedArea, period[0])
+    })
+    for (const area of areas) {
+      if (!usedAreas.has(area.index!)) add(area[0], periods.filter(period => period.index! < area.index!).at(-1)?.[0] || periods[0]?.[0])
+    }
+    if (areas.length) inheritedArea = areas.at(-1)![0]
+  }
+  return result
+}
+
 export function dispatchBlockAssignmentStatus(block: DispatchBlock): DispatchAssignmentStatus {
   if (block.modifiedBy?.trim()) return 'manual'
   if (block.drivers.length > 1) return 'shared-vehicle'
@@ -79,7 +123,12 @@ function personFrom(employee: AssignmentEmployee, scheduleCode: string): Dispatc
 }
 
 function addRoundRobin(blocks: AssignedDispatchBlock[], people: DispatchBlockPerson[], field: 'drivers' | 'stations') {
-  people.forEach((person, index) => blocks[index % blocks.length][field].push(person))
+  people.forEach((person, index) => {
+    // A small-night fallback can resolve to the same physical standard block.
+    if (!blocks.some(block => block[field].some(existing => existing.employeeId === person.employeeId))) {
+      blocks[index % blocks.length][field].push(person)
+    }
+  })
 }
 
 export function assignSchedulesToDispatchBlocks({
@@ -93,7 +142,6 @@ export function assignSchedulesToDispatchBlocks({
   employees: AssignmentEmployee[]
   shift: 'day' | 'night'
 }) {
-  const expectedScheduleShift = shift === 'day' ? 'morning' : 'night'
   const selectedBlocks: AssignedDispatchBlock[] = blocks
     .filter(block => block.shiftType === shift)
     .map(block => ({
@@ -105,28 +153,19 @@ export function assignSchedulesToDispatchBlocks({
     }))
   const employeeMap = new Map(employees.map(employee => [employee.employeeId, employee]))
   const availableAreaCodes = selectedBlocks.map(block => block.areaCode || '').filter(Boolean)
-  const manuallyAssignedIds = new Set(
-    selectedBlocks
-      .filter(block => block.modifiedBy?.trim())
-      .flatMap(block => [...block.drivers, ...block.stations, ...block.assistants])
-      .map(person => person.employeeId)
-      .filter(Boolean),
-  )
   const grouped = new Map<string, Array<{ employee: AssignmentEmployee; scheduleCode: string }>>()
   const unmatched: UnmatchedScheduleAssignment[] = []
 
   schedules
-    .filter(record => record.shiftType === expectedScheduleShift)
     .forEach(record => {
       const employee = employeeMap.get(record.employeeId) || {
         employeeId: record.employeeId,
         name: record.employeeName,
         title: record.title || '',
       }
-      const scheduleCodes = [...new Set(record.scheduleCode.split('／').map(value => value.trim()).filter(Boolean))]
-      scheduleCodes.forEach(scheduleCode => {
-        const parsed = parseScheduleAssignment(scheduleCode, availableAreaCodes)
-        if (parsed.kind !== 'area') return
+      const scheduleCode = record.scheduleCode
+      parseScheduleAssignments(scheduleCode, availableAreaCodes, record.shiftType === 'morning' ? 'day' : 'night').forEach(parsed => {
+        if (parsed.shift !== shift) return
         const key = `${parsed.areaCode}|${parsed.variant}`
         const existing = grouped.get(key) || []
         if (!existing.some(row => row.employee.employeeId === employee.employeeId)) {
@@ -156,6 +195,12 @@ export function assignSchedulesToDispatchBlocks({
       }
     }
     const automaticBlocks = candidates.filter(block => !block.modifiedBy?.trim())
+    // An override occupies this shift/variant only, not all of the employee's
+    // other assignments in the same shift (small-night and standard can coexist).
+    const manuallyAssignedIds = new Set(selectedBlocks.filter(block => block.modifiedBy?.trim()
+      && (blockVariant(block) === variant || candidates.includes(block)))
+      .flatMap(block => [...block.drivers, ...block.stations, ...block.assistants])
+      .map(person => person.employeeId).filter(Boolean))
     const remaining = rows
       .filter(row => !manuallyAssignedIds.has(row.employee.employeeId))
       .sort((left, right) => employeeAdminOrder(left.employee, right.employee))
