@@ -1538,7 +1538,7 @@ function BroadcastManager({
     await load();
   };
   const remove = async (item: Broadcast) => {
-    if (window.confirm(`確定刪除「${item.title}」？`)) {
+    if (window.confirm('確定要刪除此廣播嗎？刪除後將不再顯示，但歷史投遞紀錄仍會保留。')) {
       await deleteDoc(doc(db, 'broadcasts', item.id));
       await load();
     }
@@ -1625,7 +1625,7 @@ function BroadcastManager({
                     <button onClick={() => void toggle(item)}>
                       {item.active ? '停用' : '啟用'}
                     </button>
-                    <button disabled={Boolean(item.push && item.push.status !== "cancelled")} title="已排程或已發送的廣播須保留推播紀錄" onClick={() => void remove(item)}>刪除</button>
+                    <button onClick={() => void remove(item)}>刪除</button>
                     <BroadcastPushControls item={item} reload={load} />
                   </td>
                 )}
