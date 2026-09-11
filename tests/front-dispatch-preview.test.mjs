@@ -128,7 +128,7 @@ const virtual = {
           React.createElement('header', {className:'topbar'}, '班表'),
           React.createElement('section', {className:'content'}, children)));
     }
-    window.showDispatch = () => root.render(React.createElement('div', {className: 'app-shell','data-page':'dispatch'},React.createElement('main',{className:'workspace'},React.createElement('section',{className:'content'}, React.createElement(FirestoreDispatchView, {employeeId: 'test', isDuty: false})))));
+    window.showDispatch = (employeeId = 'test', isDuty = false) => root.render(React.createElement('div', {className: 'app-shell','data-page':'dispatch'},React.createElement('main',{className:'workspace'},React.createElement('section',{className:'content'}, React.createElement(FirestoreDispatchView, {employeeId, isDuty, key: employeeId + ':' + isDuty})))));
     window.showHome = () => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(HomeView, {name: '登入人員', onAction: () => {}, onGo: () => {}})));
     window.showFrontDuty = (shift, staff) => root.render(React.createElement(DutyStaffPanel, {shift, staff}));
     window.showManager = () => root.render(React.createElement('div', {className: 'admin-console'}, React.createElement(DispatchManager, {employeeId: 'test',admin:true})));
@@ -243,7 +243,7 @@ test('admin saves an editable area/car/work-focus configuration effective the ne
   await modal.getByLabel('區域名稱',{exact:true}).fill('管理員自訂區域');
   await modal.getByLabel('車號',{exact:true}).fill('NEW-1234');
   await modal.locator('label').filter({hasText:/^工作重點/}).locator('textarea').fill('新版工作重點');
-  await page.getByRole('button',{name:'設為新版配置',exact:true}).click();
+  await page.getByRole('button',{name:'套用為新版配置',exact:true}).click();
   await modal.waitFor({state:'hidden'});
   const result=await page.evaluate(()=>({versions:window.configVersions,audits:window.manualAudits}));
   assert.equal(result.versions.length,1);
@@ -575,8 +575,9 @@ test('Google button fetches only after confirmation and complete imported people
   await page.evaluate(() => window.showDispatch())
   await page.waitForSelector('.dispatch-toolbar input[type=date]')
   await page.locator('input[type=date]').fill('2026-09-13')
-  await page.waitForFunction(() => document.querySelectorAll('.dispatch-card .person').length === 109)
-  assert.equal(await page.locator('.dispatch-card .person').count(), 109)
+  const expected = await page.evaluate(() => window.formalByDate['2026-09-13'].filter(b=>b.shiftType==='night').reduce((n,b)=>n+b.drivers.length+b.stations.length+b.assistants.length,0));
+  await page.waitForFunction(expected => document.querySelectorAll('.dispatch-card .person').length === expected, expected)
+  assert.equal(await page.locator('.dispatch-card .person').count(), expected)
   assert.equal(await page.evaluate(() => window.writeAttempts), 0)
 })
 
@@ -900,4 +901,76 @@ test('structure toolbar creates/renames/deletes empty sections; person modal onl
  await page.screenshot({path:'output/month-structure-admin-1920.png',fullPage:false});
  await page.evaluate(()=>window.showAdminSchedule(false));
  await page.waitForFunction(()=>document.querySelectorAll('.schedule-structure-actions,.schedule-drag-handle,.section-edit,.schedule-row-action').length===0);
+});
+
+test('employee navigation preserves two shift cards, highlights assistants, and never jumps for duty or missing employee', async()=>{
+  await page.reload();
+  await page.evaluate(()=>{
+    const day=window.fixture.template.find(b=>b.shiftType==='day'&&b.areaCode==='O1');
+    const night=window.fixture.template.find(b=>b.shiftType==='night'&&b.areaCode==='O1');
+    window.formalByDate={'2026-09-09':[day,night].map(b=>({...b,modifiedBy:'admin',drivers:[],stations:[],assistants:[{employeeId:'B0410',employeeName:'陳均瑜'}]}))};
+    window.scrolls=[];HTMLElement.prototype.scrollIntoView=function(){window.scrolls.push(this.id)};
+    window.showDispatch('B0410');
+  });
+  await page.getByText('你今天有 2 筆派工',{exact:true}).waitFor();
+  await page.waitForFunction(()=>window.scrolls.length===1);
+  assert.equal(await page.locator('.dispatch-self-person').count(),1);
+  assert.match(await page.locator('.dispatch-self-person').textContent(),/陳均瑜/);
+  assert.equal(await page.locator('.tabs .active').textContent(),'早班');
+  await page.getByRole('button',{name:'下一筆',exact:true}).click();
+  await page.waitForFunction(()=>window.scrolls.length===2);
+  assert.equal(await page.locator('.tabs .active').textContent(),'夜班');
+  assert.equal(await page.locator('.dispatch-self-person').count(),1);
+  const ids=await page.evaluate(()=>window.scrolls);assert.notEqual(ids[0],ids[1]);
+  await page.getByRole('button',{name:'上一筆',exact:true}).click();
+  await page.waitForFunction(()=>window.scrolls.length===3);
+  assert.equal(await page.evaluate(()=>window.scrolls[2]),ids[0]);
+  for(const args of [['B0410',true],['NO-ASSIGNMENT',false]]){
+    await page.evaluate(args=>{window.scrolls=[];window.showDispatch(...args)},args);
+    await page.waitForFunction(()=>!document.querySelector('.loading')&&document.querySelector('.dispatch-card'));
+    assert.equal(await page.locator('.dispatch-self-navigation,.dispatch-self-person').count(),0);
+    assert.deepEqual(await page.evaluate(()=>window.scrolls),[]);
+  }
+  await page.reload();
+  await page.evaluate(()=>{
+    const b=window.fixture.template.find(b=>b.shiftType==='night'&&b.areaCode==='O1');
+    window.formalByDate={'2026-09-09':[{...b,modifiedBy:'admin',drivers:[{employeeId:'B0410',employeeName:'陳均瑜'}],stations:[],assistants:[]}]};
+    window.scrolls=[];HTMLElement.prototype.scrollIntoView=function(){window.scrolls.push(this.id)};window.showDispatch('B0410');
+  });
+  await page.getByText('你今天有 1 筆派工',{exact:true}).waitFor();
+  await page.waitForFunction(()=>window.scrolls.length===1);
+  assert.equal(await page.getByRole('button',{name:'下一筆',exact:true}).count(),0);
+  await page.reload();
+});
+
+test('saving region X1 immediately reorders raw admin rows and front cards identically; save buttons share geometry',async()=>{
+  await page.reload();await page.evaluate(()=>{
+    window.manualPickerTest=true;window.manualAudits=[];
+    window.formalByDate={'2026-09-09':window.fixture.template.map(b=>({...b,modifiedBy:'admin',drivers:[{employeeId:'MANUAL',employeeName:'人工'}],stations:[],assistants:[]}))};
+    window.showManager();
+  });
+  await page.locator('select').first().selectOption('night');
+  const row=page.locator('.dispatch-table tbody tr').filter({hasText:'RFW-7651'}).first();
+  await row.getByRole('button',{name:'修改',exact:true}).click();
+  await page.getByLabel('區域名稱',{exact:true}).fill('X1區');
+  const geometry=await page.locator('.dispatch-save-actions button').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect(),s=getComputedStyle(n);return {y:r.y,h:r.height,padding:s.padding,radius:s.borderRadius,bg:s.backgroundColor}}));
+  assert.equal(geometry.length,2);for(const k of ['y','h','padding','radius'])assert.equal(geometry[0][k],geometry[1][k]);assert.notEqual(geometry[0].bg,geometry[1].bg);
+  await page.screenshot({path:'output/dispatch-save-buttons.png'});
+  await page.setViewportSize({width:390,height:844});
+  const mobile=await page.locator('.dispatch-save-actions button').evaluateAll(nodes=>nodes.map(n=>{const r=n.getBoundingClientRect();return {y:r.y,h:r.height,right:r.right}}));
+  assert.equal(mobile[0].y,mobile[1].y);assert.equal(mobile[0].h,mobile[1].h);assert.ok(mobile[1].right<=390);
+  await page.setViewportSize({width:1920,height:1080});
+  await page.getByRole('button',{name:'儲存本日',exact:true}).click();
+  await page.locator('.admin-edit-grid').waitFor({state:'hidden'});
+  await row.getByText('X1區',{exact:true}).waitFor();
+  const adminOrder=await page.locator('.dispatch-table tbody tr').evaluateAll(rows=>rows.map(r=>r.cells[1].textContent));
+  assert.ok(adminOrder.indexOf('RFW-7651')>adminOrder.indexOf('RFX-6095'));
+  const saved=await page.evaluate(()=>({rows:window.formalByDate['2026-09-09'],audits:window.manualAudits}));
+  assert.equal(saved.rows.length,template.length);assert.equal(saved.audits.length,1);assert.equal(saved.audits[0].mode,'day');
+  assert.equal(saved.rows.find(b=>b.vehicleNo==='RFW-7651'&&b.shiftType==='night').areaCode,'O1');
+  await page.evaluate(()=>window.showDispatch());await page.locator('.dispatch-card').first().waitFor();
+  const frontOrder=await page.locator('.dispatch-card').evaluateAll(cards=>cards.map(c=>c.querySelector('.dispatch-fields > span').textContent));
+  assert.deepEqual(frontOrder,adminOrder);
+  assert.equal(await page.locator('.dispatch-card[data-area-code="X1"]').filter({hasText:'RFW-7651'}).count(),1);
+  await page.reload();
 });

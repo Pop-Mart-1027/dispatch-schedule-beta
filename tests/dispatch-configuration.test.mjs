@@ -32,3 +32,16 @@ test('daily manual overrides and personnel versions keep highest priority',()=>{
   assert.deepEqual(r.blocks[0].stations,staff.values.stations)
   assert.equal(r.blocks[0].modifiedBy,'admin')
 })
+
+test('renamed area controls next-day display sorting without rewriting history or operational fields',async()=>{
+  const {dispatchAreaCodes,dispatchAreaDisplay,dispatchBlockFrontOrder}=await server.ssrLoadModule('/lib/dispatch-area.ts');
+  const other={...block,id:'2026-09-11_night_b',blockId:'2026-09-11_night_b',areaCode:'R',areaName:'R區',vehicleNo:'SECOND'};
+  const input={...base,blocks:[block,other]},snapshot=structuredClone(input);
+  const renamed={...version,values:{...values,areaName:'X1區'}};
+  const project=rows=>rows.map(b=>dispatchAreaDisplay(b,dispatchAreaCodes(rows))).sort(dispatchBlockFrontOrder);
+  assert.deepEqual(project(resolveDispatchConfiguration('2026-09-11',[],input,[renamed])).map(b=>b.areaCode),['O1','R']);
+  const future=resolveDispatchConfiguration('2026-09-12',[],input,[renamed]);
+  assert.deepEqual(project(future).map(b=>b.areaCode),['R','X1']);
+  assert.equal(future[0].areaCode,'O1');assert.equal(future.length,2);
+  const before=structuredClone(future);project(future);assert.deepEqual(future,before);assert.deepEqual(input,snapshot);
+});

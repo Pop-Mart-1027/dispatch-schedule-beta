@@ -1,6 +1,6 @@
 'use client';
 import { saveDispatchConfiguration, dispatchToday } from '../lib/dispatch-configuration'
-import { dispatchAreaCodes, dispatchAreaDisplay, normalizeDispatchAreaCode } from '../lib/dispatch-area'
+import { dispatchAreaCodes, dispatchAreaDisplay, dispatchBlockFrontOrder } from '../lib/dispatch-area'
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { scheduleSections } from '../functions/pre-schedule-order.mjs';
@@ -657,7 +657,7 @@ function DispatchManager({ employeeId, admin = false }: { employeeId: string; ad
   const assignedBlocks = assignment.blocks;
   const validAreaCodes = dispatchAreaCodes(blocks);
   const displayArea = (block: DispatchBlock) => dispatchAreaDisplay(block, validAreaCodes);
-  const areaCode = (block: DispatchBlock) => normalizeDispatchAreaCode(block.areaCode, validAreaCodes);
+  const areaCode = (block: DispatchBlock) => displayArea(block).areaCode;
   useEffect(() => { setShowPending(false); }, [date, shift]);
   const areas = [
     ...new Set(
@@ -679,7 +679,7 @@ function DispatchManager({ employeeId, admin = false }: { employeeId: string; ad
               .toLowerCase()
               .includes(employeeSearch.toLowerCase()),
         )),
-  );
+  ).sort((a, b) => dispatchBlockFrontOrder(displayArea(a), displayArea(b)));
   // Manual dispatch is independent of roster eligibility.
   const pickerPeople = employees
     .filter(person => person.active === true)
@@ -1007,8 +1007,8 @@ function DispatchManager({ employeeId, admin = false }: { employeeId: string; ad
           </section>
           {error && <p role="alert">{error}</p>}
           <p>儲存本日只影響選定日期；新版配置從該日期次日起套用，既有人工派工仍優先。未手動調整人員時，仍依每日班表自動派工。</p>
-          <button className="admin-primary" disabled={saving} onClick={() => void save('day')}>儲存本日</button>
-          {admin && <button disabled={saving || editing.date < dispatchToday()} onClick={() => void save('version')}>設為新版配置</button>}
+          <div className="dispatch-save-actions"><button className="dispatch-save-primary" disabled={saving} onClick={() => void save('day')}>儲存本日</button>
+          {admin && <button className="dispatch-save-secondary" disabled={saving || editing.date < dispatchToday()} onClick={() => void save('version')}>套用為新版配置</button>}</div>
         </Modal>
       )}
       {auditFor && (

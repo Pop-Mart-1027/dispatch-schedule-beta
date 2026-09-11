@@ -794,3 +794,9 @@
 .admin-schedule td button:enabled { cursor:pointer; }
 .admin-schedule td button:enabled:hover { background:#fff0dc; outline:1px solid #ef9b53; }
 .admin-schedule td button:disabled { cursor:default; }
+
+.dispatch-save-actions { display:flex; justify-content:flex-start; gap:12px; margin-top:12px; }
+.dispatch-save-actions button { min-height:44px; padding:10px 16px; border:1px solid #ea741a; border-radius:8px; font:inherit; font-weight:600; cursor:pointer; }
+.dispatch-save-actions .dispatch-save-primary { background:#ea741a; color:white; }
+.dispatch-save-actions .dispatch-save-secondary { background:white; color:#b65008; }
+.dispatch-save-actions button:disabled { opacity:.5; cursor:not-allowed; }

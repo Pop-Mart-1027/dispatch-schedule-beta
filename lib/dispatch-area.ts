@@ -15,10 +15,32 @@ export function normalizeDispatchAreaCode(areaCode: string | null, validCodes: R
   return code.startsWith('Z') && validCodes.has(code.slice(1)) ? code.slice(1) : code
 }
 
+type DispatchAreaSortable = { areaCode: string | null; variantCode?: string | null; vehicleNo: string; blockId: string }
+
 // Display projection only: never pass this projection into persistence/audit.
 export function dispatchAreaDisplay<T extends { areaCode: string | null; areaName: string }>(block: T, validCodes: ReadonlySet<string>): T {
-  const areaCode = normalizeDispatchAreaCode(block.areaCode, validCodes)
-  if (!block.areaCode || areaCode === clean(block.areaCode)) return block
-  const areaName = block.areaName.replace(/[A-Za-z]+\d*/g, token => clean(token) === clean(block.areaCode!) ? areaCode! : token)
+  // The editable name may move a card to another verified area. Ambiguous names
+  // retain the stored classification; raw areaCode remains available to assignment.
+  const namedCodes = [...new Set((block.areaName.match(/[A-Za-z]+\d*/g) || []).map(token => normalizeDispatchAreaCode(token, validCodes)).filter((code): code is string => !!code && validCodes.has(code)))]
+  const areaCode = namedCodes.length === 1 ? namedCodes[0] : normalizeDispatchAreaCode(block.areaCode, validCodes)
+  if (areaCode === block.areaCode) return block
+  const areaName = block.areaName.replace(/[A-Za-z]+\d*/g, token => clean(token) === clean(block.areaCode || '') ? areaCode! : token)
   return { ...block, areaCode, areaName }
+}
+
+export function dispatchBlockFrontOrder(left: DispatchAreaSortable, right: DispatchAreaSortable) {
+  const key = (block: DispatchAreaSortable) => {
+    if (!block.areaCode) return { special: 1, letter: 99, number: Number.MAX_SAFE_INTEGER, variant: 9 }
+    const isZ = block.variantCode === 'Z' || block.areaCode.startsWith('Z')
+    const canonicalCode = block.areaCode
+    const match = canonicalCode.toUpperCase().match(/^([A-Z]+)(\d*)/)
+    const areaLetter = match?.[1] ?? canonicalCode.toUpperCase()
+    const numericSuffix = match?.[2] ? Number(match[2]) : -1
+    const variant = isZ ? 1 : block.variantCode === 'small-night' ? 2 : block.variantCode && block.variantCode !== 'standard' ? 3 : 0
+    const letterIndex = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.indexOf(areaLetter[0] ?? '')
+    return { special: 0, letter: letterIndex < 0 ? 98 : letterIndex, number: numericSuffix, variant }
+  }
+  const a = key(left)
+  const b = key(right)
+  return a.special - b.special || a.letter - b.letter || a.number - b.number || a.variant - b.variant || left.vehicleNo.localeCompare(right.vehicleNo, 'en', { numeric: true }) || left.blockId.localeCompare(right.blockId)
 }
