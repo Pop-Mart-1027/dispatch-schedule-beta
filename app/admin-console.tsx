@@ -1,4 +1,5 @@
 'use client';
+import { dispatchAreaCodes, dispatchAreaDisplay, normalizeDispatchAreaCode } from '../lib/dispatch-area'
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import { scheduleSections } from '../functions/pre-schedule-order.mjs';
@@ -656,18 +657,21 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
   };
   const assignment = shift === 'day' ? dayAssignment : nightAssignment;
   const assignedBlocks = assignment.blocks;
+  const validAreaCodes = dispatchAreaCodes(blocks);
+  const displayArea = (block: DispatchBlock) => dispatchAreaDisplay(block, validAreaCodes);
+  const areaCode = (block: DispatchBlock) => normalizeDispatchAreaCode(block.areaCode, validAreaCodes);
   useEffect(() => { setShowPending(false); }, [date, shift]);
   const areas = [
     ...new Set(
-      assignedBlocks.map((block) => block.areaCode || '特殊派工'),
+      assignedBlocks.map((block) => areaCode(block) || '特殊派工'),
     ),
   ].sort((a, b) => a.localeCompare(b, 'en', { numeric: true }));
   const visible = assignedBlocks.filter(
     (block) =>
       block.shiftType === shift &&
-      (!area || (block.areaCode || '特殊派工') === area) &&
+      (!area || (areaCode(block) || '特殊派工') === area) &&
       (!areaSearch ||
-        `${block.areaCode} ${block.areaName} ${block.vehicleNo}`
+        `${areaCode(block)} ${displayArea(block).areaName} ${block.vehicleNo}`
           .toLowerCase()
           .includes(areaSearch.toLowerCase())) &&
       (!employeeSearch ||
@@ -853,7 +857,7 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
               <tbody>{assignment.unmatched.map((person, index) => {
                 const currentAreas = [...new Set(assignedBlocks.filter(block =>
                   [...block.drivers, ...block.stations, ...block.assistants].some(item => item.employeeId === person.employeeId),
-                ).map(block => block.areaName || block.areaCode || '特殊派工'))];
+                ).map(block => displayArea(block).areaName || areaCode(block) || '特殊派工'))];
                 return <tr key={`${person.employeeId}-${person.scheduleCode}-${index}`}>
                   <td>{person.employeeId}</td><td>{person.employeeName}</td><td>{person.scheduleCode}</td>
                   <td>{currentAreas.join('、') || '尚未派工'}</td>
@@ -882,7 +886,7 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
             {visible.map((block) => (
               <tr key={block.id}>
                 <td>
-                  <b>{block.areaName || '特殊派工'}</b>
+                  <b>{displayArea(block).areaName || '特殊派工'}</b>
                 </td>
                 <td>{block.vehicleNo || '—'}</td>
                 <td>{peopleNames(block.drivers)}</td>
@@ -907,7 +911,7 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
       </div>
       {editing && draft && (
         <Modal
-          title={`${editing.areaName || '特殊派工'} · ${editing.vehicleNo || '無車號'}`}
+          title={`${displayArea(editing).areaName || '特殊派工'} · ${editing.vehicleNo || '無車號'}`}
           onClose={() => setEditing(null)}
         >
           <div className="admin-edit-grid">

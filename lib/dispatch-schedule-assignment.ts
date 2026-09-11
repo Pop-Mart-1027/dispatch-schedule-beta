@@ -1,3 +1,4 @@
+import { dispatchAreaCodes, normalizeDispatchAreaCode } from './dispatch-area'
 import type { DispatchBlock, DispatchBlockPerson } from './dispatch-blocks-firestore'
 import type { ScheduleRecord } from './schedule-firestore'
 import { employeeAdminOrder } from './admin-employee-order'
@@ -142,6 +143,8 @@ export function assignSchedulesToDispatchBlocks({
   employees: AssignmentEmployee[]
   shift: 'day' | 'night'
 }) {
+  const validAreaCodes = dispatchAreaCodes(blocks)
+  const canonicalArea = (code: string) => normalizeDispatchAreaCode(code, validAreaCodes) || ''
   const selectedBlocks: AssignedDispatchBlock[] = blocks
     .filter(block => block.shiftType === shift)
     .map(block => ({
@@ -152,7 +155,7 @@ export function assignSchedulesToDispatchBlocks({
       assignmentStatus: 'normal',
     }))
   const employeeMap = new Map(employees.map(employee => [employee.employeeId, employee]))
-  const availableAreaCodes = selectedBlocks.map(block => block.areaCode || '').filter(Boolean)
+  const availableAreaCodes = selectedBlocks.flatMap(block => [block.areaCode || '', canonicalArea(block.areaCode || '')]).filter(Boolean)
   const grouped = new Map<string, Array<{ employee: AssignmentEmployee; scheduleCode: string }>>()
   const unmatched: UnmatchedScheduleAssignment[] = []
 
@@ -166,7 +169,7 @@ export function assignSchedulesToDispatchBlocks({
       const scheduleCode = record.scheduleCode
       parseScheduleAssignments(scheduleCode, availableAreaCodes, record.shiftType === 'morning' ? 'day' : 'night').forEach(parsed => {
         if (parsed.shift !== shift) return
-        const key = `${parsed.areaCode}|${parsed.variant}`
+        const key = `${canonicalArea(parsed.areaCode)}|${parsed.variant}`
         const existing = grouped.get(key) || []
         if (!existing.some(row => row.employee.employeeId === employee.employeeId)) {
           grouped.set(key, [...existing, { employee, scheduleCode }])
@@ -177,9 +180,9 @@ export function assignSchedulesToDispatchBlocks({
   grouped.forEach((rows, key) => {
     const [areaCode, variant] = key.split('|')
     const exactAreaMatches = (block: AssignedDispatchBlock) =>
-      normalizedCode(block.areaCode || '') === areaCode
+      canonicalArea(block.areaCode || '') === areaCode
     const familyAreaMatches = (block: AssignedDispatchBlock) => {
-      const blockArea = normalizedCode(block.areaCode || '')
+      const blockArea = canonicalArea(block.areaCode || '')
       return !/\d/.test(areaCode) && baseAreaCode(blockArea).startsWith(areaCode)
     }
     const exactAreaBlocks = selectedBlocks.filter(exactAreaMatches)

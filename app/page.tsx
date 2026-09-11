@@ -1,4 +1,5 @@
 'use client'
+import { dispatchAreaCodes, dispatchAreaDisplay } from '../lib/dispatch-area'
 
 import './matrix.css'
 import './area-fix.css'
@@ -361,7 +362,7 @@ function dispatchBlockFrontOrder(left: DispatchBlock, right: DispatchBlock) {
   const key = (block: DispatchBlock) => {
     if (!block.areaCode) return { special: 1, letter: 99, number: Number.MAX_SAFE_INTEGER, variant: 9 }
     const isZ = block.variantCode === 'Z' || block.areaCode.startsWith('Z')
-    const canonicalCode = isZ && block.areaCode.startsWith('Z') ? block.areaCode.slice(1) : block.areaCode
+    const canonicalCode = block.areaCode
     const match = canonicalCode.toUpperCase().match(/^([A-Z]+)(\d*)/)
     const areaLetter = match?.[1] ?? canonicalCode.toUpperCase()
     const numericSuffix = match?.[2] ? Number(match[2]) : -1
@@ -427,7 +428,7 @@ function FirestoreDispatchView({ isDuty }: { employeeId: string; isDuty: boolean
       shift,
     }).blocks
   }, [blocks, isPreview, schedules, profiles, shift, date, dutyLoading, dutyError])
-  const visible = useMemo(()=>displayBlocks.filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0)).sort(dispatchBlockFrontOrder),[displayBlocks,shift,isDuty])
+  const visible = useMemo(()=>displayBlocks.map(block => dispatchAreaDisplay(block, dispatchAreaCodes(blocks))).filter(block => block.shiftType === shift && (isDuty || block.drivers.length + block.stations.length + block.assistants.length > 0)).sort(dispatchBlockFrontOrder),[displayBlocks,blocks,shift,isDuty])
   const jumpAreas=useMemo(()=>{const areas=new Map();for(const block of visible){if(block.areaCode&&!areas.has(block.areaCode))areas.set(block.areaCode,{key:block.id,areaCode:block.areaCode,label:block.areaName || `${block.areaCode}區`});}return [...areas.values()]},[visible])
   const dispatchLoading = blocksLoading || (dutyLoading && !displayBlocks.length)
   const dispatchError = blocksError || (dutyError ? '班表或員工資料載入失敗，無法產生自動派工' : '')

@@ -195,6 +195,38 @@ await page.addInitScript(data => {
 await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort())
 await page.goto(`http://127.0.0.1:${server.httpServer.address().port}/preview-test`)
 
+test('dispatch Z areas share canonical front cards, admin filters and first-area jump without merging blocks', async () => {
+  await page.reload();
+  await page.evaluate(() => {
+    window.formalByDate={'2026-09-09':window.fixture.template.map(b=>({...b,modifiedBy:'operator',
+      drivers:b.drivers.length?b.drivers:[{employeeId:'test-driver',employeeName:'測試駕駛'}]}))};
+    window.showManager();
+  });
+  await page.locator('select').first().selectOption('night');
+  await page.waitForFunction(()=>document.querySelectorAll('.dispatch-table tbody tr').length===94);
+  assert.equal(await page.locator('.dispatch-table tbody tr').filter({hasText:'藝文 O1'}).count(),2);
+  assert.doesNotMatch(await page.locator('.dispatch-table').textContent(),/Z(?:O1|R3?|K[34]|L[1-4]|U|W1|H)區/);
+  const area=page.getByLabel('區域篩選');
+  assert.doesNotMatch(await area.textContent(),/ZO1|ZR|ZK|ZL|ZU|ZW|ZH/);
+  await area.selectOption('O1');
+  assert.equal(await page.locator('.dispatch-table tbody tr').count(),3);
+  await page.evaluate(()=>window.showDispatch());
+  await page.waitForFunction(()=>document.querySelectorAll('.dispatch-card').length===94);
+  const cards=page.locator('.dispatch-card[data-area-code="O1"]');
+  assert.equal(await cards.count(),3);
+  assert.doesNotMatch(await page.locator('.dispatch-grid').textContent(),/Z(?:O1|R3?|K[34]|L[1-4]|U|W1|H)區/);
+  for(const car of ['RFW7651','RFX6095','BKP0190'])assert.ok((await cards.allTextContents()).some(text=>text.replaceAll('-','').includes(car)));
+  await page.locator('.area-jump-dropdown summary').click();
+  assert.equal(await page.locator('.area-jump-panel button').filter({hasText:/^O$/}).count(),1);
+  assert.equal(await page.locator('.area-jump-panel button').filter({hasText:/^ZH$/}).count(),0);
+  await page.evaluate(()=>{
+    window.jumpTarget='';HTMLElement.prototype.scrollIntoView=function(){window.jumpTarget=this.id};
+  });
+  await page.locator('.area-jump-panel').getByRole('button',{name:'O',exact:true}).click();
+  assert.equal(await page.evaluate(()=>window.jumpTarget),await cards.first().getAttribute('id'));
+  await page.reload();
+})
+
 test('manual dispatch searches active employees without roster or shift restrictions and audits saves', async () => {
   await page.reload()
   await page.evaluate(() => {
