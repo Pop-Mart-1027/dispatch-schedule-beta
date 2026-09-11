@@ -60,6 +60,10 @@ const virtual = {
       queueMicrotask(()=>next({exists:()=>true,data:()=>({active:true})}));return ()=>{};
     }
     export async function runTransaction(_db,handler) {
+      if(window.manualPickerTest){
+        const writes=[];await handler({get:async ref=>{const value=ref.path==='dispatchConfiguration/base'?window.configBase:window.formalByDate?.['2026-09-09']?.find(b=>b.id===ref.id);return {exists:()=>!!value,data:()=>value}},set:(ref,data)=>writes.push([ref,data])});
+        for(const [ref,data]of writes){if(ref.path==='dispatchConfiguration/base')window.configBase=data;else if(ref.path.startsWith('dispatchConfigurationVersions/'))(window.configVersions ||= []).push({id:ref.id,...data});else if(ref.path.startsWith('dispatchAuditLogs/'))window.manualAudits.push(data);else if(ref.path.startsWith('dispatchBlocks/')){const rows=window.formalByDate['2026-09-09'];const b=rows.find(b=>b.id===ref.id);if(b)Object.assign(b,data);else rows.push({id:ref.id,...data});}else throw Error('Unexpected write');}return;
+      }
       if(window.failSettings)throw Error('test denied');
       let value;
       await handler({get:async()=>({exists:()=>!!window.features,data:()=>window.features}),
@@ -127,7 +131,7 @@ const virtual = {
     window.showDispatch = () => root.render(React.createElement('div', {className: 'app-shell','data-page':'dispatch'},React.createElement('main',{className:'workspace'},React.createElement('section',{className:'content'}, React.createElement(FirestoreDispatchView, {employeeId: 'test', isDuty: false})))));
     window.showHome = () => root.render(React.createElement('div', {className: 'app-shell'}, React.createElement(HomeView, {name: '登入人員', onAction: () => {}, onGo: () => {}})));
     window.showFrontDuty = (shift, staff) => root.render(React.createElement(DutyStaffPanel, {shift, staff}));
-    window.showManager = () => root.render(React.createElement('div', {className: 'admin-console'}, React.createElement(DispatchManager, {employeeId: 'test'})));
+    window.showManager = () => root.render(React.createElement('div', {className: 'admin-console'}, React.createElement(DispatchManager, {employeeId: 'test',admin:true})));
     window.showDashboard = () => root.render(React.createElement('div', {className: 'admin-console'}, React.createElement(Dashboard, {role: 'admin', onOpenDispatch: () => {}})));
     window.showSchedule = shift => {
       const data = scheduleRecordsToData(window.fixture.monthSchedules, window.fixture.employees);
@@ -156,7 +160,7 @@ const server = await createServer({
     load(id) { if (id.startsWith('\0test:')) return virtual[id.slice(1, -4)] },
     transform(code, id) {
       if(['/app/month-row-manager.tsx','/app/month-section-manager.tsx'].some(path=>id.replaceAll('\\', '/').endsWith(path))) return code.replace("from '../lib/month-schedule-layout'", "from 'test:month-layout'");
-      if(['/lib/system-features.ts','/lib/dispatch-blocks-firestore.ts'].some(path=>id.replaceAll('\\', '/').endsWith(path))) return code.replace("from 'firebase/firestore'", "from 'test:firestore'");
+      if(['/lib/system-features.ts','/lib/dispatch-blocks-firestore.ts','/lib/dispatch-configuration.ts'].some(path=>id.replaceAll('\\', '/').endsWith(path))) return code.replace("from 'firebase/firestore'", "from 'test:firestore'");
       const admin = id.replaceAll('\\', '/').endsWith('/app/admin-console.tsx')
       if (!admin && !id.replaceAll('\\', '/').endsWith('/app/page.tsx')) return
       return code.replace("from 'firebase/firestore'", "from 'test:firestore'")
@@ -227,6 +231,31 @@ test('dispatch Z areas share canonical front cards, admin filters and first-area
   await page.reload();
 })
 
+test('admin saves an editable area/car/work-focus configuration effective the next day', async()=>{
+  await page.reload();
+  await page.evaluate(()=>{
+    window.manualPickerTest=true;window.manualAudits=[];
+    window.formalByDate={'2026-09-09':structuredClone(window.fixture.template)};
+    window.showManager();
+  });
+  await page.locator('.dispatch-table tbody tr').first().getByRole('button',{name:'修改',exact:true}).click();
+  const modal=page.locator('.admin-edit-grid');
+  await modal.getByLabel('區域名稱',{exact:true}).fill('管理員自訂區域');
+  await modal.getByLabel('車號',{exact:true}).fill('NEW-1234');
+  await modal.locator('label').filter({hasText:/^工作重點/}).locator('textarea').fill('新版工作重點');
+  await page.getByRole('button',{name:'設為新版配置',exact:true}).click();
+  await modal.waitFor({state:'hidden'});
+  const result=await page.evaluate(()=>({versions:window.configVersions,audits:window.manualAudits}));
+  assert.equal(result.versions.length,1);
+  assert.equal(result.versions[0].effectiveFrom,'2026-09-10');
+  assert.equal(result.versions[0].manualPeople,false);
+  assert.equal(result.versions[0].values.areaName,'管理員自訂區域');
+  assert.equal(result.versions[0].values.vehicleNo,'NEW-1234');
+  assert.equal(result.versions[0].values.workFocus,'新版工作重點');
+  assert.equal(result.audits[0].mode,'version');
+  await page.reload();
+})
+
 test('manual dispatch searches active employees without roster or shift restrictions and audits saves', async () => {
   await page.reload()
   await page.evaluate(() => {
@@ -253,7 +282,7 @@ test('manual dispatch searches active employees without roster or shift restrict
     await picker.getByRole('button',{name:'駐點',exact:true}).click();
     await picker.locator('input').fill('INACTIVE0001');
     assert.equal(await picker.locator('article').count(),0);
-    await page.getByRole('button',{name:'儲存修改',exact:true}).click();
+    await page.getByRole('button',{name:'儲存本日',exact:true}).click();
     await picker.waitFor({state:'hidden'});
   }
   const saved=await page.evaluate(()=>({blocks:window.formalByDate['2026-09-09'],audits:window.manualAudits}));

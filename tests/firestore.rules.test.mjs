@@ -329,3 +329,42 @@ test('breakfast order collections are excluded from the independent project', as
     }),
   );
 });
+
+test('dispatch day/version saves are atomic, future-only, immutable and admin-controlled', async()=>{
+  const {saveDispatchConfiguration,configuredDispatchBlocks,dispatchToday,followingDate}=await moduleServer.ssrLoadModule('/lib/dispatch-configuration.ts');
+  const admin=asRole('A001','admin'), employee=asRole('E001','employee'), duty=asRole('D001','duty');
+  const date=dispatchToday(),future=followingDate(date),later=followingDate(future);
+  const id=`${date}_night_config-test`;
+  const block={id,blockId:id,date,shiftType:'night',areaCode:'O1',areaName:'原區域',variantCode:'standard',vehicleNo:'OLD-CAR',vehicleType:'',drivers:[],stations:[],assistants:[],workFocus:'原工作',balanceArea:'',note:'',sourceSheet:'test',sourceRow:1,status:'preview',modifiedBy:'',modifiedAt:null};
+  const values={areaName:'臨時名稱',vehicleNo:'TEMP-CAR',drivers:[],stations:[],assistants:[],workFocus:'臨時工作',balanceArea:'',note:''};
+  await assertFails(saveDispatchConfiguration({block,values,blocks:[block],mode:'day',employeeId:'E001'},employee));
+  assert.equal((await getDoc(doc(admin,'dispatchConfiguration','base'))).exists(),false);
+  await assertSucceeds(saveDispatchConfiguration({block,values,blocks:[block],mode:'day',employeeId:'A001'},admin));
+  let day=(await getDoc(doc(admin,'dispatchBlocks',id))).data();
+  assert.equal(day.vehicleNo,'TEMP-CAR');assert.equal(day.modifiedBy,'A001');
+  assert.equal((await configuredDispatchBlocks(future,[],employee))[0].vehicleNo,'OLD-CAR');
+  const originalFuture={...block,id:`${future}_night_config-test`,blockId:`${future}_night_config-test`,date:future,vehicleNo:'EXISTING-AUTO'};
+  assert.equal((await configuredDispatchBlocks(future,[originalFuture],employee))[0].vehicleNo,'EXISTING-AUTO');
+  const versionsBefore=(await getDocs(collection(admin,'dispatchConfigurationVersions'))).size;
+  await assertFails(saveDispatchConfiguration({block:{id,...day},values,blocks:[block],mode:'version',employeeId:'D001'},duty));
+  assert.equal((await getDocs(collection(admin,'dispatchConfigurationVersions'))).size,versionsBefore);
+  await assertSucceeds(saveDispatchConfiguration({block:{id,...day},values:{...values,areaName:'新版區域',vehicleNo:'NEW-CAR',stations:[{employeeId:'E001',employeeName:'支援'}]},blocks:[block],mode:'version',employeeId:'A001'},admin));
+  const futureBlock=(await configuredDispatchBlocks(future,[],employee))[0];
+  assert.equal(futureBlock.vehicleNo,'NEW-CAR');assert.equal(futureBlock.areaName,'新版區域');
+  assert.equal(futureBlock.stations[0].employeeId,'E001');assert.equal(futureBlock.modifiedBy,'A001');
+  assert.equal((await configuredDispatchBlocks(later,[],employee))[0].vehicleNo,'NEW-CAR');
+  const manual={...originalFuture,vehicleNo:'MANUAL-CAR',modifiedBy:'D001'};
+  assert.deepEqual((await configuredDispatchBlocks(future,[manual],employee))[0],manual);
+  const historical={...block,date:'2020-01-01'};
+  assert.deepEqual(await configuredDispatchBlocks('2020-01-01',[historical],employee),[historical]);
+  const {listDispatchBlockTemplate}=await moduleServer.ssrLoadModule('/lib/dispatch-blocks-firestore.ts');
+  assert.deepEqual(await listDispatchBlockTemplate('2020-01-01',employee),{sourceDate:'',blocks:[]});
+  const versions=await getDocs(collection(admin,'dispatchConfigurationVersions'));
+  const version=versions.docs.at(-1),audit=(await getDoc(doc(admin,'dispatchAuditLogs',version.data().auditId))).data();
+  assert.equal(audit.mode,'version');assert.equal(audit.effectiveFrom,future);assert.equal(audit.before.vehicleNo,'TEMP-CAR');assert.equal(audit.after.vehicleNo,'NEW-CAR');
+  await assertFails(updateDoc(version.ref,{effectiveFrom:date}));
+  await assertFails(updateDoc(doc(admin,'dispatchConfiguration','base'),{activeFrom:'2020-01-01'}));
+  await assert.rejects(saveDispatchConfiguration({block:historical,values,blocks:[historical],mode:'version',employeeId:'A001'},admin),/歷史/);
+  // Stale editor must not overwrite a newer manual save or leave a stray audit/version.
+  await assert.rejects(saveDispatchConfiguration({block,values,blocks:[block],mode:'day',employeeId:'A001'},admin),/其他人修改/);
+})

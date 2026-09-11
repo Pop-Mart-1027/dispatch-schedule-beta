@@ -145,7 +145,7 @@ service cloud.firestore {
       allow update: if isAdmin()
         || (isActiveEmployee() && isDuty()
           && request.resource.data.diff(resource.data).affectedKeys().hasOnly([
-            'vehicleNo', 'drivers', 'stations', 'assistants', 'workFocus',
+            'areaName', 'vehicleNo', 'drivers', 'stations', 'assistants', 'workFocus',
             'balanceArea', 'note', 'modifiedBy', 'modifiedAt', 'updatedAt'
           ])
           && request.resource.data.modifiedBy == request.auth.token.employeeId
@@ -154,6 +154,37 @@ service cloud.firestore {
     }
     match /dispatchAuditLogs/{auditId} {
       allow read, create: if isDuty();
+      allow update, delete: if false;
+    }
+
+    match /dispatchConfiguration/{id} {
+      allow read: if isActiveEmployee();
+      allow create: if isDuty() && id == 'base'
+        && request.resource.data.keys().hasOnly(['activeFrom','blocks','createdAt','modifiedBy'])
+        && request.resource.data.activeFrom.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && request.resource.data.blocks is list && request.resource.data.blocks.size() <= 400
+        && request.resource.data.createdAt == request.time
+        && request.resource.data.modifiedBy == request.auth.token.employeeId;
+      allow update, delete: if false;
+    }
+    match /dispatchConfigurationVersions/{versionId} {
+      allow read: if isActiveEmployee();
+      allow create: if isAdmin()
+        && request.resource.data.keys().hasOnly(['effectiveFrom','slot','values','manualPeople','modifiedBy','createdAt','auditId'])
+        && request.resource.data.effectiveFrom.matches('^[0-9]{4}-[0-9]{2}-[0-9]{2}$')
+        && request.resource.data.slot is string
+        && request.resource.data.manualPeople is bool
+        && request.resource.data.values.keys().hasOnly(['areaName','vehicleNo','drivers','stations','assistants','workFocus','balanceArea','note'])
+        && request.resource.data.values.areaName is string
+        && request.resource.data.values.vehicleNo is string
+        && request.resource.data.values.drivers is list
+        && request.resource.data.values.stations is list
+        && request.resource.data.values.assistants is list
+        && request.resource.data.values.workFocus is string
+        && request.resource.data.modifiedBy == request.auth.token.employeeId
+        && request.resource.data.createdAt == request.time
+        && getAfter(/databases/$(database)/documents/dispatchAuditLogs/$(request.resource.data.auditId)).data.versionId == versionId
+        && getAfter(/databases/$(database)/documents/dispatchAuditLogs/$(request.resource.data.auditId)).data.modifiedBy == request.auth.token.employeeId;
       allow update, delete: if false;
     }
 

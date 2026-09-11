@@ -1,3 +1,4 @@
+import { configuredDispatchBlocks, readDispatchConfigurationBase } from './dispatch-configuration'
 import { addDoc, collection, doc, getDocs, limit, orderBy, query, serverTimestamp, setDoc, where, writeBatch } from 'firebase/firestore'
 import { db } from './firebase'
 import { getMonthLayout } from './month-schedule-layout'
@@ -38,17 +39,22 @@ export type DispatchBlock = {
   monthAssignmentResetIds?: string[]
 }
 
-export type DispatchBlockEditable = Pick<DispatchBlock, 'vehicleNo' | 'drivers' | 'stations' | 'assistants' | 'workFocus' | 'balanceArea' | 'note'>
+export type DispatchBlockEditable = Pick<DispatchBlock, 'areaName' | 'vehicleNo' | 'drivers' | 'stations' | 'assistants' | 'workFocus' | 'balanceArea' | 'note'>
 
 export async function listDispatchBlocks(date: string, database = db) {
   const [snapshot, layout] = await Promise.all([getDocs(query(collection(database, 'dispatchBlocks'), where('date', '==', date))), getMonthLayout(date.slice(0,7), database)])
-  return (eligibleMonthBlocks(snapshot.docs.map(item => ({ id: item.id, ...item.data() } as DispatchBlock)), layout) as DispatchBlock[])
+  return (eligibleMonthBlocks(await configuredDispatchBlocks(date, snapshot.docs.map(item => ({ id: item.id, ...item.data() } as DispatchBlock)), database), layout) as DispatchBlock[])
     .filter(item => item.status !== 'deleted')
     .sort((left, right) => left.shiftType.localeCompare(right.shiftType) || left.sourceRow - right.sourceRow || left.blockId.localeCompare(right.blockId))
 }
 
-export async function listDispatchBlockTemplate(date: string) {
-  const snapshot = await getDocs(query(collection(db, 'dispatchBlocks'), orderBy('date', 'desc'), limit(500)))
+export async function listDispatchBlockTemplate(date: string, database = db) {
+  const base = await readDispatchConfigurationBase(database)
+  // An absent historical day stays absent; never synthesize history from a new
+  // daily override or a future configuration version.
+  if (base && date < base.activeFrom) return { sourceDate: '', blocks: [] as DispatchBlock[] }
+  if (base) return { sourceDate: base.activeFrom, blocks: await configuredDispatchBlocks(date, [], database) }
+  const snapshot = await getDocs(query(collection(database, 'dispatchBlocks'), orderBy('date', 'desc'), limit(500)))
   const byDate = new Map<string, DispatchBlock[]>()
   snapshot.docs
     .map(item => ({ id: item.id, ...item.data() } as DispatchBlock))
@@ -107,6 +113,7 @@ export async function saveDispatchPreviewAsFormal(
   for (const block of blocks) {
     const edited = block.id === editedBlockId
     const values: DispatchBlockEditable = edited ? editedValues : {
+      areaName: block.areaName,
       vehicleNo: block.vehicleNo,
       drivers: block.drivers,
       stations: block.stations,
@@ -120,7 +127,6 @@ export async function saveDispatchPreviewAsFormal(
       shiftType: block.shiftType,
       blockId: block.blockId,
       areaCode: block.areaCode,
-      areaName: block.areaName,
       variantCode: block.variantCode,
       vehicleType: block.vehicleType,
       ...values,
@@ -139,6 +145,7 @@ export async function saveDispatchPreviewAsFormal(
 
 export async function writeDispatchBlockAudit(block: DispatchBlock, after: DispatchBlockEditable, modifiedBy: string) {
   const before: DispatchBlockEditable = {
+    areaName: block.areaName,
     vehicleNo: block.vehicleNo,
     drivers: block.drivers,
     stations: block.stations,

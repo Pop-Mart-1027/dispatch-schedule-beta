@@ -446,7 +446,7 @@ function DispatchAdmin({ employeeId }: { employeeId: string }) {
   const [error, setError] = useState('')
   const load = async () => { try { setBlocks(await listDispatchBlocks(date)); setError('') } catch (reason) { console.error('[dispatchBlocksAdmin] load failed', reason); setError('派工區塊載入失敗') } }
   useEffect(() => { void load() }, [date])
-  const open = (block: DispatchBlock) => { setEditing(block); setDraft({ vehicleNo: block.vehicleNo, drivers: block.drivers, stations: block.stations, assistants: block.assistants, workFocus: block.workFocus, balanceArea: block.balanceArea, note: block.note }) }
+  const open = (block: DispatchBlock) => { setEditing(block); setDraft({ areaName: block.areaName, vehicleNo: block.vehicleNo, drivers: block.drivers, stations: block.stations, assistants: block.assistants, workFocus: block.workFocus, balanceArea: block.balanceArea, note: block.note }) }
   const setText = (key: 'vehicleNo' | 'workFocus' | 'balanceArea' | 'note', value: string) => setDraft(current => current ? { ...current, [key]: value } : current)
   const setPeople = (key: 'drivers' | 'stations' | 'assistants', value: string) => setDraft(current => current ? { ...current, [key]: parseBlockPeople(value) } : current)
   const save = async () => { if (!editing || !draft) return; try { await updateDispatchBlock(editing, draft, employeeId); await writeDispatchBlockAudit(editing, draft, employeeId); setEditing(null); setDraft(null); await load() } catch (reason) { console.error('[dispatchBlocksAdmin] save failed', reason); setError('派工區塊儲存失敗') } }

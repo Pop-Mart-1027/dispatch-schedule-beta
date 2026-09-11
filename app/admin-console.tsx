@@ -1,4 +1,5 @@
 'use client';
+import { saveDispatchConfiguration, dispatchToday } from '../lib/dispatch-configuration'
 import { dispatchAreaCodes, dispatchAreaDisplay, normalizeDispatchAreaCode } from '../lib/dispatch-area'
 
 import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
@@ -50,9 +51,6 @@ import {
   buildDispatchPreviewBlocks,
   listDispatchBlocks,
   listDispatchBlockTemplate,
-  saveDispatchPreviewAsFormal,
-  updateDispatchBlock,
-  writeDispatchBlockAudit,
   type DispatchBlock,
   type DispatchBlockEditable,
   type DispatchBlockPerson,
@@ -266,7 +264,7 @@ export function AdminConsole({
           {page === 'dashboard' && (
             <Dashboard role={role} onOpenDispatch={() => setPage('dispatch')} />
           )}
-          {page === 'dispatch' && <DispatchManager employeeId={employeeId} />}
+          {page === 'dispatch' && <DispatchManager employeeId={employeeId} admin={role === 'admin'} />}
           {page === 'schedule' && (
             <ScheduleManager employeeId={employeeId} admin={admin} />
           )}
@@ -582,7 +580,7 @@ function DutyColumn({
   );
 }
 
-function DispatchManager({ employeeId }: { employeeId: string }) {
+function DispatchManager({ employeeId, admin = false }: { employeeId: string; admin?: boolean }) {
   const [date, setDate] = useState(todayTaipei);
   const [shift, setShift] = useState<'day' | 'night'>('day');
   const [blocks, setBlocks] = useState<DispatchBlock[]>([]);
@@ -690,8 +688,10 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
     .sort(employeeAdminOrder)
     .slice(0, 60);
   const open = (block: AssignedDispatchBlock) => {
+    setError('');
     setEditing(block);
     setDraft({
+      areaName: block.areaName,
       vehicleNo: block.vehicleNo,
       drivers: block.drivers,
       stations: block.stations,
@@ -731,27 +731,15 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
       ],
     });
   };
-  const save = async () => {
-    if (!editing || !draft) return;
+  const [saving, setSaving] = useState(false);
+  const save = async (mode: 'day' | 'version') => {
+    if (!editing || !draft || saving) return;
+    setSaving(true);
     try {
-      if (preview) {
-        await saveDispatchPreviewAsFormal(
-          [...dayAssignment.blocks, ...nightAssignment.blocks],
-          editing.id,
-          draft,
-          employeeId,
-        );
-      } else {
-        await updateDispatchBlock(editing, draft, employeeId);
-      }
-      await writeDispatchBlockAudit(editing, draft, employeeId);
-      setEditing(null);
-      setDraft(null);
-      await load();
-    } catch (cause) {
-      console.error('[backendDispatch] save failed', cause);
-      setError('派工修改失敗');
-    }
+      await saveDispatchConfiguration({block:editing,values:draft,blocks,mode,employeeId});
+      setEditing(null);setDraft(null);await load();
+    } catch(cause) {setError(cause instanceof Error?cause.message:'派工修改失敗');}
+    finally {setSaving(false);}
   };
   const showAudits = async (block: DispatchBlock) => {
     setAuditFor(block);
@@ -915,6 +903,7 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
           onClose={() => setEditing(null)}
         >
           <div className="admin-edit-grid">
+            <label>區域名稱<input value={draft.areaName} onChange={event=>setDraft({...draft,areaName:event.target.value})} /></label>
             <label>
               車號
               <input
@@ -1016,9 +1005,10 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
               ))}
             </div>
           </section>
-          <button className="admin-primary" onClick={() => void save()}>
-            儲存修改
-          </button>
+          {error && <p role="alert">{error}</p>}
+          <p>儲存本日只影響選定日期；新版配置從該日期次日起套用，既有人工派工仍優先。未手動調整人員時，仍依每日班表自動派工。</p>
+          <button className="admin-primary" disabled={saving} onClick={() => void save('day')}>儲存本日</button>
+          {admin && <button disabled={saving || editing.date < dispatchToday()} onClick={() => void save('version')}>設為新版配置</button>}
         </Modal>
       )}
       {auditFor && (
@@ -1034,6 +1024,7 @@ function DispatchManager({ employeeId }: { employeeId: string }) {
                     <b>{displayTime(audit.createdAt)}</b>
                     <span>{String(audit.modifiedBy || '—')}</span>
                   </header>
+                  {Boolean(audit.mode) && <p>{audit.mode === 'version' ? `新版配置，自 ${String(audit.effectiveFrom)} 起生效` : '儲存本日'}</p>}
                   <details>
                     <summary>修改前／修改後</summary>
                     <pre>
