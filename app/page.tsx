@@ -134,7 +134,7 @@ export default function Home() {
     return ()=>{cancelled=true}
   }, [currentUser?.employeeId, featuresLoading, features.broadcastsEnabled])
 
-  if (!authReady) return <main className="login-page"><p className="loading">正在確認登入狀態…</p></main>
+  if (!authReady) return <main className="login-page login-check-page"><p className="loading">正在確認登入狀態…</p></main>
   if (!currentUser) return <main className="login-page"><section className="login-card"><div className="login-bike"><BikeArtwork /></div><p className="eyebrow">員工登入</p><h1 className="login-brand"><span className="smile-icon" aria-hidden="true"><svg viewBox="0 0 32 32" fill="none"><circle cx="10" cy="11" r="2" fill="currentColor" /><circle cx="22" cy="11" r="2" fill="currentColor" /><path d="M8 19C10 27 22 27 24 19" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" /></svg></span>微笑Bike</h1><label>員工編號<input autoComplete="username" placeholder="請使用本人員工編號登入" value={account} onChange={e => setAccount(e.target.value.toUpperCase())} /></label><label>密碼<input type="password" autoComplete="current-password" placeholder="首次登入密碼為編號" value={password} onChange={e => setPassword(e.target.value)} onKeyDown={e => e.key === 'Enter' && void signIn()} /></label><button className="primary full" disabled={signingIn} onClick={() => void signIn()}>{signingIn ? '登入中…' : '登入工作台'} <ChevronRight size={18} /></button>{notice && <p className="error">{notice}</p>}</section></main>
 
   if (currentUser.mustChangePassword) return <ChangePassword employee={currentUser} onDone={async () => { await signOut(auth); setCurrentUser(null); notify('密碼已更新，請使用新密碼重新登入') }} />
