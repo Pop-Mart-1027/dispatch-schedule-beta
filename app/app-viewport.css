@@ -1,0 +1,77 @@
+/* Opt-in only: ordinary desktop browser layout and zoom remain unchanged. */
+html[data-app-viewport] {
+  height: var(--app-viewport-height, 100dvh);
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: pan-x pan-y;
+}
+html[data-app-viewport] body {
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+  overscroll-behavior: none;
+  touch-action: pan-x pan-y;
+}
+html[data-app-viewport] #root { height: 100%; min-height: 0; overflow: hidden; }
+html[data-app-viewport] .app-shell { height: 100%; min-height: 0; overflow: hidden; }
+html[data-app-viewport] .app-shell > .workspace {
+  display: flex; flex-direction: column; height: 100%; min-height: 0; overflow: hidden;
+}
+html[data-app-viewport] .workspace > .topbar { flex: 0 0 auto; }
+html[data-app-viewport] .workspace > .content {
+  flex: 1 1 0; min-height: 0; width: 100%; margin: 0 auto;
+  overflow: auto; overscroll-behavior: none;
+}
+html[data-app-viewport] .app-shell .sidebar {
+  height: calc(var(--app-viewport-height, 100dvh) - var(--screen-safe-top) - var(--screen-safe-bottom));
+  min-height: 0; overflow-y: auto; overscroll-behavior: none;
+}
+html[data-app-viewport] .app-shell:has(.sidebar.open) .workspace > .content { overflow: hidden; }
+html[data-app-viewport] .matrix-wrap,
+html[data-app-viewport] .area-jump-panel { overscroll-behavior: none; }
+
+/* Keep schedule controls outside its independent two-axis table scroller. */
+html[data-app-viewport] .app-shell[data-page='schedule'] .workspace > .content {
+  display: flex; flex-direction: column; align-items: stretch; overflow: hidden;
+}
+html[data-app-viewport] .app-shell[data-page='schedule'] .content > .tabs,
+html[data-app-viewport] .app-shell[data-page='schedule'] .content > .page-intro,
+html[data-app-viewport] .app-shell[data-page='schedule'] .content > .area-jump-dropdown { flex: 0 0 auto; }
+html[data-app-viewport] .app-shell[data-page='schedule'] .content > .matrix-wrap,
+html[data-app-viewport] .app-shell[data-page='schedule'] .content > .personal-month {
+  flex: 1 1 0; min-height: 0; max-height: none; overflow: auto; overscroll-behavior: none;
+}
+html[data-app-viewport] .dispatch-toolbar {
+  position: sticky; top: 0; z-index: 11; background: var(--page-bg, #f4f6f7);
+}
+
+/* Long login forms/dialogs remain reachable with the software keyboard open. */
+html[data-app-viewport] .login-page {
+  height: 100%; min-height: 0; overflow: auto; overscroll-behavior: none;
+  align-items: safe center;
+}
+html[data-app-viewport] :is(input, select, textarea) { font-size: max(16px, 1em); }
+html[data-app-viewport] .broadcast-modal-backdrop {
+  max-height: var(--app-viewport-height, 100dvh); overflow: auto; overscroll-behavior: none;
+}
+html[data-app-viewport] .broadcast-modal {
+  max-height: calc(var(--app-viewport-height, 100dvh) - 36px); overflow: auto; overscroll-behavior: none;
+}
+
+/* Existing wide admin workspace scrolls horizontally inside its own shell. */
+html[data-app-viewport] .admin-console {
+  height: 100%; min-height: 0; min-width: 0;
+  grid-template-columns: 248px minmax(1252px, 1fr);
+  grid-template-rows: minmax(0, 1fr); overflow: auto; overscroll-behavior: none;
+}
+html[data-app-viewport] .admin-main { display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+html[data-app-viewport] .admin-topbar { flex: 0 0 78px; }
+html[data-app-viewport] .admin-content { flex: 1 1 0; height: auto; min-height: 0; overscroll-behavior: none; }
+html[data-app-viewport] .admin-sidebar { top: 0; height: 100%; min-height: 0; overflow: auto; overscroll-behavior: none; }
+
+/* Preserve the existing edge-to-edge landscape grid, not a second layout. */
+@media (orientation: landscape) and (min-width: 480px) and (max-width: 1000px) and (max-height: 500px) and (pointer: coarse) {
+  html[data-app-viewport] .app-shell[data-page='schedule'] .workspace > .content {
+    display: grid; align-items: center;
+  }
+}

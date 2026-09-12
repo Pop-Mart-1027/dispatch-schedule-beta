@@ -1,4 +1,5 @@
 'use client'
+import { installAppViewport } from '../lib/app-viewport'
 import { dispatchAreaCodes, dispatchAreaDisplay, dispatchBlockFrontOrder } from '../lib/dispatch-area'
 import { pairDispatchCards } from '../lib/dispatch-card-layout'
 import './schedule-landscape.css'
@@ -52,6 +53,7 @@ const weekdays = ['二', '三', '四', '五', '六', '日', '一']
 const publicAssetUrl = (file: string) => `${import.meta.env.BASE_URL}${file.replace(/^\//, '')}`
 
 export default function Home() {
+  useEffect(installAppViewport, [])
   const [authReady, setAuthReady] = useState(false)
   const [account, setAccount] = useState('')
   const [password, setPassword] = useState('')
@@ -398,16 +400,23 @@ function DispatchBackToTop() {
   const [visible, setVisible] = useState(false)
   useEffect(() => {
     const mobile = window.matchMedia('(max-width: 760px)')
-    const update = () => setVisible(mobile.matches && window.scrollY > 400)
+    const content = document.querySelector<HTMLElement>('.app-shell[data-page="dispatch"] .workspace > .content')
+    const update = () => setVisible(mobile.matches && (document.documentElement.hasAttribute('data-app-viewport') ? content?.scrollTop ?? 0 : window.scrollY) > 400)
     update()
     window.addEventListener('scroll', update, { passive: true })
+    content?.addEventListener('scroll', update, { passive: true })
     mobile.addEventListener('change', update)
     return () => {
       window.removeEventListener('scroll', update)
+      content?.removeEventListener('scroll', update)
       mobile.removeEventListener('change', update)
     }
   }, [])
-  return visible ? <button type="button" className="dispatch-back-to-top" aria-label="回到頂部" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>↑</button> : null
+  return visible ? <button type="button" className="dispatch-back-to-top" aria-label="回到頂部" onClick={() => {
+    const target = document.documentElement.hasAttribute('data-app-viewport')
+      ? document.querySelector<HTMLElement>('.app-shell[data-page="dispatch"] .workspace > .content') : window
+    target?.scrollTo({ top: 0, behavior: 'smooth' })
+  }}>↑</button> : null
 }
 
 function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isDuty: boolean }) {

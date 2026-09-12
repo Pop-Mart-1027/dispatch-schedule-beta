@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import './app-viewport.css';
 
 .inline-form { display: grid; grid-template-columns: 1.4fr repeat(3, 1fr) auto; gap: 10px; align-items: center; margin: 22px 0; }
 .inline-form input { min-width: 0; }
