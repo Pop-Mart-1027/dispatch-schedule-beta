@@ -24,6 +24,8 @@ const block = (index = 0) => ({ id: `car-${index}`, blockId: `car-${index}`, dat
 const schedules = ['早', '晚', '夜'].map((shift, index) => ({ id: `row-${index}`, employeeId: `E${index}`, employeeName: `${shift}班測試員`,
   date, shiftType: 'morning', scheduleCode: `${shift}O1`, title: '調度專員' }))
 const fixture = { date, blocks: [block()], schedules, scheduleData }
+const viewportMeta = readFileSync('index.html', 'utf8').match(/<meta name="viewport"[^>]+>/)?.[0]
+assert.ok(viewportMeta, 'Pages entry must contain a viewport meta tag')
 
 const entry = `
   import React,{Fragment,useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
@@ -91,7 +93,7 @@ const server = await createServer({ configFile: false, logLevel: 'error',
     },
     configureServer(server) { server.middlewares.use('/round-test', async (_req, res) => {
       res.setHeader('Content-Type', 'text/html')
-      res.end(await server.transformIndexHtml('/round-test', '<meta name="viewport" content="width=device-width,initial-scale=1"><div id="root"></div><script type="module" src="/@id/__x00__round:entry"></script>'))
+      res.end(await server.transformIndexHtml('/round-test', viewportMeta + '<div id="root"></div><script type="module" src="/@id/__x00__round:entry"></script>'))
     }) },
   }], server: { host: '127.0.0.1', port: 0 },
 })
@@ -228,14 +230,15 @@ for (const [width, height, touch] of [[390, 844, true], [844, 390, true], [1280,
 // Exercise the actual Pages build cascade, not only Vite's fixture import order.
 // Run npm run build:pages before this suite; assets are read locally, never from production.
 function productionCss() {
-  const html = readFileSync('gh-pages/index.html', 'utf8')
+  const outputDir = process.env.SCHEDULE_PAGES_DIR || 'gh-pages'
+  const html = readFileSync(path.join(outputDir, 'index.html'), 'utf8')
   const href = html.match(/href="([^"]+\.css)"/)?.[1]
   assert.ok(href, 'Run npm run build:pages before the UI suite')
-  return readFileSync(path.join('gh-pages', 'assets', path.basename(href)), 'utf8')
+  return readFileSync(path.join(outputDir, 'assets', path.basename(href)), 'utf8')
 }
 
 async function applyBuiltCss(page, css) {
-  await page.locator('[data-employee-id]').first().waitFor()
+  await page.locator('[data-employee-id], .dispatch-card, .dispatch-table tbody tr').first().waitFor()
   await page.evaluate(css => {
     document.querySelectorAll('style, link[rel="stylesheet"]').forEach(node => node.remove())
     const style = document.createElement('style')
@@ -245,11 +248,11 @@ async function applyBuiltCss(page, css) {
   }, css)
 }
 
-async function assertDenseProduction(page, width, height) {
+async function assertDenseProduction(page, width, height, safe = { top: 0, right: 0, bottom: 0, left: 0 }) {
   const metrics = await measure(page)
   assert.equal(metrics.dense, true)
-  assert.ok(Math.abs(metrics.matrix.y - 40) <= 1, JSON.stringify(metrics))
-  assert.ok(Math.abs(metrics.matrix.y + metrics.matrix.height - (height - 4)) <= 1, JSON.stringify(metrics))
+  assert.ok(Math.abs(metrics.matrix.y - (40 + safe.top)) <= 1, JSON.stringify(metrics))
+  assert.ok(Math.abs(metrics.matrix.y + metrics.matrix.height - (height - Math.max(4, safe.bottom))) <= 1, JSON.stringify(metrics))
   assert.ok(Math.abs(metrics.matrix.width - (width - 16)) <= 1, JSON.stringify(metrics))
   assert.ok(metrics.fullyVisiblePeople >= 7, JSON.stringify(metrics))
   assert.equal(metrics.rowHeight, 30)
@@ -257,7 +260,7 @@ async function assertDenseProduction(page, width, height) {
     const r = node.getBoundingClientRect()
     return { left: r.left, top: r.top, right: r.right, bottom: r.bottom }
   }))
-  for (const r of controls) assert.ok(r.left >= 0 && r.top >= 0 && r.right <= width && r.bottom <= 40, JSON.stringify(controls))
+  for (const r of controls) assert.ok(r.left >= safe.left && r.top >= safe.top && r.right <= width - safe.right && r.bottom <= 40 + safe.top, JSON.stringify(controls))
   for (let i = 0; i < controls.length; i++) for (let j = i + 1; j < controls.length; j++) {
     const a = controls[i], b = controls[j]
     assert.ok(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top, 'Production controls overlap')
@@ -346,6 +349,61 @@ for (const [width, height, touch] of [[390, 844, true], [1280, 844, false]]) {
       const before = await measure(page)
       await applyBuiltCss(page, productionCss())
       assert.deepEqual(await measure(page), before)
+    } finally { await page.close() }
+  })
+}
+
+test('Pages entry and built HTML opt into viewport-fit=cover without disabling zoom', () => {
+  const html = readFileSync(path.join(process.env.SCHEDULE_PAGES_DIR || 'gh-pages', 'index.html'), 'utf8')
+  for (const text of [viewportMeta, html.match(/<meta name="viewport"[^>]+>/)?.[0] || '']) {
+    assert.match(text, /viewport-fit=cover/)
+    assert.doesNotMatch(text, /user-scalable=no|maximum-scale=1/)
+  }
+})
+
+async function simulateSafeArea(page, safe) {
+  await page.evaluate(safe => {
+    for (const [edge, value] of Object.entries(safe)) document.documentElement.style.setProperty(`--screen-safe-${edge}`, `${value}px`)
+  }, safe)
+}
+
+for (const safe of [{ top: 0, right: 0, bottom: 21, left: 59 }, { top: 0, right: 59, bottom: 21, left: 0 }]) {
+  test(`landscape safe-area simulation: left=${safe.left}, right=${safe.right}`, async () => {
+    const { page, errors } = await open('schedule', fixture, { width: 844, height: 390 }, true)
+    try {
+      await applyBuiltCss(page, productionCss())
+      await simulateSafeArea(page, safe)
+      const metrics = await assertDenseProduction(page, 844, 390, safe)
+      const position = await page.evaluate(() => {
+        const body = getComputedStyle(document.body)
+        const first = document.querySelector('tr[data-employee-id] td')
+        const rect = first.getBoundingClientRect()
+        return { bodyPadding: body.padding, textLeft: rect.left + parseFloat(getComputedStyle(first).paddingLeft) }
+      })
+      assert.equal(position.bodyPadding, '0px')
+      assert.ok(position.textLeft >= safe.left)
+      await page.getByRole('button', { name: '開啟選單', exact: true }).click()
+      const sidebar = await page.locator('.sidebar.open').boundingBox()
+      assert.ok(sidebar.x >= safe.left && sidebar.y >= safe.top && sidebar.y + sidebar.height <= 390 - safe.bottom + 1)
+      await page.getByRole('button', { name: '關閉側欄', exact: true }).click()
+      await page.screenshot({ path: path.join(reportDir, `safe-area-landscape-${safe.left}-${safe.right}.png`) })
+      console.log('safeAreaMetrics', JSON.stringify({ safe, ...metrics }))
+      assert.deepEqual(errors, [])
+    } finally { await page.close() }
+  })
+}
+
+for (const view of ['dispatch', 'admin']) {
+  test(`${view} retains safe-area bounds without enabling schedule density`, async () => {
+    const { page, errors } = await open(view, fixture, { width: 844, height: 390 }, true)
+    try {
+      await applyBuiltCss(page, productionCss())
+      await simulateSafeArea(page, { top: 0, right: 44, bottom: 21, left: 44 })
+      const bounds = await page.locator('#root').boundingBox()
+      assert.equal(bounds.x, 44)
+      assert.equal(bounds.width, 844 - 88)
+      assert.equal(await page.locator('.app-shell[data-page="schedule"]').count(), 0)
+      assert.deepEqual(errors, [])
     } finally { await page.close() }
   })
 }

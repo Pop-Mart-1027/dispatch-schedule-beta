@@ -1,27 +1,44 @@
+/* Cover exposes the whole display. Preserve safe content bounds outside the
+   edge-to-edge schedule; these are zero on displays without screen cutouts. */
+:root {
+  --screen-safe-top: env(safe-area-inset-top, 0px);
+  --screen-safe-right: env(safe-area-inset-right, 0px);
+  --screen-safe-bottom: env(safe-area-inset-bottom, 0px);
+  --screen-safe-left: env(safe-area-inset-left, 0px);
+}
+body { padding: var(--screen-safe-top) var(--screen-safe-right) var(--screen-safe-bottom) var(--screen-safe-left); }
+body .app-shell, body .login-page { min-height: calc(100vh - var(--screen-safe-top) - var(--screen-safe-bottom)); }
+body .admin-sidebar { top: var(--screen-safe-top); left: var(--screen-safe-left); height: calc(100vh - var(--screen-safe-top) - var(--screen-safe-bottom)); }
+body .admin-content { height: calc(100vh - 78px - var(--screen-safe-top) - var(--screen-safe-bottom)); }
+@media (max-width: 760px) {
+  body .app-shell .sidebar { top: var(--screen-safe-top); bottom: var(--screen-safe-bottom); left: var(--screen-safe-left); height: calc(100dvh - var(--screen-safe-top) - var(--screen-safe-bottom)); }
+}
+
 /* Only short, touch-capable phone landscape viewports use the dense layout. */
 @media (orientation: landscape) and (min-width: 480px) and (max-width: 1000px) and (max-height: 500px) and (pointer: coarse) {
+  body:has(.app-shell[data-page='schedule']) { padding: 0; }
   /* Keep the scroller in normal flow: no fixed shell / absolute content pair. */
   .app-shell[data-page='schedule'] { width: 100%; height: 100dvh; min-height: 0; margin: 0; padding: 0; overflow: hidden; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
   .app-shell[data-page='schedule'] .workspace { height: 100dvh; min-width: 0; min-height: 0; margin: 0; padding: 0; position: relative; }
   /* The workspace scope outranks phone rules even when they load later. */
-  .app-shell[data-page='schedule'] .workspace .topbar { position: absolute; top: 0; left: 4px; width: 44px; height: 40px; padding: 2px; border: 0; z-index: 40; }
+  .app-shell[data-page='schedule'] .workspace .topbar { position: absolute; top: var(--screen-safe-top); left: calc(4px + var(--screen-safe-left)); width: 44px; height: 40px; padding: 2px; border: 0; z-index: 40; }
   .app-shell[data-page='schedule'] .workspace .topbar > div { display: none; }
   .app-shell[data-page='schedule'] .workspace .menu-button { display: grid; place-items: center; width: 40px; height: 36px; min-width: 40px; min-height: 36px; padding: 0; background: #fff0de; border-radius: 7px; }
-  .app-shell[data-page='schedule'] .sidebar { display: flex !important; position: fixed; top: 0; bottom: 0; left: 0; width: 274px; height: 100dvh; overflow-y: auto; z-index: 60; transform: translateX(-105%); }
+  .app-shell[data-page='schedule'] .sidebar { display: flex !important; position: fixed; top: var(--screen-safe-top); bottom: var(--screen-safe-bottom); left: var(--screen-safe-left); width: 274px; height: calc(100dvh - var(--screen-safe-top) - var(--screen-safe-bottom)); overflow-y: auto; z-index: 60; transform: translateX(calc(-105% - var(--screen-safe-left))); }
   .app-shell[data-page='schedule'] .sidebar.open { transform: translateX(0); }
   .app-shell[data-page='schedule'] .drawer-close { display: grid; place-items: center; width: 36px; min-width: 36px; height: 36px; margin-left: auto; }
   .app-shell[data-page='schedule'] .mobile-backdrop { display: block; position: fixed; inset: 0; z-index: 50; background: #2b1a1280; border: 0; }
-  .app-shell[data-page='schedule'] .workspace > .content { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 40px minmax(0, 1fr); gap: 0 8px; align-items: center; width: 100%; max-width: none; height: 100%; min-height: 0; margin: 0; padding: 0 8px 4px; }
+  .app-shell[data-page='schedule'] .workspace > .content { display: grid; grid-template-columns: minmax(0, 1fr) auto; grid-template-rows: 40px minmax(0, 1fr); gap: 0 8px; align-items: center; width: 100%; max-width: none; height: 100%; min-height: 0; margin: 0; padding: var(--screen-safe-top) 8px max(4px, var(--screen-safe-bottom)); }
   .app-shell[data-page='schedule'] .page-intro { display: none; }
-  .app-shell[data-page='schedule'] .workspace .content > .tabs { grid-column: 1; grid-row: 1; flex-wrap: nowrap; min-width: 0; width: fit-content; margin: 0 0 0 44px; padding: 2px; gap: 3px; }
+  .app-shell[data-page='schedule'] .workspace .content > .tabs { grid-column: 1; grid-row: 1; flex-wrap: nowrap; min-width: 0; width: fit-content; margin: 0 0 0 calc(44px + var(--screen-safe-left)); padding: 2px; gap: 3px; }
   .app-shell[data-page='schedule'] .workspace .tab { min-height: 34px; height: 34px; padding: 4px 10px; font-size: 14px; white-space: nowrap; }
-  .app-shell[data-page='schedule'] .workspace .content > .area-jump-dropdown { grid-column: 2; grid-row: 1; min-width: 0; margin: 0; }
+  .app-shell[data-page='schedule'] .workspace .content > .area-jump-dropdown { grid-column: 2; grid-row: 1; min-width: 0; margin: 0 var(--screen-safe-right) 0 0; }
   .app-shell[data-page='schedule'] .workspace .area-jump-dropdown summary { height: 34px; padding: 4px 10px; gap: 8px; font-size: 14px; white-space: nowrap; }
   .app-shell[data-page='schedule'] .workspace .area-jump-panel { left: auto; right: 0; max-height: calc(100dvh - 52px); }
   .app-shell[data-page='schedule'] .workspace .content > .matrix-wrap { grid-column: 1 / -1; grid-row: 2; align-self: stretch; min-width: 0; min-height: 0; height: auto; max-height: none; width: 100%; max-width: 100%; margin: 0; border-radius: 6px; touch-action: pan-x pan-y; isolation: isolate; }
-  .app-shell[data-page='schedule'] .personal-month, .app-shell[data-page='schedule'] .content > .loading { grid-column: 1 / -1; grid-row: 2; align-self: stretch; overflow: auto; margin: 0; }
-  .app-shell[data-page='schedule'] .workspace .schedule-matrix { width: 3080px; min-width: 3080px; max-width: 3080px; font-size: 14px; }
-  .app-shell[data-page='schedule'] .workspace .schedule-matrix .col-title { width: 130px; }
+  .app-shell[data-page='schedule'] .personal-month, .app-shell[data-page='schedule'] .content > .loading { grid-column: 1 / -1; grid-row: 2; align-self: stretch; overflow: auto; margin: 0 var(--screen-safe-right) 0 var(--screen-safe-left); }
+  .app-shell[data-page='schedule'] .workspace .schedule-matrix { width: calc(3080px + var(--screen-safe-left)); min-width: calc(3080px + var(--screen-safe-left)); max-width: calc(3080px + var(--screen-safe-left)); font-size: 14px; }
+  .app-shell[data-page='schedule'] .workspace .schedule-matrix .col-title { width: calc(130px + var(--screen-safe-left)); }
   .app-shell[data-page='schedule'] .workspace .schedule-matrix .col-id { width: 78px; }
   .app-shell[data-page='schedule'] .workspace .schedule-matrix .col-name { width: 112px; }
   .app-shell[data-page='schedule'] .workspace .schedule-matrix .col-day, .app-shell[data-page='schedule'] .workspace .schedule-matrix tr > :nth-child(n+4) { width: 92px; min-width: 92px; max-width: 92px; }
@@ -30,10 +47,12 @@
   .app-shell[data-page='schedule'] .workspace .schedule-matrix th span, .app-shell[data-page='schedule'] .workspace .schedule-matrix th small { display: inline; margin: 0; font-size: 14px; }
   .app-shell[data-page='schedule'] .workspace .schedule-matrix th small { margin-left: 4px; }
   .app-shell[data-page='schedule'] .workspace .schedule-matrix tr > :nth-child(1) { position: sticky; left: 0; z-index: 10; }
-  .app-shell[data-page='schedule'] .workspace .schedule-matrix tr > :nth-child(2) { position: sticky; left: 130px; z-index: 10; }
-  .app-shell[data-page='schedule'] .workspace .schedule-matrix tr > :nth-child(3) { position: sticky; left: 208px; z-index: 10; }
+  .app-shell[data-page='schedule'] .workspace .schedule-matrix tr > :nth-child(2) { position: sticky; left: calc(130px + var(--screen-safe-left)); z-index: 10; }
+  .app-shell[data-page='schedule'] .workspace .schedule-matrix tr > :nth-child(3) { position: sticky; left: calc(208px + var(--screen-safe-left)); z-index: 10; }
+  .app-shell[data-page='schedule'] .workspace .schedule-matrix thead tr > :first-child,
+  .app-shell[data-page='schedule'] .workspace .schedule-matrix tbody tr[data-employee-id] > :first-child { padding-left: calc(4px + var(--screen-safe-left)); }
   .app-shell[data-page='schedule'] .workspace .schedule-matrix thead tr > :nth-child(-n+3) { z-index: 30; }
   .app-shell[data-page='schedule'] .workspace .schedule-matrix .pinned-role { display: none; }
   .app-shell[data-page='schedule'] .workspace .schedule-matrix .area-heading td { position: static; height: 26px; padding: 3px 8px; font-size: 14px; }
-  .app-shell[data-page='schedule'] .workspace .schedule-matrix .area-label { position: sticky; left: 8px; max-width: calc(100vw - 32px); }
+  .app-shell[data-page='schedule'] .workspace .schedule-matrix .area-label { position: sticky; left: calc(8px + var(--screen-safe-left)); max-width: calc(100vw - 32px - var(--screen-safe-left) - var(--screen-safe-right)); }
 }
