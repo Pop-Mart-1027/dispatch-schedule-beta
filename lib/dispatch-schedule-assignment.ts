@@ -2,6 +2,7 @@ import { dispatchAreaCodes, normalizeDispatchAreaCode } from './dispatch-area'
 import type { DispatchBlock, DispatchBlockPerson } from './dispatch-blocks-firestore'
 import type { ScheduleRecord } from './schedule-firestore'
 import { employeeAdminOrder } from './admin-employee-order'
+import { dispatchShifts, parseDispatchShifts, type DispatchShift } from './dispatch-shifts'
 
 export type AssignmentEmployee = {
   employeeId: string
@@ -74,6 +75,7 @@ export function parseScheduleAssignments(
   scheduleCode: string,
   availableAreaCodes: string[],
   defaultShift: 'day' | 'night',
+  dispatchShift?: DispatchShift,
 ): Array<ParsedScheduleAssignment & { shift: 'day' | 'night' }> {
   const result: Array<ParsedScheduleAssignment & { shift: 'day' | 'night' }> = []
   const periodsInCell = [...normalizedCode(scheduleCode).matchAll(/小夜|晚班|夜班|早班|日班|晚|夜|早|日/g)]
@@ -81,6 +83,7 @@ export function parseScheduleAssignments(
     && periodsInCell.some(period => !period[0].includes('夜'))
   let inheritedArea = ''
   for (const part of normalizedCode(scheduleCode).split(/[／/＋+、，,；;＆&]/).filter(Boolean)) {
+    if (dispatchShift && !parseDispatchShifts(part).includes(dispatchShift)) continue
     if (parseScheduleAssignment(part, availableAreaCodes).kind === 'off' || /監|主官|主任/.test(part)) continue
     // Keep unknown tokens as boundaries too: 夜O2 must never inherit O1 merely
     // because this block list has no O2.
@@ -89,10 +92,11 @@ export function parseScheduleAssignments(
     const usedAreas = new Set<number>()
     const add = (areaCode: string, period?: string) => {
       if (!areaCode) return
+      if (dispatchShift && !parseDispatchShifts(period).includes(dispatchShift)) return
       const parsed = parseScheduleAssignment(`${period || ''}${areaCode}`, availableAreaCodes)
       // Preserve existing single-roster routing; only a cell explicitly spanning
       // both periods overrides its persisted source shift.
-      const shift = spansShifts && period ? (period.includes('夜') ? 'night' : 'day') : defaultShift
+      const shift = !dispatchShift && spansShifts && period ? (period.includes('夜') ? 'night' : 'day') : defaultShift
       if (parsed.kind === 'area' && !result.some(row => row.areaCode === parsed.areaCode && row.variant === parsed.variant && row.shift === shift)) {
         result.push({ ...parsed, shift })
       }
@@ -101,6 +105,7 @@ export function parseScheduleAssignments(
       const nextPeriod = periods[index + 1]?.index ?? part.length
       const area = areas.find(area => area.index! >= period.index! + period[0].length && area.index! < nextPeriod)
         || areas.filter(area => area.index! < period.index!).at(-1)
+        || (dispatchShift ? areas.find(area => area.index! >= nextPeriod) : undefined)
       if (area) usedAreas.add(area.index!)
       add(area?.[0] || inheritedArea, period[0])
     })
@@ -137,21 +142,27 @@ export function assignSchedulesToDispatchBlocks({
   schedules,
   employees,
   shift,
+  dispatchShift,
 }: {
   blocks: DispatchBlock[]
   schedules: ScheduleRecord[]
   employees: AssignmentEmployee[]
   shift: 'day' | 'night'
+  dispatchShift?: DispatchShift
 }) {
   const validAreaCodes = dispatchAreaCodes(blocks)
   const canonicalArea = (code: string) => normalizeDispatchAreaCode(code, validAreaCodes) || ''
+  const eligiblePeople = new Set(schedules.filter(record => dispatchShift && parseDispatchShifts(record.scheduleCode).includes(dispatchShift))
+    .map(record => `${record.date}|${record.employeeId}`))
+  const manualPeople = (block: DispatchBlock, people: DispatchBlockPerson[]) => !block.modifiedBy?.trim() ? []
+    : people.filter(person => !dispatchShift || eligiblePeople.has(`${block.date}|${person.employeeId}`))
   const selectedBlocks: AssignedDispatchBlock[] = blocks
     .filter(block => block.shiftType === shift)
     .map(block => ({
       ...block,
-      drivers: block.modifiedBy?.trim() ? [...block.drivers] : [],
-      stations: block.modifiedBy?.trim() ? [...block.stations] : [],
-      assistants: block.modifiedBy?.trim() ? [...block.assistants] : [],
+      drivers: manualPeople(block, block.drivers),
+      stations: manualPeople(block, block.stations),
+      assistants: manualPeople(block, block.assistants),
       assignmentStatus: 'normal',
     }))
   const employeeMap = new Map(employees.map(employee => [employee.employeeId, employee]))
@@ -167,7 +178,7 @@ export function assignSchedulesToDispatchBlocks({
         title: record.title || '',
       }
       const scheduleCode = record.scheduleCode
-      parseScheduleAssignments(scheduleCode, availableAreaCodes, record.shiftType === 'morning' ? 'day' : 'night').forEach(parsed => {
+      parseScheduleAssignments(scheduleCode, availableAreaCodes, record.shiftType === 'morning' ? 'day' : 'night', dispatchShift).forEach(parsed => {
         if (parsed.shift !== shift) return
         const key = `${canonicalArea(parsed.areaCode)}|${parsed.variant}`
         const existing = grouped.get(key) || []
@@ -228,6 +239,55 @@ export function assignSchedulesToDispatchBlocks({
 
   selectedBlocks.forEach(block => { block.assignmentStatus = dispatchBlockAssignmentStatus(block) })
   return { blocks: selectedBlocks, unmatched }
+}
+
+// Read-only projection. Keep persisted day/night templates and all vehicle/work
+// fields intact; never write dispatchShift or the projected arrays to Firestore.
+export type ShiftDispatchBlock = AssignedDispatchBlock & { dispatchShift: DispatchShift }
+
+export function buildShiftDispatchBlocks({ date, blocks, schedules, employees }: {
+  date: string
+  blocks: DispatchBlock[]
+  schedules: ScheduleRecord[]
+  employees: AssignmentEmployee[]
+}): ShiftDispatchBlock[] {
+  const dailyBlocks = blocks.filter(block => block.date === date)
+  const dailySchedules = schedules.filter(record => record.date === date)
+  return dispatchShifts.flatMap(dispatchShift => {
+    const assigned = (['day', 'night'] as const).flatMap(shift => assignSchedulesToDispatchBlocks({
+      blocks: dailyBlocks, schedules: dailySchedules, employees, shift, dispatchShift,
+    }).blocks)
+    // A bare period (e.g. "早") specifies attendance but no new area. Retain its
+    // existing formal placement rather than guessing an area or dropping it.
+    const periodOnlyIds = new Set(dailySchedules.filter(record =>
+      parseDispatchShifts(record.scheduleCode).includes(dispatchShift)
+      && !/[A-Z]|監|主官|主任/i.test(record.scheduleCode),
+    ).map(record => record.employeeId))
+    const originals = new Map(dailyBlocks.map(block => [block.id, block]))
+    for (const block of assigned) {
+      if (block.modifiedBy?.trim()) continue
+      const original = originals.get(block.id)!
+      for (const field of ['drivers', 'stations', 'assistants'] as const) {
+        block[field].push(...original[field].filter(person => periodOnlyIds.has(person.employeeId)
+          && !block[field].some(existing => existing.employeeId === person.employeeId)))
+      }
+    }
+    // Preserve manual placement first; duplicates from multiple source rosters
+    // must not duplicate one employee within the same date + displayed shift.
+    const seen = new Set<string>()
+    const unique = new Map<string, ShiftDispatchBlock>()
+    for (const block of [...assigned].sort((a, b) => Number(Boolean(b.modifiedBy?.trim())) - Number(Boolean(a.modifiedBy?.trim())))) {
+      const keep = (people: DispatchBlockPerson[]) => people.filter(person => {
+        if (!person.employeeId || seen.has(person.employeeId)) return false
+        seen.add(person.employeeId)
+        return true
+      })
+      const projected = { ...block, dispatchShift, drivers: keep(block.drivers), stations: keep(block.stations), assistants: keep(block.assistants) }
+      projected.assignmentStatus = dispatchBlockAssignmentStatus(projected)
+      unique.set(block.id, projected)
+    }
+    return assigned.map(block => unique.get(block.id)!)
+  })
 }
 
 export function dispatchAssignmentStatusLabel(status: DispatchAssignmentStatus) {
