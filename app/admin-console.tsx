@@ -1,4 +1,5 @@
 'use client';
+import { DispatchShiftBrowser } from './dispatch-shift-browser'
 import { saveDispatchConfiguration, dispatchToday } from '../lib/dispatch-configuration'
 import { dispatchAreaCodes, dispatchAreaDisplay, dispatchBlockFrontOrder } from '../lib/dispatch-area'
 
@@ -275,7 +276,7 @@ export function AdminConsole({
           {page === 'dashboard' && (
             <Dashboard role={role} onOpenDispatch={() => setPage('dispatch')} />
           )}
-          {page === 'dispatch' && <DispatchManager employeeId={employeeId} admin={role === 'admin'} />}
+          {page === 'dispatch' && <DispatchShiftBrowser />}
           {page === 'schedule' && (
             <ScheduleManager employeeId={employeeId} admin={admin} />
           )}

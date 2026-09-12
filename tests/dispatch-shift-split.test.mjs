@@ -26,6 +26,7 @@ function loadTs(filename) {
 }
 
 const { parseDispatchShifts, dispatchShifts } = loadTs('lib/dispatch-shifts.ts')
+const { pairDispatchCards } = loadTs('lib/dispatch-card-layout.ts')
 const { buildShiftDispatchBlocks, mergeShiftDispatchCards, parseScheduleAssignments, assignSchedulesToDispatchBlocks } = loadTs('lib/dispatch-schedule-assignment.ts')
 const date = '2026-09-05'
 const record = (employeeId, scheduleCode, extra = {}) => ({
@@ -208,6 +209,43 @@ test('duplicate empty templates collapse to one card instead of removing the uni
   assert.equal(cards[0].drivers.length, 0)
 })
 
+for (const count of [1, 2, 3, 4, 5]) test(`${count} vehicles are chunked into ${Math.ceil(count / 2)} display cards`, () => {
+  const vehicles = Array.from({ length: count }, (_, index) => shiftCard({ id: `vehicle-${index}`, blockId: `vehicle-${index}`, vehicleNo: `CAR-${index}` }))
+  const cards = pairDispatchCards(vehicles)
+  assert.equal(cards.length, Math.ceil(count / 2))
+  assert.deepEqual(cards.map(card => card.vehicleCount), Array.from({ length: Math.ceil(count / 2) }, (_, index) => Math.min(2, count - index * 2)))
+  assert.deepEqual(cards.flatMap(card => card.sourceBlockIds), vehicles.map(card => card.id))
+})
+
+test('vehicle pairs do not cross date, area or displayed shift', () => {
+  assert.equal(pairDispatchCards([
+    shiftCard(), shiftCard({ id: 'late', dispatchShift: '晚' }), shiftCard({ id: 'night', dispatchShift: '夜' }),
+    shiftCard({ id: 'other-area', areaCode: 'D1', areaName: '萬華 D1區' }), shiftCard({ id: 'tomorrow', date: '2026-09-06' }),
+  ]).length, 5)
+})
+
+test('pairing combines vehicle labels, people and work focus without mutating single-car rows', () => {
+  const vehicles = [
+    shiftCard({ id: 'a', vehicleNo: 'RFV-7399', drivers: [person('a')], stations: [person('b')], workFocus: '巡查\n回報' }),
+    shiftCard({ id: 'b', vehicleNo: 'RFW-7652', drivers: [person('a'), person('c')], stations: [person('b')], assistants: [person('d')], workFocus: '回報\n補車' }),
+  ]
+  const before = structuredClone(vehicles)
+  const [card] = pairDispatchCards(vehicles)
+  assert.equal(card.vehicleNo, 'RFV-7399 / RFW-7652')
+  assert.deepEqual(card.drivers.map(p => p.employeeId), ['a', 'c'])
+  assert.deepEqual(card.stations.map(p => p.employeeId), ['b'])
+  assert.deepEqual(card.assistants.map(p => p.employeeId), ['d'])
+  assert.equal(card.workFocus, '巡查\n回報\n補車')
+  assert.deepEqual(vehicles, before)
+})
+
+test('duplicate single-vehicle templates are merged before pairing and order is deterministic', () => {
+  const vehicles = [shiftCard({ id: 'b', vehicleNo: 'CAR-2' }), shiftCard({ id: 'a', vehicleNo: 'CAR-1' }), shiftCard({ id: 'duplicate-a', vehicleNo: 'CAR-1' })]
+  const [card] = pairDispatchCards(vehicles)
+  assert.equal(card.vehicleNo, 'CAR-1 / CAR-2')
+  assert.equal(card.vehicleCount, 2)
+})
+
 test('actual dispatch view switches 5 / 3 / 4 people, including mobile and multiple-shift cells', async () => {
   const { createServer, transformWithEsbuild } = await import('vite')
   const { chromium } = await import('playwright')
@@ -220,6 +258,7 @@ test('actual dispatch view switches 5 / 3 / 4 people, including mobile and multi
     import React, {Fragment,useState,useEffect,useMemo,useRef,useLayoutEffect} from 'react';
     import {createRoot} from 'react-dom/client';
     import {buildShiftDispatchBlocks} from '/lib/dispatch-schedule-assignment.ts';
+    import {pairDispatchCards} from '/lib/dispatch-card-layout.ts';
     import {dispatchShifts,parseDispatchShifts} from '/lib/dispatch-shifts.ts';
     import {dispatchAreaCodes,dispatchAreaDisplay,dispatchBlockFrontOrder} from '/lib/dispatch-area.ts';
     const fixture=window.fixture;
