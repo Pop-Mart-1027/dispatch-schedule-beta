@@ -26,7 +26,7 @@ function loadTs(filename) {
 }
 
 const { parseDispatchShifts, dispatchShifts } = loadTs('lib/dispatch-shifts.ts')
-const { buildShiftDispatchBlocks, parseScheduleAssignments, assignSchedulesToDispatchBlocks } = loadTs('lib/dispatch-schedule-assignment.ts')
+const { buildShiftDispatchBlocks, mergeShiftDispatchCards, parseScheduleAssignments, assignSchedulesToDispatchBlocks } = loadTs('lib/dispatch-schedule-assignment.ts')
 const date = '2026-09-05'
 const record = (employeeId, scheduleCode, extra = {}) => ({
   id: employeeId, date, employeeId, employeeName: employeeId, scheduleCode,
@@ -70,7 +70,7 @@ test('daily content overrides roster source, employee title and fixed properties
 })
 
 test('two shifts in one cell appear in both tabs with independent area assignments', () => {
-  const result = project([record('dual', 'D1早08-12 / O1晚16-20')], [block(), block({ id: 'o1', blockId: 'o1', areaCode: 'O1' })])
+  const result = project([record('dual', 'D1早08-12 / O1晚16-20')], [block(), block({ id: 'o1', blockId: 'o1', areaCode: 'O1', areaName: '藝文 O1區' })])
   assert.deepEqual(ids(result, '早'), ['dual'])
   assert.deepEqual(ids(result, '晚'), ['dual'])
   assert.deepEqual(ids(result, '夜'), [])
@@ -141,6 +141,73 @@ test('existing two-roster callers retain their previous behavior', () => {
   assert.equal(result.blocks[0].drivers[0].employeeId, 'legacy')
 })
 
+const o1Block = (extra = {}) => block({ areaCode: 'O1', areaName: '藝文 O1區', vehicleNo: 'RFW-7651', ...extra })
+const shiftCard = (extra = {}) => ({ ...o1Block(), dispatchShift: '早', assignmentStatus: 'normal', ...extra })
+const person = employeeId => ({ employeeId, employeeName: employeeId })
+
+test('O1 / RFW-7651: day and night templates produce one populated card, not a second empty card', () => {
+  const result = project([record('driver', '早O1'), record('station', '早O1', { title: 'PT-駐點' })], [
+    o1Block({ id: 'day-template' }), o1Block({ id: 'night-template', shiftType: 'night' }),
+  ]).filter(card => card.dispatchShift === '早')
+  assert.equal(result.length, 1)
+  assert.deepEqual(result[0].drivers.map(p => p.employeeId), ['driver'])
+  assert.deepEqual(result[0].stations.map(p => p.employeeId), ['station'])
+})
+
+test('populated duplicates merge roles by employeeId and retain distinct work focus once', () => {
+  const input = [
+    shiftCard({ id: 'first', drivers: [person('a')], stations: [person('b')], workFocus: '巡查\n回報' }),
+    shiftCard({ id: 'second', drivers: [person('a'), person('c')], stations: [person('b')], assistants: [person('d')], workFocus: ' 回報 \n補車', note: 'extra note' }),
+    shiftCard({ id: 'empty-template', workFocus: '巡查' }),
+  ]
+  const before = structuredClone(input)
+  const cards = mergeShiftDispatchCards(input)
+  assert.equal(cards.length, 1)
+  assert.deepEqual(cards[0].drivers.map(p => p.employeeId), ['a', 'c'])
+  assert.deepEqual(cards[0].stations.map(p => p.employeeId), ['b'])
+  assert.deepEqual(cards[0].assistants.map(p => p.employeeId), ['d'])
+  assert.equal(cards[0].workFocus, '巡查\n回報\n補車')
+  assert.equal(cards[0].note, 'extra note')
+  assert.deepEqual(input, before)
+})
+
+test('same area, different vehicles remain separate', () => {
+  assert.equal(mergeShiftDispatchCards([shiftCard(), shiftCard({ id: 'other', vehicleNo: 'RFW-9999' })]).length, 2)
+})
+
+test('same vehicle remains separate across shifts, areas and dates', () => {
+  const cards = mergeShiftDispatchCards([
+    shiftCard(), shiftCard({ id: 'late', dispatchShift: '晚' }), shiftCard({ id: 'night', dispatchShift: '夜' }),
+    shiftCard({ id: 'other-area', areaCode: 'D1', areaName: '萬華 D1區' }),
+    shiftCard({ id: 'tomorrow', date: '2026-09-06' }),
+  ])
+  assert.equal(cards.length, 5)
+})
+
+test('display-area aliases and vehicle whitespace/case normalize to one key', () => {
+  const cards = mergeShiftDispatchCards([
+    shiftCard({ id: 'empty', areaCode: 'ZO1', areaName: '藝文 ZO1區', vehicleNo: ' rfw-7651 ' }),
+    shiftCard({ id: 'staffed', drivers: [person('a')] }),
+  ])
+  assert.equal(cards.length, 1)
+  assert.equal(cards[0].areaCode, 'O1')
+  assert.deepEqual(cards[0].drivers.map(p => p.employeeId), ['a'])
+})
+
+test('two populated source rosters retain both people after card merge', () => {
+  const cards = project([record('day-driver', '早O1'), record('night-driver', '早O1', { shiftType: 'night' })], [
+    o1Block({ id: 'day-template' }), o1Block({ id: 'night-template', shiftType: 'night' }),
+  ]).filter(card => card.dispatchShift === '早')
+  assert.equal(cards.length, 1)
+  assert.deepEqual(cards[0].drivers.map(p => p.employeeId).sort(), ['day-driver', 'night-driver'])
+})
+
+test('duplicate empty templates collapse to one card instead of removing the unique template', () => {
+  const cards = mergeShiftDispatchCards([shiftCard(), shiftCard({ id: 'empty-duplicate' })])
+  assert.equal(cards.length, 1)
+  assert.equal(cards[0].drivers.length, 0)
+})
+
 test('actual dispatch view switches 5 / 3 / 4 people, including mobile and multiple-shift cells', async () => {
   const { createServer, transformWithEsbuild } = await import('vite')
   const { chromium } = await import('playwright')
@@ -191,7 +258,8 @@ test('actual dispatch view switches 5 / 3 / 4 people, including mobile and multi
       const page = await browser.newPage({ viewport: { width, height: 844 } })
       const errors = []
       page.on('pageerror', error => errors.push(error.message))
-      await page.addInitScript(fixture => { window.fixture = fixture }, { schedules: fixtureSchedules, blocks: [block()] })
+      await page.addInitScript(fixture => { window.fixture = fixture }, { schedules: fixtureSchedules,
+        blocks: [block(), block({ id: 'duplicate-night-template', blockId: 'duplicate-night-template', shiftType: 'night' })] })
       await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort())
       await page.goto(`http://127.0.0.1:${server.httpServer.address().port}/shift-test`)
       await page.locator('.dispatch-card .person').first().waitFor()
@@ -199,6 +267,7 @@ test('actual dispatch view switches 5 / 3 / 4 people, including mobile and multi
       for (const [shift, count] of [['早', 5], ['晚', 3], ['夜', 4], ['早', 5]]) {
         await page.getByRole('button', { name: `${shift}班`, exact: true }).click()
         assert.equal(await page.locator('.dispatch-card .person').count(), count)
+        assert.equal(await page.locator('.dispatch-card').count(), 1)
         assert.ok((await page.locator('.dispatch-card .person small').allTextContents()).every(id => id.startsWith(shift)))
       }
       await page.evaluate(() => { sessionStorage.clear() })
@@ -210,6 +279,7 @@ test('actual dispatch view switches 5 / 3 / 4 people, including mobile and multi
       for (const [shift, count] of [['早', 1], ['晚', 1], ['夜', 0]]) {
         await page.getByRole('button', { name: `${shift}班`, exact: true }).click()
         assert.equal(await page.locator('.dispatch-card .person').count(), count)
+        assert.equal(await page.locator('.dispatch-card').count(), 1)
       }
       assert.deepEqual(errors, [])
       await page.close()

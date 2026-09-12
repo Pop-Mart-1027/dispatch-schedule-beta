@@ -1,4 +1,4 @@
-import { dispatchAreaCodes, normalizeDispatchAreaCode } from './dispatch-area'
+import { dispatchAreaCodes, dispatchAreaDisplay, normalizeDispatchAreaCode } from './dispatch-area'
 import type { DispatchBlock, DispatchBlockPerson } from './dispatch-blocks-firestore'
 import type { ScheduleRecord } from './schedule-firestore'
 import { employeeAdminOrder } from './admin-employee-order'
@@ -245,6 +245,42 @@ export function assignSchedulesToDispatchBlocks({
 // fields intact; never write dispatchShift or the projected arrays to Firestore.
 export type ShiftDispatchBlock = AssignedDispatchBlock & { dispatchShift: DispatchShift }
 
+// Card identity is independent of the source template/assignment document ID.
+// This merge is display-only and must never be persisted back to source blocks.
+export function mergeShiftDispatchCards(blocks: ShiftDispatchBlock[]): ShiftDispatchBlock[] {
+  const validAreas = dispatchAreaCodes(blocks)
+  const normalizeKey = (value: string) => value.normalize('NFKC').trim().toUpperCase().replace(/\s+/g, '')
+  const mergeText = (...values: string[]) => [...new Set(values.flatMap(value =>
+    value.split(/\r?\n/).map(line => line.trim()).filter(Boolean),
+  ))].join('\n')
+  const groups = new Map<string, { card: ShiftDispatchBlock; employeeIds: Set<string> }>()
+  for (const source of blocks) {
+    const block = dispatchAreaDisplay(source, validAreas)
+    const area = normalizeKey(block.areaCode || block.areaName || '')
+    const vehicle = normalizeKey(block.vehicleNo || '').replace(/[‐‑‒–—−]/g, '-')
+    const key = JSON.stringify([block.date, block.dispatchShift, area, vehicle])
+    let group = groups.get(key)
+    if (!group) {
+      group = { card: { ...block, drivers: [], stations: [], assistants: [] }, employeeIds: new Set() }
+      groups.set(key, group)
+    }
+    const { card, employeeIds } = group
+    for (const field of ['drivers', 'stations', 'assistants'] as const) {
+      for (const person of block[field]) {
+        if (!person.employeeId || employeeIds.has(person.employeeId)) continue
+        employeeIds.add(person.employeeId)
+        card[field].push(person)
+      }
+    }
+    card.workFocus = mergeText(card.workFocus, block.workFocus)
+    card.balanceArea = mergeText(card.balanceArea, block.balanceArea)
+    card.note = mergeText(card.note, block.note)
+    if (!card.modifiedBy?.trim() && block.modifiedBy?.trim()) card.modifiedBy = block.modifiedBy
+    card.assignmentStatus = dispatchBlockAssignmentStatus(card)
+  }
+  return [...groups.values()].map(group => group.card)
+}
+
 export function buildShiftDispatchBlocks({ date, blocks, schedules, employees }: {
   date: string
   blocks: DispatchBlock[]
@@ -286,7 +322,7 @@ export function buildShiftDispatchBlocks({ date, blocks, schedules, employees }:
       projected.assignmentStatus = dispatchBlockAssignmentStatus(projected)
       unique.set(block.id, projected)
     }
-    return assigned.map(block => unique.get(block.id)!)
+    return mergeShiftDispatchCards(assigned.map(block => unique.get(block.id)!))
   })
 }
 
