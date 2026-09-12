@@ -41,6 +41,53 @@
 .dispatch-card { scroll-margin-top:100px; }
 
 .dispatch-back-to-top { display:none; }
+/* The mobile app frame owns the header; only this region owns card scrolling.
+   Keeping controls outside the scroller removes sticky-margin bleed-through. */
+html[data-app-viewport] .app-shell[data-page='dispatch'] .workspace > .topbar {
+  position: relative; z-index: 3; background: #fffdf8;
+}
+html[data-app-viewport] .app-shell[data-page='dispatch'] .workspace > .content {
+  display: flex; flex-direction: column; position: relative; isolation: isolate;
+  z-index: 1; overflow: hidden; padding: 8px 10px 8px;
+}
+html[data-app-viewport] .app-shell[data-page='dispatch'] .dispatch-toolbar {
+  position: relative; top: auto; z-index: 2; flex: 0 0 auto;
+  display: grid; grid-template-columns: minmax(0, 1fr) 112px;
+  align-items: center; gap: 8px; margin: 0; padding: 0 0 8px;
+  background: #f4f6f7; overflow: visible;
+}
+html[data-app-viewport] .app-shell[data-page='dispatch'] .dispatch-toolbar > label {
+  grid-column: 1 / -1; display: grid; grid-template-columns: 42px minmax(0, 1fr);
+  align-items: center; gap: 8px; width: auto; min-width: 0; margin: 0;
+}
+html[data-app-viewport] .app-shell[data-page='dispatch'] .dispatch-toolbar input {
+  min-width: 0; width: 100%; min-height: 40px; margin: 0; padding: 7px 10px;
+}
+html[data-app-viewport] .app-shell[data-page='dispatch'] .dispatch-toolbar > .tabs {
+  display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
+  min-width: 0; width: 100%; margin: 0; padding: 3px; gap: 2px;
+}
+html[data-app-viewport] .app-shell[data-page='dispatch'] .dispatch-toolbar .tab {
+  min-width: 0; min-height: 40px; padding: 6px 4px; font-size: 14px; white-space: nowrap;
+}
+html[data-app-viewport] .app-shell[data-page='dispatch'] .dispatch-toolbar > .area-jump-dropdown {
+  min-width: 0; width: 100%; margin: 0; align-self: center;
+}
+html[data-app-viewport] .app-shell[data-page='dispatch'] .area-jump-dropdown summary {
+  min-height: 44px; padding: 6px 8px; gap: 4px; justify-content: space-between;
+  font-size: 14px; white-space: nowrap;
+}
+html[data-app-viewport] .app-shell[data-page='dispatch'] .area-jump-panel {
+  left: auto; right: 0; max-height: min(280px, 40dvh);
+}
+html[data-app-viewport] .app-shell[data-page='dispatch'] .dispatch-scroll-region {
+  flex: 1 1 0; min-height: 0; min-width: 0; position: relative; z-index: 0;
+  overflow: auto; overscroll-behavior: none; scroll-padding-top: 4px;
+}
+html[data-app-viewport] .app-shell[data-page='dispatch']:has(.sidebar.open) .dispatch-scroll-region { overflow: hidden; }
+html[data-app-viewport] .app-shell[data-page='dispatch'] .dispatch-card[id] { scroll-margin-top: 4px; }
+html[data-app-viewport] .app-shell[data-page='dispatch'] .dispatch-self-navigation { top: 0; z-index: 1; }
+html[data-app-viewport] .app-shell[data-page='dispatch'] .dispatch-scroll-region:has(.dispatch-self-navigation) { scroll-padding-top: 96px; }
 @media (max-width:760px) {
   .dispatch-back-to-top { display:flex; position:fixed; right:calc(12px + env(safe-area-inset-right, 0px)); bottom:calc(16px + env(safe-area-inset-bottom, 0px)); z-index:20; align-items:center; justify-content:center; width:44px; height:44px; padding:0; border:1px solid #ffffff90; border-radius:50%; background:rgba(48, 66, 74, .65); color:#fff; font-size:26px; line-height:1; box-shadow:0 2px 8px #0002; cursor:pointer; }
   .dispatch-back-to-top:focus-visible { outline:2px solid #ea741a; outline-offset:3px; }

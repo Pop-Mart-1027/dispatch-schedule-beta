@@ -30,6 +30,7 @@ assert.ok(viewportMeta, 'Pages entry must contain a viewport meta tag')
 const entry = `
   import React,{Fragment,useEffect,useLayoutEffect,useMemo,useRef,useState} from 'react';
   import {createRoot} from 'react-dom/client';
+  import {installAppViewport} from '/lib/app-viewport.ts';
   import {DispatchShiftBrowser} from '/app/dispatch-shift-browser.tsx';
   import {buildShiftDispatchBlocks} from '/lib/dispatch-schedule-assignment.ts';
   import {pairDispatchCards} from '/lib/dispatch-card-layout.ts';
@@ -43,6 +44,7 @@ const entry = `
   import '/app/dispatch.css'; import '/app/youbike-theme.css'; import '/app/mobile-nav.css';
   import '/app/mobile-layout.css'; import '/app/admin-console.css'; import '/app/front-readonly.css';
   const params=new URLSearchParams(location.search);
+  if(params.has('viewport')) installAppViewport();
   if(!params.has('baseline')) await import('/app/schedule-landscape.css');
   const weekdays=['二','三','四','五','六','日','一'];
   const taipeiToday=()=>window.fixture.date;
@@ -64,7 +66,7 @@ const entry = `
     </div>
   }
   const screen=params.get('view');
-  createRoot(document.getElementById('root')).render(screen==='admin'?<div className="admin-console"><DispatchShiftBrowser/></div>:screen==='dispatch'?<div className="app-shell" data-page="dispatch"><main className="workspace"><section className="content"><FirestoreDispatchView employeeId={params.get('employee')||'observer'} isDuty={!params.has('employee')}/></section></main></div>:<ScheduleShell/>);
+  createRoot(document.getElementById('root')).render(screen==='admin'?<div className="admin-console"><DispatchShiftBrowser/></div>:screen==='dispatch'?<div className="app-shell" data-page="dispatch"><main className="workspace">{params.has('viewport')&&<header className="topbar"><button className="menu-button" aria-label="開啟選單"><Menu/></button><h2>派工單</h2></header>}<section className="content"><FirestoreDispatchView employeeId={params.get('employee')||'observer'} isDuty={!params.has('employee')}/></section></main></div>:<ScheduleShell/>);
 `
 const mocks = {
   'round:entry': entry,
@@ -403,6 +405,63 @@ for (const view of ['dispatch', 'admin']) {
       assert.equal(bounds.x, 44)
       assert.equal(bounds.width, 844 - 88)
       assert.equal(await page.locator('.app-shell[data-page="schedule"]').count(), 0)
+      assert.deepEqual(errors, [])
+    } finally { await page.close() }
+  })
+}
+
+for (const [width, height] of [[390, 844], [844, 390], [320, 568]]) {
+  test(`dispatch fixed controls ${width}x${height}: no bleed, one-row shifts and working area jump`, async () => {
+    const data = { ...fixture, blocks: Array.from({ length: 8 }, (_, i) => ({ ...block(i), workFocus: Array.from({ length: 45 }, (_, j) => `Long work focus ${j + 1}: inspect and report safely`).join('\n') })) }
+    const { page, errors } = await open('dispatch&viewport=1', data, { width, height }, true)
+    try {
+      await applyBuiltCss(page, productionCss())
+      const bounds = async () => page.evaluate(() => {
+        const rect = selector => { const r = document.querySelector(selector).getBoundingClientRect(); return { x: r.x, y: r.y, width: r.width, height: r.height, bottom: r.bottom, right: r.right } }
+        return { topbar: rect('.topbar'), toolbar: rect('.dispatch-toolbar'), tabs: rect('.dispatch-toolbar .tabs'), dropdown: rect('.dispatch-toolbar summary'), scroller: rect('.dispatch-scroll-region'), buttons: [...document.querySelectorAll('.dispatch-toolbar .tab')].map(node => { const r = node.getBoundingClientRect(); return { y: r.y, right: r.right, width: r.width } }) }
+      })
+      const before = await bounds()
+      assert.equal(before.buttons.length, 3)
+      assert.ok(before.buttons.every(b => b.y === before.buttons[0].y && b.width >= 48))
+      assert.ok(Math.abs(before.dropdown.y - before.buttons[0].y) <= 4)
+      assert.ok(before.tabs.right <= before.dropdown.x)
+      assert.ok(before.dropdown.right <= width)
+      assert.ok(before.scroller.y >= before.toolbar.bottom)
+      assert.ok(before.scroller.bottom <= height)
+      assert.ok(before.toolbar.height <= 106, JSON.stringify(before))
+      for (const top of [100, 650, 1400]) {
+        await page.locator('.dispatch-scroll-region').evaluate((node, value) => { node.scrollTop = value }, top)
+        assert.ok(await page.locator('.dispatch-scroll-region').evaluate(node => node.scrollTop > 0))
+        assert.deepEqual(await bounds(), before)
+        const painted = await page.evaluate(() => {
+          const controls = document.querySelector('.dispatch-toolbar').getBoundingClientRect()
+          const topbar = document.querySelector('.topbar').getBoundingClientRect()
+          const isCard = (x, y) => Boolean(document.elementFromPoint(x, y)?.closest('.dispatch-card,.duty-staff'))
+          return { bleed: [controls.top + 2, controls.bottom - 2, topbar.bottom - 2].some(y => isCard(controls.left + 20, y)), bodyScroll: scrollY,
+            background: getComputedStyle(document.querySelector('.dispatch-toolbar')).backgroundColor }
+        })
+        assert.equal(painted.bleed, false)
+        assert.equal(painted.bodyScroll, 0)
+        assert.equal(painted.background, 'rgb(244, 246, 247)')
+      }
+      for (const label of ['晚班', '夜班', '早班']) {
+        await page.getByRole('button', { name: label, exact: true }).click()
+        assert.ok(await page.getByRole('button', { name: label, exact: true }).evaluate(node => node.classList.contains('active')))
+      }
+      await page.locator('.area-jump-dropdown summary').click()
+      const panel = await page.locator('.area-jump-panel').boundingBox()
+      assert.ok(panel.x >= 0 && panel.x + panel.width <= width)
+      await page.locator('.area-jump-panel button').first().click()
+      assert.equal(await page.locator('.area-jump-dropdown[open]').count(), 0)
+      const card = await page.locator('.dispatch-card').first().boundingBox()
+      assert.ok(card.y >= before.scroller.y - 1 && card.y < before.scroller.y + 16)
+      if (width <= 760) {
+        await page.locator('.dispatch-scroll-region').evaluate(node => { node.scrollTop = 700 })
+        await page.getByRole('button', { name: '回到頂部', exact: true }).click()
+        await page.waitForFunction(() => document.querySelector('.dispatch-scroll-region').scrollTop < 2)
+      }
+      await page.screenshot({ path: path.join(reportDir, `dispatch-controls-${width}x${height}.png`) })
+      console.log('dispatchControlMetrics', JSON.stringify({ width, height, ...before }))
       assert.deepEqual(errors, [])
     } finally { await page.close() }
   })
