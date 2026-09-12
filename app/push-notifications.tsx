@@ -10,18 +10,19 @@ const getPermissionHint = (permission: NotificationPermission) => {
   return ''
 }
 
+type PushUiState = 'unknown' | 'enabled' | 'disabled'
+
 export function PushNotifications({ employeeId }: { employeeId: string }) {
   const [message, setMessage] = useState('')
   const [busy, setBusy] = useState(false)
-  const [enabled, setEnabled] = useState(false)
-  const [allowed, setAllowed] = useState(false)
-  const [checking, setChecking] = useState(true)
+  const [canRegister, setCanRegister] = useState(false)
+  const [state, setState] = useState<PushUiState>('unknown')
 
   const evaluatePushState = () => {
     const support = pushSupportMessage()
     if (support) {
       setMessage(support)
-      setEnabled(false)
+      setState('disabled')
       return
     }
 
@@ -29,19 +30,19 @@ export function PushNotifications({ employeeId }: { employeeId: string }) {
     const hasRegistration = hasPushRegistration()
 
     if (permission !== 'granted') {
-      setEnabled(false)
-      setMessage(getPermissionHint(permission))
+      setState('disabled')
+      setMessage(getPermissionHint(permission) || '尚未授權通知，請先授權。')
       return
     }
 
     if (!hasRegistration) {
-      setEnabled(false)
+      setState('disabled')
       setMessage('尚未開啟通知，請按下方「開啟通知」。')
       return
     }
 
-    setEnabled(true)
-    setMessage('此裝置已開啟通知。')
+    setState('enabled')
+    setMessage('')
   }
 
   useEffect(() => {
@@ -49,19 +50,18 @@ export function PushNotifications({ employeeId }: { employeeId: string }) {
     let permissionStatus: PermissionStatus | null = null
 
     const load = async () => {
-      const support = pushSupportMessage()
-      setMessage(support)
-      setChecking(true)
+      setMessage('')
+      setState('unknown')
 
       try {
         const result = await httpsCallable<undefined, WebPushConfig>(functions, 'getWebPushConfig')()
         if (!alive) return
 
-        const canRegister = result.data.canRegisterPush ?? true
-        setAllowed(canRegister)
+        const nextCanRegister = result.data.canRegisterPush ?? true
+        setCanRegister(nextCanRegister)
 
-        if (!canRegister) {
-          setEnabled(false)
+        if (!nextCanRegister) {
+          setState('disabled')
           setMessage('目前未開放測試員工開啟通知。')
           return
         }
@@ -69,10 +69,9 @@ export function PushNotifications({ employeeId }: { employeeId: string }) {
         evaluatePushState()
       } catch (error) {
         if (!alive) return
+        setCanRegister(false)
+        setState('disabled')
         setMessage(error instanceof Error ? error.message : '取得推播設定失敗')
-      } finally {
-        if (!alive) return
-        setChecking(false)
       }
     }
 
@@ -110,38 +109,41 @@ export function PushNotifications({ employeeId }: { employeeId: string }) {
       return
     }
 
-    if (!allowed) {
+    if (!canRegister) {
       setMessage('目前未開放測試員工開啟通知。')
       return
     }
 
     setBusy(true)
+    setMessage('通知設定中…')
     try {
       const permission = await Notification.requestPermission()
       if (permission !== 'granted') {
         setMessage(getPermissionHint(permission) || '尚未授權通知，請先授權。')
-        setEnabled(false)
+        setState('disabled')
         return
       }
 
       await registerPush()
-      setEnabled(true)
-      setMessage('此裝置已開啟通知，關閉 App 後也可接收廣播。')
+      evaluatePushState()
     } catch (error) {
-      setEnabled(false)
+      setState('disabled')
       setMessage(error instanceof Error ? error.message : '通知註冊失敗，請重試。')
     } finally {
       setBusy(false)
-      evaluatePushState()
     }
   }
 
-  if (enabled) return null
+  if (state === 'unknown' || state === 'enabled') {
+    return null
+  }
 
-  return allowed
-    ? <div>
-      <button className="primary" disabled={busy} onClick={() => void enable()}>{busy ? '通知設定中…' : '開啟通知'}</button>
-      <p role="status">{message || (checking ? '檢查推播權限中…' : '')}</p>
-    </div>
-    : <p role="status">{checking ? '檢查推播權限中…' : message || '目前僅測試白名單可開啟手機推播。'}</p>
+  return canRegister
+    ? (
+      <div>
+        <button className="primary" disabled={busy} onClick={() => void enable()}>{busy ? '通知設定中…' : '開啟通知'}</button>
+        {message && <p role="status">{message}</p>}
+      </div>
+    )
+    : <p role="status">{message || '目前僅測試白名單可開啟手機推播。'}</p>
 }
