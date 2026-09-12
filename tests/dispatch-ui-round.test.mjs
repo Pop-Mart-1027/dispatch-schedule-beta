@@ -71,6 +71,7 @@ const mocks = {
   'round:firebase': 'export const db={};',
   'round:firestore': `export const collection=(_db,path)=>({path});export async function getDocs(ref){if(ref.path!=='employees')throw Error('Unexpected read');return{docs:[]};}`,
 }
+
 const server = await createServer({ configFile: false, logLevel: 'error',
   cacheDir: path.join(reportDir, 'vite-cache'),
   resolve: { alias: { '@': process.cwd() } },
@@ -220,6 +221,131 @@ for (const [width, height, touch] of [[390, 844, true], [844, 390, true], [1280,
       await page.getByRole('button', { name: '我的班表', exact: true }).last().click()
       assert.ok(await page.locator('.personal-month').isVisible())
       assert.deepEqual(errors, [])
+    } finally { await page.close() }
+  })
+}
+
+// Exercise the actual Pages build cascade, not only Vite's fixture import order.
+// Run npm run build:pages before this suite; assets are read locally, never from production.
+function productionCss() {
+  const html = readFileSync('gh-pages/index.html', 'utf8')
+  const href = html.match(/href="([^"]+\.css)"/)?.[1]
+  assert.ok(href, 'Run npm run build:pages before the UI suite')
+  return readFileSync(path.join('gh-pages', 'assets', path.basename(href)), 'utf8')
+}
+
+async function applyBuiltCss(page, css) {
+  await page.locator('[data-employee-id]').first().waitFor()
+  await page.evaluate(css => {
+    document.querySelectorAll('style, link[rel="stylesheet"]').forEach(node => node.remove())
+    const style = document.createElement('style')
+    style.dataset.productionCascade = 'true'
+    style.textContent = css
+    document.head.appendChild(style)
+  }, css)
+}
+
+async function assertDenseProduction(page, width, height) {
+  const metrics = await measure(page)
+  assert.equal(metrics.dense, true)
+  assert.ok(Math.abs(metrics.matrix.y - 40) <= 1, JSON.stringify(metrics))
+  assert.ok(Math.abs(metrics.matrix.y + metrics.matrix.height - (height - 4)) <= 1, JSON.stringify(metrics))
+  assert.ok(Math.abs(metrics.matrix.width - (width - 16)) <= 1, JSON.stringify(metrics))
+  assert.ok(metrics.fullyVisiblePeople >= 7, JSON.stringify(metrics))
+  assert.equal(metrics.rowHeight, 30)
+  const controls = await page.locator('.menu-button, .content > .tabs button, .area-jump-dropdown summary').evaluateAll(nodes => nodes.map(node => {
+    const r = node.getBoundingClientRect()
+    return { left: r.left, top: r.top, right: r.right, bottom: r.bottom }
+  }))
+  for (const r of controls) assert.ok(r.left >= 0 && r.top >= 0 && r.right <= width && r.bottom <= 40, JSON.stringify(controls))
+  for (let i = 0; i < controls.length; i++) for (let j = i + 1; j < controls.length; j++) {
+    const a = controls[i], b = controls[j]
+    assert.ok(a.right <= b.left || b.right <= a.left || a.bottom <= b.top || b.bottom <= a.top, 'Production controls overlap')
+  }
+  for (const scrollLeft of [0, 400, 1400]) {
+    await page.locator('.matrix-wrap').evaluate((node, left) => { node.scrollLeft = left }, scrollLeft)
+    const aligned = await page.locator('.schedule-matrix').evaluate(table => {
+      const header = table.querySelector('thead tr').children
+      const row = table.querySelector('tr[data-employee-id]').children
+      return [0, 1, 2].every(index => {
+        const h = header[index].getBoundingClientRect(), r = row[index].getBoundingClientRect()
+        return Math.abs(h.left - r.left) < 1 && Math.abs(h.width - r.width) < 1
+          && getComputedStyle(row[index]).position === 'sticky'
+      })
+    })
+    assert.ok(aligned, `Production sticky columns misalign at scrollLeft=${scrollLeft}`)
+  }
+  await page.locator('.matrix-wrap').evaluate(node => { node.scrollLeft = 0 })
+  return metrics
+}
+
+for (const [width, height] of [[844, 390], [740, 390], [667, 375]]) {
+  test(`Pages built CSS ${width}x${height}: full-height, aligned controls and sticky columns`, async () => {
+    const { page, errors } = await open('schedule', fixture, { width, height }, true)
+    try {
+      await applyBuiltCss(page, productionCss())
+      const metrics = await assertDenseProduction(page, width, height)
+      await page.getByRole('button', { name: '開啟選單', exact: true }).click()
+      await page.getByRole('button', { name: '關閉側欄', exact: true }).click()
+      await page.locator('.area-jump-dropdown summary').click()
+      await page.getByRole('button', { name: 'D', exact: true }).click()
+      await page.getByRole('button', { name: '夜班', exact: true }).click()
+      await assertDenseProduction(page, width, height)
+      await page.getByRole('button', { name: '早班', exact: true }).click()
+      await assertDenseProduction(page, width, height)
+      await page.screenshot({ path: path.join(reportDir, `production-schedule-${width}x${height}.png`) })
+      console.log('productionScheduleMetrics', JSON.stringify({ width, height, ...metrics }))
+      assert.deepEqual(errors, [])
+    } finally { await page.close() }
+  })
+}
+
+test('Pages built CSS stays full-height through rotation and viewport-height changes', async () => {
+  const { page, errors } = await open('schedule', fixture, { width: 390, height: 844 }, true)
+  try {
+    await applyBuiltCss(page, productionCss())
+    for (const [width, height] of [[740, 390], [740, 320], [390, 844], [844, 390], [390, 844], [740, 390]]) {
+      await page.setViewportSize({ width, height })
+      if (width > height) await assertDenseProduction(page, width, height)
+      else assert.equal((await measure(page)).dense, false)
+    }
+    await page.locator('.matrix-wrap').evaluate(node => { node.scrollTop = 300 })
+    const painted = await page.evaluate(() => {
+      const matrix = document.querySelector('.matrix-wrap').getBoundingClientRect()
+      const element = document.elementFromPoint(matrix.left + 250, matrix.top + 100)
+      return Boolean(element?.closest('td'))
+    })
+    assert.ok(painted, 'Schedule scroller must remain visible after rotation and scrolling')
+    assert.deepEqual(errors, [])
+  } finally { await page.close() }
+})
+
+test('previous Pages CSS reproduces the narrow-landscape height and sticky-name regression', {
+  skip: !process.env.SCHEDULE_BEFORE_CSS,
+}, async () => {
+  const { page } = await open('schedule', fixture, { width: 740, height: 390 }, true)
+  try {
+    await applyBuiltCss(page, readFileSync(process.env.SCHEDULE_BEFORE_CSS, 'utf8'))
+    const before = await measure(page)
+    const nameLeft = await page.locator('.schedule-matrix tr[data-employee-id] > :nth-child(3)').first().evaluate(node => getComputedStyle(node).left)
+    console.log('beforeProductionRegression', JSON.stringify({ ...before, nameLeft }))
+    assert.ok(before.matrix.height < 390 - 44)
+    assert.equal(nameLeft, '0px')
+    await applyBuiltCss(page, productionCss())
+    await assertDenseProduction(page, 740, 390)
+  } finally { await page.close() }
+})
+
+for (const [width, height, touch] of [[390, 844, true], [1280, 844, false]]) {
+  test(`Pages built CSS ${width}x${height} unchanged outside phone landscape`, {
+    skip: !process.env.SCHEDULE_BEFORE_CSS,
+  }, async () => {
+    const { page } = await open('schedule', fixture, { width, height }, touch)
+    try {
+      await applyBuiltCss(page, readFileSync(process.env.SCHEDULE_BEFORE_CSS, 'utf8'))
+      const before = await measure(page)
+      await applyBuiltCss(page, productionCss())
+      assert.deepEqual(await measure(page), before)
     } finally { await page.close() }
   })
 }
