@@ -4,8 +4,9 @@ import { titleAdminOrder } from '../lib/admin-employee-order';
 import {
   preScheduleDisplayOrder,
   preScheduleSource,
-  scheduleSections,
 } from '../functions/pre-schedule-order.mjs';
+import { monthlySections } from '../functions/pre-schedule-roster.mjs';
+import { PreSchedulePeople } from './pre-schedule-people';
 import {
   PRE_CHOICES,
   monthDays,
@@ -26,7 +27,7 @@ import {
 } from '../lib/pre-schedule';
 import './pre-schedule-admin.css';
 
-export function PreScheduleAdmin({ admin }: { admin: boolean }) {
+export function PreScheduleAdmin({ admin, onOpenEmployees }: { admin: boolean; onOpenEmployees?: () => void }) {
   const [month, setMonth] = useState(nextPreMonth),
     [publishing, setPublishing] = useState(false);
   return (
@@ -35,6 +36,7 @@ export function PreScheduleAdmin({ admin }: { admin: boolean }) {
         key={month}
         month={month}
         admin={admin}
+        onOpenEmployees={onOpenEmployees}
         onPublishing={setPublishing}
         heading={<>
         <h2>整月預排管理</h2>
@@ -57,17 +59,20 @@ function MonthMatrix({
   admin,
   onPublishing,
   heading,
+  onOpenEmployees,
 }: {
   month: string;
   admin: boolean;
   onPublishing: (value: boolean) => void;
   heading: ReactNode;
+  onOpenEmployees?: () => void;
 }) {
   const [group, setGroup] = useState<'day' | 'night'>('day'),
     [data, setData] = useState<PreGroup | null>(null);
   const [loading, setLoading] = useState(true),
     [error, setError] = useState(''),
     [version, setVersion] = useState(0);
+  const [personEditor, setPersonEditor] = useState<{ person: PrePerson | null } | null>(null);
   const [search, setSearch] = useState(''),
     [title, setTitle] = useState(''),
     [filter, setFilter] = useState('all');
@@ -167,7 +172,6 @@ function MonthMatrix({
     submitted: rows.filter((r) => r.entry?.submitted).length,
     unsubmitted: rows.filter((r) => !r.entry?.submitted).length,
     incomplete: rows.filter((r) => r.checks.incomplete).length,
-    abnormal: rows.filter((r) => r.checks.abnormal).length,
     unarranged: rows.reduce((n, r) => n + r.checks.unarranged, 0),
   };
   const visible = rows.filter(
@@ -178,12 +182,13 @@ function MonthMatrix({
         (filter === 'submitted' && r.entry?.submitted) ||
         (filter === 'unsubmitted' && !r.entry?.submitted) ||
         (filter === 'incomplete' && r.checks.incomplete) ||
-        (filter === 'abnormal' && r.checks.abnormal) ||
         (filter === 'unarranged' && r.checks.unarranged > 0)),
   );
   const canEdit =
     !!data?.month && mayReview(data.month, clock) && !loading && !running;
-  const sections = scheduleSections(visible, group, row => row.person);
+  const editCodeOptions = [...new Set([...PRE_CHOICES, ...(data?.formalCodes || [])])];
+  const validEditCode = value === '' || editCodeOptions.includes(value);
+  const sections = monthlySections(visible, group, row => row.person);
   const reload = () => setVersion((v) => v + 1);
   const configure = async (status: 'open' | 'locked') => {
     setSaving(true);
@@ -219,7 +224,7 @@ function MonthMatrix({
     setValue(reviewedDays(month, entry)[index]);
   };
   const saveCell = async () => {
-    if (!edit) return;
+    if (!edit || !validEditCode) return;
     setSaving(true);
     setError('');
     try {
@@ -414,7 +419,6 @@ function MonthMatrix({
           ['已送出人數', stats.submitted],
           ['未送出人數', stats.unsubmitted],
           ['未完整人數', stats.incomplete],
-          ['異常人數', stats.abnormal],
         ].map(([label, n]) => (
           <div className="admin-stat" key={label}>
             <span>{label}</span>
@@ -432,6 +436,7 @@ function MonthMatrix({
       )}
       </div>
       <div className="admin-page-toolbar pre-month-filterbar">
+        {admin && <button type="button" className="pre-person-add" disabled={!canEdit || saving} onClick={() => setPersonEditor({ person: null })}>加入人員</button>}
         <input
           aria-label="搜尋預排員工"
           placeholder="員編／姓名"
@@ -460,7 +465,6 @@ function MonthMatrix({
             ['submitted', '已送出'],
             ['unsubmitted', '未送出'],
             ['incomplete', '未完成'],
-            ['abnormal', '異常'],
             ['unarranged', '出勤未安排'],
           ].map(([v, l]) => (
             <option value={v} key={v}>
@@ -534,7 +538,7 @@ function MonthMatrix({
             {!loading &&
               sections.map(section => (
                 <Fragment key={section.key}>
-                  {section.people.some((row: typeof rows[number]) => preScheduleSource(row.person.employeeId)) && (
+                  {section.people.some((row: typeof rows[number]) => preScheduleSource(row.person.employeeId) || row.person.rosterSection) && (
                       <tr className="pre-source-heading" data-area-code={section.areaCode || undefined}>
                         <td colSpan={monthDays(month) + 3}>
                           <span>
@@ -546,12 +550,11 @@ function MonthMatrix({
                   {section.people.map(({ person, entry, checks }: typeof rows[number]) => <tr key={person.employeeId} data-employee-id={person.employeeId}>
                     <td>{person.title}</td>
                     <td>{person.employeeId}</td>
-                    <td title={checks.issues.join('；')}>
-                      <strong>{person.name}</strong>
+                    <td>
+                      {admin ? <button type="button" className="pre-person-edit" aria-label={`編輯資料／移動位置 ${person.employeeId}`} title="編輯資料／移動位置" disabled={!canEdit || saving} onClick={() => setPersonEditor({ person })}>{person.name} <span aria-hidden="true">✎</span></button> : <strong>{person.name}</strong>}
                       <small>
                         {entry?.submitted ? '已送出' : '未送出'}
                         {checks.incomplete ? ' · 未完成' : ''}
-                        {checks.abnormal ? ' · 異常' : ''}
                       </small>
                     </td>
                     {Array.from({ length: monthDays(month) }, (_, i) => (
@@ -583,53 +586,77 @@ function MonthMatrix({
         </table>
         {loading && <p>載入整組預排中…</p>}
       </div>
+      {personEditor && admin && <PreSchedulePeople
+        month={month} selected={personEditor.person} initialGroup={group}
+        onClose={() => setPersonEditor(null)}
+        onOpenEmployees={onOpenEmployees}
+        onSaved={nextGroup => { setPersonEditor(null); setSearch(''); setTitle(''); setFilter('all'); setGroup(nextGroup); reload(); }}
+      />}
       {edit && (
-        <div className="admin-modal-backdrop">
+        <div className="admin-modal-backdrop pre-edit-backdrop">
           <section
             role="dialog"
             aria-modal="true"
             aria-label="整理預排"
-            className="admin-modal"
+            className="admin-modal pre-edit-modal"
           >
+            <header>
             <h3>
               {edit.person.employeeId} {edit.person.name} · {month}-
               {edit.index + 1}
             </h3>
+            <button
+              type="button"
+              className="pre-edit-close"
+              aria-label="關閉整理預排"
+              disabled={saving}
+              onClick={() => setEdit(null)}
+            >
+              X
+            </button>
+            </header>
+            <div className="pre-edit-body">
             <p>
               員工預排：{edit.entry.days[edit.index] || '未填'}（保留原始需求）
             </p>
             <label>
               整理後正式班碼
-              <select
+              <input
                 aria-label="整理後正式班碼"
+                list="pre-edit-code-options"
+                placeholder="未排，或輸入關鍵字（例如 O）"
+                autoComplete="off"
+                disabled={saving}
                 value={value}
+                onFocus={(e) => e.currentTarget.select()}
                 onChange={(e) => setValue(e.target.value)}
-              >
-                <option value="">未排</option>
-                <optgroup label="預排／休假選項">
-                  {PRE_CHOICES.map((x) => (
-                    <option key={x}>{x}</option>
-                  ))}
-                </optgroup>
-                <optgroup label="既有正式班碼">
-                  {(data?.formalCodes || []).map((code) => (
-                    <option key={code}>{code}</option>
-                  ))}
-                </optgroup>
-              </select>
+                aria-invalid={!validEditCode}
+                aria-describedby="pre-edit-code-help"
+              />
+              <datalist id="pre-edit-code-options">
+                {editCodeOptions.map((code) => <option key={code} value={code} />)}
+              </datalist>
             </label>
+            <p id="pre-edit-code-help" className="pre-edit-code-help">
+              {validEditCode
+                ? '可輸入關鍵字搜尋既有班碼；清空欄位代表未排。'
+                : '請從建議選項選取完整班碼後再儲存。'}
+            </p>
             <p>選「上班」仍屬待安排；請選用正式班碼，休／例／假別不需區碼。</p>
             {!data?.formalCodes?.length && (
               <p role="alert">
                 尚無可用正式班碼，請確認既有正式班表來源；不可自行猜測區碼。
               </p>
             )}
-            <button disabled={saving} onClick={() => void saveCell()}>
-              儲存並留下修改紀錄
+            </div>
+            <footer className="pre-edit-actions">
+            <button type="button" className="pre-edit-save" disabled={saving || !validEditCode} onClick={() => void saveCell()}>
+              {saving ? '儲存中…' : '儲存並留下修改紀錄'}
             </button>
-            <button disabled={saving} onClick={() => setEdit(null)}>
+            <button type="button" className="pre-edit-cancel" disabled={saving} onClick={() => setEdit(null)}>
               取消
             </button>
+            </footer>
           </section>
         </div>
       )}

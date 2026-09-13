@@ -44,12 +44,22 @@ const entries = people.map((p, i) => ({
 const virtual = {
   'pre:test-api': `export * from '/lib/pre-schedule.ts';
     import {publicationSummary} from '/functions/pre-schedule-domain.mjs';
+    import {monthlyRoster,monthlyEntry,placeMonthlyPerson} from '/functions/pre-schedule-roster.mjs';
     const catalog={day:['早A1'],night:['夜O4','小夜O1','夜監']};
     export async function preCall(action,monthKey,values={}) {
       window.calls.push({action,monthKey,...values});
       const state=window.state;
       if(action==='context')return {month:state.month,ownerId:state.own.employeeId,entry:state.own};
-      if(action==='group')return {month:state.month,formalCodes:catalog[values.group],roster:state.people.filter(p=>p.group===values.group),entries:state.entries.filter(p=>p.group===values.group)};
+      if(action==='group'){const people=monthlyRoster(state.people);return {month:state.month,formalCodes:catalog[values.group],roster:people.filter(p=>p.group===values.group),entries:state.entries.map(e=>monthlyEntry(e,people)).filter(p=>p.group===values.group)}};
+      if(action==='people')return {people:monthlyRoster(state.people),revision:state.rosterRevision||0};
+      if(action==='findPerson')return {person:values.employeeId==='N9001'?{employeeId:'N9001',name:'測試新進員工',title:'調度專員',group:'day'}:null};
+      if(action==='savePerson'){
+        if(values.rosterRevision!==(state.rosterRevision||0))throw Error('名單版本衝突');
+        const old=state.people.find(p=>p.employeeId===values.employeeId);
+        const person={...(old||{employeeId:'N9001',name:'測試新進員工',title:'調度專員'}),group:values.group,rosterGroup:values.group,rosterSection:values.section};
+        state.people=placeMonthlyPerson(monthlyRoster(state.people),person,values.beforeId);state.rosterRevision=(state.rosterRevision||0)+1;
+        return {person,revision:state.rosterRevision};
+      }
       if(action==='save') {
         await new Promise(r=>setTimeout(r,window.saveDelay||0));
         if(values.revision!==(state.own?.revision||0))throw Error('revision conflict');
@@ -75,7 +85,7 @@ const virtual = {
     window.employee=()=>root.render(React.createElement(EmployeePreSchedule,{key:key++,cellStyle:()=>''}));
     window.manager=admin=>root.render(React.createElement('div',{className:'admin-console'},
       React.createElement('aside',{className:'admin-sidebar'}),React.createElement('main',{className:'admin-main'},
-        React.createElement('header',{className:'admin-topbar'}),React.createElement('section',{className:'admin-content'},React.createElement(PreScheduleAdmin,{key:key++,admin})))));
+        React.createElement('header',{className:'admin-topbar'}),React.createElement('section',{className:'admin-content'},React.createElement(PreScheduleAdmin,{key:key++,admin,onOpenEmployees:admin?()=>{window.employeeManagerOpened=true;window.leave()}:undefined})))));
     window.leave=()=>root.render(React.createElement('p',null,'其他頁面'));
     window.employee();`,
 };
@@ -96,7 +106,7 @@ const server = await createServer({
       },
       transform(code, id) {
         if (
-          /\/app\/pre-schedule-(admin|employee)\.tsx$/.test(
+          /\/app\/pre-schedule-(admin|employee|people)\.tsx$/.test(
             id.replaceAll('\\', '/'),
           )
         )
@@ -291,7 +301,7 @@ test('monitor edits the selected monthly entry only; formal publication is admin
   await page.getByLabel('搜尋預排員工').fill('P0501');
   await page.getByRole('button', { name: 'P0501 1日', exact: true }).click();
   const dialog = page.getByRole('dialog', { name: '整理預排' });
-  await dialog.locator('select').selectOption('慰');
+  await dialog.getByLabel('整理後正式班碼').fill('慰');
   await dialog.getByRole('button', { name: '儲存並留下修改紀錄' }).click();
   await page.waitForFunction(
     () =>
@@ -364,7 +374,7 @@ test('admin cannot publish one remaining 上班; summary filters its exact cell 
     ),
   );
   await page.getByRole('button', { name: 'P0501 1日', exact: true }).click();
-  await page.getByLabel('整理後正式班碼').selectOption('夜O4');
+  await page.getByLabel('整理後正式班碼').fill('夜O4');
   await page.getByRole('button', { name: '儲存並留下修改紀錄' }).click();
   await page.waitForFunction(
     () =>
@@ -598,4 +608,86 @@ test('personnel-first layout keeps the matrix visible and settings accessible', 
   assert.ok(await page.locator('.pre-month-table tr[data-employee-id="93900"]').count() === 1);
   await page.getByLabel('搜尋預排員工').fill('');
   assert.equal(await page.evaluate(() => window.calls.filter(c => !['group', 'context'].includes(c.action)).length), 0);
+});
+
+test('edit dialog has visible save/cancel/close and keyword input only saves real codes', async () => {
+  await page.getByRole('tab', { name: '大小夜班', exact: true }).click();
+  await page.waitForSelector('tr[data-employee-id="96504"]');
+  const before = await page.evaluate(() => window.calls.filter(c => c.action === 'review').length);
+  await page.getByRole('button', { name: '96504 1日', exact: true }).click();
+  const dialog = page.getByRole('dialog', { name: '整理預排', exact: true });
+  await dialog.getByLabel('整理後正式班碼').fill('O');
+  assert.ok(await dialog.getByRole('button', { name: '儲存並留下修改紀錄' }).isDisabled());
+  assert.ok((await dialog.locator('datalist option').evaluateAll(options => options.map(o => o.value))).includes('夜O4'));
+  await dialog.getByLabel('整理後正式班碼').fill('夜O4');
+  assert.equal(await dialog.getByRole('button', { name: '儲存並留下修改紀錄' }).isDisabled(), false);
+  for (const [width,height] of [[1500,768],[844,390],[390,844]]) {
+    await page.setViewportSize({width,height});
+    for (const name of ['儲存並留下修改紀錄','取消','關閉整理預排']) {
+      const rect=await dialog.getByRole('button',{name,exact:true}).boundingBox();
+      assert.ok(rect && rect.x>=0 && rect.y>=0 && rect.x+rect.width<=width && rect.y+rect.height<=height, `${name} stays on-screen at ${width}`);
+    }
+  }
+  await dialog.getByRole('button',{name:'關閉整理預排'}).click();
+  assert.equal(await dialog.count(),0);
+  assert.equal(await page.evaluate(() => window.calls.filter(c => c.action === 'review').length),before);
+  await page.setViewportSize({width:1500,height:768});
+  assert.ok(!(await page.locator('.pre-month-table').textContent()).includes('異常'));
+  assert.ok(!(await page.locator('.pre-month-stats').textContent()).includes('異常'));
+  assert.equal(await page.getByLabel('預排狀態').locator('option[value="abnormal"]').count(),0);
+});
+
+test('missing ID opens employee management without saving a fake employee', async () => {
+  const saves=await page.evaluate(()=>window.calls.filter(c=>c.action==='savePerson').length);
+  await page.getByRole('button',{name:'加入人員',exact:true}).click();
+  const dialog=page.getByRole('dialog',{name:'加入人員',exact:true});
+  await dialog.getByLabel('加入員工編號').fill('UNKNOWN');
+  await dialog.getByRole('button',{name:'查詢員工'}).click();
+  await page.waitForSelector('.pre-person-navigation');
+  assert.ok((await dialog.textContent()).includes('查無資料，請先新增員工編號。'));
+  assert.ok(await dialog.getByRole('button',{name:'確認加入'}).isDisabled());
+  await dialog.getByRole('button',{name:'前往員工管理'}).click();
+  assert.equal(await page.evaluate(()=>window.employeeManagerOpened),true);
+  assert.equal(await page.evaluate(()=>window.calls.filter(c=>c.action==='savePerson').length),saves);
+});
+
+test('admin adds numbered employee and edits monthly group, section and persisted position', async () => {
+  await page.evaluate(()=>window.manager(true));
+  await page.waitForSelector('tr[data-employee-id="93900"]');
+  await page.getByRole('button',{name:'加入人員',exact:true}).click();
+  let dialog=page.getByRole('dialog',{name:'加入人員',exact:true});
+  await dialog.getByLabel('加入員工編號').fill('N9001');
+  await dialog.getByRole('button',{name:'查詢員工'}).click();
+  await dialog.getByLabel('人員當月區域').fill('O1區');
+  await dialog.getByRole('button',{name:'確認加入'}).click();
+  await page.waitForSelector('tr[data-employee-id="N9001"]');
+  assert.equal(await page.locator('tr[data-employee-id="N9001"]').count(),1);
+  await page.getByRole('button',{name:'編輯資料／移動位置 N9001'}).click();
+  dialog=page.getByRole('dialog',{name:'編輯資料／移動位置',exact:true});
+  await dialog.getByLabel('人員當月班別').selectOption('night');
+  await dialog.getByLabel('人員當月區域').fill('O1區');
+  await dialog.getByLabel('人員移動位置').selectOption('96504');
+  await dialog.getByRole('button',{name:'儲存人員設定'}).click();
+  await page.waitForSelector('[role="tab"][aria-selected="true"]');
+  await page.waitForFunction(()=>document.querySelector('[role="tab"][aria-selected="true"]')?.textContent==='大小夜班' && document.querySelector('tr[data-employee-id="N9001"]'));
+  const ids=await page.locator('tr[data-employee-id]').evaluateAll(rows=>rows.map(r=>r.dataset.employeeId));
+  assert.equal(ids.indexOf('96504'),ids.indexOf('N9001')+1);
+  await page.getByRole('button',{name:'重新載入',exact:true}).click();
+  await page.waitForSelector('tr[data-employee-id="N9001"]');
+  assert.equal(await page.locator('tr[data-employee-id="N9001"]').count(),1);
+  const saved=await page.evaluate(()=>window.state.people.find(p=>p.employeeId==='N9001'));
+  assert.equal(saved.group,'night');assert.equal(saved.rosterSection,'O1區');
+  assert.deepEqual(errors,[]);
+});
+
+test('monitor cannot add/move staff and open period remains read-only',async()=>{
+  await page.evaluate(()=>window.manager(false));
+  await page.waitForSelector('tr[data-employee-id="93900"]');
+  assert.equal(await page.getByRole('button',{name:'加入人員',exact:true}).count(),0);
+  assert.equal(await page.getByRole('button',{name:'編輯資料／移動位置 93900'}).count(),0);
+  await page.evaluate(()=>{window.state.month.status='open';window.state.month.closeAt=window.clock+60000;window.manager(true)});
+  await page.waitForSelector('tr[data-employee-id="93900"]');
+  assert.ok(await page.getByRole('button',{name:'加入人員',exact:true}).isDisabled());
+  assert.ok(await page.getByRole('button',{name:'編輯資料／移動位置 93900'}).isDisabled());
+  assert.ok(await page.getByRole('button',{name:'93900 1日',exact:true}).isDisabled());
 });

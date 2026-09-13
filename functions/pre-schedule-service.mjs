@@ -1,5 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { preScheduleRoster, preScheduleEntry } from './pre-schedule-order.mjs';
+import { monthlyRoster, monthlyEntry } from './pre-schedule-roster.mjs';
+import { managePreSchedulePeople } from './pre-schedule-people.mjs';
 import {
   monthDays,
   assessDays,
@@ -191,7 +193,7 @@ export function createPreScheduleService({
     });
   }
   async function roster(key) {
-    return preScheduleRoster(
+    return monthlyRoster(
       (await monthRef(key).collection('internal').doc('roster').get()).data()
         ?.people || [],
     );
@@ -228,7 +230,7 @@ export function createPreScheduleService({
       monthRef(key).get(),
       formalCodeCatalog(key, true),
     ]);
-    const values = entries.docs.map((d) => preScheduleEntry(d.data()));
+    const values = entries.docs.map((d) => monthlyEntry(d.data(), people));
     const currentEmployees = people.length
       ? await db.getAll(
           ...people.map((p) => db.collection('employees').doc(p.employeeId)),
@@ -355,6 +357,10 @@ export function createPreScheduleService({
         'failed-precondition',
         '此月份尚未開放，請管理員從既有期限設定建立月份',
       );
+    if (['people', 'findPerson', 'savePerson'].includes(input.action)) {
+      requireAdmin(a);
+      return managePreSchedulePeople({ db, ref, input: { ...input, monthKey: key }, actorId: a.id, now, stamp, fail });
+    }
     if (input.action === 'group') {
       requireDuty(a);
       if (!['day', 'night'].includes(input.group))
@@ -382,7 +388,7 @@ export function createPreScheduleService({
       return {
         ...ctx,
         roster: selected,
-        entries: entries.map((d) => serializeEntry(preScheduleEntry(d.data()))),
+        entries: entries.map((d) => serializeEntry(monthlyEntry(d.data(), people))),
         formalCodes: catalog[input.group],
         formalCodeSourceMonth: catalog.sourceMonth,
       };
@@ -422,11 +428,15 @@ export function createPreScheduleService({
       // Keep shape/value validation above and permission/revision checks below.
       const entryRef = ref.collection('entries').doc(target);
       await db.runTransaction(async (tx) => {
-        const [m, old, settings] = await Promise.all([
+        const [m, old, settings, rosterSnap] = await Promise.all([
           tx.get(ref),
           tx.get(entryRef),
           tx.get(db.collection('scheduleSettings').doc(key)),
+          tx.get(ref.collection('internal').doc('roster')),
         ]);
+        const currentPerson = monthlyRoster(rosterSnap.data()?.people || []).find(p => p.employeeId === target);
+        if (!currentPerson || currentPerson.group !== person.group || currentPerson.title !== person.title || currentPerson.name !== person.name)
+          fail('aborted', '人員資料已變更，請重新載入後再修改');
         const month = publicMonth(m.data());
         if (settings.data()?.status === 'closed') month.status = 'locked';
         month.openAt = ms(settings.data()?.startAt ?? m.data().openAt);

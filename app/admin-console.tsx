@@ -291,7 +291,7 @@ export function AdminConsole({
           {page === 'pre-settings' && admin && (
             <PreScheduleSettings employeeId={employeeId} />
           )}
-          {page === 'pre-management' && <PreScheduleAdmin admin={admin} />}
+          {page === 'pre-management' && <PreScheduleAdmin admin={admin} onOpenEmployees={admin ? () => setPage('employees') : undefined} />}
           {page === 'system' && admin && <SystemSettings employeeId={employeeId} />}
           {page === 'leave' && (
             <Placeholder

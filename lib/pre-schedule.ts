@@ -25,6 +25,9 @@ export type PrePerson = {
   name: string;
   title: string;
   group: 'day' | 'night';
+  rosterGroup?: 'day' | 'night';
+  rosterSection?: string;
+  rosterOrder?: number;
 };
 export type PreEntry = {
   employeeId: string;
