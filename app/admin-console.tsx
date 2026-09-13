@@ -17,6 +17,7 @@ import { ScheduleCellEditor } from './schedule-cell-editor';
 import { buildScheduleEditCatalog } from '../lib/schedule-edit-catalog';
 import { updateFormalScheduleCell, getScheduleRecord } from '../lib/schedule-firestore';
 import { PreScheduleAdmin } from './pre-schedule-admin';
+import { PreScheduleSettings } from './pre-schedule-settings';
 import {
   addDoc,
   collection,
@@ -2049,119 +2050,6 @@ function EmployeeManager() {
         </Modal>
       )}
     </>
-  );
-}
-
-function PreScheduleSettings({ employeeId }: { employeeId: string }) {
-  const nextMonth = (() => {
-    const date = new Date(`${todayTaipei()}T00:00:00`);
-    date.setMonth(date.getMonth() + 1);
-    return date.toISOString().slice(0, 7);
-  })();
-  const [month, setMonth] = useState(nextMonth);
-  const [startAt, setStartAt] = useState('');
-  const [endAt, setEndAt] = useState('');
-  const [status, setStatus] = useState<'scheduled' | 'open' | 'closed'>(
-    'scheduled',
-  );
-  const [saving,setSaving]=useState(false), [savedAt,setSavedAt]=useState(''), [saveMessage,setSaveMessage]=useState('');
-  const load = async () => {
-    const snapshot = await getDoc(doc(db, 'scheduleSettings', month));
-    if (snapshot.exists()) {
-      const data = snapshot.data();
-      setStartAt(datetimeValue(data.startAt));
-      setEndAt(datetimeValue(data.endAt));
-      setStatus(data.status || 'scheduled');
-      setSavedAt(data.updatedAt?.toDate?.().toLocaleString('zh-TW',{timeZone:'Asia/Taipei'}) || '');
-    } else {
-      setSavedAt('');
-      setStartAt('');
-      setEndAt('');
-      setStatus('scheduled');
-    }
-  };
-  useEffect(() => {
-    void load().catch(error=>{console.error('[scheduleSettings] load failed',error);setSaveMessage('設定載入失敗');});
-  }, [month]);
-  const save = async (nextStatus = status) => {
-    setSaving(true);setSaveMessage('儲存中…');
-    try {
-    await setDoc(
-      doc(db, 'scheduleSettings', month),
-      {
-        targetMonth: month,
-        startAt: startAt ? Timestamp.fromDate(new Date(startAt)) : null,
-        endAt: endAt ? Timestamp.fromDate(new Date(endAt)) : null,
-        status: nextStatus,
-        updatedBy: employeeId,
-        updatedAt: serverTimestamp(),
-      },
-      { merge: true },
-    );
-    setStatus(nextStatus);
-    await load();setSaveMessage('已儲存');
-    } catch(error) {console.error('[scheduleSettings] save failed',error);setSaveMessage('儲存失敗，請稍後再試');} finally {setSaving(false);}
-  };
-  const extendOneDay = () => {
-    const base = endAt ? new Date(endAt) : new Date();
-    base.setDate(base.getDate() + 1);
-    const local = new Date(base.getTime() - base.getTimezoneOffset() * 60000)
-      .toISOString()
-      .slice(0, 16);
-    setEndAt(local);
-  };
-  return (
-    <div className="settings-grid">
-      <section className="admin-panel settings-panel">
-        <header>
-          <h2>預排班開放設定</h2>
-          <span className={`setting-status ${status}`}>
-            {status === 'open'
-              ? '開放中'
-              : status === 'closed'
-                ? '已關閉'
-                : '預定'}
-          </span>
-        </header>
-        <label>
-          目標排班月份
-          <input
-            type="month"
-            value={month}
-            onChange={(event) => setMonth(event.target.value)}
-          />
-        </label>
-        <label>
-          開放時間
-          <input
-            type="datetime-local"
-            value={startAt}
-            onChange={(event) => setStartAt(event.target.value)}
-          />
-        </label>
-        <label>
-          截止時間
-          <input
-            type="datetime-local"
-            value={endAt}
-            onChange={(event) => setEndAt(event.target.value)}
-          />
-        </label>
-        <div className="settings-actions" aria-busy={saving}>
-          <button disabled={saving} className="admin-primary" onClick={() => void save()}>
-            儲存時間
-          </button>
-          <button disabled={saving} onClick={() => void save('open')}>立即開放／重新開放</button>
-          <button disabled={saving} onClick={() => void save('closed')}>立即關閉</button>
-          <button disabled={saving} onClick={extendOneDay}>延長 1 天</button>
-        </div>
-        <p className="settings-save-status" role="status">{saveMessage}{savedAt && ` · 最後儲存時間：${savedAt}`}</p>
-        <p>
-          開放期間由管理員設定，不寫死每月 10～20 日；按「延長 1
-          天」後再儲存即可生效。
-        </p>
-      </section>
-    </div>
   );
 }
 

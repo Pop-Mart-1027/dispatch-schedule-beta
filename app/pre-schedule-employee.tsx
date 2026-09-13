@@ -46,6 +46,7 @@ function EmployeeMonth({
   const [note, setNote] = useState(''),
     [tool, setTool] = useState('上班'),
     [activeDay, setActiveDay] = useState(0);
+  const [periodError, setPeriodError] = useState('');
   const [dirty, setDirty] = useState(false),
     [saving, setSaving] = useState(false),
     [error, setError] = useState(''),
@@ -89,6 +90,32 @@ function EmployeeMonth({
   }, [month]);
   const editable =
     !!context?.month && mayEmployeeEdit(context.month, clock) && !conflict;
+  useEffect(() => {
+    let active = true, refreshing = false;
+    const refreshPeriod = async () => {
+      if (document.visibilityState === 'hidden' || refreshing) return;
+      refreshing = true;
+      try {
+        const data = await preCall<PreContext>('context', month);
+        if (!active) return;
+        // Refresh permissions only; never overwrite local days, notes or revision.
+        setContext(old => old ? { ...old, month: data.month, settings: data.settings } : old);
+        setPeriodError('');
+      } catch (reason) {
+        console.error('[preSchedule] period refresh failed', reason);
+        if (active) setPeriodError('開放狀態更新失敗，稍後將重試；已填內容保留。');
+      } finally { refreshing = false; }
+    };
+    const resume = () => { void refreshPeriod(); };
+    window.addEventListener('focus', resume);
+    document.addEventListener('visibilitychange', resume);
+    const timer = window.setInterval(resume, 30000);
+    return () => {
+      active = false; window.clearInterval(timer);
+      window.removeEventListener('focus', resume);
+      document.removeEventListener('visibilitychange', resume);
+    };
+  }, [month]);
   const checks = assessDays(month, days);
   const save = async (submit = false) => {
     if (busy.current || !editable) return;
@@ -178,6 +205,7 @@ function EmployeeMonth({
         {saving ? '儲存中…' : message}
       </p>
       {!context && !error && <p>載入預排中…</p>}
+      {periodError && <p role="status">{periodError}</p>}
       {context && !context.month && <p>此月份尚未開放預排。</p>}
       {context?.month && !editable && (
         <p>
