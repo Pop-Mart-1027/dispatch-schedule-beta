@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import { createServer } from 'vite';
 import react from '@vitejs/plugin-react';
 import { chromium } from 'playwright';
+import { mkdir } from 'node:fs/promises';
 import { toFormalRecords } from '../functions/pre-schedule-domain.mjs';
 import { readFile } from 'node:fs/promises';
 import {
@@ -561,4 +562,40 @@ test('September matrix exposes day/night tabs, leadership heading and exact O1 t
       ),
     ),
   );
+});
+
+test('personnel-first layout keeps the matrix visible and settings accessible', async () => {
+  await page.evaluate(() => window.manager(true));
+  await page.waitForFunction(() => document.querySelectorAll('.pre-month-table tr[data-employee-id]').length > 100);
+  await mkdir('E:/Codex/BACKUP_pre_schedule_layout_20260913/previews', { recursive: true });
+  for (const [width, height] of [[1920, 1080], [1600, 900], [1500, 768]]) {
+    await page.setViewportSize({ width, height });
+    await page.locator('.pre-month-scroll').evaluate(el => { el.scrollTop = 0; el.scrollLeft = 0; });
+    const layout = await page.evaluate(() => {
+      const box = document.querySelector('.pre-month-scroll').getBoundingClientRect();
+      const rows = [...document.querySelectorAll('.pre-month-table tr[data-employee-id]')];
+      const visible = rows.filter(row => {
+        const r = row.getBoundingClientRect();
+        return r.top >= box.top && r.bottom <= box.bottom;
+      }).length;
+      return { top: box.top, bottom: box.bottom, height: box.height, visible };
+    });
+    console.log('personnel-first layout', { width, height, ...layout });
+    assert.ok(layout.top < 330, 'controls must not consume most of the page');
+    assert.ok(layout.bottom <= height, 'matrix stays inside the viewport');
+    assert.ok(layout.height > height * 0.55, 'most viewport height belongs to the staff matrix');
+    assert.ok(layout.visible >= 8, 'at least eight complete personnel rows remain visible');
+    await page.screenshot({ path: `E:/Codex/BACKUP_pre_schedule_layout_20260913/previews/admin-${width}.png` });
+  }
+  const before = await page.locator('.pre-month-scroll').boundingBox();
+  await page.locator('.pre-month-settings summary').click();
+  assert.ok(await page.getByLabel('開放時間（台北）', { exact: true }).isVisible());
+  assert.ok(await page.getByLabel('截止時間（台北）', { exact: true }).isVisible());
+  const after = await page.locator('.pre-month-scroll').boundingBox();
+  assert.equal(after.height, before.height, 'opening settings does not squeeze staff rows');
+  await page.locator('.pre-month-settings summary').click();
+  await page.getByLabel('搜尋預排員工').fill('93900');
+  assert.ok(await page.locator('.pre-month-table tr[data-employee-id="93900"]').count() === 1);
+  await page.getByLabel('搜尋預排員工').fill('');
+  assert.equal(await page.evaluate(() => window.calls.filter(c => !['group', 'context'].includes(c.action)).length), 0);
 });

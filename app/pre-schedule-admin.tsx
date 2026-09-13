@@ -1,5 +1,5 @@
 'use client';
-import { Fragment, useEffect, useMemo, useState, useRef } from 'react';
+import { Fragment, useEffect, useMemo, useState, useRef, type ReactNode } from 'react';
 import { titleAdminOrder } from '../lib/admin-employee-order';
 import {
   preScheduleDisplayOrder,
@@ -31,7 +31,12 @@ export function PreScheduleAdmin({ admin }: { admin: boolean }) {
     [publishing, setPublishing] = useState(false);
   return (
     <div className="pre-month-workspace">
-      <div className="admin-page-toolbar">
+      <MonthMatrix
+        key={month}
+        month={month}
+        admin={admin}
+        onPublishing={setPublishing}
+        heading={<>
         <h2>整月預排管理</h2>
         <label>
           預排月份
@@ -42,12 +47,7 @@ export function PreScheduleAdmin({ admin }: { admin: boolean }) {
             onChange={(e) => e.target.value && setMonth(e.target.value)}
           />
         </label>
-      </div>
-      <MonthMatrix
-        key={month}
-        month={month}
-        admin={admin}
-        onPublishing={setPublishing}
+        </>}
       />
     </div>
   );
@@ -56,10 +56,12 @@ function MonthMatrix({
   month,
   admin,
   onPublishing,
+  heading,
 }: {
   month: string;
   admin: boolean;
   onPublishing: (value: boolean) => void;
+  heading: ReactNode;
 }) {
   const [group, setGroup] = useState<'day' | 'night'>('day'),
     [data, setData] = useState<PreGroup | null>(null);
@@ -310,8 +312,9 @@ function MonthMatrix({
   };
   return (
     <section className="pre-month-admin">
-      <div className="admin-page-toolbar">
-        <div className="pre-group-tabs" role="tablist" aria-label="預排組別">
+      <div className="admin-page-toolbar pre-month-titlebar pre-month-groupbar">
+        {heading}
+        <div className="pre-group-tabs" role="tablist" aria-label="預排組別" title="依原班表順序；大小夜班含夜班、小夜班">
           <button
             role="tab"
             aria-selected={group === 'day'}
@@ -339,11 +342,11 @@ function MonthMatrix({
             大小夜班
           </button>
         </div>
-        <span>依原班表編制與車組順序排列；大小夜班包含夜班與小夜班</span>
         <button onClick={reload} disabled={running}>
           重新載入
         </button>
       </div>
+      <div className="pre-month-periodbar">
       <p>
         開放：{preTime(data?.month?.openAt)}　截止：
         {preTime(data?.month?.closeAt)}　狀態：
@@ -361,6 +364,7 @@ function MonthMatrix({
       {admin && (
         <details className="pre-month-settings">
           <summary>月份開放／鎖定與期限設定</summary>
+          <div className="pre-month-settings-panel">
           <label>
             開放時間（台北）
             <input
@@ -389,8 +393,10 @@ function MonthMatrix({
           >
             鎖定月份
           </button>
+          </div>
         </details>
       )}
+      </div>
       {error && (
         <div role="alert" className="admin-alert">
           {error}
@@ -401,6 +407,7 @@ function MonthMatrix({
           此月份尚未建立，請管理員設定期限並開放月份；既有設定會自動帶入，不寫死每月日期。
         </p>
       )}
+      <div className="pre-month-summarybar">
       <div className="pre-month-stats">
         {[
           ['應預排人數', stats.expected],
@@ -416,15 +423,15 @@ function MonthMatrix({
         ))}
       </div>
       {!loading && stats.unarranged > 0 && (
-        <div className="admin-alert">
+        <div className="pre-month-arrangement-note">
           <strong>
-            尚有 {stats.unarranged} 個出勤班次未完成班別／區域安排
+            {stats.unarranged} 班次待安排
           </strong>
-          （目前組別）{' '}
           <button onClick={() => filterUnarranged()}>查看未安排格子</button>
         </div>
       )}
-      <div className="admin-page-toolbar">
+      </div>
+      <div className="admin-page-toolbar pre-month-filterbar">
         <input
           aria-label="搜尋預排員工"
           placeholder="員編／姓名"

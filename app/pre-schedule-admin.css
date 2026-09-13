@@ -3,6 +3,41 @@
   min-height: 0;
   display: flex;
   flex-direction: column;
+  gap: 4px;
+}
+.admin-content:has(> .pre-month-workspace) {
+  padding: 10px 14px 12px;
+}
+.pre-month-admin > .pre-month-titlebar {
+  min-height: 40px;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  align-items: center;
+  gap: 20px;
+}
+.pre-month-titlebar h2 {
+  margin: 0;
+  font-size: 18px;
+  white-space: nowrap;
+}
+.pre-month-admin .pre-month-titlebar label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: auto;
+  white-space: nowrap;
+}
+.pre-month-titlebar input {
+  width: 165px;
+  height: 32px;
+  margin: 0;
+  padding: 3px 8px;
+}
+.pre-month-titlebar > button {
+  margin-left: auto;
 }
 .pre-month-workspace > .admin-page-toolbar {
   flex-shrink: 0;
@@ -19,26 +54,28 @@
 }
 .pre-month-admin .admin-page-toolbar {
   align-items: center;
-  min-height: 54px;
-  margin-bottom: 10px;
-  padding: 8px 12px;
+  min-height: 38px;
+  margin-bottom: 4px;
+  padding: 3px 8px;
+  gap: 8px;
+  border-radius: 6px;
 }
 .pre-month-admin .pre-group-tabs {
   margin: 0;
   display: flex;
   flex: 0 0 auto;
   gap: 4px;
-  padding: 4px;
+  padding: 2px;
   background: #f3e9dc;
   border-radius: 8px;
 }
 .pre-group-tabs button {
-  min-width: 116px;
-  padding: 10px 20px;
+  min-width: 84px;
+  padding: 5px 12px;
   border: 0;
   background: transparent;
   color: #694727;
-  font-size: 16px;
+  font-size: 14px;
   font-weight: 700;
   border-radius: 6px;
 }
@@ -61,10 +98,44 @@
   left: 10px;
 }
 .pre-month-admin .admin-page-toolbar > input {
-  width: 230px;
+  width: 190px;
 }
 .pre-month-admin .admin-page-toolbar > select {
-  width: 190px;
+  width: 150px;
+}
+.pre-month-admin .admin-page-toolbar :is(input, select) {
+  height: 32px;
+  margin: 0;
+  padding: 3px 8px;
+  font-size: 14px;
+}
+.pre-month-admin .admin-page-toolbar > button {
+  padding: 6px 10px;
+  white-space: nowrap;
+}
+.pre-month-filterbar > span,
+.pre-month-order-note {
+  font-size: 12px;
+  color: #61717b;
+}
+.pre-month-periodbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 30px;
+  font-size: 12px;
+}
+.pre-month-periodbar > p {
+  margin: 0;
+}
+.pre-month-summarybar {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  padding: 4px 0;
+  margin-bottom: 4px;
 }
 .pre-month-admin .admin-page-toolbar > span {
   flex: 1;
@@ -73,19 +144,77 @@
   margin: 8px 0;
 }
 .pre-month-stats {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 12px;
-  margin: 12px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 16px;
+  margin: 0;
+}
+.pre-month-stats .admin-stat {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-height: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+}
+.pre-month-stats .admin-stat strong {
+  margin: 0;
+  font-size: 18px;
+}
+.pre-month-arrangement-note {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-left: auto;
+  color: #a54414;
+  font-size: 12px;
+}
+.pre-month-arrangement-note button {
+  padding: 3px 8px;
+  border: 1px solid #f2c29d;
+  border-radius: 5px;
+  background: #fff3e8;
 }
 .pre-month-settings {
-  padding: 10px;
+  position: relative;
+  padding: 4px 8px;
   background: #fff6ec;
+  border-radius: 5px;
+  white-space: nowrap;
+}
+.pre-month-settings summary {
+  cursor: pointer;
+}
+.pre-month-settings-panel {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 10;
+  width: min(520px, 80vw);
+  max-height: 55vh;
+  overflow: auto;
+  padding: 12px;
+  border: 1px solid #e6ded4;
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 8px 24px #38271926;
+  white-space: normal;
 }
 .pre-month-settings label {
-  display: inline-flex;
+  display: flex;
+  align-items: center;
   gap: 8px;
-  margin: 10px;
+  margin: 0 0 10px;
+}
+.pre-month-settings label input {
+  flex: 1;
+  min-width: 0;
+}
+.pre-month-settings-panel > button {
+  margin-right: 8px;
+  padding: 6px 10px;
 }
 .pre-month-scroll {
   flex: 1;
@@ -93,6 +222,8 @@
   overflow: auto;
   background: white;
   border: 1px solid #ddd;
+  overscroll-behavior: contain;
+  isolation: isolate;
 }
 .pre-month-table {
   border-collapse: separate;
