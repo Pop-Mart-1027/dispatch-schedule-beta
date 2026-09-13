@@ -45,7 +45,7 @@ const virtual = {
         window.state.month={monthKey,status:values.status,openAt:values.openAt,closeAt:values.closeAt,publishJob:null};
         window.state.settings=null;
       }
-      if(action==='save')window.state.entry={...window.state.entry,...values,revision:values.revision+1};
+      if(action==='save')window.state.entry={...window.state.entry,...values,revision:values.revision+1,submitted:window.state.entry.submitted||!!values.submit};
       return structuredClone({...window.state,ownerId:'P1'});
     }`,
   'opening:entry': `import React from 'react';import {createRoot} from 'react-dom/client';
@@ -74,15 +74,15 @@ const server = await createServer({ configFile: false, logLevel: 'error', plugin
 await server.listen();
 const browser = await chromium.launch({ channel: 'msedge', headless: true });
 after(async () => { await browser.close(); await server.close(); });
-async function open(timezoneId = 'Asia/Taipei') {
+async function open(timezoneId = 'Asia/Taipei', requestedDays = Array(31).fill('')) {
   const page = await browser.newPage({ viewport: { width: 390, height: 844 }, timezoneId });
   page.setDefaultTimeout(8000);
-  await page.addInitScript(now => {
+  await page.addInitScript(({ now, requestedDays }) => {
     const NativeDate = Date;
     window.Date = class extends NativeDate { constructor(...args) { super(...(args.length ? args : [now])); } static now() { return now; } };
     window.calls = [];
-    window.state = { month: null, settings: { startAt: now - 60000, endAt: now + 3600000, status: 'open' }, entry: { days: Array(31).fill(''), note: '', revision: 0, submitted: false } };
-  }, now);
+    window.state = { month: null, settings: { startAt: now - 60000, endAt: now + 3600000, status: 'open' }, entry: { days: requestedDays, note: '', revision: 0, submitted: false } };
+  }, { now, requestedDays });
   await page.route('**/*', route => new URL(route.request().url()).hostname === '127.0.0.1' ? route.continue() : route.abort());
   await page.goto(`http://127.0.0.1:${server.httpServer.address().port}/opening-test`);
   await page.getByText('尚未初始化', { exact: true }).waitFor();
@@ -126,6 +126,26 @@ for (const timezone of ['Asia/Taipei', 'UTC']) {
     } finally { await page.close(); }
   });
 }
+test('employee may submit incomplete or consecutive-work schedules without content-rule messages', async () => {
+  for (const days of [Array(31).fill(''), Array(31).fill('上班'), Array.from({ length: 31 }, (_, i) => i === 17 ? '慰' : i === 23 ? '例' : '上班')]) {
+    const page = await open('Asia/Taipei', days);
+    try {
+      await page.getByRole('button', { name: '立即開放／重新開放', exact: true }).click();
+      await page.getByLabel('截止小時').selectOption('22');
+      await page.getByLabel('截止分鐘').selectOption('30');
+      await page.getByRole('button', { name: '確認立即開放', exact: true }).click();
+      await page.getByText('開放中', { exact: true }).waitFor();
+      await page.evaluate(() => window.dispatchEvent(new Event('focus')));
+      await page.getByRole('button', { name: '送出預排', exact: true }).click();
+      await page.waitForFunction(() => window.state.entry.submitted);
+      assert.deepEqual(await page.evaluate(() => window.state.entry.days), days);
+      assert.equal(await page.getByText('预排檢查', { exact: false }).count(), 0);
+      assert.ok(!(await page.locator('.pre-card').innerText()).includes('預排檢查：'));
+      assert.ok(!(await page.locator('.pre-card').innerText()).includes('截止前仍可修改已送出的預排'));
+    } finally { await page.close(); }
+  }
+});
+
 test('tomorrow cutoff is explicit and configure errors leave the picker open', async () => {
   const page = await open();
   try {

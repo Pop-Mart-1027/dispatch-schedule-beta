@@ -418,8 +418,8 @@ export function createPreScheduleService({
         input.note.length > 2000
       )
         fail('invalid-argument', '預排天數、班別或備註不正確');
-      if (!review && input.submit && !checks.canSubmit)
-        fail('failed-precondition', '預排未完整或不符合既有預排檢查');
+      // Staff submit requests for manual review, including incomplete schedules.
+      // Keep shape/value validation above and permission/revision checks below.
       const entryRef = ref.collection('entries').doc(target);
       await db.runTransaction(async (tx) => {
         const [m, old, settings] = await Promise.all([

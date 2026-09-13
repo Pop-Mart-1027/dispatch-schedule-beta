@@ -127,6 +127,25 @@ after(async () => {
   await env.cleanup();
   await deleteApp(app);
 });
+test('employee submissions allow incomplete, no-rest and consecutive-work requests for manual review', async () => {
+  const key = '2026-12';
+  const invoke = (id, action, extra = {}) => service.handle({ auth: auth(id), data: { monthKey: key, action, ...extra } });
+  await invoke('A1', 'configure', { openAt: clock - 1000, closeAt: clock + 60000, status: 'open' });
+  const formalBefore = await formalCount();
+  let revision = 0;
+  for (const requested of [Array(31).fill(''), Array(31).fill('上班'), days.map((value, i) => i === 17 ? '慰' : value)]) {
+    const result = await invoke('P1', 'save', { days: requested, note: '', revision, submit: true });
+    assert.equal(result.entry.submitted, true);
+    assert.deepEqual(result.entry.days, requested);
+    revision = result.entry.revision;
+  }
+  await assert.rejects(invoke('P1', 'save', { days: ['上班'], note: '', revision, submit: true }), e => e.code === 'invalid-argument');
+  await assert.rejects(invoke('P1', 'save', { days, note: '', revision: 0, submit: true }), e => e.code === 'aborted');
+  await invoke('A1', 'configure', { openAt: clock - 1000, closeAt: clock + 60000, status: 'locked' });
+  await assert.rejects(invoke('P1', 'save', { days, note: '', revision, submit: true }), e => e.code === 'permission-denied');
+  assert.equal(await formalCount(), formalBefore);
+});
+
 test('admin opens from existing settings; exactly two groups; employee reads only own entry', async () => {
   const ctx = await call('P1', 'context');
   assert.equal(ctx.month, null);

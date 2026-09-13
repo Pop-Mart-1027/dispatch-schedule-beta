@@ -3,7 +3,6 @@ import { useEffect, useRef, useState } from 'react';
 import {
   PRE_CHOICES,
   monthDays,
-  assessDays,
   mayEmployeeEdit,
   usePreScheduleClock,
   preCall,
@@ -116,7 +115,6 @@ function EmployeeMonth({
       document.removeEventListener('visibilitychange', resume);
     };
   }, [month]);
-  const checks = assessDays(month, days);
   const save = async (submit = false) => {
     if (busy.current || !editable) return;
     busy.current = true;
@@ -280,15 +278,13 @@ function EmployeeMonth({
           }}
         />
       </label>
-      {checks.issues.length > 0 && <p>預排檢查：{checks.issues.join('；')}</p>}
       <button
         className="primary"
-        disabled={!editable || saving || !checks.canSubmit}
+        disabled={!editable || saving}
         onClick={() => void save(true)}
       >
         送出預排
       </button>
-      <p>截止前仍可修改已送出的預排，最新修改會自動儲存。</p>
     </section>
   );
 }
