@@ -294,3 +294,6 @@ exports.closePreScheduleMonths = onSchedule({schedule:'every 5 minutes',timeZone
   if (process.env.CLOSE_PRE_SCHEDULE_ENABLED !== 'true') return { disabled: true }
   return (await preScheduleService()).closeExpired()
 })
+
+// Vehicle faults are isolated from broadcast Push, Auth and schedule writers.
+Object.assign(exports, require('./vehicle-fault-service')({ db, requireUser }))

@@ -1,5 +1,7 @@
 'use client';
 import { DispatchShiftBrowser } from './dispatch-shift-browser'
+import { VehicleFaultBackend } from './vehicle-faults'
+import { vehicleFaultCall, type FaultAccess } from '../lib/vehicle-faults'
 import { saveDispatchConfiguration, dispatchToday } from '../lib/dispatch-configuration'
 import { dispatchAreaCodes, dispatchAreaDisplay, dispatchBlockFrontOrder } from '../lib/dispatch-area'
 
@@ -39,6 +41,8 @@ import {
   CalendarDays,
   ClipboardList,
   ImageUp,
+  Inbox,
+  Wrench,
   LogOut,
   Megaphone,
   Settings,
@@ -66,7 +70,7 @@ import {
 } from '../lib/schedule-firestore';
 import type { Broadcast } from '../lib/broadcasts';
 import {
-  ADMIN_TITLE_OPTIONS,
+  ADMIN_TITLE_OPTIONS as BASE_ADMIN_TITLE_OPTIONS,
   employeeAdminOrder,
   isStandardAdminTitle,
   permissionLabel,
@@ -86,7 +90,12 @@ import {
 } from '../lib/announcements';
 
 type BackendRole = 'duty' | 'admin';
+// A title is not an authorization grant. Vehicle actions also require the
+// existing duty/admin claims and matching active employee role on the server.
+const ADMIN_TITLE_OPTIONS = [...BASE_ADMIN_TITLE_OPTIONS, '車管'];
 type Page =
+  | 'vehicle-inbox'
+  | 'vehicle-management'
   | 'dashboard'
   | 'dispatch'
   | 'schedule'
@@ -198,14 +207,26 @@ export function AdminConsole({
   onExit: () => void;
   onSignOut: () => void;
 }) {
-  const [page, setPage] = useState<Page>('dashboard');
+  const [page, setPage] = useState<Page>(() => typeof window !== 'undefined' && window.location.hash === '#vehicle-inbox' ? 'vehicle-inbox' : 'dashboard');
   const admin = role === 'admin';
+  const [fleetAccess, setFleetAccess] = useState(admin);
+  useEffect(() => {
+    let cancelled = false;
+    setFleetAccess(admin);
+    void vehicleFaultCall<FaultAccess>('capabilities').then(access => {
+      if (!cancelled) setFleetAccess(access.fleet);
+    }).catch(() => { /* New module unavailable must not block the backend. */ });
+    if (window.location.hash === '#vehicle-inbox') window.history.replaceState(null, '', window.location.pathname + window.location.search);
+    return () => { cancelled = true; };
+  }, [employeeId, admin]);
   const monitorItems: Array<[Page, string, React.ReactNode]> = [
     ['dashboard', admin ? '管理總覽' : '監控總覽', <BarChart3 size={18} />],
     ['dispatch', admin ? '派工管理' : '今日派工', <ClipboardList size={18} />],
     ['pre-management', '預排管理', <CalendarDays size={18} />],
     ['schedule', admin ? '班表管理' : '班表', <CalendarDays size={18} />],
     ['broadcasts', admin ? '廣播管理' : '廣播事項', <Megaphone size={18} />],
+    ['vehicle-inbox', '車輛通報收件匣', <Inbox size={18} />],
+    ...(fleetAccess ? [['vehicle-management', '車管管理', <Wrench size={18} />] as [Page, string, React.ReactNode]] : []),
   ];
   const adminItems: Array<[Page, string, React.ReactNode]> = [
     ['announcements', '公告管理', <ImageUp size={18} />],
@@ -274,6 +295,8 @@ export function AdminConsole({
           </div>
         </header>
         <section className="admin-content">
+          {page === 'vehicle-inbox' && <VehicleFaultBackend mode="monitor" onBack={() => setPage('dashboard')} />}
+          {page === 'vehicle-management' && fleetAccess && <VehicleFaultBackend mode="fleet" onBack={() => setPage('dashboard')} />}
           {page === 'dashboard' && (
             <Dashboard role={role} onOpenDispatch={() => setPage('dispatch')} />
           )}
