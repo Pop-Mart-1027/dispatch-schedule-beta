@@ -32,6 +32,7 @@ import { listMonthScheduleRecords, listScheduleRecords, type ScheduleRecord } fr
 import { buildDispatchPreviewBlocks, listDispatchBlockTemplate, listDispatchBlocks, updateDispatchBlock, writeDispatchBlockAudit, type DispatchBlock, type DispatchBlockEditable, type DispatchBlockPerson } from '../lib/dispatch-blocks-firestore'
 import { assignSchedulesToDispatchBlocks, buildShiftDispatchBlocks, type ShiftDispatchBlock } from '../lib/dispatch-schedule-assignment'
 import { dispatchShifts, parseDispatchShifts, type DispatchShift } from '../lib/dispatch-shifts'
+import { useDispatchDate } from './use-dispatch-date'
 import { monitorDisplayRows } from '../lib/monitor-display'
 import { popupModeLabels, targetTypeLabels } from '../lib/ui-labels'
 import { broadcastIsActive } from '../lib/broadcast-time.mjs'
@@ -425,12 +426,11 @@ function DispatchBackToTop() {
 }
 
 function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isDuty: boolean }) {
-  const [date, setDate] = useState(taipeiToday)
+  const { date, setDate, shift, setShift, allowAutoShift } = useDispatchDate()
   const [personalFirst] = useState(() => !isDuty && typeof window !== 'undefined' && window.matchMedia('(max-width: 760px)').matches)
   const [fullListReady, setFullListReady] = useState(!personalFirst)
   const cached = useMemo(() => personalFirst ? readFrontDispatchCache(employeeId, date) : null, [employeeId, date, personalFirst])
   const dispatchRef=useRef<HTMLDivElement>(null)
-  const [shift, setShift] = useState<DispatchShift>('早')
   const [blocks, setBlocks] = useState<DispatchBlock[]>([])
   const [schedules, setSchedules] = useState<ScheduleRecord[]>([])
   const [profiles, setProfiles] = useState<EmployeeProfile[]>([])
@@ -527,9 +527,10 @@ function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isD
   const [ownIndex, setOwnIndex] = useState(0)
   const [scrollTarget, setScrollTarget] = useState<ShiftDispatchBlock | null>(null)
   const locatedDate = useRef('')
-  const selectOwn = (index: number) => {
+  const selectOwn = (index: number, automatic = false) => {
     const block = ownBlocks[index]
     if (!block) return
+    if (!automatic) setDate(date)
     setOwnIndex(index); setShift(block.dispatchShift); setScrollTarget(block)
   }
   useEffect(() => {
@@ -538,8 +539,9 @@ function FirestoreDispatchView({ employeeId, isDuty }: { employeeId: string; isD
     if (locatedDate.current === key) return
     locatedDate.current = key
     setOwnIndex(0)
-    if (ownBlocks.length) selectOwn(0)
-  }, [date, employeeId, isDuty, blocksLoadedDate, peopleLoadedDate, blocksLoading, dutyLoading, blocksError, dutyError, ownBlocks])
+    const index = allowAutoShift ? 0 : ownBlocks.findIndex(block => block.dispatchShift === shift)
+    if (index >= 0 && ownBlocks[index]) selectOwn(index, true)
+  }, [date, employeeId, isDuty, blocksLoadedDate, peopleLoadedDate, blocksLoading, dutyLoading, blocksError, dutyError, ownBlocks, shift, allowAutoShift])
   useEffect(() => {
     if (!scrollTarget || scrollTarget.date !== date || shift !== scrollTarget.dispatchShift || blocksLoading || dutyLoading) return
     const frame = requestAnimationFrame(() => {
