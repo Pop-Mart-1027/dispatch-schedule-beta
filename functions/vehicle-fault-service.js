@@ -11,6 +11,7 @@ const { FAULT_TYPES, PRIORITIES, MAX_FILE_BYTES, taipeiDate, monitorOnDuty, vali
 // No client Firestore access or public attachment URLs. Every operation checks
 // the current employee document AND the signed-in claims, independently of UI.
 module.exports = function registerVehicleFaults({ db, requireUser, storage = getStorage, messaging = getMessaging }) {
+  const mileage = require('./vehicle-mileage-service')({ db })
   const reports = db.collection('vehicleFaultReports')
   const drafts = db.collection('vehicleFaultDrafts')
   const stamp = () => FieldValue.serverTimestamp()
@@ -80,6 +81,7 @@ module.exports = function registerVehicleFaults({ db, requireUser, storage = get
     const input = request.data || {}
     const action = input.action
     if (action === 'capabilities') return { duty: user.duty, fleet: user.fleet, admin: user.admin, employeeId: user.employeeId, name: user.name }
+    if (typeof action === 'string' && action.startsWith('mileage.')) return mileage.handle(user, input)
     if (action === 'draft') {
       const requestId = id(input.requestId)
       const vehicleNo = text(input.vehicleNo, 20).toUpperCase()

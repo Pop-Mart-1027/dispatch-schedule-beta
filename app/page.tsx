@@ -33,6 +33,7 @@ import { buildDispatchPreviewBlocks, listDispatchBlockTemplate, listDispatchBloc
 import { assignSchedulesToDispatchBlocks, buildShiftDispatchBlocks, type ShiftDispatchBlock } from '../lib/dispatch-schedule-assignment'
 import { dispatchShifts, parseDispatchShifts, type DispatchShift } from '../lib/dispatch-shifts'
 import { useDispatchDate } from './use-dispatch-date'
+import { VehicleMileageEmployee } from './vehicle-mileage'
 import { monitorDisplayRows } from '../lib/monitor-display'
 import { popupModeLabels, targetTypeLabels } from '../lib/ui-labels'
 import { broadcastIsActive } from '../lib/broadcast-time.mjs'
@@ -271,10 +272,12 @@ function BroadcastAdmin({ employeeId }: { employeeId: string }) {
 function BikeArtwork() { return <div className="bike-art"><img src={publicAssetUrl('youbike-cutout.png')} alt="橘白色腳踏車" /></div> }
 
 function HomeView({ onAction, onGo, dispatchEnabled = true }: { onAction: (text: string) => void; name: string; onGo: (page: string) => void; dispatchEnabled?: boolean }) {
+  const [mileageOpen, setMileageOpen] = useState(false)
   const [today, setToday] = useState(taipeiToday)
   useEffect(() => { const timer = window.setInterval(() => setToday(taipeiToday()), 30000); return () => window.clearInterval(timer) }, [])
   const [year, month, day] = today.split('-').map(Number)
-  return <section className="home-overview"><header><p className="home-date">{year}年{month}月{day}日</p><h1>工作總覽</h1></header><div className="home-actions"><button onClick={() => onGo('schedule')}><CalendarDays size={25} /><strong>我的班表</strong><small>查看本月班表</small></button>{dispatchEnabled && <button onClick={() => onGo('dispatch')}><ClipboardList size={25} /><strong>派工單</strong><small>查看今日派工</small></button>}<button onClick={() => onGo('vehicle-fault')}><ClipboardPlus size={25} /><strong>通報系統</strong><small>車輛故障與處理進度</small></button><button onClick={() => onAction('請假申請尚未串接後端')}><ClipboardPlus size={25} /><strong>請假申請</strong><small>病假、事假、特休申請</small></button></div></section>
+  if (mileageOpen) return <VehicleMileageEmployee onBack={() => setMileageOpen(false)} />
+  return <section className="home-overview"><header><p className="home-date">{year}年{month}月{day}日</p><h1>工作總覽</h1></header><div className="home-actions"><button onClick={() => onGo('schedule')}><CalendarDays size={25} /><strong>我的班表</strong><small>查看本月班表</small></button>{dispatchEnabled && <button onClick={() => onGo('dispatch')}><ClipboardList size={25} /><strong>派工單</strong><small>查看今日派工</small></button>}<button onClick={() => onGo('vehicle-fault')}><ClipboardPlus size={25} /><strong>通報系統</strong><small>車輛故障與處理進度</small></button><button onClick={() => setMileageOpen(true)}><ClipboardList size={25} /><strong>里程登記</strong><small>每週五填報車輛里程</small></button><button onClick={() => onAction('請假申請尚未串接後端')}><ClipboardPlus size={25} /><strong>請假申請</strong><small>病假、事假、特休申請</small></button></div></section>
 }
 
 function todayWorkContext(data: ScheduleData | null, employeeId: string) {

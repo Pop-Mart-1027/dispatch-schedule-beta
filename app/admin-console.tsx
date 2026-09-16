@@ -1,6 +1,7 @@
 'use client';
 import { DispatchShiftBrowser } from './dispatch-shift-browser'
 import { VehicleFaultBackend } from './vehicle-faults'
+import { VehicleMileageFleet } from './vehicle-mileage'
 import { vehicleFaultCall, type FaultAccess } from '../lib/vehicle-faults'
 import { saveDispatchConfiguration, dispatchToday } from '../lib/dispatch-configuration'
 import { dispatchAreaCodes, dispatchAreaDisplay, dispatchBlockFrontOrder } from '../lib/dispatch-area'
@@ -296,7 +297,7 @@ export function AdminConsole({
         </header>
         <section className="admin-content">
           {page === 'vehicle-inbox' && <VehicleFaultBackend mode="monitor" onBack={() => setPage('dashboard')} />}
-          {page === 'vehicle-management' && fleetAccess && <VehicleFaultBackend mode="fleet" onBack={() => setPage('dashboard')} />}
+          {page === 'vehicle-management' && fleetAccess && <VehicleMileageFleet onBack={() => setPage('dashboard')} faultInbox={<VehicleFaultBackend mode="fleet" onBack={() => setPage('dashboard')} />} />}
           {page === 'dashboard' && (
             <Dashboard role={role} onOpenDispatch={() => setPage('dispatch')} />
           )}
