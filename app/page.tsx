@@ -396,7 +396,7 @@ function deriveDutyStaff(records: ScheduleRecord[], profiles: EmployeeProfile[],
     if (!name) return
     if (title.includes('調度副主任')) result.deputyDirectors.push(name)
     else if (title.includes('調度主任') || title.includes('主官')) result.directors.push(name)
-    if (!record.scheduleCode.includes('監') && !(shift === '夜' && title.includes('監控') && /^(國上|休上)?夜$/.test(record.scheduleCode.trim()))) return
+    if (!record.scheduleCode.includes('監') && !(shift === '夜' && preScheduleSource(record.employeeId)?.category === 'monitor' && /^(國上|休上)?夜$/.test(record.scheduleCode.trim()))) return
     const target = record.scheduleCode.includes('國上') || group.includes('新北') || area.includes('新北') ? result.newTaipeiMonitors : result.taipeiMonitors
     target.push(name)
   })
