@@ -51,7 +51,10 @@ export function createScheduleSheetSync({db,FieldValue,fetch:fetchSource=fetch})
           for(let i=0;i<batch.length;i++) {
             const task=batch[i], before=snapshots[i].exists?snapshots[i].data():null;
             if(task.collection==='scheduleMonthLayouts' && (before?.revision||0)!==(task.before?.revision||0))throw Error('月份配置已被修改，下一輪重新比對');
-            const after={...task.after,updatedAt:FieldValue.serverTimestamp(),modifiedBy:'google-schedule-sync'};
+            // Existing layout metadata (especially Firestore Timestamps) must not
+            // pass through the cloned planning projection or be written back.
+            const values=task.collection==='scheduleMonthLayouts' && before ? {rows:task.after.rows} : task.after;
+            const after={...values,updatedAt:FieldValue.serverTimestamp(),modifiedBy:'google-schedule-sync'};
             delete after.id;
             if(task.collection==='scheduleMonthLayouts')after.revision=(before?.revision||0)+1;
             if(!before)after.createdAt=FieldValue.serverTimestamp();
