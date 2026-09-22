@@ -1,5 +1,7 @@
 'use client';
 import { DispatchShiftBrowser } from './dispatch-shift-browser'
+import { subscribeMonthSchedule } from '../lib/live-schedule'
+import { ScheduleSheetSyncControls } from './schedule-sheet-sync-controls'
 import { VehicleFaultBackend } from './vehicle-faults'
 import { VehicleMileageFleet } from './vehicle-mileage'
 import { vehicleFaultCall, type FaultAccess } from '../lib/vehicle-faults'
@@ -1150,8 +1152,11 @@ function ScheduleManager({
   };
   useEffect(() => {
     setRecords([]);setLayout(null);setRowAction(null);setEditing(null);setSectionAction(null);setDragging(null);setDrop(null);setOrderStatus('');
-    void load();
-    return ()=>{loadRevision.current++;};
+    setMonthLoading(true);
+    const stop=subscribeMonthSchedule(month,(rows,people,monthLayout)=>{
+      setRecords(rows);setLayout(monthLayout);setEmployees(people as unknown as EmployeeRecord[]);setMonthLoading(false);setError('');
+    },()=>{setMonthLoading(false);setError('班表同步更新失敗，請重新載入');});
+    return ()=>{stop();loadRevision.current++;};
   }, [month]);
   const days = new Date(
     Number(month.slice(0, 4)),
@@ -1275,6 +1280,7 @@ function ScheduleManager({
   ), [sections, month, group, days, layoutById, admin, monthLoading, orderBusy, dragging, drop]);
   return (
     <section className="admin-schedule-page">
+      {admin && <ScheduleSheetSyncControls />}
       <div className="admin-page-toolbar filters">
         <div className="schedule-group-switch" aria-label="正式班表組別">
           <button disabled={orderBusy} aria-pressed={group === 'day'} onClick={() => {setGroup('day');setDragging(null);setDrop(null);}}>日班</button>

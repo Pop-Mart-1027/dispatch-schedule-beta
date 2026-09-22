@@ -14,6 +14,17 @@ setGlobalOptions({ region: 'asia-east1', maxInstances: 10, serviceAccount: 'smil
 
 const db = getFirestore()
 const auth = getAuth()
+async function googleScheduleSyncService() {
+  const { createScheduleSheetSync } = await import('./schedule-sheet-service.mjs')
+  return createScheduleSheetSync({ db, FieldValue })
+}
+exports.manageGoogleScheduleSync = onCall({ timeoutSeconds: 300, memory: '512MiB' }, async request => {
+  await requireAdmin(request)
+  return (await googleScheduleSyncService()).handle(request.data)
+})
+exports.syncGoogleSchedules = onSchedule({ schedule: 'every 1 minutes', timeZone: 'Asia/Taipei', timeoutSeconds: 480, memory: '1GiB', maxInstances: 1 }, async () => {
+  await (await googleScheduleSyncService()).run()
+})
 const ROLES = new Set(['employee', 'duty', 'admin'])
 const EMPLOYEE_ID = /^[A-Z0-9]{3,20}$/
 

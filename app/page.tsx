@@ -35,6 +35,7 @@ import { dispatchShifts, parseDispatchShifts, type DispatchShift } from '../lib/
 import { useDispatchDate } from './use-dispatch-date'
 import { VehicleMileageEmployee } from './vehicle-mileage'
 import { monitorDisplayRows } from '../lib/monitor-display'
+import { subscribeMonthSchedule } from '../lib/live-schedule'
 import { popupModeLabels, targetTypeLabels } from '../lib/ui-labels'
 import { broadcastIsActive } from '../lib/broadcast-time.mjs'
 import { getBroadcastRead, listActiveBroadcasts, recordBroadcastShown, type Broadcast } from '../lib/broadcasts'
@@ -89,15 +90,20 @@ export default function Home() {
     }
   }
 
-  const scheduleLoadOwner = useRef('')
+  const [scheduleMonth, setScheduleMonth] = useState(() => new Date(Date.now()+8*3600000).toISOString().slice(0,7))
   useEffect(() => {
-    if (!currentUser) { scheduleLoadOwner.current = ''; return }
-    if (currentUser.role === 'employee' && window.matchMedia('(max-width: 760px)').matches && !['schedule', 'attendance'].includes(page)) return
-    if (scheduleLoadOwner.current === currentUser.employeeId) return
-    const owner = currentUser.employeeId
-    scheduleLoadOwner.current = owner
-    void Promise.all([listMonthScheduleRecords('2026-09'), getDocs(collection(db, 'employees')), getMonthLayout('2026-09')]).then(([records, employees, layout]) => { if (scheduleLoadOwner.current !== owner) return; const profiles = employees.docs.map(item => ({ employeeId: item.id, ...(item.data() as Omit<EmployeeProfile, 'employeeId'>) })); console.info('[scheduleRecords] loaded', { employeeId: 'all', count: records.length }); setScheduleData(scheduleRecordsToData(records, profiles, layout)); if (!records.length) notify('班表資料尚未匯入') }).catch(error => { if (scheduleLoadOwner.current !== owner) return; scheduleLoadOwner.current = ''; console.error('[scheduleRecords] load failed', error); setScheduleData(scheduleRecordsToData([])); notify(error?.code === 'permission-denied' ? '班表讀取權限不足' : '班表資料載入失敗') })
-  }, [currentUser?.employeeId, page])
+    const refresh=()=>setScheduleMonth(new Date(Date.now()+8*3600000).toISOString().slice(0,7))
+    const timer=setInterval(refresh,60000)
+    window.addEventListener('focus',refresh)
+    return ()=>{clearInterval(timer);window.removeEventListener('focus',refresh)}
+  },[])
+  useEffect(() => {
+    setScheduleData(null)
+    if(!currentUser || !['schedule','attendance'].includes(page))return
+    return subscribeMonthSchedule(scheduleMonth,(records,profiles,layout)=>{
+      setScheduleData(scheduleRecordsToData(records,profiles,layout,scheduleMonth))
+    },error=>{console.error('[scheduleRecords] live read failed',error);notify('班表更新失敗，請重新進入班表重試')})
+  },[currentUser?.employeeId,page,scheduleMonth])
 
   useEffect(() => onAuthStateChanged(auth, async user => {
     if (!user) { clearFrontDispatchCache(); popupSessionChecked.current = false; popupSessionChecking.current = false; setCurrentUser(null); setBroadcastPopupQueue([]); setAuthReady(true); return }
@@ -155,13 +161,14 @@ export default function Home() {
 
   const titles: Record<string, string> = { home: '工作總覽', notice: '公告', broadcasts: '廣播事項', 'dispatch-admin': '派工管理', 'broadcast-admin': '廣播管理', attendance: '打卡', checkpoints: '打卡點管理', geofence: '電子圍籬測試', schedule: '我的班表', dispatch: '派工單', pre: '預排班', leave: '假勤／特休', profile: '個人資料', employees: '員工管理', integrations: '尚未串接', 'vehicle-fault': '通報系統' }
   const go = (target: string) => { setPage(target); setMenuOpen(false) }
-  return <div className="app-shell" data-page={page}>{menuOpen && <button className="mobile-backdrop" aria-label="關閉選單" onClick={() => setMenuOpen(false)} />}<aside className={menuOpen ? 'sidebar open' : 'sidebar'}><div className="logo"><span>調</span><div><strong>調度工作台</strong></div><button className="drawer-close" aria-label="關閉選單" onClick={() => setMenuOpen(false)}><X size={20} /></button></div><nav><Nav label="工作總覽" active={page === 'home'} icon={<Coffee size={18} />} onClick={() => go('home')} />{attendanceEnabled && <Nav label="打卡" active={page === 'attendance'} icon={<CheckCircle2 size={18} />} onClick={() => go('attendance')} />}<Nav label="公告" active={page === 'notice'} icon={<Megaphone size={18} />} onClick={() => go('notice')} />{features.broadcastsEnabled && <Nav label="廣播事項" active={page === 'broadcasts'} icon={<Megaphone size={18} />} onClick={() => go('broadcasts')} />}<Nav label="我的班表" active={page === 'schedule'} icon={<CalendarDays size={18} />} onClick={() => go('schedule')} />{features.dispatchEnabled && <Nav label="派工單" active={page === 'dispatch'} icon={<ClipboardList size={18} />} onClick={() => go('dispatch')} />}<Nav label="通報系統" active={page === 'vehicle-fault'} icon={<ClipboardPlus size={18} />} onClick={() => go('vehicle-fault')} /><Nav label="預排班" active={page === 'pre'} icon={<Clock3 size={18} />} onClick={() => go('pre')} /><Nav label="假勤／特休" active={page === 'leave'} icon={<ClipboardPlus size={18} />} onClick={() => go('leave')} /><Nav label="個人資料" active={page === 'profile'} icon={<UserRound size={18} />} onClick={() => go('profile')} />{(currentUser.role === 'admin' || currentUser.role === 'duty') && <Nav label={currentUser.role === 'admin' ? '管理後台' : '監控後台'} active={false} icon={<ShieldCheck size={18} />} onClick={() => go('admin-console')} />}<Nav label="尚未串接" active={page === 'integrations'} icon={<Clock3 size={18} />} onClick={() => go('integrations')} /></nav><button className="logout" onClick={() => void signOut(auth)}><LogOut size={17} />登出</button></aside><main className="workspace"><header className="topbar"><button className="menu-button" aria-label="開啟選單" onClick={() => setMenuOpen(true)}><Menu size={22} /></button><div><p className="eyebrow">2026 年 9 月</p><h2>{titles[page]}</h2></div><div className="profile-chip"><span>{currentUser.name}<small>{account} · {currentUser.role === 'admin' ? '管理員' : '調度專員'}</small></span></div></header><section className="content">{page === 'home' && <HomeView onAction={notify} name={currentUser.name} onGo={go} dispatchEnabled={features.dispatchEnabled} />}{page === 'vehicle-fault' && <VehicleFaultEmployee employeeId={currentUser.employeeId} employeeName={currentUser.name} />}{((page==='dispatch'&&!features.dispatchEnabled)||(page==='broadcasts'&&!features.broadcastsEnabled)||(page==='attendance'&&!attendanceEnabled))&&<p className="loading">此功能尚未開放</p>}{page === 'notice' && <EmptyNotice />}{page === 'broadcasts' && features.broadcastsEnabled && <BroadcastList employeeId={account} />}{page === 'attendance' && attendanceEnabled && <AttendanceView employeeId={account} employeeName={currentUser.name} scheduleData={scheduleData} />}{page === 'checkpoints' && currentUser.role === 'admin' && <CheckpointAdmin />}{page === 'geofence' && currentUser.role === 'admin' && <GeofenceTest />}{page === 'integrations' && <IntegrationsView />}{page === 'schedule' && <ScheduleView tab={scheduleTab} setTab={setScheduleTab} data={scheduleData} employeeId={account} />}{page === 'dispatch' && features.dispatchEnabled && <FirestoreDispatchView employeeId={account} isDuty={currentUser.role === 'admin' || currentUser.role === 'duty'} />}{page === 'pre' && <PreSchedule onSave={() => notify('預排班已儲存為草稿')} />}{page === 'leave' && <LeaveView onAction={notify} />}{page === 'profile' && <ProfileView employee={currentUser} />}</section></main>{notice && <div className="toast">✓ {notice}</div>}{features.broadcastsEnabled && broadcastPopupQueue[0] && <BroadcastModal item={broadcastPopupQueue[0]} onClose={() => setBroadcastPopupQueue(queue => queue.slice(1))} />}</div>
+  return <div className="app-shell" data-page={page}>{menuOpen && <button className="mobile-backdrop" aria-label="關閉選單" onClick={() => setMenuOpen(false)} />}<aside className={menuOpen ? 'sidebar open' : 'sidebar'}><div className="logo"><span>調</span><div><strong>調度工作台</strong></div><button className="drawer-close" aria-label="關閉選單" onClick={() => setMenuOpen(false)}><X size={20} /></button></div><nav><Nav label="工作總覽" active={page === 'home'} icon={<Coffee size={18} />} onClick={() => go('home')} />{attendanceEnabled && <Nav label="打卡" active={page === 'attendance'} icon={<CheckCircle2 size={18} />} onClick={() => go('attendance')} />}<Nav label="公告" active={page === 'notice'} icon={<Megaphone size={18} />} onClick={() => go('notice')} />{features.broadcastsEnabled && <Nav label="廣播事項" active={page === 'broadcasts'} icon={<Megaphone size={18} />} onClick={() => go('broadcasts')} />}<Nav label="我的班表" active={page === 'schedule'} icon={<CalendarDays size={18} />} onClick={() => go('schedule')} />{features.dispatchEnabled && <Nav label="派工單" active={page === 'dispatch'} icon={<ClipboardList size={18} />} onClick={() => go('dispatch')} />}<Nav label="通報系統" active={page === 'vehicle-fault'} icon={<ClipboardPlus size={18} />} onClick={() => go('vehicle-fault')} /><Nav label="預排班" active={page === 'pre'} icon={<Clock3 size={18} />} onClick={() => go('pre')} /><Nav label="假勤／特休" active={page === 'leave'} icon={<ClipboardPlus size={18} />} onClick={() => go('leave')} /><Nav label="個人資料" active={page === 'profile'} icon={<UserRound size={18} />} onClick={() => go('profile')} />{(currentUser.role === 'admin' || currentUser.role === 'duty') && <Nav label={currentUser.role === 'admin' ? '管理後台' : '監控後台'} active={false} icon={<ShieldCheck size={18} />} onClick={() => go('admin-console')} />}<Nav label="尚未串接" active={page === 'integrations'} icon={<Clock3 size={18} />} onClick={() => go('integrations')} /></nav><button className="logout" onClick={() => void signOut(auth)}><LogOut size={17} />登出</button></aside><main className="workspace"><header className="topbar"><button className="menu-button" aria-label="開啟選單" onClick={() => setMenuOpen(true)}><Menu size={22} /></button><div><p className="eyebrow">{scheduleMonth.replace('-', ' 年 ')} 月</p><h2>{titles[page]}</h2></div><div className="profile-chip"><span>{currentUser.name}<small>{account} · {currentUser.role === 'admin' ? '管理員' : '調度專員'}</small></span></div></header><section className="content">{page === 'home' && <HomeView onAction={notify} name={currentUser.name} onGo={go} dispatchEnabled={features.dispatchEnabled} />}{page === 'vehicle-fault' && <VehicleFaultEmployee employeeId={currentUser.employeeId} employeeName={currentUser.name} />}{((page==='dispatch'&&!features.dispatchEnabled)||(page==='broadcasts'&&!features.broadcastsEnabled)||(page==='attendance'&&!attendanceEnabled))&&<p className="loading">此功能尚未開放</p>}{page === 'notice' && <EmptyNotice />}{page === 'broadcasts' && features.broadcastsEnabled && <BroadcastList employeeId={account} />}{page === 'attendance' && attendanceEnabled && <AttendanceView employeeId={account} employeeName={currentUser.name} scheduleData={scheduleData} />}{page === 'checkpoints' && currentUser.role === 'admin' && <CheckpointAdmin />}{page === 'geofence' && currentUser.role === 'admin' && <GeofenceTest />}{page === 'integrations' && <IntegrationsView />}{page === 'schedule' && <ScheduleView tab={scheduleTab} setTab={setScheduleTab} data={scheduleData} employeeId={account} />}{page === 'dispatch' && features.dispatchEnabled && <FirestoreDispatchView employeeId={account} isDuty={currentUser.role === 'admin' || currentUser.role === 'duty'} />}{page === 'pre' && <PreSchedule onSave={() => notify('預排班已儲存為草稿')} />}{page === 'leave' && <LeaveView onAction={notify} />}{page === 'profile' && <ProfileView employee={currentUser} />}</section></main>{notice && <div className="toast">✓ {notice}</div>}{features.broadcastsEnabled && broadcastPopupQueue[0] && <BroadcastModal item={broadcastPopupQueue[0]} onClose={() => setBroadcastPopupQueue(queue => queue.slice(1))} />}</div>
 }
 
 function Nav({ label, icon, active, onClick }: { label: string; icon: React.ReactNode; active: boolean; onClick: () => void }) { return <button className={active ? 'nav-item active' : 'nav-item'} onClick={onClick}>{icon}<span>{label}</span></button> }
 
-function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProfile[] = [], layout:MonthLayout|null=null): ScheduleData {
-  const days = Array.from({ length: 30 }, (_, i) => String(i + 1))
+function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProfile[] = [], layout:MonthLayout|null=null, month = new Date(Date.now()+8*3600000).toISOString().slice(0,7)): ScheduleData {
+  const count = new Date(Number(month.slice(0,4)),Number(month.slice(5)),0).getDate()
+  const days = Array.from({ length: count }, (_, i) => String(i + 1))
   const profileMap = new Map(profiles.map(profile => [profile.employeeId, profile]))
   const sourceRows = [...sourceSchedule.morning.map(row => ({ ...row, shiftType: 'morning' as const })), ...sourceSchedule.night.map(row => ({ ...row, shiftType: 'night' as const }))]
   const sourceMap = new Map(sourceRows.map(row => [`${row.shiftType}:${row.employeeId}`, row]))
@@ -172,7 +179,7 @@ function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProf
     const day = Number(record.date.slice(8)) - 1
     const profile = profileMap.get(record.employeeId)
     const source = sourceMap.get(`${preScheduleSource(record.employeeId)?.group === 'day' ? 'morning' : preScheduleSource(record.employeeId)?.group === 'night' ? 'night' : record.shiftType}:${record.employeeId}`)
-    const current = grouped.get(key) ?? { rowId: record.employeeId, employeeId: record.employeeId, name: profile?.name || record.employeeName, title: profile?.title || record.title || source?.title || '', group: profile?.group || record.group || source?.group || '', area: profile?.area || record.area || source?.area || '', shifts: Array(30).fill('') }
+    const current = grouped.get(key) ?? { rowId: record.employeeId, employeeId: record.employeeId, name: profile?.name || record.employeeName, title: profile?.title || record.title || source?.title || '', group: profile?.group || record.group || source?.group || '', area: profile?.area || record.area || source?.area || '', shifts: Array(count).fill('') }
     const value = record.scheduleCode || record.scheduleLabel || record.leaveType || ''
     current.shifts[day] = [...new Set([current.shifts[day], value].filter(Boolean))].join('／')
     fallbackGroups.set(key, record.shiftType === 'morning' ? 'day' : 'night')
@@ -183,13 +190,13 @@ function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProf
     for(const id of grouped.keys()) if(!ids.has(id)) grouped.delete(id);
     for(const entry of layout.rows){
       const person=profileMap.get(entry.employeeId);
-      if(!grouped.has(entry.employeeId)&&person)grouped.set(entry.employeeId,{rowId:entry.employeeId,employeeId:entry.employeeId,name:person.name,title:person.title || '',group:entry.group,area:entry.areaCode || '',shifts:Array(30).fill('')});
+      if(!grouped.has(entry.employeeId)&&person)grouped.set(entry.employeeId,{rowId:entry.employeeId,employeeId:entry.employeeId,name:person.name,title:person.title || '',group:entry.group,area:entry.areaCode || '',shifts:Array(count).fill('')});
       const row=grouped.get(entry.employeeId);if(row)for(const day of entry.blankDays)row.shifts[Number(day)-1]='';
     }
   }
   const rowsFor = (shiftType: 'morning' | 'night') => [...grouped.values()]
     .filter(row => (layout?.rows.find(r=>r.employeeId===row.employeeId)?.group || scheduleDisplayGroup(row, fallbackGroups.get(row.employeeId))) === (shiftType === 'morning' ? 'day' : 'night'))
-  return { month: '2026-09', days, morning: rowsFor('morning'), night: rowsFor('night'),layout }
+  return { month, days, morning: rowsFor('morning'), night: rowsFor('night'),layout }
 }
 
 async function showEligibleBroadcasts(user: Employee, isCurrent = () => true): Promise<Broadcast[]> {
@@ -327,7 +334,7 @@ function ScheduleView({ tab, setTab, data, employeeId }: { tab: string; setTab: 
   const isMine = tab === 'mine'
   const rows = tab === 'morning' ? data?.morning ?? [] : data?.night ?? []
   const personal = data && [...data.night, ...data.morning].find(row => row.employeeId === employeeId)
-  return <><div className="page-intro"><div><p className="eyebrow">每月班表</p><h1>{isMine ? '我的班表' : tab === 'morning' ? '早班全員班表' : '夜班全員班表'}</h1><p className="muted">{isMine ? '本人的正式班表。' : `正式${tab === 'morning' ? '早班' : '夜班'}資料，共 ${rows.length} 筆。`}</p></div></div><div className="tabs"><button className={isMine ? 'tab active' : 'tab'} onClick={() => setTab('mine')}>我的班表</button><button className={tab === 'morning' ? 'tab active' : 'tab'} onClick={() => setTab('morning')}>早班</button><button className={tab === 'night' ? 'tab active' : 'tab'} onClick={() => setTab('night')}>夜班</button></div>{!data ? <p className="loading">正在載入 9 月班表…</p> : isMine ? <PersonalSchedule row={personal ?? undefined} month={data.month} /> : rows.length ? <ScheduleMatrix key={tab} layout={data.layout} rows={rows} days={data.days} group={tab === 'morning' ? 'day' : 'night'} /> : <p className="loading">班表資料尚未匯入</p>}</>
+  return <><div className="page-intro"><div><p className="eyebrow">每月班表</p><h1>{isMine ? '我的班表' : tab === 'morning' ? '早班全員班表' : '夜班全員班表'}</h1><p className="muted">{isMine ? '本人的正式班表。' : `正式${tab === 'morning' ? '早班' : '夜班'}資料，共 ${rows.length} 筆。`}</p></div></div><div className="tabs"><button className={isMine ? 'tab active' : 'tab'} onClick={() => setTab('mine')}>我的班表</button><button className={tab === 'morning' ? 'tab active' : 'tab'} onClick={() => setTab('morning')}>早班</button><button className={tab === 'night' ? 'tab active' : 'tab'} onClick={() => setTab('night')}>夜班</button></div>{!data ? <p className="loading">正在載入班表…</p> : isMine ? <PersonalSchedule row={personal ?? undefined} month={data.month} /> : rows.length ? <ScheduleMatrix key={tab} month={data.month} layout={data.layout} rows={rows} days={data.days} group={tab === 'morning' ? 'day' : 'night'} /> : <p className="loading">班表資料尚未匯入</p>}</>
 }
 
 function PersonalSchedule({ row, month }: { row: ScheduleRow | undefined; month: string }) {
@@ -339,12 +346,12 @@ function PersonalSchedule({ row, month }: { row: ScheduleRow | undefined; month:
   return <section className="personal-month"><h2 className="plan-month">{year} 年 {monthNumber} 月</h2><div className="month-grid">{['日','一','二','三','四','五','六'].map(w=><div className="weekday" key={w}>{w}</div>)}{Array.from({length:offset},(_,i)=><div key={'blank'+i} aria-hidden="true" />)}{Array.from({length:count},(_,index)=>{const shift=row.shifts[index] || ''; return <article className={`month-day ${scheduleCellStyle(shift)}`} key={index} aria-label={`${monthNumber}月${index+1}日 ${shift}`}><small>{index+1}</small><strong>{labels[shift] || shift || '—'}</strong></article>})}</div></section>
 }
 
-function ScheduleMatrix({ rows, days, group = 'day',layout }: { rows: ScheduleRow[]; days: string[]; group?: string;layout?:MonthLayout|null }) {
+function ScheduleMatrix({ rows, days, group = 'day',layout,month = new Date(Date.now()+8*3600000).toISOString().slice(0,7) }: { rows: ScheduleRow[]; days: string[]; group?: string;layout?:MonthLayout|null;month?:string }) {
   const scrollRef = useRef<HTMLDivElement>(null)
   const groups = useMemo(() => monthSections(rows, group,layout), [rows, group,layout])
   const areas = groups
   return <><AreaJumpDropdown areas={areas} group={group} scope="front-schedule" scrollTarget={scrollRef} />
-    <div className="matrix-wrap" ref={scrollRef}><table className="schedule-matrix"><colgroup><col className="col-title" /><col className="col-id" /><col className="col-name" />{days.map(day => <col className="col-day" key={day} />)}</colgroup><thead><tr><th>職務</th><th>員編</th><th>姓名</th>{days.map((day, index) => <th className={weekdayHeaderStyle(index)} key={day}><span>9月{day}日</span><small>{weekdayAt(index)}</small></th>)}</tr></thead><tbody>{groups.map(section => <Fragment key={section.key}><tr className="area-heading" id={scheduleSectionId('front-schedule',group,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days.length + 3}><span className="area-label">{section.label}</span></td></tr>{section.people.map((row: ScheduleRow) => <tr key={row.rowId} data-employee-id={row.employeeId}><td>{row.title || '—'}</td><td>{row.employeeId}</td><td><strong>{row.name}</strong><small className="pinned-role">{row.title}</small></td>{row.shifts.map((shift, dayIndex) => <td className={scheduleCellStyle(shift)} key={dayIndex}>{shift || '—'}</td>)}</tr>)}</Fragment>)}</tbody></table></div></>
+    <div className="matrix-wrap" ref={scrollRef}><table className="schedule-matrix"><colgroup><col className="col-title" /><col className="col-id" /><col className="col-name" />{days.map(day => <col className="col-day" key={day} />)}</colgroup><thead><tr><th>職務</th><th>員編</th><th>姓名</th>{days.map((day, index) => <th className={weekdayHeaderStyle(index,month)} key={day}><span>{Number(month.slice(5))}月{day}日</span><small>{weekdayAt(index,month)}</small></th>)}</tr></thead><tbody>{groups.map(section => <Fragment key={section.key}><tr className="area-heading" id={scheduleSectionId('front-schedule',group,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days.length + 3}><span className="area-label">{section.label}</span></td></tr>{section.people.map((row: ScheduleRow) => <tr key={row.rowId} data-employee-id={row.employeeId}><td>{row.title || '—'}</td><td>{row.employeeId}</td><td><strong>{row.name}</strong><small className="pinned-role">{row.title}</small></td>{row.shifts.map((shift, dayIndex) => <td className={scheduleCellStyle(shift)} key={dayIndex}>{shift || '—'}</td>)}</tr>)}</Fragment>)}</tbody></table></div></>
 }
 
 function scheduleCellStyle(shift: string) {
@@ -354,13 +361,14 @@ function scheduleCellStyle(shift: string) {
   return ''
 }
 
-function weekdayHeaderStyle(index: number) {
-  if (weekdayAt(index) === '六') return 'saturday'
-  if (weekdayAt(index) === '日') return 'sunday'
+function weekdayHeaderStyle(index: number, month?: string) {
+  if (weekdayAt(index,month) === '六') return 'saturday'
+  if (weekdayAt(index,month) === '日') return 'sunday'
   return ''
 }
 
-function weekdayAt(index: number) {
+function weekdayAt(index: number, month?: string) {
+  if(month)return ['日','一','二','三','四','五','六'][new Date(Number(month.slice(0,4)),Number(month.slice(5))-1,index+1).getDay()]
   return weekdays[index % 7]
 }
 
@@ -388,7 +396,7 @@ function deriveDutyStaff(records: ScheduleRecord[], profiles: EmployeeProfile[],
     if (!name) return
     if (title.includes('調度副主任')) result.deputyDirectors.push(name)
     else if (title.includes('調度主任') || title.includes('主官')) result.directors.push(name)
-    if (!record.scheduleCode.includes('監')) return
+    if (!record.scheduleCode.includes('監') && !(shift === '夜' && title.includes('監控') && /^(國上|休上)?夜$/.test(record.scheduleCode.trim()))) return
     const target = record.scheduleCode.includes('國上') || group.includes('新北') || area.includes('新北') ? result.newTaipeiMonitors : result.taipeiMonitors
     target.push(name)
   })
