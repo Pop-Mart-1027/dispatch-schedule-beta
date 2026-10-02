@@ -107,6 +107,68 @@ export function planNewScheduleEmployees({source,employees,now=new Date()}) {
   return {employees:proposed,issues};
 }
 
+function sectionFamily(key, areaCode) {
+  // PT/support sections retain their distinct identity even if an old row has
+  // a stale area code. Labels and daily work codes never determine placement.
+  if(String(key).startsWith('section:'))return `section:${key}`;
+  const code=clean(areaCode).toUpperCase();
+  const family=/^ZH\d*$/.test(code)?'ZH':code.match(/^Z?([A-X])\d*$/)?.[1]||code.match(/^([A-Z]+)\d*$/)?.[1];
+  return family?`family:${family}`:`section:${key}`;
+}
+
+function groupAdjacentSections(items, sectionOf) {
+  const groups=new Map();
+  for(const item of items) {
+    const {group,key,areaCode}=sectionOf(item);
+    if(!groups.has(group))groups.set(group,new Map());
+    const families=groups.get(group), family=sectionFamily(key,areaCode);
+    if(!families.has(family))families.set(family,new Map());
+    const sections=families.get(family);
+    if(!sections.has(key))sections.set(key,[]);
+    sections.get(key).push(item);
+  }
+  // Map insertion order retains the first appearance of each group, family
+  // and exact section, plus the existing manual order inside each section.
+  return [...groups.values()].flatMap(families=>[...families.values()].flatMap(sections=>[...sections.values()].flat()));
+}
+
+function orderedMonthLayout(layout) {
+  const catalog=new Map(monthSectionCatalog(layout.rows,layout).map(s=>[`${s.group}:${s.key}`,s]));
+  const rows=groupAdjacentSections(layout.rows,row=>{
+    const key=monthRowSectionKey(row), section=catalog.get(`${row.group}:${key}`);
+    return {group:row.group,key,areaCode:section?section.areaCode:row.areaCode};
+  });
+  return {...layout,rows,...(layout.sections?{sections:groupAdjacentSections(layout.sections,s=>s)}:{})};
+}
+
+// Layout-only reconciliation is safe when source cells have not changed. It
+// neither provisions staff nor alters membership, blank days, or section data.
+export function planScheduleLayoutOrder(layouts) {
+  const changes=[];
+  for(const before of layouts) {
+    const after=orderedMonthLayout(before);
+    if(JSON.stringify(before.rows)===JSON.stringify(after.rows) && JSON.stringify(before.sections)===JSON.stringify(after.sections))continue;
+    changes.push({id:before.monthKey||before.id,before,after});
+  }
+  return changes;
+}
+
+function sourceOrderedSections(sections, source) {
+  const ranks=new Map(), groups=new Map();
+  for(const row of source) {
+    const sourceSection=row.section || (preScheduleSource(row.employeeId)?.group===row.group?preScheduleSource(row.employeeId)?.section:'');
+    const key=scheduleSectionIdentity(sourceSection,row.areaCode||'',row.group).key;
+    if(!ranks.has(row.group))ranks.set(row.group,new Map());
+    const order=ranks.get(row.group);
+    if(!order.has(key))order.set(key,order.size);
+  }
+  for(const section of sections) {
+    if(!groups.has(section.group))groups.set(section.group,[]);
+    groups.get(section.group).push(section);
+  }
+  return [...groups].flatMap(([group,items])=>items.sort((a,b)=>(ranks.get(group)?.get(a.key)??Infinity)-(ranks.get(group)?.get(b.key)??Infinity)));
+}
+
 export function planScheduleSync({source, employees, records, layouts}) {
   const profiles=new Map(employees.map(p=>[p.employeeId||p.id,p]));
   const layoutMap=new Map(layouts.map(l=>[l.monthKey||l.id,l]));
@@ -118,7 +180,8 @@ export function planScheduleSync({source, employees, records, layouts}) {
     if(!grouped.has(key))grouped.set(key,[]);
     grouped.get(key).push(row);
   }
-  const nextLayouts=new Map();
+  const nextLayouts=new Map(), bootstrapMonths=new Set();
+  const sourceMonths=new Set(source.map(r=>r.month).filter(m=>/^\d{4}-(0[1-9]|1[0-2])$/.test(m)));
   for(const rows of grouped.values()) {
     const first=rows[0], id=first.employeeId, month=first.month, person=profiles.get(id);
     if(!person || person.active!==true){issues.push({employeeId:id,month,reason:'missing-or-inactive-employee'});continue;}
@@ -135,6 +198,7 @@ export function planScheduleSync({source, employees, records, layouts}) {
     // A newly published month has no app records from which to infer sections.
     // Only bootstrap new layouts or the empty layout produced by the old sync.
     const bootstrap=!existingLayout || (existingLayout.modifiedBy==='google-schedule-sync' && !existingLayout.rows.length && !existingLayout.sections && !existingLayout.excludedEmployeeIds?.length && !Object.keys(existingLayout.assignmentResetAt||{}).length);
+    if(bootstrap)bootstrapMonths.add(month);
     let next=nextLayouts.get(month);
     if(!next) {
       const base=existingLayout || {monthKey:month,revision:0,rows:initialMonthRows(employees.filter(p=>records.some(r=>r.employeeId===(p.employeeId||p.id)&&r.date.startsWith(month))).map(p=>({...p,employeeId:p.employeeId||p.id}))),excludedEmployeeIds:[]};
@@ -182,7 +246,15 @@ export function planScheduleSync({source, employees, records, layouts}) {
       updates.push({id:before?.id||key,before:before||null,after});
     }
   }
-  for(const [month,next] of nextLayouts) {
+  // Reconcile the catalog as well as rows: both schedule views render sections
+  // in catalog order, and new source subareas previously landed at its tail.
+  for(const [month,current] of new Map([...layoutMap,...nextLayouts])) {
+    if(!sourceMonths.has(month))continue;
+    // A person appearing in both tabs enters grouped at its day-tab position.
+    // New month catalogs must instead follow each selected source tab's own
+    // section order. Existing catalogs keep their manual first-appearance order.
+    const base=bootstrapMonths.has(month)&&current.sections?{...current,sections:sourceOrderedSections(current.sections,source.filter(r=>r.month===month))}:current;
+    const next=orderedMonthLayout(base);
     const old=layoutMap.get(month);
     if(old && JSON.stringify(old.rows)===JSON.stringify(next.rows) && JSON.stringify(old.sections)===JSON.stringify(next.sections))continue;
     layoutChanges.push({id:month,before:old||null,after:next});

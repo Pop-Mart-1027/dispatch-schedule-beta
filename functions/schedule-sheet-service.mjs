@@ -1,7 +1,8 @@
 import { randomUUID } from 'node:crypto';
-import { SPREADSHEET_ID, discoverSheets, parseScheduleSheet, planScheduleSync, planNewScheduleEmployees, digest } from './schedule-sheet-domain.mjs';
+import { SPREADSHEET_ID, discoverSheets, parseScheduleSheet, planScheduleSync, planScheduleLayoutOrder, planNewScheduleEmployees, digest } from './schedule-sheet-domain.mjs';
 
 // Re-plan unchanged source after fixes to discovery or month initialization.
+// Ordering is checked separately on every run, without replaying schedule cells.
 export const SCHEDULE_SYNC_SCHEMA_VERSION = 3;
 const ISSUE_RETRY_INTERVAL_MS = 15 * 60 * 1000;
 
@@ -39,6 +40,34 @@ export function createScheduleSheetSync({db,FieldValue,fetch:fetchSource=fetch,p
     return {...combinePlan(source,state,newPeople.employees,newPeople.issues),createdEmployees:newPeople.employees.length};
   };
   const summary=plan=>({changed:plan.updates.length,layouts:plan.layoutChanges.length,cleared:plan.cleared,createdEmployees:plan.createdEmployees||0,issues:plan.issues.slice(0,100),issueCount:plan.issues.length});
+  async function applyPlan(plan,runId) {
+    const tasks=[...plan.layoutChanges.map(x=>({...x,collection:'scheduleMonthLayouts'})),...plan.updates.map(x=>({...x,collection:'scheduleRecords'}))];
+    for(let offset=0;offset<tasks.length;offset+=100) {
+      const batch=tasks.slice(offset,offset+100);
+      await db.runTransaction(async tx=>{
+        const c=(await tx.get(control)).data();
+        if(!c?.enabled || c.runId!==runId)throw Error('同步已暫停或執行權已變更');
+        const refs=batch.map(t=>db.collection(t.collection).doc(t.id));
+        const snapshots=await tx.getAll(...refs);
+        for(let i=0;i<batch.length;i++) {
+          const task=batch[i], before=snapshots[i].exists?snapshots[i].data():null;
+          if(task.collection==='scheduleMonthLayouts' && (before?.revision||0)!==(task.before?.revision||0))throw Error('月份配置已被修改，下一輪重新比對');
+          // Preserve existing metadata and only write the projected layout arrays.
+          const values=task.collection==='scheduleMonthLayouts' && before ? {
+            rows:task.after.rows,
+            ...(task.after.sections!==undefined ? {sections:task.after.sections} : {}),
+          } : task.after;
+          const after={...values,updatedAt:FieldValue.serverTimestamp(),modifiedBy:'google-schedule-sync'};
+          delete after.id;
+          if(task.collection==='scheduleMonthLayouts')after.revision=(before?.revision||0)+1;
+          if(!before)after.createdAt=FieldValue.serverTimestamp();
+          tx.set(refs[i],after,{merge:true});
+          tx.set(db.collection('scheduleSheetSyncRuns').doc(runId).collection('changes').doc(`${task.collection}_${task.id}`),{path:refs[i].path,before,after:task.after,createdAt:FieldValue.serverTimestamp()});
+        }
+        tx.update(control,{leaseUntil:Date.now()+480000});
+      });
+    }
+  }
   async function run() {
     const runId=randomUUID();
     const claimed=await db.runTransaction(async tx=>{
@@ -50,11 +79,22 @@ export function createScheduleSheetSync({db,FieldValue,fetch:fetchSource=fetch,p
     try {
       const source=await readSource(), hash=digest(source);
       const state=(await control.get()).data();
-      // Source changes always reconcile on the next minute. Unresolved rows retry
-      // periodically so absent employees do not cause full roster reads each minute.
+      // Check layout order on every run, including unchanged sheet contents.
+      // Unresolved employees still retry periodically without full roster reads.
       const issueRetryDue=state.lastResult?.issueCount>0 && !(state.nextIssueRetryAt>Date.now());
       if(state.sourceHash===hash && state.sourceSchemaVersion===SCHEDULE_SYNC_SCHEMA_VERSION && !issueRetryDue) {
-        await control.update({lastCheckedAt:FieldValue.serverTimestamp(),lastError:'',leaseUntil:0});return {unchanged:true};
+        const months=new Set(source.map(row=>row.month));
+        const layouts=(await db.collection('scheduleMonthLayouts').get()).docs.map(d=>({...d.data(),id:d.id})).filter(layout=>months.has(layout.monthKey||layout.id));
+        const layoutChanges=planScheduleLayoutOrder(layouts);
+        await applyPlan({layoutChanges,updates:[]},runId);
+        const result=layoutChanges.length ? {changed:0,layouts:layoutChanges.length,cleared:0,createdEmployees:0,issues:state.lastResult?.issues||[],issueCount:state.lastResult?.issueCount||0,orderingOnly:true} : {unchanged:true};
+        await db.runTransaction(async tx=>{
+          const c=(await tx.get(control)).data();
+          if(!c?.enabled || c.runId!==runId)throw Error('同步已暫停或執行權已變更');
+          tx.update(control,{lastCheckedAt:FieldValue.serverTimestamp(),lastError:'',leaseUntil:0,...(layoutChanges.length?{lastSuccessAt:FieldValue.serverTimestamp(),lastResult:result}:{})});
+          if(layoutChanges.length)tx.set(db.collection('scheduleSheetSyncRuns').doc(runId),{...result,sourceHash:hash,sourceSchemaVersion:SCHEDULE_SYNC_SCHEMA_VERSION,completedAt:FieldValue.serverTimestamp()});
+        });
+        return result;
       }
       const stateData=await readState(),newPeople=employeePlan(source,stateData);
       const projected=combinePlan(source,stateData,newPeople.employees,newPeople.issues);
@@ -98,34 +138,7 @@ export function createScheduleSheetSync({db,FieldValue,fetch:fetchSource=fetch,p
       }
       const plan={...combinePlan(source,stateData,[],employeeIssues),createdEmployees};
       if(plan.cleared>100)throw Error(`來源將清空 ${plan.cleared} 格，已停止自動套用，請管理員核對`);
-      const tasks=[...plan.layoutChanges.map(x=>({...x,collection:'scheduleMonthLayouts'})),...plan.updates.map(x=>({...x,collection:'scheduleRecords'}))];
-      for(let offset=0;offset<tasks.length;offset+=100) {
-        const batch=tasks.slice(offset,offset+100);
-        await db.runTransaction(async tx=>{
-          const c=(await tx.get(control)).data();
-          if(!c?.enabled || c.runId!==runId)throw Error('同步已暫停或執行權已變更');
-          const refs=batch.map(t=>db.collection(t.collection).doc(t.id));
-          const snapshots=await tx.getAll(...refs);
-          for(let i=0;i<batch.length;i++) {
-            const task=batch[i], before=snapshots[i].exists?snapshots[i].data():null;
-            if(task.collection==='scheduleMonthLayouts' && (before?.revision||0)!==(task.before?.revision||0))throw Error('月份配置已被修改，下一輪重新比對');
-            // Existing layout metadata (especially Firestore Timestamps) must not
-            // pass through the cloned planning projection or be written back.
-            // Bootstrap may add a missing section catalog to a prior empty sync layout.
-            const values=task.collection==='scheduleMonthLayouts' && before ? {
-              rows:task.after.rows,
-              ...(task.after.sections!==undefined ? {sections:task.after.sections} : {}),
-            } : task.after;
-            const after={...values,updatedAt:FieldValue.serverTimestamp(),modifiedBy:'google-schedule-sync'};
-            delete after.id;
-            if(task.collection==='scheduleMonthLayouts')after.revision=(before?.revision||0)+1;
-            if(!before)after.createdAt=FieldValue.serverTimestamp();
-            tx.set(refs[i],after,{merge:true});
-            tx.set(db.collection('scheduleSheetSyncRuns').doc(runId).collection('changes').doc(`${task.collection}_${task.id}`),{path:refs[i].path,before,after:task.after,createdAt:FieldValue.serverTimestamp()});
-          }
-          tx.update(control,{leaseUntil:Date.now()+480000});
-        });
-      }
+      await applyPlan(plan,runId);
       const result=summary(plan);
       await db.runTransaction(async tx=>{
         const c=(await tx.get(control)).data();if(c?.runId!==runId)return;

@@ -47,7 +47,7 @@ function currentLayout(extra = {}) {
   return { monthKey: '2026-10', revision: 4, rows: [structuredClone(row)], sections: [section], excludedEmployeeIds: [], ...extra };
 }
 
-function setup({ control = {}, layout, withEmployee = true, sheets = fixtures(), records = [], provisionEmployee, failEmployeeWrites = 0 } = {}) {
+function setup({ control = {}, layout, withEmployee = true, sheets = fixtures(), records = [], provisionEmployee, failEmployeeWrites = 0, beforeQueryRead, beforeGetAll } = {}) {
   const saved = new Map([['scheduleSheetSync/control', { enabled: true, ...control }]]);
   if (withEmployee) saved.set(`employees/${employeeId}`, employee);
   if (layout) saved.set('scheduleMonthLayouts/2026-10', layout);
@@ -61,6 +61,7 @@ function setup({ control = {}, layout, withEmployee = true, sheets = fixtures(),
     const query = (filters = []) => ({
       where: (field, operator, value) => query([...filters, { field, operator, value }]),
       get: async () => {
+        await beforeQueryRead?.({ collection: path, saved });
         stats.queryReads++;
         const docs = [...saved].filter(([key, value]) => {
           if (!key.startsWith(`${path}/`) || key.slice(path.length + 1).includes('/')) return false;
@@ -90,7 +91,10 @@ function setup({ control = {}, layout, withEmployee = true, sheets = fixtures(),
       const writes = [];
       const result = await callback({
         get: async ref => snapshot(ref),
-        getAll: async (...refs) => refs.map(snapshot),
+        getAll: async (...refs) => {
+          await beforeGetAll?.({ refs, saved });
+          return refs.map(snapshot);
+        },
         update: (ref, values) => {
           assert.ok(saved.has(ref.path), `Missing document ${ref.path}`);
           writes.push({ ref, values, merge: true });
@@ -153,7 +157,7 @@ void test('unresolved employees are retried without requiring a sheet change', a
   assert.equal(saved.get('scheduleSheetSync/control').lastResult.issueCount, 0);
 });
 
-void test('unchanged current-version source skips app queries and clears a stale error', async () => {
+void test('unchanged current-version source checks only layout order and clears a stale error', async () => {
   const sheets = fixtures();
   const lastSuccessAt = new FakeTimestamp(1000);
   const { saved, stats, service } = setup({ sheets, control: {
@@ -161,12 +165,121 @@ void test('unchanged current-version source skips app queries and clears a stale
     lastResult: { changed: 31, issueCount: 0 }, lastError: '試算表讀取失敗 HTTP 503', lastSuccessAt,
   } });
   assert.deepEqual(await service.run(), { unchanged: true });
-  assert.equal(stats.queryReads, 0);
+  assert.equal(stats.queryReads, 1);
   const control = saved.get('scheduleSheetSync/control');
   assert.equal(control.lastError, '');
   assert.equal(control.leaseUntil, 0);
   assert.equal(control.lastSuccessAt, lastSuccessAt);
   assert.equal([...saved.keys()].filter(path => path.startsWith('scheduleSheetSyncRuns/')).length, 0);
+});
+
+function splitAreaLayout() {
+  const area = code => ({ key: `area:${code}`, group: 'night', section: `${code}區`, areaCode: code, label: `${code}區自訂標題` });
+  const placement = (id, code, blankDays = []) => ({ employeeId: id, group: 'night', sectionKey: `area:${code}`, section: `${code}區`, areaCode: code, blankDays });
+  return currentLayout({
+    sections: [area('O1'), area('R1'), area('O4')],
+    rows: [placement(employeeId, 'O1', ['1']), placement('B8002', 'R1'), placement('B8003', 'O4'), placement('B8004', 'O1', ['7'])],
+    excludedEmployeeIds: ['B7000'], assignmentResetAt: { [employeeId]: 'keep reset' },
+    createdAt: new FakeTimestamp(2000), customMetadata: 'keep metadata',
+  });
+}
+
+void test('every unchanged-source run repairs separated areas without touching people, codes or highlight dates', async () => {
+  const sheets = fixtures();
+  const layout = splitAreaLayout();
+  const previousIssue = { reason: 'unmapped-source-area', employeeId: 'B7000' };
+  let provisions = 0;
+  const { saved, stats, service } = setup({ sheets, layout, provisionEmployee: async () => provisions++,
+    records: [{ id: 'keep-record', employeeId, date: '2026-10-01', scheduleCode: '休', note: 'keep note' }],
+    control: { sourceHash: digest(sourceRows(sheets)), sourceSchemaVersion: SCHEDULE_SYNC_SCHEMA_VERSION,
+      lastResult: { issues: [previousIssue], issueCount: 120 }, nextIssueRetryAt: Date.now() + 600000 },
+  });
+  const person = { ...employee, onboardingStartedAt: '2026-10-02T11:30:00.000Z', onboardingHighlightUntil: '2027-01-02T11:30:00.000Z' };
+  saved.set(`employees/${employeeId}`, person);
+  const record = saved.get('scheduleRecords/keep-record');
+  const result = await service.run();
+  assert.equal(result.orderingOnly, true);
+  assert.equal(result.layouts, 1);
+  assert.equal(result.changed, 0);
+  assert.equal(result.createdEmployees, 0);
+  assert.equal(result.issueCount, 120);
+  assert.deepEqual(result.issues, [previousIssue]);
+  const sorted = saved.get('scheduleMonthLayouts/2026-10');
+  assert.deepEqual(sorted.sections.map(s => s.key), ['area:O1', 'area:O4', 'area:R1']);
+  assert.deepEqual(sorted.rows.map(r => r.employeeId), [employeeId, 'B8004', 'B8003', 'B8002']);
+  for (const original of layout.rows) assert.deepEqual(sorted.rows.find(r => r.employeeId === original.employeeId), original);
+  for (const original of layout.sections) assert.deepEqual(sorted.sections.find(s => s.key === original.key), original);
+  assert.equal(sorted.createdAt, layout.createdAt);
+  assert.equal(sorted.customMetadata, layout.customMetadata);
+  assert.deepEqual(sorted.assignmentResetAt, layout.assignmentResetAt);
+  assert.deepEqual(sorted.excludedEmployeeIds, layout.excludedEmployeeIds);
+  assert.equal(saved.get(`employees/${employeeId}`), person);
+  assert.equal(saved.get('scheduleRecords/keep-record'), record);
+  assert.equal(provisions, 0);
+  assert.equal(stats.queryReads, 1);
+  assert.equal(sorted.revision, 5);
+  const log = [...saved.entries()].find(([path]) => path.includes('/changes/scheduleMonthLayouts_2026-10'))?.[1];
+  assert.deepEqual(log.before.rows, layout.rows);
+  assert.deepEqual(log.after.rows, sorted.rows);
+  assert.deepEqual(await service.run(), { unchanged: true });
+  assert.equal(saved.get('scheduleMonthLayouts/2026-10').revision, 5);
+  // A later app layout update must be checked even though the sheet hash is identical.
+  saved.set('scheduleMonthLayouts/2026-10', { ...sorted, rows: layout.rows, sections: layout.sections, revision: 6 });
+  assert.equal((await service.run()).layouts, 1);
+  assert.equal(saved.get('scheduleMonthLayouts/2026-10').revision, 7);
+  assert.deepEqual(saved.get('scheduleMonthLayouts/2026-10').sections, sorted.sections);
+  assert.equal(saved.get(`employees/${employeeId}`), person);
+  assert.equal(saved.get('scheduleRecords/keep-record'), record);
+  assert.equal(provisions, 0);
+  assert.equal(stats.queryReads, 3);
+});
+
+void test('layout checks are limited to months present in the valid sheet source', async () => {
+  const sheets = fixtures();
+  const { saved, service } = setup({ sheets, layout: currentLayout(),
+    control: { sourceHash: digest(sourceRows(sheets)), sourceSchemaVersion: SCHEDULE_SYNC_SCHEMA_VERSION },
+  });
+  const futureLayout = { ...splitAreaLayout(), monthKey: '2026-11' };
+  saved.set('scheduleMonthLayouts/2026-11', futureLayout);
+  assert.deepEqual(await service.run(), { unchanged: true });
+  assert.equal(saved.get('scheduleMonthLayouts/2026-11'), futureLayout);
+});
+
+void test('an ordering repair does not overwrite a concurrent month layout revision', async () => {
+  const sheets = fixtures();
+  let intervene = true;
+  const { saved, service } = setup({ sheets, layout: splitAreaLayout(),
+    control: { sourceHash: digest(sourceRows(sheets)), sourceSchemaVersion: SCHEDULE_SYNC_SCHEMA_VERSION },
+    beforeGetAll: ({ saved: state }) => {
+      if (!intervene) return;
+      intervene = false;
+      const previous = state.get('scheduleMonthLayouts/2026-10');
+      state.set('scheduleMonthLayouts/2026-10', { ...previous, revision: 5, customMetadata: 'concurrent edit' });
+    },
+  });
+  await assert.rejects(service.run(), /月份配置已被修改/);
+  assert.equal(saved.get('scheduleMonthLayouts/2026-10').revision, 5);
+  assert.equal(saved.get('scheduleMonthLayouts/2026-10').customMetadata, 'concurrent edit');
+  assert.deepEqual(saved.get('scheduleMonthLayouts/2026-10').sections.map(s => s.key), ['area:O1', 'area:R1', 'area:O4']);
+  assert.equal(saved.get('scheduleSheetSync/control').leaseUntil, 0);
+  assert.equal((await service.run()).orderingOnly, true);
+  assert.equal(saved.get('scheduleMonthLayouts/2026-10').revision, 6);
+  assert.equal(saved.get('scheduleMonthLayouts/2026-10').customMetadata, 'concurrent edit');
+});
+
+void test('pausing sync after layout reads prevents an unchanged-source ordering write', async () => {
+  const sheets = fixtures();
+  const layout = splitAreaLayout();
+  const { saved, service } = setup({ sheets, layout,
+    control: { sourceHash: digest(sourceRows(sheets)), sourceSchemaVersion: SCHEDULE_SYNC_SCHEMA_VERSION },
+    beforeQueryRead: ({ collection, saved: state }) => {
+      if (collection === 'scheduleMonthLayouts') state.set('scheduleSheetSync/control', { ...state.get('scheduleSheetSync/control'), enabled: false });
+    },
+  });
+  await assert.rejects(service.run(), /同步已暫停/);
+  assert.equal(saved.get('scheduleMonthLayouts/2026-10'), layout);
+  assert.equal(saved.get('scheduleSheetSync/control').enabled, false);
+  assert.equal(saved.get('scheduleSheetSync/control').leaseUntil, 0);
 });
 
 void test('new October, November and December sheets create their own complete month schedules', async () => {
@@ -278,10 +391,10 @@ void test('pending issues do not re-read the full app roster every minute, but n
   assert.equal((await service.run()).issueCount, 1);
   assert.ok(saved.get('scheduleSheetSync/control').nextIssueRetryAt > Date.now());
   assert.deepEqual(await service.run(), { unchanged: true });
-  assert.equal(stats.queryReads, 3);
+  assert.equal(stats.queryReads, 4);
   sheets.set('11月日班', csv(11));
   assert.equal((await service.run()).issueCount, 2);
-  assert.equal(stats.queryReads, 6);
+  assert.equal(stats.queryReads, 7);
 });
 
 void test('new employees are provisioned and appended to their source area in the same automatic run', async () => {
