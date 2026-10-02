@@ -14,6 +14,9 @@ import './mobile-nav.css'
 import './mobile-layout.css'
 import './admin-console.css'
 import './front-readonly.css'
+import './new-hire-highlight.css'
+import { useNewHireClock } from './use-new-hire-clock'
+import { isNewHireHighlighted, newHireHighlightTitle, type NewHireFields } from '../lib/new-hire-highlight.mjs'
 import { Fragment, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
 import { scheduleSections, scheduleDisplayGroup, preScheduleSource } from '../functions/pre-schedule-order.mjs'
 import { monthSections } from '../functions/month-schedule-layout.mjs'
@@ -47,10 +50,10 @@ import { useSystemFeatures } from '../lib/system-features'
 import { EmployeePreSchedule } from './pre-schedule-employee'
 import { VehicleFaultEmployee } from './vehicle-faults'
 
-type ScheduleRow = { rowId: string; employeeId: string; name: string; title: string; group: string; area: string; shifts: string[] }
+type ScheduleRow = { rowId: string; employeeId: string; name: string; title: string; group: string; area: string; shifts: string[] } & NewHireFields
 type ScheduleData = { month: string; days: string[]; morning: ScheduleRow[]; night: ScheduleRow[]; layout?: MonthLayout|null }
 type Employee = { employeeId: string; name: string; title: string; role: 'employee' | 'duty' | 'admin'; hireDate: string; active: boolean; mustChangePassword: boolean }
-type EmployeeProfile = { employeeId: string; name: string; title?: string; group?: string; area?: string }
+type EmployeeProfile = { employeeId: string; name: string; title?: string; group?: string; area?: string } & NewHireFields
 type PunchRecord = AttendanceRecord
 type Checkpoint = AttendanceLocation
 const weekdays = ['二', '三', '四', '五', '六', '日', '一']
@@ -179,7 +182,7 @@ function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProf
     const day = Number(record.date.slice(8)) - 1
     const profile = profileMap.get(record.employeeId)
     const source = sourceMap.get(`${preScheduleSource(record.employeeId)?.group === 'day' ? 'morning' : preScheduleSource(record.employeeId)?.group === 'night' ? 'night' : record.shiftType}:${record.employeeId}`)
-    const current = grouped.get(key) ?? { rowId: record.employeeId, employeeId: record.employeeId, name: profile?.name || record.employeeName, title: profile?.title || record.title || source?.title || '', group: profile?.group || record.group || source?.group || '', area: profile?.area || record.area || source?.area || '', shifts: Array(count).fill('') }
+    const current = grouped.get(key) ?? { rowId: record.employeeId, employeeId: record.employeeId, name: profile?.name || record.employeeName, title: profile?.title || record.title || source?.title || '', group: profile?.group || record.group || source?.group || '', area: profile?.area || record.area || source?.area || '', onboardingStartedAt: profile?.onboardingStartedAt, onboardingHighlightUntil: profile?.onboardingHighlightUntil, shifts: Array(count).fill('') }
     const value = record.scheduleCode || record.scheduleLabel || record.leaveType || ''
     current.shifts[day] = [...new Set([current.shifts[day], value].filter(Boolean))].join('／')
     fallbackGroups.set(key, record.shiftType === 'morning' ? 'day' : 'night')
@@ -190,7 +193,7 @@ function scheduleRecordsToData(records: ScheduleRecord[], profiles: EmployeeProf
     for(const id of grouped.keys()) if(!ids.has(id)) grouped.delete(id);
     for(const entry of layout.rows){
       const person=profileMap.get(entry.employeeId);
-      if(!grouped.has(entry.employeeId)&&person)grouped.set(entry.employeeId,{rowId:entry.employeeId,employeeId:entry.employeeId,name:person.name,title:person.title || '',group:entry.group,area:entry.areaCode || '',shifts:Array(count).fill('')});
+      if(!grouped.has(entry.employeeId)&&person)grouped.set(entry.employeeId,{rowId:entry.employeeId,employeeId:entry.employeeId,name:person.name,title:person.title || '',group:entry.group,area:entry.areaCode || '',onboardingStartedAt:person.onboardingStartedAt,onboardingHighlightUntil:person.onboardingHighlightUntil,shifts:Array(count).fill('')});
       const row=grouped.get(entry.employeeId);if(row)for(const day of entry.blankDays)row.shifts[Number(day)-1]='';
     }
   }
@@ -338,20 +341,26 @@ function ScheduleView({ tab, setTab, data, employeeId }: { tab: string; setTab: 
 }
 
 function PersonalSchedule({ row, month }: { row: ScheduleRow | undefined; month: string }) {
+  const now = useNewHireClock()
   if (!row) return <p className="loading">找不到本人的來源班表。</p>
+  const newHire = isNewHireHighlighted(row, now)
   const [year, monthNumber] = month.split('-').map(Number)
   const offset = new Date(year, monthNumber - 1, 1).getDay()
   const count = new Date(year, monthNumber, 0).getDate()
   const labels: Record<string, string> = { 慰: '慰勞', 事: '事假', 病: '病假', 特: '特休', 例: '例假', 休: '休假' }
-  return <section className="personal-month"><h2 className="plan-month">{year} 年 {monthNumber} 月</h2><div className="month-grid">{['日','一','二','三','四','五','六'].map(w=><div className="weekday" key={w}>{w}</div>)}{Array.from({length:offset},(_,i)=><div key={'blank'+i} aria-hidden="true" />)}{Array.from({length:count},(_,index)=>{const shift=row.shifts[index] || ''; return <article className={`month-day ${scheduleCellStyle(shift)}`} key={index} aria-label={`${monthNumber}月${index+1}日 ${shift}`}><small>{index+1}</small><strong>{labels[shift] || shift || '—'}</strong></article>})}</div></section>
+  return <section className="personal-month"><h2 className="plan-month">{year} 年 {monthNumber} 月</h2><p className="personal-schedule-person" data-new-hire={newHire || undefined} title={newHire ? newHireHighlightTitle(row) : undefined}><strong>{row.name}</strong><span>{row.employeeId}</span>{newHire && <small className="new-hire-badge">新進</small>}</p><div className="month-grid">{['日','一','二','三','四','五','六'].map(w=><div className="weekday" key={w}>{w}</div>)}{Array.from({length:offset},(_,i)=><div key={'blank'+i} aria-hidden="true" />)}{Array.from({length:count},(_,index)=>{const shift=row.shifts[index] || ''; return <article className={`month-day ${scheduleCellStyle(shift)}`} key={index} aria-label={`${monthNumber}月${index+1}日 ${shift}`}><small>{index+1}</small><strong>{labels[shift] || shift || '—'}</strong></article>})}</div></section>
 }
 
 function ScheduleMatrix({ rows, days, group = 'day',layout,month = new Date(Date.now()+8*3600000).toISOString().slice(0,7) }: { rows: ScheduleRow[]; days: string[]; group?: string;layout?:MonthLayout|null;month?:string }) {
+  const now = useNewHireClock()
   const scrollRef = useRef<HTMLDivElement>(null)
   const groups = useMemo(() => monthSections(rows, group,layout), [rows, group,layout])
   const areas = groups
   return <><AreaJumpDropdown areas={areas} group={group} scope="front-schedule" scrollTarget={scrollRef} />
-    <div className="matrix-wrap" ref={scrollRef}><table className="schedule-matrix"><colgroup><col className="col-title" /><col className="col-id" /><col className="col-name" />{days.map(day => <col className="col-day" key={day} />)}</colgroup><thead><tr><th>職務</th><th>員編</th><th>姓名</th>{days.map((day, index) => <th className={weekdayHeaderStyle(index,month)} key={day}><span>{Number(month.slice(5))}月{day}日</span><small>{weekdayAt(index,month)}</small></th>)}</tr></thead><tbody>{groups.map(section => <Fragment key={section.key}><tr className="area-heading" id={scheduleSectionId('front-schedule',group,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days.length + 3}><span className="area-label">{section.label}</span></td></tr>{section.people.map((row: ScheduleRow) => <tr key={row.rowId} data-employee-id={row.employeeId}><td>{row.title || '—'}</td><td>{row.employeeId}</td><td><strong>{row.name}</strong><small className="pinned-role">{row.title}</small></td>{row.shifts.map((shift, dayIndex) => <td className={scheduleCellStyle(shift)} key={dayIndex}>{shift || '—'}</td>)}</tr>)}</Fragment>)}</tbody></table></div></>
+    <div className="matrix-wrap" ref={scrollRef}><table className="schedule-matrix"><colgroup><col className="col-title" /><col className="col-id" /><col className="col-name" />{days.map(day => <col className="col-day" key={day} />)}</colgroup><thead><tr><th>職務</th><th>員編</th><th>姓名</th>{days.map((day, index) => <th className={weekdayHeaderStyle(index,month)} key={day}><span>{Number(month.slice(5))}月{day}日</span><small>{weekdayAt(index,month)}</small></th>)}</tr></thead><tbody>{groups.map(section => <Fragment key={section.key}><tr className="area-heading" id={scheduleSectionId('front-schedule',group,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days.length + 3}><span className="area-label">{section.label}</span></td></tr>{section.people.map((row: ScheduleRow) => {
+      const newHire = isNewHireHighlighted(row, now)
+      return <tr key={row.rowId} data-employee-id={row.employeeId} data-new-hire={newHire || undefined}><td>{row.title || '—'}</td><td title={newHire ? newHireHighlightTitle(row) : undefined}>{row.employeeId}{newHire && <small className="new-hire-badge">新進</small>}</td><td><strong>{row.name}</strong><small className="pinned-role">{row.title}</small></td>{row.shifts.map((shift, dayIndex) => <td className={scheduleCellStyle(shift)} key={dayIndex}>{shift || '—'}</td>)}</tr>
+    })}</Fragment>)}</tbody></table></div></>
 }
 
 function scheduleCellStyle(shift: string) {

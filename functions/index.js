@@ -16,13 +16,15 @@ const db = getFirestore()
 const auth = getAuth()
 async function googleScheduleSyncService() {
   const { createScheduleSheetSync } = await import('./schedule-sheet-service.mjs')
-  return createScheduleSheetSync({ db, FieldValue })
+  const { createScheduleEmployeeProvisioner } = await import('./schedule-employee-provision.mjs')
+  const provisionEmployee = createScheduleEmployeeProvisioner({ auth, employeeEmail, importTemporaryPasswordUser })
+  return createScheduleSheetSync({ db, FieldValue, provisionEmployee })
 }
 exports.manageGoogleScheduleSync = onCall({ timeoutSeconds: 300, memory: '512MiB' }, async request => {
   await requireAdmin(request)
   return (await googleScheduleSyncService()).handle(request.data)
 })
-exports.syncGoogleSchedules = onSchedule({ schedule: 'every 1 minutes', timeZone: 'Asia/Taipei', timeoutSeconds: 480, memory: '1GiB', maxInstances: 1 }, async () => {
+exports.syncGoogleSchedules = onSchedule({ schedule: 'every 1 minutes', timeZone: 'Asia/Taipei', timeoutSeconds: 480, memory: '1GiB', maxInstances: 1, serviceAccount: 'smilebike-auth-runtime@meimei-breakfast-order.iam.gserviceaccount.com' }, async () => {
   await (await googleScheduleSyncService()).run()
 })
 const ROLES = new Set(['employee', 'duty', 'admin'])
@@ -73,6 +75,9 @@ function publicEmployee(doc) {
     title: data.title,
     role: data.role,
     hireDate: data.hireDate,
+    hireDateSource: data.hireDateSource,
+    onboardingStartedAt: data.onboardingStartedAt,
+    onboardingHighlightUntil: data.onboardingHighlightUntil,
     active: data.active,
     mustChangePassword: data.mustChangePassword,
   }

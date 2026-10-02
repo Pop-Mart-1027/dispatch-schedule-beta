@@ -2,6 +2,9 @@
 import { DispatchShiftBrowser } from './dispatch-shift-browser'
 import { subscribeMonthSchedule } from '../lib/live-schedule'
 import { ScheduleSheetSyncControls } from './schedule-sheet-sync-controls'
+import './new-hire-highlight.css'
+import { useNewHireClock } from './use-new-hire-clock'
+import { isNewHireHighlighted, newHireHighlightTitle, type NewHireFields } from '../lib/new-hire-highlight.mjs'
 import { VehicleFaultBackend } from './vehicle-faults'
 import { VehicleMileageFleet } from './vehicle-mileage'
 import { vehicleFaultCall, type FaultAccess } from '../lib/vehicle-faults'
@@ -109,7 +112,7 @@ type Page =
   | 'pre-management'
   | 'system'
   | 'leave';
-type EmployeeRecord = {
+type EmployeeRecord = NewHireFields & {
   employeeId: string;
   name: string;
   title: string;
@@ -1109,6 +1112,7 @@ function ScheduleManager({
   admin: boolean;
 }) {
   const [month, setMonth] = useState(todayTaipei().slice(0, 7));
+  const now = useNewHireClock();
   const [layout, setLayout] = useState<MonthLayout|null>(null);
   const layoutById=useMemo(()=>new Map(layout?.rows.map(row=>[row.employeeId,row]) || []),[layout]);
   const loadRevision=useRef(0);
@@ -1229,7 +1233,7 @@ function ScheduleManager({
             {sections.map(section => <Fragment key={section.key}>
               <tr className="admin-source-heading" id={scheduleSectionId('admin-schedule',`${month}-${group}`,section.key)} data-area-code={section.areaCode || undefined}><td colSpan={days + 3}><div className="section-title-control"><span>{section.label}</span>{admin&&<button className="section-edit" aria-label={`編輯區域名稱 ${section.label}`} disabled={monthLoading||orderBusy} onClick={()=>setSectionAction({action:'section-rename',key:section.key})}>✎</button>}</div></td></tr>
               {section.people.map((row: typeof rows[number]) => (
-              <tr key={row.id} data-employee-id={row.id} data-dragging={dragging?.id===row.id || undefined} data-drop={drop?.id===row.id?drop.position:undefined}
+              <tr key={row.id} data-employee-id={row.id} data-new-hire={isNewHireHighlighted(row.employee, now) || undefined} data-dragging={dragging?.id===row.id || undefined} data-drop={drop?.id===row.id?drop.position:undefined}
                 onDragOver={event=>{
                   if(!dragging||dragging.section!==section.key||orderBusy)return;
                   event.preventDefault();event.dataTransfer.dropEffect='move';
@@ -1243,7 +1247,7 @@ function ScheduleManager({
                 <td>{admin&&<button className="schedule-drag-handle" aria-label={`拖曳排序 ${row.id}`} title="拖曳整列，同區排序" disabled={monthLoading||orderBusy} draggable={!monthLoading&&!orderBusy}
                   onDragStart={event=>{setDragging({id:row.id,section:section.key});setOrderStatus('');event.dataTransfer.effectAllowed='move';event.dataTransfer.setData('text/plain',row.id);const tr=event.currentTarget.closest('tr');if(tr)event.dataTransfer.setDragImage(tr,12,12);}}
                   onDragEnd={()=>{setDragging(null);setDrop(null);}}>⋮⋮</button>}{row.employee?.title || '—'}</td>
-                <td>{row.id}</td>
+                <td title={isNewHireHighlighted(row.employee, now) ? newHireHighlightTitle(row.employee!) : undefined}>{row.id}{isNewHireHighlighted(row.employee, now) && <small className="new-hire-badge">新進</small>}</td>
                 <td>
                   {row.employee?.name || row.items[0]?.employeeName || '—'}
                   {admin&&<button disabled={monthLoading||orderBusy} className="schedule-row-action" aria-label={`管理 ${row.id} ${row.employee?.name || ''}`} onClick={()=>setRowAction(row.id)}>⋮</button>}
@@ -1277,7 +1281,7 @@ function ScheduleManager({
               </tr>
             ))}</Fragment>)}
           </tbody>
-  ), [sections, month, group, days, layoutById, admin, monthLoading, orderBusy, dragging, drop]);
+  ), [sections, month, group, days, layoutById, admin, monthLoading, orderBusy, dragging, drop, now]);
   return (
     <section className="admin-schedule-page">
       {admin && <ScheduleSheetSyncControls />}

@@ -3,8 +3,9 @@ import { db } from './firebase'
 import type { ScheduleRecord } from './schedule-firestore'
 import type { MonthLayout } from './month-schedule-layout'
 import { eligibleMonthSchedules } from '../functions/month-schedule-policy.mjs'
+import type { NewHireFields } from './new-hire-highlight.mjs'
 
-export type ScheduleProfile = { employeeId: string; name: string; title?: string; group?: string; area?: string; [key: string]: unknown }
+export type ScheduleProfile = { employeeId: string; name: string; title?: string; group?: string; area?: string; [key: string]: unknown } & NewHireFields
 export function subscribeMonthSchedule(month: string, onData: (records: ScheduleRecord[], people: ScheduleProfile[], layout: MonthLayout|null) => void, onError: (error: Error) => void) {
   let records: ScheduleRecord[]|undefined, people: ScheduleProfile[]|undefined, layout: MonthLayout|null|undefined, active=true
   let timer: ReturnType<typeof setTimeout>|undefined

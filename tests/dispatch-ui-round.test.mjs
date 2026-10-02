@@ -38,11 +38,14 @@ const entry = `
   import {dispatchAreaCodes,dispatchAreaDisplay,dispatchBlockFrontOrder} from '/lib/dispatch-area.ts';
   import {monthSections} from '/functions/month-schedule-layout.mjs';
   import {AreaJumpDropdown,scheduleSectionId} from '/app/area-jump-dropdown.tsx';
+  import {useNewHireClock} from '/app/use-new-hire-clock.ts';
+  import {isNewHireHighlighted,newHireHighlightTitle} from '/lib/new-hire-highlight.mjs';
   import {WorkFocus} from '/app/work-focus.tsx';
   import {Menu,X} from 'lucide-react';
   import '/app/globals.css'; import '/app/matrix.css'; import '/app/area-fix.css';
   import '/app/dispatch.css'; import '/app/youbike-theme.css'; import '/app/mobile-nav.css';
   import '/app/mobile-layout.css'; import '/app/admin-console.css'; import '/app/front-readonly.css';
+  import '/app/new-hire-highlight.css';
   const params=new URLSearchParams(location.search);
   if(params.has('viewport')) installAppViewport();
   if(!params.has('baseline')) await import('/app/schedule-landscape.css');
