@@ -376,3 +376,156 @@ void test('full sync ordering does not touch an unpublished or historical manual
   assert.equal(p.layoutChanges.some(l=>l.id==='2026-08'),false);
   assert.deepEqual(old.sections.map(s=>s.areaCode),['O1','R','O4']);
 });
+
+const novemberSource=(employeeId,group,areaCode,codes=Array(30).fill(group==='night'?`夜${areaCode}`:`早${areaCode}`))=>newEmployeeSource({employeeId,name:`測試${employeeId}`,group,areaCode,section:areaCode?`${areaCode}區`:'',month:'2026-11',codes});
+const novemberEmployees=source=>[...new Map(source.map(r=>[r.employeeId,{employeeId:r.employeeId,name:r.name,active:true}])).values()];
+const partialDayLayout=(extra={})=>({monthKey:'2026-11',revision:1,modifiedBy:'google-schedule-sync',rows:[orderRow('B9999','G')],sections:[orderSection('G','day',{label:'自訂日班G區'})],excludedEmployeeIds:[],...extra});
+
+void test('late night tab initializes its catalog and shifts without rebuilding the already synced day group',()=>{
+  const day=novemberSource('B9999','day','G');
+  const night=[novemberSource('B8001','night','O1'),novemberSource('B8002','night','O1'),novemberSource('B8003','night','O4')];
+  const alsoDay={...night[2],employeeId:day.employeeId,name:day.name};
+  const old=partialDayLayout();
+  const records=day.codes.map((scheduleCode,i)=>({id:`day-${i}`,date:`2026-11-${String(i+1).padStart(2,'0')}`,employeeId:day.employeeId,scheduleCode,scheduleLabel:scheduleCode,shiftType:'morning'}));
+  const source=[day,...night,alsoDay];
+  const p=plan({source,employees:novemberEmployees(source),records,layouts:[old]});
+  assert.deepEqual(p.issues,[]);
+  assert.equal(p.updates.length,90);
+  assert.ok(p.updates.every(u=>u.after.shiftType==='night'));
+  assert.deepEqual(p.layoutChanges[0].after.sections.map(s=>[s.group,s.key]),[['day','area:G'],['night','area:O1'],['night','area:O4']]);
+  assert.deepEqual(p.layoutChanges[0].after.sections[0],old.sections[0]);
+  assert.deepEqual(p.layoutChanges[0].after.rows[0],old.rows[0]);
+  assert.deepEqual(p.layoutChanges[0].after.rows.slice(1).map(r=>r.employeeId),night.map(r=>r.employeeId));
+  const repeated=plan({source,employees:novemberEmployees(source),records:[...records,...p.updates.map(u=>({id:u.id,...u.after}))],layouts:[p.layoutChanges[0].after]});
+  assert.equal(repeated.updates.length,0);
+  assert.equal(repeated.layoutChanges.length,0);
+});
+
+void test('a late shift still requires an explicitly mapped area and respects a day employee exclusion',()=>{
+  const dayExcluded=novemberSource('B8011','day','G');
+  const night=novemberSource('B8012','night','O1');
+  const unknown=novemberSource('B8013','night',null);
+  const source=[dayExcluded,night,unknown];
+  const old=partialDayLayout({excludedEmployeeIds:[dayExcluded.employeeId]});
+  const p=plan({source,employees:novemberEmployees(source),layouts:[old]});
+  assert.equal(p.updates.length,30);
+  assert.ok(p.updates.every(u=>u.after.employeeId===night.employeeId));
+  assert.deepEqual(p.issues.map(i=>i.reason),['explicitly-excluded-from-month','unmapped-source-area']);
+  assert.deepEqual(p.layoutChanges[0].after.excludedEmployeeIds,[dayExcluded.employeeId]);
+});
+
+void test('manually managed or already initialized absent groups are not recreated by late shift bootstrap',()=>{
+  const source=[novemberSource('B8011','night','O4'),novemberSource('B8012','night','O4')];
+  for(const {layout,records=[]} of [
+    {layout:partialDayLayout({modifiedBy:'admin'})},
+    {layout:partialDayLayout({sections:undefined})},
+    {layout:partialDayLayout({sections:[orderSection('G'),orderSection('O1','night')]})},
+    {layout:partialDayLayout({excludedEmployeeIds:[source[0].employeeId]})},
+    {layout:partialDayLayout(),records:[{id:'previous-night',employeeId:'B8111',date:'2026-11-01',shiftType:'night',scheduleCode:'夜O1'}]},
+  ]) {
+    const p=plan({source,employees:novemberEmployees(source),records,layouts:[layout]});
+    assert.equal(p.updates.length,0);
+    assert.equal(p.layoutChanges.length,0);
+    assert.ok(p.issues.some(i=>i.reason==='unmapped-source-area'));
+  }
+});
+
+void test('preserving incomplete blank cells leaves stored codes and manual blank flags untouched',()=>{
+  const source=novemberSource('B9999','day','G',Array.from({length:30},(_,i)=>i===2?'早G':''));
+  const old=partialDayLayout({rows:[orderRow('B9999','G','day',{blankDays:['1','2','3','4']})]});
+  const records=[
+    {id:'old-code',employeeId:'B9999',date:'2026-11-01',shiftType:'morning',scheduleCode:'早G'},
+    {id:'old-label',employeeId:'B9999',date:'2026-11-02',shiftType:'morning',scheduleLabel:'例'},
+    {id:'nonblank-edit',employeeId:'B9999',date:'2026-11-03',shiftType:'morning',scheduleCode:'休'},
+  ];
+  const state={source:[source],employees:novemberEmployees([source]),records,layouts:[old]};
+  const p=plan({...state,preserveBlankCells:true});
+  assert.equal(p.cleared,0);
+  assert.equal(p.protectedClears,2);
+  assert.deepEqual(p.updates.map(u=>u.id),['nonblank-edit']);
+  assert.equal(p.updates[0].after.scheduleCode,'早G');
+  assert.deepEqual(p.layoutChanges[0].after.rows[0].blankDays,['1','2','4']);
+  assert.deepEqual(old.rows[0].blankDays,['1','2','3','4']);
+  const ordinary=plan(state);
+  assert.equal(ordinary.cleared,2);
+  assert.equal(ordinary.protectedClears,0);
+  assert.ok(ordinary.updates.some(u=>u.id==='old-code'&&u.after.scheduleCode===''));
+});
+
+function dualTabRecoveryFixture() {
+  const id='B9999', dayId='B8111';
+  const codes=(code)=>Array.from({length:30},(_,i)=>i===0?code:'');
+  const source=[novemberSource(id,'day','G',codes('早G')),novemberSource(dayId,'day','G',codes('早G')),novemberSource(id,'night','O1',codes('夜O1')),novemberSource(dayId,'night','O1',codes('夜O1'))];
+  const prior={monthKey:'2026-10',revision:3,rows:[orderRow(id,'O1','night'),orderRow(dayId,'G')],sections:[orderSection('G'),orderSection('O1','night')]};
+  const current=partialDayLayout({rows:[orderRow(id,'G','day',{blankDays:['16'],extra:'keep'}),orderRow(dayId,'G')]});
+  const record=(employeeId,day,extra)=>({id:`${employeeId}-${day}`,date:`2026-11-${day}`,employeeId,shiftType:'morning',source:'google-schedule-sync',modifiedBy:'google-schedule-sync',...extra});
+  const records=[
+    record(id,'01',{scheduleCode:'早G',scheduleLabel:'早G',leaveType:''}),
+    record(id,'16',{scheduleCode:' 例 ',scheduleLabel:'original label',leaveType:'original leave',note:'keep note'}),
+    record(id,'17',{scheduleCode:'',scheduleLabel:'',leaveType:''}),
+    record(dayId,'01',{scheduleCode:'早G',scheduleLabel:'早G',leaveType:''}),
+  ];
+  return {id,dayId,source,employees:novemberEmployees(source),layouts:[prior,current],records};
+}
+
+void test('a pristine partial layout restores confirmed prior-night dual-tab staff and preserves late blank-source cells',()=>{
+  const state=dualTabRecoveryFixture();
+  const p=plan(state);
+  assert.equal(p.issues.length,0);
+  assert.equal(p.cleared,0);
+  assert.equal(p.protectedClears,1);
+  assert.equal(p.layoutChanges.length,1);
+  const after=p.layoutChanges[0].after;
+  assert.deepEqual(after.sections.map(s=>[s.group,s.key]),[['day','area:G'],['night','area:O1']]);
+  assert.deepEqual(after.rows.find(r=>r.employeeId===state.id),{...orderRow(state.id,'O1','night',{blankDays:['16'],extra:'keep'}),syncGroupRecoveryFrom:'day',syncGroupRecoveryTo:'night'});
+  assert.deepEqual(after.rows.find(r=>r.employeeId===state.dayId),state.layouts[1].rows[1]);
+  const movedUpdates=p.updates.filter(u=>u.before?.employeeId===state.id || u.after.employeeId===state.id);
+  assert.deepEqual(movedUpdates.map(u=>u.after),[
+    {scheduleCode:'夜O1',scheduleLabel:'夜O1',leaveType:'',shiftType:'night'},
+    {shiftType:'night'},
+    {shiftType:'night'},
+  ]);
+  assert.equal(movedUpdates[1].before.scheduleCode,' 例 ');
+  assert.equal(movedUpdates[1].before.scheduleLabel,'original label');
+  assert.equal(movedUpdates[1].before.leaveType,'original leave');
+  assert.equal(movedUpdates[1].before.note,'keep note');
+});
+
+void test('layout-first retry corrects only pending sync-owned shifts and retains manual record edits',()=>{
+  const state=dualTabRecoveryFixture();
+  const first=plan(state);
+  const changed=first.layoutChanges[0].after;
+  const firstPatch=first.updates.find(u=>u.id===`${state.id}-01`).after;
+  const records=state.records.map(r=>r.id===`${state.id}-01`?{...r,...firstPatch}:r.id===`${state.id}-17`?{...r,modifiedBy:'admin',scheduleCode:'手動'}:r);
+  const next={...state,records,layouts:[state.layouts[0],{...changed,revision:2}],preserveBlankCells:true};
+  const retry=plan(next);
+  assert.deepEqual(retry.layoutChanges,[]);
+  assert.equal(retry.cleared,0);
+  assert.equal(retry.protectedClears,1);
+  assert.deepEqual(retry.updates.map(u=>[u.id,u.after]),[[`${state.id}-16`,{shiftType:'night'}]]);
+  const completed=records.map(r=>r.id===`${state.id}-16`?{...r,shiftType:'night'}:r);
+  assert.deepEqual(plan({...next,records:completed}).updates,[]);
+});
+
+void test('dual-tab recovery refuses edited, duplicate, or ambiguous placements',()=>{
+  const state=dualTabRecoveryFixture();
+  const [previous,current]=state.layouts;
+  const night=state.source.find(r=>r.employeeId===state.id&&r.group==='night');
+  const cases=[
+    {layouts:[previous,{...current,revision:2}]},
+    {layouts:[previous,{...current,modifiedBy:'admin'}]},
+    {layouts:[{...previous,excludedEmployeeIds:[state.id]},current]},
+    {layouts:[{...previous,rows:[...previous.rows,orderRow(state.id,'G')]},current]},
+    {records:[{...state.records[0],modifiedBy:'admin'},...state.records.slice(1)]},
+    {records:[{...state.records[0],source:'admin-month-schedule'},...state.records.slice(1)]},
+    {records:[...state.records,{...state.records[0],id:'duplicate'}]},
+    {source:[...state.source,{...night,areaCode:'O4',section:'O4區'}]},
+    {source:state.source.map(r=>r===night?{...r,name:'另一位人員'}:r)},
+    {source:state.source.map(r=>r===night?{...r,areaCode:null,section:''}:r)},
+  ];
+  for(const variant of cases) {
+    const p=plan({...state,...variant,preserveBlankCells:true});
+    assert.deepEqual(p.layoutChanges,[]);
+    assert.ok(p.updates.every(u=>u.after.shiftType!=='night'));
+  }
+});

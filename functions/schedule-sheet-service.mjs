@@ -3,8 +3,9 @@ import { SPREADSHEET_ID, discoverSheets, parseScheduleSheet, planScheduleSync, p
 
 // Re-plan unchanged source after fixes to discovery or month initialization.
 // Ordering is checked separately on every run, without replaying schedule cells.
-export const SCHEDULE_SYNC_SCHEMA_VERSION = 3;
+export const SCHEDULE_SYNC_SCHEMA_VERSION = 4;
 const ISSUE_RETRY_INTERVAL_MS = 15 * 60 * 1000;
+const MAX_AUTOMATIC_CLEARS = 100;
 
 export function createScheduleSheetSync({db,FieldValue,fetch:fetchSource=fetch,provisionEmployee,now=()=>new Date()}) {
   const control=db.collection('scheduleSheetSync').doc('control');
@@ -29,17 +30,28 @@ export function createScheduleSheetSync({db,FieldValue,fetch:fetchSource=fetch,p
     return {employees:people.docs.map(d=>({...d.data(),employeeId:d.id})),records:records.docs.map(d=>({...d.data(),id:d.id})),layouts:layouts.docs.map(d=>({...d.data(),id:d.id}))};
   };
   const employeePlan=(source,state)=>typeof provisionEmployee==='function'?planNewScheduleEmployees({source,employees:state.employees,now:now()}):{employees:[],issues:[]};
-  const combinePlan=(source,state,newPeople,extraIssues=[])=>{
-    const plan=planScheduleSync({source,...state,employees:[...state.employees,...newPeople]});
+  const combinePlan=(source,state,newPeople,extraIssues=[],preserveBlankCells=false)=>{
+    const plan=planScheduleSync({source,...state,employees:[...state.employees,...newPeople],preserveBlankCells});
     const explained=new Set(extraIssues.map(i=>`${i.month}:${i.employeeId}`));
     plan.issues=[...plan.issues.filter(i=>i.reason!=='missing-or-inactive-employee'||!explained.has(`${i.month}:${i.employeeId}`)),...extraIssues];
     return plan;
   };
+  const safePlan=(source,state,newPeople,issues,preserveBlankCells=false)=>{
+    let plan=combinePlan(source,state,newPeople,issues,preserveBlankCells);
+    if(plan.cleared>MAX_AUTOMATIC_CLEARS && !preserveBlankCells) {
+      preserveBlankCells=true;
+      plan=combinePlan(source,state,newPeople,issues,true);
+    }
+    if(preserveBlankCells && plan.cleared)throw Error('無法保留既有班次，停止同步');
+    return {plan,preserveBlankCells};
+  };
   const preview=async source=>{
     const state=await readState(),newPeople=employeePlan(source,state);
-    return {...combinePlan(source,state,newPeople.employees,newPeople.issues),createdEmployees:newPeople.employees.length};
+    return {...safePlan(source,state,newPeople.employees,newPeople.issues).plan,createdEmployees:newPeople.employees.length};
   };
-  const summary=plan=>({changed:plan.updates.length,layouts:plan.layoutChanges.length,cleared:plan.cleared,createdEmployees:plan.createdEmployees||0,issues:plan.issues.slice(0,100),issueCount:plan.issues.length});
+  const summary=plan=>({changed:plan.updates.length,layouts:plan.layoutChanges.length,cleared:plan.cleared,protectedClears:plan.protectedClears||0,createdEmployees:plan.createdEmployees||0,issues:plan.issues.slice(0,100),issueCount:plan.issues.length});
+  const changesGroup=task=>task.collection==='scheduleRecords' && task.before && task.after.shiftType && task.after.shiftType!==task.before.shiftType;
+  const groupOf=shiftType=>shiftType==='morning'?'day':shiftType;
   async function applyPlan(plan,runId) {
     const tasks=[...plan.layoutChanges.map(x=>({...x,collection:'scheduleMonthLayouts'})),...plan.updates.map(x=>({...x,collection:'scheduleRecords'}))];
     for(let offset=0;offset<tasks.length;offset+=100) {
@@ -48,10 +60,20 @@ export function createScheduleSheetSync({db,FieldValue,fetch:fetchSource=fetch,p
         const c=(await tx.get(control)).data();
         if(!c?.enabled || c.runId!==runId)throw Error('同步已暫停或執行權已變更');
         const refs=batch.map(t=>db.collection(t.collection).doc(t.id));
-        const snapshots=await tx.getAll(...refs);
+        const layoutsInBatch=new Map(batch.filter(t=>t.collection==='scheduleMonthLayouts').map(t=>[t.id,t.after]));
+        const recoveryMonths=[...new Set(batch.filter(changesGroup).map(t=>t.before.date.slice(0,7)))].filter(month=>!layoutsInBatch.has(month));
+        const snapshots=await tx.getAll(...refs,...recoveryMonths.map(month=>db.collection('scheduleMonthLayouts').doc(month)));
+        recoveryMonths.forEach((month,i)=>layoutsInBatch.set(month,snapshots[refs.length+i].data()));
         for(let i=0;i<batch.length;i++) {
           const task=batch[i], before=snapshots[i].exists?snapshots[i].data():null;
           if(task.collection==='scheduleMonthLayouts' && (before?.revision||0)!==(task.before?.revision||0))throw Error('月份配置已被修改，下一輪重新比對');
+          if(changesGroup(task)) {
+            const {employeeId,date}=task.before, layout=layoutsInBatch.get(date.slice(0,7));
+            const row=layout?.rows.find(r=>r.employeeId===employeeId);
+            const group=groupOf(task.after.shiftType);
+            if(!row || row.group!==group || row.syncGroupRecoveryTo!==group || row.syncGroupRecoveryFrom!==groupOf(task.before.shiftType) ||
+              layout.excludedEmployeeIds?.includes(employeeId) || ['employeeId','date','source','modifiedBy','shiftType'].some(key=>before?.[key]!==task.before[key]))throw Error('班別已被修改，下一輪重新比對');
+          }
           // Preserve existing metadata and only write the projected layout arrays.
           const values=task.collection==='scheduleMonthLayouts' && before ? {
             rows:task.after.rows,
@@ -87,7 +109,7 @@ export function createScheduleSheetSync({db,FieldValue,fetch:fetchSource=fetch,p
         const layouts=(await db.collection('scheduleMonthLayouts').get()).docs.map(d=>({...d.data(),id:d.id})).filter(layout=>months.has(layout.monthKey||layout.id));
         const layoutChanges=planScheduleLayoutOrder(layouts);
         await applyPlan({layoutChanges,updates:[]},runId);
-        const result=layoutChanges.length ? {changed:0,layouts:layoutChanges.length,cleared:0,createdEmployees:0,issues:state.lastResult?.issues||[],issueCount:state.lastResult?.issueCount||0,orderingOnly:true} : {unchanged:true};
+        const result=layoutChanges.length ? {changed:0,layouts:layoutChanges.length,cleared:0,protectedClears:state.lastResult?.protectedClears||0,createdEmployees:0,issues:state.lastResult?.issues||[],issueCount:state.lastResult?.issueCount||0,orderingOnly:true} : {unchanged:true};
         await db.runTransaction(async tx=>{
           const c=(await tx.get(control)).data();
           if(!c?.enabled || c.runId!==runId)throw Error('同步已暫停或執行權已變更');
@@ -97,9 +119,9 @@ export function createScheduleSheetSync({db,FieldValue,fetch:fetchSource=fetch,p
         return result;
       }
       const stateData=await readState(),newPeople=employeePlan(source,stateData);
-      const projected=combinePlan(source,stateData,newPeople.employees,newPeople.issues);
-      // Fail closed on bulk clearing; an administrator must inspect the source first.
-      if(projected.cleared>100)throw Error(`來源將清空 ${projected.cleared} 格，已停止自動套用，請管理員核對`);
+      // A partially published sheet can have thousands of blanks. Keep the bulk
+      // clear protection without blocking populated cells or another shift tab.
+      const projected=safePlan(source,stateData,newPeople.employees,newPeople.issues);
       let createdEmployees=0;
       const employeeIssues=[...newPeople.issues];
       for(const candidate of newPeople.employees) {
@@ -136,8 +158,8 @@ export function createScheduleSheetSync({db,FieldValue,fetch:fetchSource=fetch,p
         if(saved.created)createdEmployees++;
         stateData.employees.push({...saved.profile,employeeId:candidate.employeeId});
       }
-      const plan={...combinePlan(source,stateData,[],employeeIssues),createdEmployees};
-      if(plan.cleared>100)throw Error(`來源將清空 ${plan.cleared} 格，已停止自動套用，請管理員核對`);
+      const actual=newPeople.employees.length?safePlan(source,stateData,[],employeeIssues,projected.preserveBlankCells).plan:projected.plan;
+      const plan={...actual,createdEmployees};
       await applyPlan(plan,runId);
       const result=summary(plan);
       await db.runTransaction(async tx=>{

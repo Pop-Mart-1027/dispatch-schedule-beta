@@ -153,11 +153,12 @@ export function planScheduleLayoutOrder(layouts) {
   return changes;
 }
 
+const sourceSectionFor=row=>row.section || (preScheduleSource(row.employeeId)?.group===row.group?preScheduleSource(row.employeeId)?.section:'');
+
 function sourceOrderedSections(sections, source) {
   const ranks=new Map(), groups=new Map();
   for(const row of source) {
-    const sourceSection=row.section || (preScheduleSource(row.employeeId)?.group===row.group?preScheduleSource(row.employeeId)?.section:'');
-    const key=scheduleSectionIdentity(sourceSection,row.areaCode||'',row.group).key;
+    const key=scheduleSectionIdentity(sourceSectionFor(row),row.areaCode||'',row.group).key;
     if(!ranks.has(row.group))ranks.set(row.group,new Map());
     const order=ranks.get(row.group);
     if(!order.has(key))order.set(key,order.size);
@@ -169,7 +170,51 @@ function sourceOrderedSections(sections, source) {
   return [...groups].flatMap(([group,items])=>items.sort((a,b)=>(ranks.get(group)?.get(a.key)??Infinity)-(ranks.get(group)?.get(b.key)??Infinity)));
 }
 
-export function planScheduleSync({source, employees, records, layouts}) {
+function lateSourceGroups(layoutMap, grouped, records) {
+  const groupsWithRecords=new Set(records.map(r=>`${r.date.slice(0,7)}:${r.shiftType==='morning'?'day':r.shiftType}`));
+  const missing=new Set();
+  for(const [month,layout] of layoutMap) {
+    // An explicitly initialized layout is needed to distinguish a partial
+    // sheet import from an administrator's empty layout or a legacy layout.
+    if(layout.modifiedBy!=='google-schedule-sync' || !layout.rows.length || !layout.sections?.length)continue;
+    for(const group of ['day','night']) {
+      const key=`${month}:${group}`;
+      if(groupsWithRecords.has(key) || layout.rows.some(r=>r.group===group) || layout.sections.some(s=>s.group===group))continue;
+      if(layout.excludedEmployeeIds?.some(id=>{
+        const rows=grouped.get(`${month}:${id}`);
+        return rows?.length && rows.every(r=>r.group===group);
+      }))continue;
+      missing.add(key);
+    }
+  }
+  return missing;
+}
+
+const hasScheduleValue=record=>[record?.scheduleCode,record?.scheduleLabel,record?.leaveType].some(v=>clean(v));
+const officialGroup=group=>group==='day'||group==='night';
+const shiftForGroup=group=>group==='day'?'morning':'night';
+const isUneditedSyncRecord=record=>record?.source==='google-schedule-sync' && record.modifiedBy==='google-schedule-sync';
+
+function recoverableGroup({month,id,rows,existingLayout,existingRow,existingRecords,layoutMap,missingGroups,duplicates}) {
+  if(existingLayout?.revision!==1 || existingLayout.modifiedBy!=='google-schedule-sync' || !officialGroup(existingRow?.group))return null;
+  if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(month))return null;
+  const [year,monthNumber]=month.split('-').map(Number);
+  const previousMonth=new Date(Date.UTC(year,monthNumber-2,1)).toISOString().slice(0,7);
+  const previousLayout=layoutMap.get(previousMonth);
+  if(!previousLayout || previousLayout.excludedEmployeeIds?.includes(id))return null;
+  const previousRows=previousLayout.rows.filter(r=>r.employeeId===id);
+  const alternate=previousRows.length===1?previousRows[0].group:null;
+  if(!officialGroup(alternate) || alternate===existingRow.group || !missingGroups.has(`${month}:${alternate}`))return null;
+  if(!rows.some(r=>r.group===existingRow.group) || rows.some(r=>r.name!==rows[0].name))return null;
+  const selected=rows.filter(r=>r.group===alternate);
+  if(!selected.length || selected.some(r=>!sourceSectionFor(r) && !/^[A-Z]+\d*$/.test(r.areaCode||'')))return null;
+  if(new Set(selected.map(r=>scheduleSectionIdentity(sourceSectionFor(r),r.areaCode||'',alternate).key)).size!==1)return null;
+  const originalShift=shiftForGroup(existingRow.group);
+  if(!existingRecords.length || existingRecords.some(r=>!isUneditedSyncRecord(r) || r.shiftType!==originalShift || duplicates.has(`${id}_${r.date}`)))return null;
+  return alternate;
+}
+
+export function planScheduleSync({source, employees, records, layouts, preserveBlankCells=false}) {
   const profiles=new Map(employees.map(p=>[p.employeeId||p.id,p]));
   const layoutMap=new Map(layouts.map(l=>[l.monthKey||l.id,l]));
   const recordMap=new Map(), duplicates=new Set();
@@ -181,7 +226,9 @@ export function planScheduleSync({source, employees, records, layouts}) {
     grouped.get(key).push(row);
   }
   const nextLayouts=new Map(), bootstrapMonths=new Set();
+  const missingGroups=lateSourceGroups(layoutMap,grouped,records);
   const sourceMonths=new Set(source.map(r=>r.month).filter(m=>/^\d{4}-(0[1-9]|1[0-2])$/.test(m)));
+  let protectedClears=0;
   for(const rows of grouped.values()) {
     const first=rows[0], id=first.employeeId, month=first.month, person=profiles.get(id);
     if(!person || person.active!==true){issues.push({employeeId:id,month,reason:'missing-or-inactive-employee'});continue;}
@@ -191,13 +238,15 @@ export function planScheduleSync({source, employees, records, layouts}) {
     const existingRow=existingLayout?.rows.find(r=>r.employeeId===id);
     const existingRecords=records.filter(r=>r.employeeId===id && r.date.startsWith(month));
     const groups=[...new Set(rows.map(r=>r.group))];
-    const group=existingRow?.group || (existingRecords[0]?.shiftType==='morning'?'day':existingRecords[0]?.shiftType==='night'?'night':null) || (groups.length===1?groups[0]:preScheduleSource(id)?.group);
+    const recoveredGroup=groups.length>1?recoverableGroup({month,id,rows,existingLayout,existingRow,existingRecords,layoutMap,missingGroups,duplicates}):null;
+    const group=recoveredGroup || existingRow?.group || (existingRecords[0]?.shiftType==='morning'?'day':existingRecords[0]?.shiftType==='night'?'night':null) || (groups.length===1?groups[0]:preScheduleSource(id)?.group);
     const selected=rows.filter(r=>r.group===(group||groups[0]));
     if(!selected.length || (!group && groups.length>1)){issues.push({employeeId:id,month,reason:'ambiguous-source-group'});continue;}
     if(selected.some(r=>r.name!==selected[0].name)){issues.push({employeeId:id,month,reason:'conflicting-source-names'});continue;}
     // A newly published month has no app records from which to infer sections.
     // Only bootstrap new layouts or the empty layout produced by the old sync.
     const bootstrap=!existingLayout || (existingLayout.modifiedBy==='google-schedule-sync' && !existingLayout.rows.length && !existingLayout.sections && !existingLayout.excludedEmployeeIds?.length && !Object.keys(existingLayout.assignmentResetAt||{}).length);
+    const bootstrapGroup=missingGroups.has(`${month}:${selected[0].group}`);
     if(bootstrap)bootstrapMonths.add(month);
     let next=nextLayouts.get(month);
     if(!next) {
@@ -206,31 +255,37 @@ export function planScheduleSync({source, employees, records, layouts}) {
       if(bootstrap)next.sections=monthSectionCatalog(next.rows,next);
     }
     let target=next.rows.find(r=>r.employeeId===id);
-    if(!target || (bootstrap && !existingRow)) {
+    if(!target || recoveredGroup || (bootstrap && !existingRow)) {
       const candidate=selected[0];
       const provisioned=person.source==='google-schedule-sync' && !!person.onboardingStartedAt;
       // Newcomers may introduce a source section, but its creation must not
       // authorize ordinary staff to return to a section missing from the
       // administrator's original catalog during the same sync pass.
-      const sections=!bootstrap && !provisioned?monthSectionCatalog(existingLayout.rows,existingLayout):monthSectionCatalog(next.rows,next);
-      const sourceSection=candidate.section || (preScheduleSource(id)?.group===candidate.group?preScheduleSource(id)?.section:'');
+      const sections=!bootstrap && !bootstrapGroup && !provisioned?monthSectionCatalog(existingLayout.rows,existingLayout):monthSectionCatalog(next.rows,next);
+      const sourceSection=sourceSectionFor(candidate);
       const identity=scheduleSectionIdentity(sourceSection,candidate.areaCode||'',candidate.group);
       let section=sections.find(s=>s.group===candidate.group && (s.key===identity.key || (candidate.areaCode && s.areaCode===candidate.areaCode)));
       // The employee provisioner explicitly authorizes placement in its source
       // section. The scope does not extend to existing manually managed staff.
       const canExtend=provisioned;
-      if(!section && (bootstrap || canExtend) && (sourceSection || candidate.areaCode)) {
+      if(!section && (bootstrap || bootstrapGroup || canExtend) && (sourceSection || candidate.areaCode)) {
         section={key:identity.key,group:candidate.group,section:sourceSection||`${candidate.areaCode}區`,areaCode:identity.areaCode,label:identity.label};
         if(!next.sections)next.sections=sections;
         next.sections.push(section);
       }
       if(!section){issues.push({employeeId:id,month,reason:'unmapped-source-area'});continue;}
       if(target)next.rows.splice(next.rows.indexOf(target),1);
-      target={employeeId:id,group:candidate.group,section:section.section,sectionKey:section.key,areaCode:section.areaCode,blankDays:[]};
+      const placement={employeeId:id,group:candidate.group,section:section.section,sectionKey:section.key,areaCode:section.areaCode};
+      target=recoveredGroup?{...target,...placement,syncGroupRecoveryFrom:existingRow.group,syncGroupRecoveryTo:recoveredGroup}:{...placement,blankDays:[]};
       const last=next.rows.findLastIndex(r=>r.group===target.group && monthRowSectionKey(r)===target.sectionKey);
       next.rows.splice(last<0?next.rows.length:last+1,0,target);
     }
     nextLayouts.set(month,next);
+    // The layout can commit before every schedule record. The persisted row
+    // marker lets later passes finish a proven correction without repeating it
+    // if an administrator moves the employee to another group.
+    const recoveryFrom=target.group===target.syncGroupRecoveryTo && officialGroup(target.syncGroupRecoveryFrom) && target.group!==target.syncGroupRecoveryFrom?target.syncGroupRecoveryFrom:null;
+    const targetShift=shiftForGroup(target.group);
     const count=selected[0].codes.length;
     for(let i=0;i<count;i++) {
       const date=`${month}-${String(i+1).padStart(2,'0')}`;
@@ -238,11 +293,18 @@ export function planScheduleSync({source, employees, records, layouts}) {
       const key=`${id}_${date}`;
       if(duplicates.has(key)){issues.push({employeeId:id,date,reason:'duplicate-app-records'});continue;}
       const code=[...new Set(selected.map(r=>r.codes[i]).filter(Boolean))].join('／');
-      target.blankDays=(target.blankDays||[]).filter(d=>d!==String(i+1));
       const before=recordMap.get(key);
-      const values={scheduleCode:code,scheduleLabel:code,leaveType:/^(例|休|慰|病|病假|事|事假|特休|假|公假|國假|喪假|婚假|家庭照顧|生理假)$/.test(code)?code:''};
+      if(recoveryFrom && before && (!isUneditedSyncRecord(before) || ![shiftForGroup(recoveryFrom),targetShift].includes(before.shiftType)))continue;
+      const correctShift=recoveryFrom && before?.shiftType===shiftForGroup(recoveryFrom);
+      if(!code && (preserveBlankCells || recoveryFrom)) {
+        if(hasScheduleValue(before))protectedClears++;
+        if(correctShift)updates.push({id:before.id||key,before,after:{shiftType:targetShift}});
+        continue;
+      }
+      target.blankDays=(target.blankDays||[]).filter(d=>d!==String(i+1));
+      const values={scheduleCode:code,scheduleLabel:code,leaveType:/^(例|休|慰|病|病假|事|事假|特休|假|公假|國假|喪假|婚假|家庭照顧|生理假)$/.test(code)?code:'',...(correctShift?{shiftType:targetShift}:{})};
       if(before && Object.entries(values).every(([k,v])=>(before[k]||'')===v))continue;
-      const after=before ? values : {...values,date,employeeId:id,employeeName:person.name,shiftType:target.group==='day'?'morning':'night',source:'google-schedule-sync',status:'active',note:''};
+      const after=before ? values : {...values,date,employeeId:id,employeeName:person.name,shiftType:targetShift,source:'google-schedule-sync',status:'active',note:''};
       updates.push({id:before?.id||key,before:before||null,after});
     }
   }
@@ -253,11 +315,17 @@ export function planScheduleSync({source, employees, records, layouts}) {
     // A person appearing in both tabs enters grouped at its day-tab position.
     // New month catalogs must instead follow each selected source tab's own
     // section order. Existing catalogs keep their manual first-appearance order.
-    const base=bootstrapMonths.has(month)&&current.sections?{...current,sections:sourceOrderedSections(current.sections,source.filter(r=>r.month===month))}:current;
+    const sourceRanked=s=>bootstrapMonths.has(month)||missingGroups.has(`${month}:${s.group}`);
+    let base=current;
+    if(current.sections?.some(sourceRanked)) {
+      const order=sourceOrderedSections(current.sections.filter(sourceRanked),source.filter(r=>r.month===month));
+      let at=0;
+      base={...current,sections:current.sections.map(s=>sourceRanked(s)?order[at++]:s)};
+    }
     const next=orderedMonthLayout(base);
     const old=layoutMap.get(month);
     if(old && JSON.stringify(old.rows)===JSON.stringify(next.rows) && JSON.stringify(old.sections)===JSON.stringify(next.sections))continue;
     layoutChanges.push({id:month,before:old||null,after:next});
   }
-  return {updates,layoutChanges,issues,cleared:updates.filter(u=>u.before?.scheduleCode && !u.after.scheduleCode).length};
+  return {updates,layoutChanges,issues,cleared:updates.filter(u=>hasScheduleValue(u.before) && u.after.scheduleCode==='').length,protectedClears};
 }

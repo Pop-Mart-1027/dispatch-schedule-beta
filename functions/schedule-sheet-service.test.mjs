@@ -494,18 +494,48 @@ void test('existing inactive staff and auth conflicts never create schedule rows
   assert.equal(conflicting.saved.has(`employees/${employeeId}`), false);
 });
 
-void test('bulk clearing guard runs before provisioning any new account', async () => {
+void test('a late night roster syncs despite an incomplete day sheet without clearing saved cells', async () => {
   const sheets = fixtures();
   const existingPeople = ['B8001', 'B8002', 'B8003', 'B8004'];
-  const emptyRows = existingPeople.map(id => ['', '調度專員', id, '原有人員', ...Array(31).fill('')].join(',')).join('\n');
-  sheets.set('10月日班', `${csv(10)}\n${emptyRows}`);
-  const records = existingPeople.flatMap(id => Array.from({ length: 31 }, (_, day) => ({ id: `${id}_${day}`, employeeId: id, date: `2026-10-${String(day + 1).padStart(2, '0')}`, scheduleCode: '早S' })));
+  const dayRows = existingPeople.map((id,i) => ['', '調度專員', id, '原有人員', i===0?'晚S':'', ...Array(30).fill('')].join(','));
+  sheets.set('10月日班', [...csv(10).split('\n').slice(0,-1),...dayRows].join('\n'));
+  const nightRows=csv(10).replace('S區-ABC-1234','O4區-ABC-1234').split('\n');
+  nightRows[nightRows.length-1]=['','調度專員',employeeId,employee.name,...Array(15).fill('夜O4'),...Array(16).fill('')].join(',');
+  sheets.set('10月夜班',nightRows.join('\n'));
+  const records = existingPeople.flatMap(id => Array.from({ length: 31 }, (_, day) => ({ id: `${id}_${day}`, employeeId: id, date: `2026-10-${String(day + 1).padStart(2, '0')}`, scheduleCode: '早S', shiftType: 'morning' })));
   let provisions = 0;
-  const { saved, service } = setup({ sheets, withEmployee: false, records, layout: currentLayout({ rows: existingPeople.map(id => ({ ...row, employeeId: id })) }), provisionEmployee: async () => provisions++ });
+  const dayLayout=currentLayout({ modifiedBy:'google-schedule-sync', rows:existingPeople.map(id=>({...row,employeeId:id,blankDays:['17']})) });
+  const { saved, service } = setup({ sheets, records, layout: dayLayout, provisionEmployee: async () => provisions++ });
   existingPeople.forEach(id => saved.set(`employees/${id}`, { ...employee, name: '原有人員' }));
-  await assert.rejects(service.run(), /清空 124 格/);
+  const preview=await service.handle({action:'preview'});
+  assert.equal(preview.protectedClears,123);
+  assert.equal(preview.changed,16);
+  assert.equal(saved.get('scheduleMonthLayouts/2026-10'),dayLayout);
+  const result=await service.run();
+  assert.deepEqual(result,preview);
+  assert.equal(result.cleared,0);
+  assert.equal(result.layouts,1);
+  assert.equal(result.issueCount,0);
   assert.equal(provisions, 0);
-  assert.equal(saved.has(`employees/${employeeId}`), false);
+  assert.equal(saved.get('scheduleRecords/B8001_0').scheduleCode,'晚S');
+  assert.equal(saved.get('scheduleRecords/B8001_16'),records[16]);
+  assert.equal(saved.get(`scheduleRecords/${employeeId}_2026-10-15`).scheduleCode,'夜O4');
+  assert.equal(saved.get(`scheduleRecords/${employeeId}_2026-10-15`).shiftType,'night');
+  assert.equal(saved.has(`scheduleRecords/${employeeId}_2026-10-16`),false);
+  const sorted=saved.get('scheduleMonthLayouts/2026-10');
+  assert.deepEqual(sorted.rows.filter(r=>r.group==='day'),dayLayout.rows);
+  assert.deepEqual(sorted.sections.map(s=>`${s.group}:${s.areaCode}`),['day:S','night:O4']);
+  assert.deepEqual(await service.run(),{unchanged:true});
+  assert.equal(saved.get('scheduleMonthLayouts/2026-10'),sorted);
+  assert.equal(saved.get('scheduleSheetSync/control').lastResult.protectedClears,123);
+  nightRows[nightRows.length-1]=['','調度專員',employeeId,employee.name,...Array(16).fill('夜O4'),...Array(15).fill('')].join(',');
+  sheets.set('10月夜班',nightRows.join('\n'));
+  const later=await service.run();
+  assert.equal(later.changed,1);
+  assert.equal(later.layouts,0);
+  assert.equal(later.protectedClears,123);
+  assert.equal(saved.get(`scheduleRecords/${employeeId}_2026-10-16`).scheduleCode,'夜O4');
+  assert.equal(saved.get('scheduleRecords/B8001_16'),records[16]);
 });
 
 void test('concurrent ordinary employee creation cannot bypass the actual-plan bulk clearing guard', async () => {
@@ -523,7 +553,26 @@ void test('concurrent ordinary employee creation cannot bypass the actual-plan b
     saved.set(`employees/${candidate.employeeId}`, { ...employee, role: 'employee' });
   } });
   saved.set('scheduleMonthLayouts/2026-09', { ...currentLayout(), monthKey: '2026-09', rows: ids.map(id => ({ ...row, employeeId: id })) });
-  await assert.rejects(service.run(), /清空 120 格/);
+  const result=await service.run();
+  assert.equal(result.cleared,0);
+  assert.equal(result.protectedClears,120);
+  assert.equal(result.createdEmployees,0);
   assert.equal(saved.get(`scheduleRecords/${employeeId}_0`).scheduleCode, '早S');
-  assert.equal([...saved.keys()].filter(path => path.startsWith('scheduleRecords/') && saved.get(path).date.startsWith('2026-10')).length, 0);
+  assert.equal([...saved.keys()].filter(path => path.startsWith('scheduleRecords/') && saved.get(path).date.startsWith('2026-10')).length, 124);
+});
+
+void test('shift recovery does not overwrite a schedule manually edited after planning', async () => {
+  const sheets=fixtures();
+  sheets.set('10月夜班',csv(10).replace('S區-ABC-1234','O4區-ABC-1234').replaceAll('早S','夜O4'));
+  const original=currentLayout({revision:1,modifiedBy:'google-schedule-sync'});
+  const record={id:'race-record',date:'2026-10-01',employeeId,shiftType:'morning',scheduleCode:'早S',source:'google-schedule-sync',modifiedBy:'google-schedule-sync'};
+  const {saved,service}=setup({sheets,layout:original,records:[record],beforeGetAll:({refs,saved:state})=>{
+    if(refs.some(ref=>ref.id===record.id))state.set(`scheduleRecords/${record.id}`,{...record,scheduleCode:'休',modifiedBy:'admin'});
+  }});
+  saved.set('scheduleMonthLayouts/2026-09',{monthKey:'2026-09',rows:[{...row,group:'night',section:'O4區',areaCode:'O4'}]});
+  await assert.rejects(service.run(),/班別已被修改/);
+  assert.equal(saved.get('scheduleMonthLayouts/2026-10'),original);
+  assert.equal(saved.get(`scheduleRecords/${record.id}`).scheduleCode,'休');
+  assert.equal(saved.get(`scheduleRecords/${record.id}`).shiftType,'morning');
+  assert.equal(saved.get('scheduleSheetSync/control').leaseUntil,0);
 });
