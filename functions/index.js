@@ -24,7 +24,7 @@ exports.manageGoogleScheduleSync = onCall({ timeoutSeconds: 300, memory: '512MiB
   await requireAdmin(request)
   return (await googleScheduleSyncService()).handle(request.data)
 })
-exports.syncGoogleSchedules = onSchedule({ schedule: 'every 1 minutes', timeZone: 'Asia/Taipei', timeoutSeconds: 480, memory: '1GiB', maxInstances: 1, serviceAccount: 'smilebike-auth-runtime@meimei-breakfast-order.iam.gserviceaccount.com' }, async () => {
+exports.syncGoogleSchedules = onSchedule({ schedule: '0 0 * * *', timeZone: 'Asia/Taipei', timeoutSeconds: 480, memory: '1GiB', maxInstances: 1, serviceAccount: 'smilebike-auth-runtime@meimei-breakfast-order.iam.gserviceaccount.com' }, async () => {
   await (await googleScheduleSyncService()).run()
 })
 const ROLES = new Set(['employee', 'duty', 'admin'])
